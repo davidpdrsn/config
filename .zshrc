@@ -16,6 +16,8 @@ export CARGO_PROFILE_DEV_SPLIT_DEBUGINFO=unpacked
 export CARGO_PROFILE_TEST_SPLIT_DEBUGINFO=unpacked
 export CARGO_INCREMENTAL=1
 
+export PATH=$PATH:/Users/david.pedersen/.ark/bin
+
 ## PLUGINS
 ## -----------------------
 

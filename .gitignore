@@ -1,5 +1,6 @@
 .CFUserTextEncoding
 .Trash
+.ark/
 .cargo
 .config/gh/hosts.yml
 .config/iterm2/
@@ -9,6 +10,7 @@
 .rust-analyzer-target-dir/
 .rustup
 .ssh
+.tmux/
 .viminfo
 .zcompdump
 .zhistory
