@@ -1,0 +1,187 @@
+local telescope = require("telescope/builtin")
+
+function make_map_fn(mode)
+    return function(mapping, what_to_do, options)
+        options = options or {}
+        if options.noremap == nil then
+            options.noremap = true
+        end
+
+        vim.keymap.set(mode, mapping, what_to_do, options)
+    end
+end
+
+local cmap = make_map_fn("c")
+local nmap = make_map_fn("n")
+local vmap = make_map_fn("v")
+local imap = make_map_fn("i")
+local tmap = make_map_fn("t")
+
+imap("\\u", function()
+    insert_guid()
+end)
+
+function leader(mapping, what_to_do, options)
+    nmap("<leader>" .. mapping, what_to_do, options)
+end
+
+leader("b", function() telescope.buffers() end)
+leader("B", function() telescope.current_buffer_fuzzy_find() end)
+leader("T", function() telescope.builtin() end)
+leader("cm", ":!chmod +x %<cr>")
+leader("ev", ":tabedit $MYVIMRC<cr>:lcd ~/.config/nvim/<cr>")
+leader("f", function() telescope.find_files() end)
+leader("h", ":nohlsearch<cr>")
+leader("k", function() vim.diagnostic.open_float() end)
+
+leader("lD", ":Telescope diagnostics severity=error<cr>")
+leader("lS", function() telescope.lsp_dynamic_workspace_symbols() end)
+leader("lo", function() telescope.current_buffer_fuzzy_find() end)
+leader("la", function() vim.lsp.buf.code_action() end)
+leader("ld", function() telescope.diagnostics() end)
+leader("lf", function()
+    local path_to_current_file = vim.fn.expand('%:p')
+    vim.cmd("execute 'write'")
+    vim.cmd("silent !/Users/davidpdrsn/.cargo/bin/cli format " .. path_to_current_file)
+    vim.cmd("execute 'checktime'")
+end)
+leader("lr", function() vim.lsp.buf.rename() end)
+leader("ls", function() telescope.lsp_document_symbols() end)
+
+function scratch_term(cmd)
+    return function()
+        require('FTerm').scratch({ cmd = cmd })
+    end
+end
+
+function custom_term(cmd)
+    local fterm = require("FTerm")
+
+    local the_term = fterm:new({
+        ft = 'fterm_gitui',
+        cmd = cmd,
+    })
+
+    return function()
+        the_term:toggle()
+    end
+end
+
+leader("cl", scratch_term({'cli'}))
+leader("cb", scratch_term({'t', 'b'}))
+leader("ct", scratch_term({'t', 't'}))
+leader("cc", scratch_term({'t', 'c'}))
+
+leader("R", function() telescope.resume() end)
+leader("rd", ":RustOpenExternalDocs<cr>")
+leader("rg", function() telescope.live_grep() end)
+leader("rG", function() telescope.grep_string() end)
+leader("rm", ":RustExpandMacro<cr>")
+leader("rn", ":call RenameFile()<cr>")
+leader("ro", ":sp<cr>:RustOpenCargo<cr>")
+leader("rp", ":RustParentModule<cr>")
+leader("rr", ":RustRunnables<cr>")
+leader(":", function() telescope.commands() end)
+
+leader("sv", ":source $MYVIMRC<cr>:nohlsearch<cr>")
+leader("x", ":set filetype=")
+leader("u", ":UndotreeToggle<cr>")
+
+leader("pi", ":so<cr>:PackerInstall<cr>")
+leader("pu", ":so<cr>:PackerUpdate<cr>")
+leader("pc", ":so<cr>:PackerClean<cr>")
+
+vim.cmd[[
+    function! RenameFile()
+        let old_name = expand('%')
+        let new_name = input('New file name: ', expand('%'), 'file')
+        if new_name != '' && new_name != old_name
+            exec ':saveas ' . new_name
+            exec ':silent !rm ' . old_name
+            redraw!
+        endif
+    endfunction
+]]
+
+-- get path to current file in command mode with %%
+cmap("%%", "<C-R>=expand('%:h').'/'<cr>")
+
+-- quickly insert semicolon or comma at end of line
+leader(";", "maA;<esc>`a")
+leader(",", "maA,<esc>`a")
+
+-- exit insert mode and save just by hitting ctrl-s
+imap("<c-s>", "<esc>:w<cr>")
+nmap("<c-s>", ":w<cr>")
+
+-- intuitive movement over long lines
+nmap("k", "gk")
+nmap("j", "gj")
+
+-- make Y work as expected
+nmap("Y", "y$")
+
+-- disable useless and annoying keys
+nmap("Q", "<Nop>")
+
+-- resize windows with the shift+arrow keys
+nmap("<s-up>", "10<C-W>+")
+nmap("<s-down>", "10<C-W>-")
+
+-- Don't jump around when using * to search for word under cursor
+-- Often I just want to see where else a word appears
+vim.cmd[[
+    nnoremap * :let @/ = '\<'.expand('<cword>').'\>'\|set hlsearch<C-M>
+]]
+
+-- show docs
+nmap(
+    'K',
+    function()
+        local filetype = vim.bo.filetype
+        if vim.tbl_contains({ 'vim','help' }, filetype) then
+            vim.cmd('h '.. vim.fn.expand('<cword>'))
+        elseif vim.tbl_contains({ 'man' }, filetype) then
+            vim.cmd('Man '.. vim.fn.expand('<cword>'))
+        else
+            vim.lsp.buf.hover()
+        end
+    end,
+    { silent = true }
+)
+
+-- term
+nmap('<c-t>', '<CMD>lua require("FTerm").toggle()<CR>')
+tmap('<c-t>', '<C-\\><C-n><CMD>lua require("FTerm").toggle()<CR>')
+
+-- lsp
+nmap('gd', function() vim.lsp.buf.definition() end)
+nmap('gy', function() vim.lsp.buf.type_definition() end)
+nmap('gr', function() telescope.lsp_references() end)
+nmap('[g', function() vim.diagnostic.goto_prev() end)
+nmap(']g', function() vim.diagnostic.goto_next() end)
+
+vim.cmd[[
+    " don't wanna retrain my fingers
+    command! W w
+    command! Q q
+    command! Qall qall
+
+    command! Replace lua require('spectre').open()
+]]
+
+math.randomseed(os.time())
+local random = math.random
+function insert_guid()
+    local template ='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+    local le_guid = string.gsub(template, '[xy]', function (c)
+        local v = (c == 'x') and random(0, 0xf) or random(8, 0xb)
+        return string.format('%x', v)
+    end)
+
+    vim.cmd("execute \"norm i" .. le_guid .. "\"")
+end
+
+vim.cmd[[
+    command! Uuid lua insert_guid()
+]]
