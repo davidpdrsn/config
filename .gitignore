@@ -6,6 +6,7 @@
 .gitconfig
 .lesshst
 .local
+.rust-analyzer-target-dir/
 .rustup
 .ssh
 .viminfo

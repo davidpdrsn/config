@@ -117,7 +117,7 @@ require('rust-tools').setup({
                 checkOnSave = {
                     command = "clippy",
                     enable = true,
-                    extraArgs = { "--target-dir", "/Users/davidpdrsn/rust-analyzer-check" },
+                    extraArgs = { "--target-dir", "/Users/david.pedersen/.rust-analyzer-target-dir" },
                 },
                 completion = {
                     autoimport = {
