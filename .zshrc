@@ -87,6 +87,13 @@ alias d='git diff'
 alias gdc='git diff --cached'
 alias gr='git reset'
 alias grh='git reset --hard'
+alias gca='git commit --amend'
+alias gpr='gh pr create'
+alias gpll='git pull'
+alias grb='git rebase'
+alias gm='git merge'
+alias grbc='git rebase --continue'
+alias grba='git rebase --abort'
 
 ## FU
 ## -----------------------

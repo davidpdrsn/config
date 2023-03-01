@@ -331,7 +331,7 @@ snippet aspect
     Debug, Clone, serde::Serialize, serde::Deserialize, speedy::Writable, speedy::Readable,
 	Aspect
 )]
-#[aspect(guid = "`/Users/davidpdrsn/.cargo/bin/cli uuid`")]
+#[aspect(guid = "`/Users/david.pedersen/.cargo/bin/cli uuid`")]
 pub struct $1Aspect {
     $0
 }
@@ -345,7 +345,7 @@ pub struct $1Msg {
 
 impl Message for $1Msg {
     const GUID: MessageGuid =
-        MessageGuid::const_new_from_str("`/Users/davidpdrsn/.cargo/bin/cli uuid`");
+        MessageGuid::const_new_from_str("`/Users/david.pedersen/.cargo/bin/cli uuid`");
 }
 endsnippet
 
@@ -357,7 +357,7 @@ fn $2() -> Result<()> {
 endsnippet
 
 snippet uuid
-"`/Users/davidpdrsn/.cargo/bin/cli uuid`"
+"`/Users/david.pedersen/.cargo/bin/cli uuid`"
 endsnippet
 
 snippet ifl
@@ -386,7 +386,7 @@ endsnippet
 
 snippet event
 #[derive(Event, Reflect, Debug, Clone)]
-#[event(event_guid = "`/Users/davidpdrsn/.cargo/bin/cli uuid`")]
+#[event(event_guid = "`/Users/david.pedersen/.cargo/bin/cli uuid`")]
 pub struct $1 {
     $0
 }
@@ -394,12 +394,12 @@ endsnippet
 
 snippet operation
 #[derive(Operation, Reflect, Debug, Clone)]
-#[operation(operation_guid = "`/Users/davidpdrsn/.cargo/bin/cli uuid`", output = $2)]
+#[operation(operation_guid = "`/Users/david.pedersen/.cargo/bin/cli uuid`", output = $2)]
 pub struct $1 {
 }
 
 #[derive(Event, Reflect, Debug, Clone)]
-#[event(event_guid = "`/Users/davidpdrsn/.cargo/bin/cli uuid`")]
+#[event(event_guid = "`/Users/david.pedersen/.cargo/bin/cli uuid`")]
 pub struct $2 {
 }
 endsnippet
@@ -407,8 +407,8 @@ endsnippet
 snippet prop
 #[derive(Property, Clone, Debug, Default)]
 #[property(
-    property_guid = "`/Users/davidpdrsn/.cargo/bin/cli uuid`",
-    changed_guid = "`/Users/davidpdrsn/.cargo/bin/cli uuid`"
+    property_guid = "`/Users/david.pedersen/.cargo/bin/cli uuid`",
+    changed_guid = "`/Users/david.pedersen/.cargo/bin/cli uuid`"
 )]
 struct $1;
 
@@ -425,7 +425,7 @@ endsnippet
 
 snippet behavior
 declare_behavior! {
-    "`/Users/davidpdrsn/.cargo/bin/cli uuid`"
+    "`/Users/david.pedersen/.cargo/bin/cli uuid`"
     $1Behavior
 }
 
