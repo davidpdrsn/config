@@ -68,9 +68,9 @@ function custom_term(cmd)
 end
 
 leader("cl", scratch_term({'cli'}))
-leader("cb", scratch_term({'t', 'b'}))
-leader("ct", scratch_term({'t', 't'}))
-leader("cc", scratch_term({'t', 'c'}))
+leader("cb", scratch_term({'cli', 'b'}))
+leader("ct", scratch_term({'cli', 't'}))
+leader("cc", scratch_term({'cli', 'c'}))
 
 leader("R", function() telescope.resume() end)
 leader("rd", ":RustOpenExternalDocs<cr>")

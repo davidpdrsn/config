@@ -28,6 +28,7 @@ bindkey -e
 source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source ~/.fzf.zsh
+source /Users/david.pedersen/.config/broot/launcher/bash/br
 
 ## PROMPT
 ## -----------------------
@@ -63,6 +64,7 @@ alias la='exa -a --long --header --sort name'
 alias mkdir='mkdir -p'
 alias xtask='cargo xtask'
 alias o='open .'
+alias t='/Users/david.pedersen/.cargo/bin/cli'
 
 # nvim
 alias vi='nvim'
