@@ -72,6 +72,8 @@ alias mkdir='mkdir -p'
 alias xtask='cargo xtask'
 alias o='open .'
 alias t='/Users/david.pedersen/.cargo/bin/cli'
+alias ark-client='/Users/david.pedersen/.ark/bin/ark-client --no-update-check --no-auto-update'
+alias commit-config='git add --all && git commit -m "misc changes" && git push'
 
 # nvim
 alias vi='nvim'
