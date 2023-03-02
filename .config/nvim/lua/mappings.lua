@@ -87,9 +87,7 @@ leader("sv", ":source $MYVIMRC<cr>:nohlsearch<cr>")
 leader("x", ":set filetype=")
 leader("u", ":UndotreeToggle<cr>")
 
-leader("pi", ":so<cr>:PackerInstall<cr>")
-leader("pu", ":so<cr>:PackerUpdate<cr>")
-leader("pc", ":so<cr>:PackerClean<cr>")
+leader("ps", ":so<cr>:PackerSync<cr>")
 
 vim.cmd[[
     function! RenameFile()

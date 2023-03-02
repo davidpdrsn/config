@@ -27,14 +27,21 @@ bindkey -e
 
 source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+
 source ~/.fzf.zsh
-source /Users/david.pedersen/.config/broot/launcher/bash/br
+source ~/.config/broot/launcher/bash/br
 
 ## PROMPT
 ## -----------------------
 
 # Make the colors work
 autoload -U colors && colors
+
+# edit current line in vim
+autoload -U edit-command-line
+zle -N edit-command-line
+bindkey '\033' edit-command-line
+export KEYTIMEOUT=1
 
 # Allow for output of commands
 setopt prompt_subst
