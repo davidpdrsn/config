@@ -52,7 +52,7 @@ local symbol="❯"
 local start="%(?,%{$fg[green]%}$symbol%{$reset_color%},%{$fg[red]%}$symbol%{$reset_color%})"
 
 PROMPT=$'
-$(smart-pwd) %{$reset_color%}$(git-prompt)%{$reset_color%}
+$(smart-pwd) %{$reset_color%}$(git-prompt)$(is-vim-running)%{$reset_color%}
 ${start} '
 RPROMPT=$''
 
