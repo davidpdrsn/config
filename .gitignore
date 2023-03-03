@@ -29,3 +29,5 @@ code
 .config/broot/
 .npm
 talks
+.bash_history
+.python_history

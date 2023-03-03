@@ -106,6 +106,7 @@ alias grb='git rebase'
 alias gm='git merge'
 alias grbc='git rebase --continue'
 alias grba='git rebase --abort'
+alias grbi='git rebase -i'
 
 ## FU
 ## -----------------------
