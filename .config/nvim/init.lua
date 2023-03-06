@@ -134,9 +134,6 @@ require('rust-tools').setup({
                     enable = true,
                 },
                 rustcSource = "discover",
-                updates = {
-                    channel = "nightly",
-                },
             },
         },
     }

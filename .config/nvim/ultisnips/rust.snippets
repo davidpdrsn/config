@@ -390,6 +390,11 @@ snippet event
 pub struct $1 {
     $0
 }
+
+impl EventImpl for $1 {
+    const LOCATION: EndpointLocation = EndpointLocation::Entity;
+    const AVAILABILITY: EndpointAvailability = EndpointAvailability::Unconditional;
+}
 endsnippet
 
 snippet operation

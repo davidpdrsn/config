@@ -22,6 +22,9 @@ export PATH=$PATH:/Users/david.pedersen/.bin
 # make ctrl-p, ctrl-n, etc work in tmux
 bindkey -e
 
+autoload -Uz compinit
+compinit
+
 ## PLUGINS
 ## -----------------------
 
@@ -30,6 +33,27 @@ source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 source ~/.fzf.zsh
 source ~/.config/broot/launcher/bash/br
+
+
+#compdef gt
+###-begin-gt-completions-###
+#
+# yargs command completion script
+#
+# Installation: /opt/homebrew/bin/gt completion >> ~/.zshrc
+#    or /opt/homebrew/bin/gt completion >> ~/.zprofile on OSX.
+#
+_gt_yargs_completions()
+{
+  local reply
+  local si=$IFS
+  IFS=$'
+' reply=($(COMP_CWORD="$((CURRENT-1))" COMP_LINE="$BUFFER" COMP_POINT="$CURSOR" /opt/homebrew/bin/gt --get-yargs-completions "${words[@]}"))
+  IFS=$si
+  _describe 'values' reply
+}
+compdef _gt_yargs_completions gt
+###-end-gt-completions-###
 
 ## PROMPT
 ## -----------------------
