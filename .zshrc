@@ -22,8 +22,22 @@ export PATH=$PATH:/Users/david.pedersen/.bin
 # make ctrl-p, ctrl-n, etc work in tmux
 bindkey -e
 
+# enable completion
 autoload -Uz compinit
 compinit
+
+# make completion with tab look not terrible
+setopt auto_menu
+setopt always_to_end
+setopt complete_in_word
+unsetopt flow_control
+unsetopt menu_complete
+zstyle ':completion:*:*:*:*:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+zstyle ':completion::complete:*' use-cache 1
+zstyle ':completion::complete:*' cache-path $ZSH_CACHE_DIR
+zstyle ':completion:*' list-colors ''
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
 
 ## PLUGINS
 ## -----------------------
@@ -34,15 +48,7 @@ source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source ~/.fzf.zsh
 source ~/.config/broot/launcher/bash/br
 
-
-#compdef gt
-###-begin-gt-completions-###
-#
-# yargs command completion script
-#
-# Installation: /opt/homebrew/bin/gt completion >> ~/.zshrc
-#    or /opt/homebrew/bin/gt completion >> ~/.zprofile on OSX.
-#
+# graphite completion
 _gt_yargs_completions()
 {
   local reply
@@ -53,7 +59,6 @@ _gt_yargs_completions()
   _describe 'values' reply
 }
 compdef _gt_yargs_completions gt
-###-end-gt-completions-###
 
 ## PROMPT
 ## -----------------------
@@ -133,7 +138,7 @@ alias grbc='git rebase --continue'
 alias grba='git rebase --abort'
 alias grbi='git rebase -i'
 
-## FU
+## FUNCTIONS
 ## -----------------------
 
 function g {
