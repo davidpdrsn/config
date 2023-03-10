@@ -115,9 +115,14 @@ require('rust-tools').setup({
                     }
                 },
                 checkOnSave = {
-                    command = "clippy",
+                    overrideCommand = {
+                        "cargo",
+                        "clippy",
+                        "--message-format=json",
+                        "--all-targets",
+                        "--target-dir", "/Users/david.pedersen/.rust-analyzer-target-dir"
+                    },
                     enable = true,
-                    extraArgs = { "--target-dir", "/Users/david.pedersen/.rust-analyzer-target-dir" },
                 },
                 completion = {
                     autoimport = {
