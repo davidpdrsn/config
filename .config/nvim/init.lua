@@ -137,6 +137,9 @@ require('rust-tools').setup({
                 },
                 procMacro = {
                     enable = true,
+                    attributes = {
+                        enable = true,
+                    },
                 },
                 rustcSource = "discover",
             },
