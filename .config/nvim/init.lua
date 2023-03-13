@@ -118,6 +118,8 @@ require('rust-tools').setup({
                     overrideCommand = {
                         "cargo",
                         "clippy",
+                        "--all-features",
+                        "--tests",
                         "--message-format=json",
                         "--all-targets",
                         "--target-dir", "/Users/david.pedersen/.rust-analyzer-target-dir"
