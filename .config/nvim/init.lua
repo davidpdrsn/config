@@ -122,7 +122,9 @@ require('rust-tools').setup({
                         "--tests",
                         "--message-format=json",
                         "--all-targets",
-                        "--target-dir", "/Users/david.pedersen/.rust-analyzer-target-dir"
+                        "--target-dir",
+                        "/Users/david.pedersen/.rust-analyzer-target-dir",
+                        "--workspace",
                     },
                     enable = true,
                 },
@@ -215,7 +217,11 @@ require('nvim-autopairs').setup()
 require('nvim-autopairs').remove_rule("'")
 
 require('dressing').setup()
-require("fidget").setup()
+require("fidget").setup({
+    fmt = {
+        max_width = 50,
+    },
+})
 require('numb').setup()
 require("mason").setup()
 
