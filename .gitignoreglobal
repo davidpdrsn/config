@@ -19,3 +19,4 @@ dump.rdb
 /tmp
 bacon.toml
 .reload-on-demand.toml
+mprocs.yaml
