@@ -19,6 +19,7 @@ export CARGO_UNSTABLE_SPARSE_REGISTRY=true
 
 export PATH=$PATH:/Users/david.pedersen/.ark/bin
 export PATH=$PATH:/Users/david.pedersen/.bin
+export PATH=$PATH:/Applications/Postgres.app/Contents/Versions/latest/bin
 
 # make ctrl-p, ctrl-n, etc work in tmux
 bindkey -e
