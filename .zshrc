@@ -106,6 +106,7 @@ alias t='/Users/david.pedersen/.cargo/bin/cli'
 alias ark-client='/Users/david.pedersen/.ark/bin/ark-client --no-update-check --no-auto-update'
 alias commit-config='git add --all && git commit -m "misc changes"'
 alias at='tmux attach'
+alias local-ark-client='/Users/david.pedersen/code/embark/ark/target/release/ark-client'
 
 # nvim
 alias vi='nvim'
