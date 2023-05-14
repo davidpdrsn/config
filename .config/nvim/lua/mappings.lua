@@ -38,13 +38,7 @@ leader("lD", ":Telescope diagnostics severity=error<cr>")
 leader("lS", function() telescope.lsp_dynamic_workspace_symbols() end)
 leader("lo", function() telescope.current_buffer_fuzzy_find() end)
 leader("la", function() vim.lsp.buf.code_action() end)
-leader("ld", function() telescope.diagnostics() end)
-leader("lf", function()
-    local path_to_current_file = vim.fn.expand('%:p')
-    vim.cmd("execute 'write'")
-    vim.cmd("silent !/Users/david.pedersen/.cargo/bin/cli format " .. path_to_current_file)
-    vim.cmd("execute 'checktime'")
-end)
+leader("ld", ":Telescope diagnostics severity_limit=warn<cr>")
 leader("lr", function() vim.lsp.buf.rename() end)
 leader("ls", function() telescope.lsp_document_symbols() end)
 
@@ -183,3 +177,16 @@ end
 vim.cmd[[
     command! Uuid lua insert_guid()
 ]]
+
+-- https://github.com/neovim/nvim-lspconfig
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+  callback = function(ev)
+    vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+
+    local opts = { buffer = ev.buf }
+    vim.keymap.set('n', '<space>lf', function()
+      vim.lsp.buf.format { async = true }
+    end, opts)
+  end,
+})

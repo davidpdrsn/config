@@ -426,14 +426,31 @@ impl PropertyImpl for $1 {
 endsnippet
 
 snippet behavior
-declare_behavior! {
-    "`/Users/david.pedersen/.cargo/bin/cli uuid`"
-    $1Behavior
+#[doc(hidden)]
+pub fn register(_api: &mut sandbox_api::registration::RegistrationApiApplet) {}
+
+#[derive(Clone, Default, serde::Serialize, serde::Deserialize)]
+pub struct $1Behavior;
+
+impl BehaviorDecl for $1Behavior {
+    const GUID: BehaviorGuid =
+        BehaviorGuid::const_new_from_str("`/Users/david.pedersen/.cargo/bin/cli uuid`");
+
+    fn default_behavior() -> DefaultBehavior<Self> {
+        DefaultBehavior::default()
+    }
 }
 
 #[derive(Default, Clone, serde::Serialize, serde::Deserialize, Behavior)]
 #[behavior(declaration = $1Behavior)]
 pub struct $1BehaviorImpl {}
+
+impl From<$1Behavior> for $1BehaviorImpl {
+	fn from(decl: $1Behavior) -> Self {
+		let $1Behavior {} = decl;
+		Self::default()
+	}
+}
 
 impl BehaviorImpl for $1BehaviorImpl {
     fn build(b: &mut impl BehaviorImplBuilder<Self>) {
