@@ -77,7 +77,7 @@ return require('packer').startup(function(use)
     -- completion
     use 'hrsh7th/nvim-cmp'
     -- UI for nvim-lsp progress
-    use 'j-hui/fidget.nvim'
+    use { 'j-hui/fidget.nvim', branch = 'legacy' }
     -- easy lsp config
     use 'neovim/nvim-lspconfig'
     -- popup api from vim in Neovim
@@ -95,7 +95,7 @@ return require('packer').startup(function(use)
     -- icons
     use 'kyazdani42/nvim-web-devicons'
     -- floating terminal
-    use 'numToStr/FTerm.nvim'
+    use 'akinsho/toggleterm.nvim'
     -- undo history tree
     use 'mbbill/undotree'
     -- install and manage LSP servers
@@ -104,4 +104,10 @@ return require('packer').startup(function(use)
     use "AlexvZyl/nordic.nvim"
     -- theme
     use "rebelot/kanagawa.nvim"
+    -- move lines
+    use "fedepujol/move.nvim"
+    -- recent files in telescope
+    use "smartpde/telescope-recent-files"
+    -- change case
+    use "johmsalas/text-case.nvim"
 end)

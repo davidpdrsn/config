@@ -386,7 +386,7 @@ endsnippet
 
 snippet event
 #[derive(Event, Reflect, Debug, Clone)]
-#[event(event_guid = "`/Users/david.pedersen/.cargo/bin/cli uuid`")]
+#[event(guid = "`/Users/david.pedersen/.cargo/bin/cli uuid`")]
 pub struct $1 {
     $0
 }
@@ -399,7 +399,7 @@ endsnippet
 
 snippet operation
 #[derive(Operation, Reflect, Debug, Clone)]
-#[operation(operation_guid = "`/Users/david.pedersen/.cargo/bin/cli uuid`", output = $2)]
+#[operation(guid = "`/Users/david.pedersen/.cargo/bin/cli uuid`", output = $2)]
 pub struct $1 {
 }
 endsnippet
@@ -407,8 +407,7 @@ endsnippet
 snippet prop
 #[derive(Property, Clone, Debug, Default)]
 #[property(
-    property_guid = "`/Users/david.pedersen/.cargo/bin/cli uuid`",
-    changed_guid = "`/Users/david.pedersen/.cargo/bin/cli uuid`"
+    guid = "`/Users/david.pedersen/.cargo/bin/cli uuid`",
 )]
 struct $1;
 

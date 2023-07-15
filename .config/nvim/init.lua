@@ -34,10 +34,12 @@ vim.opt.foldenable = false
 vim.opt.spell = false
 
 require("tokyonight").setup({
+  style = "night",
   dim_inactive = true,
   on_colors = function(colors)
     -- https://pinetools.com/lighten-color
     colors.bg = "#1e1f2c"
+    colors.terminal_black = "NONE"
   end
 })
 
@@ -66,6 +68,8 @@ function on_attach(client, bufnr)
   })
 
   require('illuminate').on_attach(client)
+
+  client.server_capabilities.semanticTokensProvider = nil
 end
 
 require('lspconfig').tsserver.setup({
@@ -256,12 +260,25 @@ require('lualine').setup({
     },
 })
 
-require("FTerm").setup({
-    border = "rounded",
-})
-
 require('leap').add_default_mappings()
 
 vim.cmd[[
     let g:hardtime_default_on = 1
 ]]
+
+require("telescope").setup {
+  defaults = {},
+  extensions = {
+    recent_files = {
+        only_cwd = true
+    }
+  }
+}
+
+require("telescope").load_extension("recent_files")
+
+require('telescope').load_extension('textcase')
+
+require('textcase').setup {}
+
+require("toggleterm").setup()

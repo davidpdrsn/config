@@ -31,6 +31,7 @@ leader("T", function() telescope.builtin() end)
 leader("cm", ":!chmod +x %<cr>")
 leader("ev", ":tabedit $MYVIMRC<cr>:lcd ~/.config/nvim/<cr>")
 leader("f", function() telescope.find_files() end)
+leader("F", function() require('telescope').extensions.recent_files.pick() end)
 leader("h", ":nohlsearch<cr>")
 leader("k", function() vim.diagnostic.open_float() end)
 
@@ -42,29 +43,29 @@ leader("ld", ":Telescope diagnostics severity_limit=warn<cr>")
 leader("lr", function() vim.lsp.buf.rename() end)
 leader("ls", function() telescope.lsp_document_symbols() end)
 
-function scratch_term(cmd)
-    return function()
-        require('FTerm').scratch({ cmd = cmd })
-    end
-end
+-- function scratch_term(cmd)
+--     return function()
+--         require('FTerm').scratch({ cmd = cmd })
+--     end
+-- end
 
-function custom_term(cmd)
-    local fterm = require("FTerm")
+-- function custom_term(cmd)
+--     local fterm = require("FTerm")
 
-    local the_term = fterm:new({
-        ft = 'fterm_gitui',
-        cmd = cmd,
-    })
+--     local the_term = fterm:new({
+--         ft = 'fterm_gitui',
+--         cmd = cmd,
+--     })
 
-    return function()
-        the_term:toggle()
-    end
-end
+--     return function()
+--         the_term:toggle()
+--     end
+-- end
 
-leader("cl", scratch_term({'cli'}))
-leader("cb", scratch_term({'cli', 'b'}))
-leader("ct", scratch_term({'cli', 't'}))
-leader("cc", scratch_term({'cli', 'c'}))
+-- leader("cl", scratch_term({'cli'}))
+-- leader("cb", scratch_term({'cli', 'b'}))
+-- leader("ct", scratch_term({'cli', 't'}))
+-- leader("cc", scratch_term({'cli', 'c'}))
 
 leader("R", function() telescope.resume() end)
 leader("rd", ":RustOpenExternalDocs<cr>")
@@ -143,8 +144,17 @@ nmap(
 )
 
 -- term
-nmap('<c-t>', '<CMD>lua require("FTerm").toggle()<CR>')
-tmap('<c-t>', '<C-\\><C-n><CMD>lua require("FTerm").toggle()<CR>')
+local Terminal  = require('toggleterm.terminal').Terminal
+local term = Terminal:new({
+    direction = "float",
+    float_opts = {
+        border = 'shadow',
+    }
+})
+
+nmap('<c-t>', function()
+    term:toggle()
+end)
 
 -- lsp
 nmap('gd', function() vim.lsp.buf.definition() end)
@@ -160,6 +170,9 @@ vim.cmd[[
     command! Qall qall
 
     command! Replace lua require('spectre').open()
+
+    autocmd TermEnter term://*toggleterm#*
+          \ tnoremap <silent><c-t> <Cmd>exe v:count1 . "ToggleTerm"<CR>
 ]]
 
 math.randomseed(os.time())
@@ -190,3 +203,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end, opts)
   end,
 })
+
+-- move lines
+-- https://github.com/fedepujol/move.nvim
+vmap('<S-j>', ':MoveBlock(1)<CR>')
+vmap('<S-k>', ':MoveBlock(-1)<CR>')
