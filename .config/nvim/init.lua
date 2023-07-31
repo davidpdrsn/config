@@ -267,7 +267,26 @@ vim.cmd[[
 ]]
 
 require("telescope").setup {
-  defaults = {},
+  defaults = {
+      file_ignore_patterns = {
+          ".anim",
+          ".enc",
+          ".fbx",
+          ".glb",
+          ".glb.license",
+          ".gpg",
+          ".idx",
+          ".license",
+          ".ogg",
+          ".ogg.license",
+          ".pack",
+          ".pdf",
+          ".png",
+          ".ttf",
+          ".ttf.license",
+          ".wav",
+      }
+  },
   extensions = {
     recent_files = {
         only_cwd = true
