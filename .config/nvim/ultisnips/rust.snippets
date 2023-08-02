@@ -409,7 +409,7 @@ snippet prop
 #[property(
     guid = "`/Users/david.pedersen/.cargo/bin/cli uuid`",
 )]
-struct $1;
+pub struct $1;
 
 impl PropertyImpl for $1 {
     const LOCATION: EndpointLocation = EndpointLocation::Entity;
