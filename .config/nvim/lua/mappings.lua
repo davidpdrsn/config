@@ -42,31 +42,6 @@ leader("la", function() vim.lsp.buf.code_action() end)
 leader("ld", ":Telescope diagnostics severity_limit=warn<cr>")
 leader("lr", function() vim.lsp.buf.rename() end)
 leader("ls", function() telescope.lsp_document_symbols() end)
-
--- function scratch_term(cmd)
---     return function()
---         require('FTerm').scratch({ cmd = cmd })
---     end
--- end
-
--- function custom_term(cmd)
---     local fterm = require("FTerm")
-
---     local the_term = fterm:new({
---         ft = 'fterm_gitui',
---         cmd = cmd,
---     })
-
---     return function()
---         the_term:toggle()
---     end
--- end
-
--- leader("cl", scratch_term({'cli'}))
--- leader("cb", scratch_term({'cli', 'b'}))
--- leader("ct", scratch_term({'cli', 't'}))
--- leader("cc", scratch_term({'cli', 'c'}))
-
 leader("R", function() telescope.resume() end)
 leader("rd", ":RustOpenExternalDocs<cr>")
 leader("rg", function() telescope.live_grep() end)
@@ -106,6 +81,10 @@ leader(",", "maA,<esc>`a")
 -- exit insert mode and save just by hitting ctrl-s
 imap("<c-s>", "<esc>:w<cr>")
 nmap("<c-s>", ":w<cr>")
+
+-- snippets
+imap('<c-k>', function() require("luasnip").expand() end, { silent = true })
+imap('<c-j>', function() require("luasnip").jump(1) end, { silent = true })
 
 -- intuitive movement over long lines
 nmap("k", "gk")
@@ -148,7 +127,7 @@ local Terminal  = require('toggleterm.terminal').Terminal
 local term = Terminal:new({
     direction = "float",
     float_opts = {
-        border = 'shadow',
+        border = 'single',
     }
 })
 

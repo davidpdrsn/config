@@ -1,0 +1,262 @@
+snippet _ "force type error"
+	let _: () = $0;
+
+snippet i "impl"
+	impl $1 {
+		$2
+	}
+
+snippet it "impl trait"
+	impl $1 for $2 {
+		$0
+	}
+
+snippet s "struct"
+	struct $1 {
+		$2
+	}
+
+snippet e "enum"
+	enum $1 {
+		$2
+	}
+
+snippet t "trait"
+	trait $1 {
+		$2
+	}
+
+snippet d "debug"
+	dbg!(&$0);
+
+snippet pl "println"
+	println!("$0");
+
+snippet tests "test module"
+	#[cfg(test)]
+	mod tests {
+		#[allow(unused_imports)]
+		use super::*;
+	}
+
+snippet test "a single test"
+	#[test]
+	fn $1() {
+		$0
+	}
+
+snippet new "new function"
+	fn new($1) -> Self {
+		$0
+	}
+
+snippet todo "todo"
+	// TODO(david): $0
+
+snippet td "todo!"
+	todo!()
+
+snippet p "panic!"
+	panic!()
+
+snippet ps "panic!"
+	panic!("{:?}", $0)
+
+snippet main "main function"
+	fn main() {
+		$0
+	}
+
+snippet dr "derive"
+	#[derive($0)]
+
+snippet atest "async test"
+	#[tokio::test]
+	async fn $1() {
+		$0
+	}
+
+snippet al
+	#[allow($0)]
+
+snippet all
+	#![allow($0)]
+
+snippet aspect
+	#[derive(
+	    Debug, Clone, serde::Serialize, serde::Deserialize, speedy::Writable, speedy::Readable,
+		Aspect
+	)]
+	#[aspect(guid = "${UUID}")]
+	pub struct $1Aspect {
+	    $0
+	}
+
+snippet msg
+	#[derive(Debug, Clone, speedy::Writable, speedy::Readable)]
+	pub struct $1Msg {
+	    $0
+	}
+	
+	impl Message for $1Msg {
+	    const GUID: MessageGuid =
+	        MessageGuid::const_new_from_str("${UUID}");
+	}
+
+snippet for
+	for $1 in $2 {
+		$3
+	}
+
+snippet if
+	if $1 {
+		$2
+	}
+
+snippet ifl
+	if let Some($1) = $2 {
+		$3
+	}
+
+snippet middleware
+	async fn $1<B>(
+		request: Request<B>,
+		next: Next<B>,
+	) -> Response {
+		let response = next.run(request).await;
+		response
+	}
+
+snippet event
+	#[derive(Event, Reflect, Debug, Clone)]
+	#[event(guid = "${UUID}")]
+	pub struct $1 {
+	    $0
+	}
+	
+	impl EventImpl for $1 {
+	    const LOCATION: EndpointLocation = EndpointLocation::Entity;
+	    const AVAILABILITY: EndpointAvailability = EndpointAvailability::Unconditional;
+	}
+
+snippet operation
+	#[derive(Operation, Reflect, Debug, Clone)]
+	#[operation(guid = "${UUID}", output = $2)]
+	pub struct $1 {
+	}
+
+snippet prop
+	#[derive(Property, Clone, Debug, Default)]
+	#[property(guid = "${UUID}")]
+	pub struct $1;
+	
+	impl PropertyImpl for $1 {
+	    const LOCATION: EndpointLocation = EndpointLocation::Entity;
+		const AVAILABILITY: EndpointAvailability = EndpointAvailability::Unconditional;
+	
+	    type Data = $2;
+	    type Aspect = $3;
+	
+	    fn map_aspect(aspect: Option<&Self::Aspect>) -> Self::Data {
+	        $0
+	    }
+	}
+
+snippet behavior
+	#[doc(hidden)]
+	pub fn register(_api: &mut sandbox_api::registration::RegistrationApiApplet) {}
+	
+	#[derive(Clone, Default, serde::Serialize, serde::Deserialize)]
+	pub struct $1Behavior;
+	
+	impl BehaviorDecl for $1Behavior {
+	    const GUID: BehaviorGuid =
+	        BehaviorGuid::const_new_from_str("${UUID}");
+	
+	    fn default_behavior() -> DefaultBehavior<Self> {
+	        DefaultBehavior::default()
+	    }
+	}
+	
+	#[derive(Default, Clone, serde::Serialize, serde::Deserialize, Behavior)]
+	#[behavior(declaration = $1Behavior)]
+	pub struct $1BehaviorImpl {}
+	
+	impl From<$1Behavior> for $1BehaviorImpl {
+		fn from(decl: $1Behavior) -> Self {
+			let $1Behavior {} = decl;
+			Self::default()
+		}
+	}
+	
+	impl BehaviorImpl for $1BehaviorImpl {
+	    fn build(b: &mut impl BehaviorImplBuilder<Self>) {
+	        $0
+	    }
+	}
+
+snippet msgh
+	fn on_$1(&mut self, msg: &$2, api: &dyn BehaviorApi) {
+	}
+
+snippet ba
+	&dyn BehaviorApi
+
+snippet sandbox-derives
+	#[derive(Debug, Clone, serde::Serialize, serde::Deserialize, speedy::Writable, speedy::Readable)]
+
+snippet init
+	fn on_init(&mut self, msg: &InitMsg, api: &dyn BehaviorApi) {
+		$1
+	}
+
+snippet think
+	fn on_think(&mut self, msg: &ThinkMsg, api: &dyn BehaviorApi) {
+		$1
+	}
+
+snippet sr
+	SandboxResult<$1>
+
+snippet intoiterator
+	impl IntoIterator for $1 {
+		type Item = $2;
+		type IntoIter = $3;
+
+		fn into_iter(self) -> Self::IntoIter {
+			$4
+		}
+	}
+
+snippet map
+	.map(|$1| {
+		$2
+	})
+
+snippet filter_map
+	.filter_map(|$1| {
+		$2
+	})
+
+snippet filter
+	.filter(|$1| {
+		$2
+	})
+
+snippet and_then
+	.and_then(|$1| {
+		$2
+	})
+
+snippet on_msg
+	b.on_msg::<$1>(Self::on_$2);
+
+	fn on_$2(&mut self, msg: &$1, api: &dyn BehaviorApi) {
+	}
+
+snippet on_msg_closure
+	b.on_msg::<$1>(
+		|behavior: &mut Self, msg: &$1, api: &dyn BehaviorApi| {
+			$0
+		}
+	);

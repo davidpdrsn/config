@@ -65,9 +65,12 @@ return require('packer').startup(function(use)
     -- highlight other occurances of words
     use 'RRethy/vim-illuminate'
     -- snippets
-    use 'SirVer/ultisnips'
+    use({
+        "L3MON4D3/LuaSnip",
+        tag = "v2.*",
+    })
     -- nvim-cmp source for snippets
-    use 'quangnguyen30192/cmp-nvim-ultisnips'
+    use 'saadparwaiz1/cmp_luasnip'
     -- nvim-cmp source for buffer words
     use 'hrsh7th/cmp-buffer'
     -- nvim-cmp source for lsp

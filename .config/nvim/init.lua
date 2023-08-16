@@ -162,7 +162,7 @@ local cmp = require('cmp')
 cmp.setup({
     snippet = {
         expand = function(args)
-            vim.fn["UltiSnips#Anon"](args.body)
+            require('luasnip').lsp_expand(args.body)
         end,
     },
     mapping = {
@@ -177,7 +177,7 @@ cmp.setup({
     sources = {
         { name = 'buffer' },
         { name = 'nvim_lsp' },
-        { name = 'ultisnips' },
+        { name = 'luasnip' },
     }
 })
 
@@ -267,26 +267,7 @@ vim.cmd[[
 ]]
 
 require("telescope").setup {
-  defaults = {
-      file_ignore_patterns = {
-          ".anim",
-          ".enc",
-          ".fbx",
-          ".glb",
-          ".glb.license",
-          ".gpg",
-          ".idx",
-          ".license",
-          ".ogg",
-          ".ogg.license",
-          ".pack",
-          ".pdf",
-          ".png",
-          ".ttf",
-          ".ttf.license",
-          ".wav",
-      }
-  },
+  defaults = {},
   extensions = {
     recent_files = {
         only_cwd = true
@@ -298,6 +279,9 @@ require("telescope").load_extension("recent_files")
 
 require('telescope').load_extension('textcase')
 
-require('textcase').setup {}
+require('textcase').setup()
 
 require("toggleterm").setup()
+
+require("luasnip.loaders.from_snipmate").lazy_load({paths = "~/.config/nvim/snippets"})
+require("luasnip.loaders.from_vscode").lazy_load()
