@@ -129,43 +129,56 @@ snippet middleware
 
 snippet event
 	#[derive(Event, Reflect, Debug, Clone)]
-	#[event(guid = "${UUID}")]
-	pub struct $1 {
-	    $0
-	}
-	
-	impl EventImpl for $1 {
-	    const LOCATION: EndpointLocation = EndpointLocation::Entity;
-	    const AVAILABILITY: EndpointAvailability = EndpointAvailability::Unconditional;
-	}
+    #[event(guid = "${UUID}")]
+    pub struct $1 {}
+    
+    impl EventImpl for $1 {
+		// const LOCATION: EndpointLocation = EndpointLocation::Entity;
+		// const AVAILABILITY: EndpointAvailability = EndpointAvailability::Conditional;
+		// const CATEGORIES: &'static [EndpointCategory] = &[];
+    }
 
 snippet operation
-	#[derive(Operation, Reflect, Debug, Clone)]
-	#[operation(guid = "${UUID}", output = $2)]
-	pub struct $1 {
-	}
+    #[derive(Operation, Reflect, Debug, Clone)]
+    #[operation(guid = "${UUID}")]
+    pub struct $1 {}
+    
+    impl OperationImpl for $1 {
+		// const LOCATION: EndpointLocation = EndpointLocation::Entity;
+		// const AVAILABILITY: EndpointAvailability = EndpointAvailability::Conditional;
+		// const CATEGORIES: &'static [EndpointCategory] = &[];
+
+        type Data = $2;
+
+        fn init(entity: EntityId, instigator_ctx: InstigatorCtx, api: &dyn BehaviorApi) {
+            todo!();
+        }
+    }
 
 snippet prop
-	#[derive(Property, Clone, Debug, Default)]
+	#[derive(Property)]
 	#[property(guid = "${UUID}")]
 	pub struct $1;
 	
 	impl PropertyImpl for $1 {
-	    const LOCATION: EndpointLocation = EndpointLocation::Entity;
-		const AVAILABILITY: EndpointAvailability = EndpointAvailability::Unconditional;
+		// const LOCATION: EndpointLocation = EndpointLocation::Entity;
+		// const AVAILABILITY: EndpointAvailability = EndpointAvailability::Conditional;
+		// const CATEGORIES: &'static [EndpointCategory] = &[];
+		// const READ_ONLY: bool = false;
 	
 	    type Data = $2;
 	    type Aspect = $3;
 	
 	    fn map_aspect(aspect: Option<&Self::Aspect>) -> Self::Data {
-	        $0
+	        todo!()
+	    }
+	
+	    fn init(entity: EntityId, instigator_ctx: InstigatorCtx, api: &dyn BehaviorApi) {
+	        todo!()
 	    }
 	}
 
 snippet behavior
-	#[doc(hidden)]
-	pub fn register(_api: &mut sandbox_api::registration::RegistrationApiApplet) {}
-	
 	#[derive(Clone, Default, serde::Serialize, serde::Deserialize)]
 	pub struct $1Behavior;
 	
@@ -228,35 +241,18 @@ snippet intoiterator
 		}
 	}
 
-snippet map
-	.map(|$1| {
-		$2
-	})
-
-snippet filter_map
-	.filter_map(|$1| {
-		$2
-	})
-
-snippet filter
-	.filter(|$1| {
-		$2
-	})
-
-snippet and_then
-	.and_then(|$1| {
-		$2
-	})
-
-snippet on_msg
+snippet onmsg
 	b.on_msg::<$1>(Self::on_$2);
 
 	fn on_$2(&mut self, msg: &$1, api: &dyn BehaviorApi) {
 	}
 
-snippet on_msg_closure
+snippet onmsgclosure
 	b.on_msg::<$1>(
 		|behavior: &mut Self, msg: &$1, api: &dyn BehaviorApi| {
 			$0
 		}
 	);
+
+snippet bingo
+	ark::info!("[{}:{}:{}]: BINGO", file!(), line!(), column!());

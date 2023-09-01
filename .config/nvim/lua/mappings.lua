@@ -33,7 +33,7 @@ leader("ev", ":tabedit $MYVIMRC<cr>:lcd ~/.config/nvim/<cr>")
 leader("f", function() telescope.find_files() end)
 leader("F", function() require('telescope').extensions.recent_files.pick() end)
 leader("h", ":nohlsearch<cr>")
-leader("k", function() vim.diagnostic.open_float() end)
+leader("k", function() vim.diagnostic.open_float({ source = true }) end)
 
 leader("lD", ":Telescope diagnostics severity=error<cr>")
 leader("lS", function() telescope.lsp_dynamic_workspace_symbols() end)
@@ -130,6 +130,18 @@ local term = Terminal:new({
         border = 'single',
     }
 })
+
+nmap('<c-b>', function()
+    Terminal:new({
+        cmd = "/Users/david.pedersen/.cargo/bin/cli 'build and open ark-client'",
+        close_on_exit = false,
+        on_exit = function(t, job, exit_code, name)
+            if exit_code == 0 then
+                t:close()
+            end
+        end
+    }):toggle()
+end)
 
 nmap('<c-t>', function()
     term:toggle()
