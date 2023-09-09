@@ -128,15 +128,15 @@ snippet middleware
 	}
 
 snippet event
-	#[derive(Event, Reflect, Debug, Clone)]
+    #[derive(Event, Reflect, Debug, Clone)]
     #[event(guid = "${UUID}")]
-    pub struct $1 {}
-    
-    impl EventImpl for $1 {
+	pub struct $1 {}
+
+	impl EventImpl for $1 {
 		// const LOCATION: EndpointLocation = EndpointLocation::Entity;
 		// const AVAILABILITY: EndpointAvailability = EndpointAvailability::Conditional;
 		// const CATEGORIES: &'static [EndpointCategory] = &[];
-    }
+	}
 
 snippet operation
     #[derive(Operation, Reflect, Debug, Clone)]
@@ -256,3 +256,25 @@ snippet onmsgclosure
 
 snippet bingo
 	ark::info!("[{}:{}:{}]: BINGO", file!(), line!(), column!());
+
+snippet in
+	ark::info!("$0");
+
+snippet x
+	macro_rules! x {
+		() => {
+			panic!("[{}:{}]", file!(), line!())
+		};
+		($val:expr $(,)?) => {
+			match $val {
+				tmp => {
+					panic!("[{}:{}] {} = {:#?}",
+						file!(), line!(), stringify!($val), &tmp);
+					tmp
+				}
+			}
+		};
+		($($val:expr),+ $(,)?) => {
+			($(x!($val)),+,)
+		};
+	}

@@ -124,12 +124,6 @@ nmap(
 
 -- term
 local Terminal  = require('toggleterm.terminal').Terminal
-local term = Terminal:new({
-    direction = "float",
-    float_opts = {
-        border = 'single',
-    }
-})
 
 nmap('<c-b>', function()
     Terminal:new({
@@ -143,6 +137,12 @@ nmap('<c-b>', function()
     }):toggle()
 end)
 
+local term = Terminal:new({
+    direction = "float",
+    float_opts = {
+        border = 'single',
+    }
+})
 nmap('<c-t>', function()
     term:toggle()
 end)
