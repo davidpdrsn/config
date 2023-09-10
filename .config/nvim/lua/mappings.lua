@@ -57,6 +57,13 @@ leader("sv", ":source $MYVIMRC<cr>:nohlsearch<cr>")
 leader("x", ":set filetype=")
 leader("u", ":UndotreeToggle<cr>")
 
+leader("gaa", ":Git add --all<cr>")
+leader("gap", ":Git add --patch<cr>")
+leader("gc", ":Git commit --verbose<cr>")
+leader("gp", ":Git push<cr>")
+leader("gpf", ":Git push --force-with-lease<cr>")
+leader("gl", ":Git log --decorate --graph --oneline<cr>")
+
 leader("ps", ":so<cr>:PackerSync<cr>")
 
 vim.cmd[[
