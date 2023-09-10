@@ -57,6 +57,7 @@ leader("sv", ":source $MYVIMRC<cr>:nohlsearch<cr>")
 leader("x", ":set filetype=")
 leader("u", ":UndotreeToggle<cr>")
 
+leader("g", ":G<cr>")
 leader("gaa", ":Git add --all<cr>")
 leader("gap", ":Git add --patch<cr>")
 leader("gc", ":Git commit --verbose<cr>")
