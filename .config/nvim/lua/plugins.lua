@@ -115,4 +115,6 @@ return require('packer').startup(function(use)
     use "johmsalas/text-case.nvim"
     -- git wrapper
     use "tpope/vim-fugitive"
+    -- git signs
+    use "lewis6991/gitsigns.nvim"
 end)
