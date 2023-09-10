@@ -113,4 +113,6 @@ return require('packer').startup(function(use)
     use "smartpde/telescope-recent-files"
     -- change case
     use "johmsalas/text-case.nvim"
+    -- git wrapper
+    use "tpope/vim-fugitive"
 end)
