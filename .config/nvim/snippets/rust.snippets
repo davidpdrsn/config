@@ -83,11 +83,9 @@ snippet all
 	#![allow($0)]
 
 snippet aspect
-	#[derive(
-	    Debug, Clone, serde::Serialize, serde::Deserialize, speedy::Writable, speedy::Readable,
-		Aspect
-	)]
+	#[derive(Debug, Clone, speedy::Writable, speedy::Readable, Aspect)]
 	#[aspect(guid = "${UUID}")]
+	#[persist(kind = None)]
 	pub struct $1Aspect {
 	    $0
 	}
@@ -128,8 +126,8 @@ snippet middleware
 	}
 
 snippet event
-    #[derive(Event, Reflect, Debug, Clone)]
-    #[event(guid = "${UUID}")]
+	#[derive(Event, Reflect, Debug, Clone)]
+	#[event(guid = "${UUID}")]
 	pub struct $1 {}
 
 	impl EventImpl for $1 {
@@ -139,21 +137,21 @@ snippet event
 	}
 
 snippet operation
-    #[derive(Operation, Reflect, Debug, Clone)]
-    #[operation(guid = "${UUID}")]
-    pub struct $1 {}
-    
-    impl OperationImpl for $1 {
+	#[derive(Operation, Reflect, Debug, Clone)]
+	#[operation(guid = "${UUID}")]
+	pub struct $1 {}
+
+	impl OperationImpl for $1 {
 		// const LOCATION: EndpointLocation = EndpointLocation::Entity;
 		// const AVAILABILITY: EndpointAvailability = EndpointAvailability::Conditional;
 		// const CATEGORIES: &'static [EndpointCategory] = &[];
 
-        type Data = $2;
+		type Data = $2;
 
-        fn init(entity: EntityId, instigator_ctx: InstigatorCtx, api: &dyn BehaviorApi) {
-            todo!();
-        }
-    }
+		fn init(entity: EntityId, instigator_ctx: InstigatorCtx, api: &dyn BehaviorApi) {
+			todo!();
+		}
+	}
 
 snippet prop
 	#[derive(Property)]
@@ -178,7 +176,7 @@ snippet prop
 	    }
 	}
 
-snippet behavior
+snippet behaviordecl
 	#[derive(Clone, Default, serde::Serialize, serde::Deserialize)]
 	pub struct $1Behavior;
 	
@@ -186,13 +184,15 @@ snippet behavior
 	    const GUID: BehaviorGuid =
 	        BehaviorGuid::const_new_from_str("${UUID}");
 	
-	    fn default_behavior() -> DefaultBehavior<Self> {
-	        DefaultBehavior::default()
-	    }
+	    // fn default_behavior() -> DefaultBehavior<Self> {
+	    //     DefaultBehavior::default()
+	    // }
 	}
 	
-	#[derive(Default, Clone, serde::Serialize, serde::Deserialize, Behavior)]
+snippet behaviorimpl
+	#[derive(Default, Clone, Behavior)]
 	#[behavior(declaration = $1Behavior)]
+	#[persist(kind = ExistenceOnly)]
 	pub struct $1BehaviorImpl {}
 	
 	impl From<$1Behavior> for $1BehaviorImpl {
@@ -208,8 +208,16 @@ snippet behavior
 	    }
 	}
 
+	impl $1BehaviorImpl {
+
+	}
+
 snippet msgh
 	fn on_$1(&mut self, msg: &$2, api: &dyn BehaviorApi) {
+	}
+
+snippet msgh2
+	fn on_$1(&mut self, msg: &$2, world: World<'_>, mut cmd: Commands<'_>) {
 	}
 
 snippet ba
@@ -257,8 +265,8 @@ snippet onmsgclosure
 snippet bingo
 	ark::info!("[{}:{}:{}]: BINGO", file!(), line!(), column!());
 
-snippet in
-	ark::info!("$0");
+snippet info
+	ark::info!("$0 = {:?}", $0);
 
 snippet x
 	macro_rules! x {
