@@ -1,0 +1,6 @@
+{
+  "message": {
+    "contents": "The Graphite CLI version you have installed (0.22.2) is no longer the latest (0.22.15).\nSee how to update the CLI here: https://graphite.dev/docs/updating-the-cli\n- Team Graphite :)",
+    "cliVersion": "0.22.2"
+  }
+}
