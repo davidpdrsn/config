@@ -259,11 +259,6 @@ _G.packer_plugins = {
     path = "/Users/david.pedersen/.local/share/nvim/site/pack/packer/start/vim-highlightedyank",
     url = "https://github.com/machakann/vim-highlightedyank"
   },
-  ["vim-illuminate"] = {
-    loaded = true,
-    path = "/Users/david.pedersen/.local/share/nvim/site/pack/packer/start/vim-illuminate",
-    url = "https://github.com/RRethy/vim-illuminate"
-  },
   ["vim-jsonnet"] = {
     loaded = true,
     path = "/Users/david.pedersen/.local/share/nvim/site/pack/packer/start/vim-jsonnet",

@@ -63,7 +63,7 @@ return require('packer').startup(function(use)
     -- multiple cursors
     use 'mg979/vim-visual-multi'
     -- highlight other occurances of words
-    use 'RRethy/vim-illuminate'
+    -- use 'RRethy/vim-illuminate'
     -- snippets
     use({
         "L3MON4D3/LuaSnip",
