@@ -67,7 +67,7 @@ function on_attach(client, bufnr)
       },
   })
 
-  require('illuminate').on_attach(client)
+  -- require('illuminate').on_attach(client)
 
   client.server_capabilities.semanticTokensProvider = nil
 end
