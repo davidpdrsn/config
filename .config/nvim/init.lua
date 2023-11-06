@@ -120,6 +120,16 @@ require('rust-tools').setup({
                         enable = true,
                     }
                 },
+                -- rustfmt = {
+                --     extraArgs = {
+                --         "--config",
+                --         "imports_granularity=item",
+                --         "--config",
+                --         "format_strings=true",
+                --         "--config",
+                --         "group_imports=StdExternalCrate",
+                --     }
+                -- },
                 checkOnSave = {
                     overrideCommand = {
                         "cargo",
