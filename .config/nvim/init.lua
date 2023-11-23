@@ -120,20 +120,11 @@ require('rust-tools').setup({
                         enable = true,
                     }
                 },
-                -- rustfmt = {
-                --     extraArgs = {
-                --         "--config",
-                --         "imports_granularity=item",
-                --         "--config",
-                --         "format_strings=true",
-                --         "--config",
-                --         "group_imports=StdExternalCrate",
-                --     }
-                -- },
                 checkOnSave = {
                     overrideCommand = {
                         "cargo",
                         "clippy",
+                        -- https://embark-studios.slack.com/archives/CU37WN58S/p1700210183088409
                         "--all-features",
                         "--tests",
                         "--message-format=json",
