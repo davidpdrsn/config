@@ -82,6 +82,17 @@ setopt prompt_subst
 local symbol="❯"
 local start="%(?,%{$fg[green]%}$symbol%{$reset_color%},%{$fg[red]%}$symbol%{$reset_color%})"
 
+# rust things to install
+# https://github.com/davidpdrsn/is-vim-running
+# https://github.com/davidpdrsn/smart-pwd
+# https://github.com/davidpdrsn/git-prompt
+# https://github.com/davidpdrsn/git-branch-picker
+# https://github.com/davidpdrsn/git-remove-merged-branches
+# ripgrep
+# zoxide
+# exa
+# /Users/david.pedersen/code/cli
+
 PROMPT=$'
 $(smart-pwd) %{$reset_color%}$(git-prompt)$(is-vim-running)%{$reset_color%}
 ${start} '
@@ -103,6 +114,8 @@ alias mkdir='mkdir -p'
 alias xtask='cargo xtask'
 alias o='open .'
 alias t='/Users/david.pedersen/.cargo/bin/cli'
+alias b='/Users/david.pedersen/.cargo/bin/cli build'
+alias ci='/Users/david.pedersen/.cargo/bin/cli "open ci"'
 alias wim='/Users/david.pedersen/.ark/bin/ark-client --no-update-check --no-auto-update'
 alias wim-app='/Users/david.pedersen/.ark/bin/ark-client --no-update-check --no-auto-update'
 alias ark-client='echo "use wim"'
@@ -118,6 +131,7 @@ alias vv='nvim $(rg --files | fzf)'
 
 # git
 alias gaa='git add --all'
+alias gac='git add --all && git commit --verbose'
 alias gap='git add -p'
 alias gb='git branch'
 alias gc='git commit --verbose'
