@@ -20,6 +20,7 @@ export CARGO_UNSTABLE_SPARSE_REGISTRY=true
 export PATH=$PATH:/Users/david.pedersen/.ark/bin
 export PATH=$PATH:/Users/david.pedersen/.bin
 export PATH=$PATH:/Applications/Postgres.app/Contents/Versions/latest/bin
+export PATH=$PATH:/Applications/wim.app/Contents/MacOS
 
 # make ctrl-p, ctrl-n, etc work in tmux
 bindkey -e
@@ -91,6 +92,7 @@ local start="%(?,%{$fg[green]%}$symbol%{$reset_color%},%{$fg[red]%}$symbol%{$res
 # ripgrep
 # zoxide
 # exa
+# cargo-hack
 # /Users/david.pedersen/code/cli
 
 PROMPT=$'
@@ -116,12 +118,11 @@ alias o='open .'
 alias t='/Users/david.pedersen/.cargo/bin/cli'
 alias b='/Users/david.pedersen/.cargo/bin/cli build'
 alias ci='/Users/david.pedersen/.cargo/bin/cli "open ci"'
-alias wim='/Users/david.pedersen/.ark/bin/ark-client --no-update-check --no-auto-update'
-alias wim-app='/Users/david.pedersen/.ark/bin/ark-client --no-update-check --no-auto-update'
-alias ark-client='echo "use wim"'
+alias wim='/Applications/wim.app/Contents/MacOS/ark-client --no-update-check --no-auto-update'
+alias wim-app='/Applications/wim.app/Contents/MacOS/ark-client --no-update-check --no-auto-update'
 alias commit-config='git add --all && git commit -m "misc changes"'
 alias at='tmux attach'
-alias local-ark-client='/Users/david.pedersen/code/embark/ark/target/release/ark-client'
+alias local-ark-client='/Users/david.pedersen/code/embark/wim-app/target/release/ark-client'
 
 # nvim
 alias vi='nvim'

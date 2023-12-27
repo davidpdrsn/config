@@ -124,7 +124,6 @@ require('rust-tools').setup({
                     overrideCommand = {
                         "cargo",
                         "clippy",
-                        -- https://embark-studios.slack.com/archives/CU37WN58S/p1700210183088409
                         "--all-features",
                         "--tests",
                         "--message-format=json",
