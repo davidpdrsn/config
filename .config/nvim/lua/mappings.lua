@@ -1,4 +1,5 @@
 local telescope = require("telescope/builtin")
+local Terminal = require('toggleterm.terminal').Terminal
 
 function make_map_fn(mode)
     return function(mapping, what_to_do, options)
@@ -56,15 +57,6 @@ leader(":", function() telescope.commands() end)
 leader("sv", ":source $MYVIMRC<cr>:nohlsearch<cr>")
 leader("x", ":set filetype=")
 leader("u", ":UndotreeToggle<cr>")
-
-leader("g", ":G<cr>")
-leader("gaa", ":Git add --all<cr>")
-leader("gap", ":Git add --patch<cr>")
-leader("gc", ":Git commit --verbose<cr>")
-leader("gca", ":Git commit --amend --verbose<cr>")
-leader("gp", ":Git push<cr>")
-leader("gpf", ":Git push --force-with-lease<cr>")
-leader("gl", ":Git log --decorate --graph --oneline<cr>")
 
 leader("ps", ":so<cr>:PackerSync<cr>")
 
@@ -132,20 +124,6 @@ nmap(
 )
 
 -- term
-local Terminal  = require('toggleterm.terminal').Terminal
-
-nmap('<c-b>', function()
-    Terminal:new({
-        cmd = "/Users/david.pedersen/.cargo/bin/cli 'build and open ark-client'",
-        close_on_exit = false,
-        on_exit = function(t, job, exit_code, name)
-            if exit_code == 0 then
-                t:close()
-            end
-        end
-    }):toggle()
-end)
-
 local term = Terminal:new({
     direction = "float",
     float_opts = {
