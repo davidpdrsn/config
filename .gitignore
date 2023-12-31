@@ -35,3 +35,4 @@ talks
 .psql_history
 .graphite_beta_survey
 .cache
+.config/balance/archive.json
