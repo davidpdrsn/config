@@ -213,6 +213,11 @@ vim.cmd([[
         au BufWinEnter * setlocal cursorline
         au WinLeave * setlocal nocursorline
     augroup END
+
+    augroup autosave_buffer
+      au!
+      au FocusLost * silent! w
+    augroup END
 ]])
 
 --------------------------------------------
