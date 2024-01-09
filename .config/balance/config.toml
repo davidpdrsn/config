@@ -1,6 +1,6 @@
 [settings]
 show_help = false
-selected_filter = "axum"
+selected_filter = "work"
 updated_at_cut_off = "2023-12-01T00:00:00Z"
 
 [filters]
