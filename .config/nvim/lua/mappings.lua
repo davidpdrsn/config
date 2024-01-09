@@ -54,7 +54,7 @@ leader("rp", ":RustParentModule<cr>")
 leader("rr", ":RustRunnables<cr>")
 leader(":", function() telescope.commands() end)
 
-leader("sv", ":source $MYVIMRC<cr>:nohlsearch<cr>")
+leader("s", "<Plug>(leap-cross-window)")
 leader("x", ":set filetype=")
 leader("u", ":UndotreeToggle<cr>")
 
