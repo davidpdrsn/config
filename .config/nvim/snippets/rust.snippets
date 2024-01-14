@@ -85,7 +85,7 @@ snippet all
 snippet aspect
 	#[derive(Debug, Clone, speedy::Writable, speedy::Readable, Aspect)]
 	#[aspect(guid = "${UUID}")]
-	#[persist(kind = None)]
+	#[persisted(kind = None)]
 	pub struct $1Aspect {
 	    $0
 	}
@@ -192,7 +192,7 @@ snippet behaviordecl
 snippet behaviorimpl
 	#[derive(Default, Clone, Behavior)]
 	#[behavior(declaration = $1Behavior)]
-	#[persist(kind = ExistenceOnly)]
+	#[persisted(kind = ExistenceOnly)]
 	pub struct $1BehaviorImpl {}
 	
 	impl From<$1Behavior> for $1BehaviorImpl {

@@ -1,7 +1,8 @@
 [settings]
 show_help = false
-selected_filter = "work"
+selected_filter = "not-work"
 updated_at_cut_off = "2023-12-01T00:00:00Z"
+focus_filter = "not-work"
 
 [filters]
 axum = [

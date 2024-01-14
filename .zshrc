@@ -123,6 +123,7 @@ alias wim-app='/Applications/wim.app/Contents/MacOS/ark-client --no-update-check
 alias commit-config='git add --all && git commit -m "misc changes"'
 alias at='tmux attach'
 alias local-ark-client='/Users/david.pedersen/code/embark/wim-app/target/release/ark-client'
+alias mbark='/Users/david.pedersen/code/embark/wim-mod/mbark'
 
 # nvim
 alias vi='nvim'
