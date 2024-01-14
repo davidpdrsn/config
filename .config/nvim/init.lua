@@ -200,9 +200,6 @@ vim.cmd([[
 
         " when in a git commit buffer go the beginning
         autocmd FileType gitcommit au! BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0])
-
-        " save files when focus is lost
-        autocmd BufLeave * silent! update
     augroup END
 
     " https://stackoverflow.com/questions/14068751/how-to-hide-cursor-line-when-focus-in-on-other-window-in-vim
@@ -216,7 +213,16 @@ vim.cmd([[
 
     augroup autosave_buffer
       au!
-      au FocusLost * silent! w
+
+      au FocusLost * silent!
+        \   if getbufinfo('%')[0].name != '' && getbufinfo('%')[0].changed
+        \ |     write
+        \ | endif
+
+      au BufLeave * silent!
+        \   if getbufinfo('%')[0].name != '' && getbufinfo('%')[0].changed
+        \ |     write
+        \ | endif
     augroup END
 ]])
 
