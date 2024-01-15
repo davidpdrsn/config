@@ -27,7 +27,7 @@ snippet t "trait"
 	}
 
 snippet d "debug"
-	dbg!(&$0);
+	ark::dbg!(&$0);
 
 snippet pl "println"
 	println!("$0");
@@ -40,7 +40,7 @@ snippet tests "test module"
 	}
 
 snippet test "a single test"
-	#[test]
+	#[ark::test]
 	fn $1() {
 		$0
 	}
@@ -117,9 +117,9 @@ snippet ifl
 	}
 
 snippet middleware
-	async fn $1<B>(
-		request: Request<B>,
-		next: Next<B>,
+	async fn $1(
+		request: Request,
+		next: Next,
 	) -> Response {
 		let response = next.run(request).await;
 		response
@@ -217,7 +217,7 @@ snippet msgh
 	}
 
 snippet msgh2
-	fn on_$1(&mut self, msg: &$2, world: World<'_>, mut cmd: Commands<'_>) {
+	fn on_$1(&mut self, msg: &$2, mut api: Api<'_>) {
 	}
 
 snippet ba
