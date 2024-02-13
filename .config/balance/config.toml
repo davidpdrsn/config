@@ -2,7 +2,6 @@
 show_help = false
 selected_filter = "work"
 updated_at_cut_off = "2023-12-01T00:00:00Z"
-focus_filter = "work"
 
 [filters]
 axum = [
