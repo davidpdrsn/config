@@ -36,6 +36,7 @@ leader("F", function() require('telescope').extensions.recent_files.pick() end)
 leader("h", ":nohlsearch<cr>")
 leader("k", function() vim.diagnostic.open_float({ source = true }) end)
 
+leader("gu", ":UndotreeToggle<cr>")
 leader("lD", ":Telescope diagnostics severity=error<cr>")
 leader("lS", function() telescope.lsp_dynamic_workspace_symbols() end)
 leader("lo", function() telescope.current_buffer_fuzzy_find() end)
