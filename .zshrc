@@ -94,6 +94,7 @@ local start="%(?,%{$fg[green]%}$symbol%{$reset_color%},%{$fg[red]%}$symbol%{$res
 # exa
 # cargo-hack
 # /Users/david.pedersen/code/cli
+# brew install difftastic
 
 PROMPT=$'
 $(smart-pwd) %{$reset_color%}$(git-prompt)$(is-vim-running)%{$reset_color%}
@@ -158,6 +159,7 @@ alias gm='git merge'
 alias grbc='git rebase --continue'
 alias grba='git rebase --abort'
 alias grbi='git rebase -i'
+alias gs='git show --ext-diff'
 
 ## FUNCTIONS
 ## -----------------------
