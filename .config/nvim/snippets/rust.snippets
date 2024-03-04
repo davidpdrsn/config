@@ -83,7 +83,7 @@ snippet all
 	#![allow($0)]
 
 snippet aspect
-	#[derive(Debug, Clone, speedy::Writable, speedy::Readable, Aspect)]
+	#[derive(Debug, Clone, Reflect, Aspect)]
 	#[aspect(guid = "${UUID}")]
 	#[persisted(kind = None)]
 	pub struct $1Aspect {
@@ -91,7 +91,7 @@ snippet aspect
 	}
 
 snippet msg
-	#[derive(Debug, Clone, speedy::Writable, speedy::Readable)]
+	#[derive(Debug, Clone)]
 	pub struct $1Msg {
 	    $0
 	}
