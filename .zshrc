@@ -118,17 +118,18 @@ alias xtask='cargo xtask'
 alias o='open .'
 alias b='/Users/david.pedersen/.cargo/bin/t build'
 alias ci='/Users/david.pedersen/.cargo/bin/t "open ci"'
-alias wim='/Applications/wim.app/Contents/MacOS/ark-client --no-update-check --no-auto-update'
-alias wim-app='/Applications/wim.app/Contents/MacOS/ark-client --no-update-check --no-auto-update'
+alias wim='/Applications/wim.app/Contents/MacOS/ark-client'
+alias wim-app='/Applications/wim.app/Contents/MacOS/ark-client'
 alias commit-config='git add --all && git commit -m "misc changes"'
 alias at='tmux attach'
-alias local-ark-client='/Users/david.pedersen/code/embark/wim-app/target/release/ark-client'
+alias local-ark-client='/Users/david.pedersen/code/embark/wim-app/wim-app/target/release/ark-client'
 alias mbark='/Users/david.pedersen/code/embark/wim-mod/mbark'
+alias godot='/Applications/Godot.app/Contents/MacOS/Godot'
 
 # nvim
 alias vi='nvim'
 alias vim='nvim'
-alias vimconflicts='nvim $(rg -l -. "[<>]{5}")'
+alias vimconflicts='nvim $(rg -l -. "[<>=]{7}")'
 alias vv='nvim $(rg --files | fzf)'
 
 # git

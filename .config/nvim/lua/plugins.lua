@@ -117,4 +117,6 @@ return require('packer').startup(function(use)
     use "tpope/vim-fugitive"
     -- git signs
     use "lewis6991/gitsigns.nvim"
+    -- godot
+    use "habamax/vim-godot"
 end)
