@@ -1,4 +1,5 @@
 local common = require("common")
+local rust_root_dir = require("rust_root_dir").rust_root_dir
 
 --------------------------------------------
 -- General setup
@@ -32,6 +33,8 @@ vim.opt.softtabstop = 4
 vim.opt.tabstop = 4
 vim.opt.foldenable = false
 vim.opt.spell = false
+
+-- vim.g.godot_executable = "/Applications/Godot.app/Contents/MacOS/Godot"
 
 require("tokyonight").setup({
   style = "night",
@@ -76,6 +79,10 @@ require('lspconfig').tsserver.setup({
     on_attach = on_attach,
 })
 
+require('lspconfig').gdscript.setup({
+    on_attach = on_attach,
+})
+
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
     vim.lsp.diagnostic.on_publish_diagnostics,
     {
@@ -103,6 +110,7 @@ require('rust-tools').setup({
         },
     },
     server = {
+        root_dir = rust_root_dir,
         on_attach = on_attach,
         flags = {
             debounce_text_changes = 150,
@@ -124,10 +132,14 @@ require('rust-tools').setup({
                     overrideCommand = {
                         "cargo",
                         "clippy",
+                        -- "-p",
+                        -- "sandbox-protocols-internal",
                         "--all-features",
                         "--tests",
                         "--message-format=json",
                         "--all-targets",
+                        -- "--target",
+                        -- "x86_64-unknown-linux-gnu",
                         "--target-dir",
                         "/Users/david.pedersen/.rust-analyzer-target-dir",
                         "--workspace",

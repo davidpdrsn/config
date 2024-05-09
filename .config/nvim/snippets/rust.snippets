@@ -53,6 +53,16 @@ snippet new "new function"
 snippet todo "todo"
 	// TODO(david): $0
 
+snippet todovar "todo"
+	// TODO(david): $0
+	let todo_ = ();
+
+snippet todoconst "todo"
+	const _: () = {
+		// TODO(david): $0
+		let todo_ = ();
+	};
+
 snippet td "todo!"
 	todo!()
 
@@ -137,7 +147,7 @@ snippet event
 	}
 
 snippet operation
-	#[derive(Operation, Reflect, Debug, Clone)]
+	#[derive(Operation)]
 	#[operation(guid = "${UUID}")]
 	pub struct $1 {}
 
