@@ -290,7 +290,12 @@ vim.cmd[[
 ]]
 
 require("telescope").setup {
-  defaults = {},
+  defaults = {
+    file_ignore_patterns = { 
+      ".glb" ,
+      ".ogg" 
+    }
+  },
   extensions = {
     recent_files = {
         only_cwd = true
