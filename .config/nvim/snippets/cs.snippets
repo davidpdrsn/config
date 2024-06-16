@@ -1,0 +1,38 @@
+snippet ready
+	public override void _Ready()
+	{
+		$0
+	}
+
+snippet input
+	public override void _Input(InputEvent ev)
+	{
+		$0
+	}
+
+snippet physics_process
+	public override void _PhysicsProcess(double delta)
+	{
+		$0
+	}
+
+snippet process
+	public override void _Process(double delta)
+	{
+		$0
+	}
+
+snippet signal
+	[Signal]
+	public delegate void $0EventHandler();
+
+snippet print
+	GD.Print($0)
+
+snippet export
+	[Export]
+	private $0;
+
+snippet export-public
+	[Export]
+	public $0 { get; set; };
