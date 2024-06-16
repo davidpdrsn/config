@@ -37,3 +37,7 @@ talks
 .graphite_beta_survey
 .cache
 .config/balance/archive.json
+.aspnet/
+.dotnet/
+.nuget/
+.templateengine/
