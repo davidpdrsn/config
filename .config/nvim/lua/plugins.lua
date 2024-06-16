@@ -107,8 +107,6 @@ return require('packer').startup(function(use)
     use "AlexvZyl/nordic.nvim"
     -- theme
     use "rebelot/kanagawa.nvim"
-    -- move lines
-    use "fedepujol/move.nvim"
     -- recent files in telescope
     use "smartpde/telescope-recent-files"
     -- change case
@@ -119,4 +117,6 @@ return require('packer').startup(function(use)
     use "lewis6991/gitsigns.nvim"
     -- godot
     use "habamax/vim-godot"
+    -- run c# formatter
+    use "sbdchd/neoformat"
 end)

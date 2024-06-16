@@ -172,10 +172,10 @@ vim.cmd[[
 
 -- https://github.com/neovim/nvim-lspconfig
 vim.api.nvim_create_autocmd('LspAttach', {
-  group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+  group = vim.api.nvim_create_augroup('RustUserLspConfig', {}),
+  pattern = "*.rs",
   callback = function(ev)
     vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
-
     local opts = { buffer = ev.buf }
     vim.keymap.set('n', '<space>lf', function()
       vim.lsp.buf.format { async = true }
@@ -183,7 +183,11 @@ vim.api.nvim_create_autocmd('LspAttach', {
   end,
 })
 
--- move lines
--- https://github.com/fedepujol/move.nvim
-vmap('<S-j>', ':MoveBlock(1)<CR>')
-vmap('<S-k>', ':MoveBlock(-1)<CR>')
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('CSharpUserLspConfig', {}),
+  pattern = "*.cs",
+  callback = function(ev)
+    local opts = { buffer = ev.buf }
+    vim.keymap.set('n', '<space>lf', ":silent !dotnet csharpier .<cr>", opts)
+  end,
+})

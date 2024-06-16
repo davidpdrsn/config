@@ -83,6 +83,10 @@ require('lspconfig').gdscript.setup({
     on_attach = on_attach,
 })
 
+require('lspconfig').csharp_ls.setup({
+    on_attach = on_attach,
+})
+
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
     vim.lsp.diagnostic.on_publish_diagnostics,
     {
@@ -187,8 +191,8 @@ cmp.setup({
         ['<C-p>'] = cmp.mapping(cmp.mapping.select_prev_item(), {'i','c'}),
     },
     sources = {
-        { name = 'buffer' },
         { name = 'nvim_lsp' },
+        { name = 'buffer' },
         { name = 'luasnip' },
     }
 })
@@ -236,6 +240,11 @@ vim.cmd([[
         \ |     write
         \ | endif
     augroup END
+
+    " augroup fmt
+    "   autocmd!
+    "   autocmd BufWritePre *.cs undojoin | Neoformat
+    " augroup END
 ]])
 
 --------------------------------------------
@@ -292,8 +301,9 @@ vim.cmd[[
 require("telescope").setup {
   defaults = {
     file_ignore_patterns = { 
-      ".glb" ,
-      ".ogg" 
+      ".glb",
+      ".ogg",
+      ".png",
     }
   },
   extensions = {

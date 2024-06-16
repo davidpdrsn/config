@@ -24,6 +24,7 @@ export PATH=$PATH:/Users/david.pedersen/.ark/bin
 export PATH=$PATH:/Users/david.pedersen/.bin
 export PATH=$PATH:/Applications/Postgres.app/Contents/Versions/latest/bin
 export PATH=$PATH:/Applications/wim.app/Contents/MacOS
+export PATH=$PATH:/Users/david.pedersen/.dotnet/tools
 
 # make ctrl-p, ctrl-n, etc work in tmux
 bindkey -e

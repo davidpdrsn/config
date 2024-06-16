@@ -149,6 +149,11 @@ _G.packer_plugins = {
     path = "/Users/david.pedersen/.local/share/nvim/site/pack/packer/start/move.nvim",
     url = "https://github.com/fedepujol/move.nvim"
   },
+  neoformat = {
+    loaded = true,
+    path = "/Users/david.pedersen/.local/share/nvim/site/pack/packer/start/neoformat",
+    url = "https://github.com/sbdchd/neoformat"
+  },
   ["nordic.nvim"] = {
     loaded = true,
     path = "/Users/david.pedersen/.local/share/nvim/site/pack/packer/start/nordic.nvim",
@@ -253,6 +258,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/david.pedersen/.local/share/nvim/site/pack/packer/start/vim-fugitive",
     url = "https://github.com/tpope/vim-fugitive"
+  },
+  ["vim-godot"] = {
+    loaded = true,
+    path = "/Users/david.pedersen/.local/share/nvim/site/pack/packer/start/vim-godot",
+    url = "https://github.com/habamax/vim-godot"
   },
   ["vim-highlightedyank"] = {
     loaded = true,
