@@ -36,3 +36,12 @@ snippet export
 snippet export-public
 	[Export]
 	public $0 { get; set; };
+
+snippet component
+	using Godot;
+
+	[GlobalClass]
+	public partial class $1Component : Node
+	{
+		$0
+	}
