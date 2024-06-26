@@ -119,4 +119,12 @@ return require('packer').startup(function(use)
     use "habamax/vim-godot"
     -- run c# formatter
     use "sbdchd/neoformat"
+    -- arrange windows
+    use "sindrets/winshift.nvim"
+    -- split/join things on multiple lines
+    use "Wansmer/treesj"
+    -- better quickfix window
+    use "kevinhwang91/nvim-bqf"
+    -- toggle quickfix
+    use "drmingdrmer/vim-toggle-quickfix"
 end)
