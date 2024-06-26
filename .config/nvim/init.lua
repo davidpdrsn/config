@@ -299,18 +299,18 @@ vim.cmd[[
 ]]
 
 require("telescope").setup {
-  defaults = {
-    file_ignore_patterns = { 
-      ".glb",
-      ".ogg",
-      ".png",
+    defaults = {
+        file_ignore_patterns = { 
+            ".glb",
+            ".ogg",
+            ".png",
+        }
+    },
+    extensions = {
+        recent_files = {
+            only_cwd = true
+        }
     }
-  },
-  extensions = {
-    recent_files = {
-        only_cwd = true
-    }
-  }
 }
 
 require("telescope").load_extension("recent_files")
@@ -325,3 +325,13 @@ require("luasnip.loaders.from_snipmate").lazy_load({paths = "~/.config/nvim/snip
 require("luasnip.loaders.from_vscode").lazy_load()
 
 require('gitsigns').setup()
+
+require('treesj').setup({
+    use_default_keymaps = false
+})
+
+require('bqf').setup({
+    preview = {
+        winblend = 0,
+    }
+})

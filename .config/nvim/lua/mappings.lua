@@ -54,6 +54,9 @@ leader("ro", ":sp<cr>:RustOpenCargo<cr>")
 leader("rp", ":RustParentModule<cr>")
 leader("rr", ":RustRunnables<cr>")
 leader(":", function() telescope.commands() end)
+leader("w", ":WinShift<cr>")
+leader("W", ":WinShift swap<cr>")
+leader("j", function() require('treesj').toggle() end)
 
 leader("s", "<Plug>(leap-cross-window)")
 leader("x", ":set filetype=")
@@ -71,6 +74,8 @@ vim.cmd[[
             redraw!
         endif
     endfunction
+
+    nmap <C-g><C-o> <Plug>window:quickfix:loop
 ]]
 
 -- get path to current file in command mode with %%
