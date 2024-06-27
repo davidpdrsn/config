@@ -98,21 +98,7 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
     }
 )
 
-require('rust-tools').setup({
-    tools = {
-        inlay_hints = {
-            auto = false,
-            only_current_line = false,
-            show_parameter_hints = true,
-            parameter_hints_prefix = "<- ",
-            other_hints_prefix = "=> ",
-            max_len_align = false,
-            max_len_align_padding = 1,
-            right_align = false,
-            right_align_padding = 7,
-            highlight = "Comment",
-        },
-    },
+vim.g.rustaceanvim = {
     server = {
         root_dir = rust_root_dir,
         on_attach = on_attach,
@@ -171,9 +157,10 @@ require('rust-tools').setup({
             },
         },
     }
-})
+}
 
 local cmp = require('cmp')
+local lspkind = require('lspkind')
 
 cmp.setup({
     snippet = {
@@ -194,6 +181,16 @@ cmp.setup({
         { name = 'nvim_lsp' },
         { name = 'buffer' },
         { name = 'luasnip' },
+    },
+    formatting = {
+        format = lspkind.cmp_format({
+            mode = 'symbol', -- show only symbol annotations
+            maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
+            -- can also be a function to dynamically calculate max width such as 
+            -- maxwidth = function() return math.floor(0.45 * vim.o.columns) end,
+            ellipsis_char = '...', -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
+            show_labelDetails = true, -- show labelDetails in menu. Disabled by default
+        })
     }
 })
 

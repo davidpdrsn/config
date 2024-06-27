@@ -88,7 +88,7 @@ return require('packer').startup(function(use)
     -- lsp signature hint as you type
     use 'ray-x/lsp_signature.nvim'
     -- rust things
-    use 'simrat39/rust-tools.nvim'
+    use 'mrcjkb/rustaceanvim'
     -- peek lines when jumping
     use 'nacro90/numb.nvim'
     -- search and replace
@@ -127,4 +127,6 @@ return require('packer').startup(function(use)
     use "kevinhwang91/nvim-bqf"
     -- toggle quickfix
     use "drmingdrmer/vim-toggle-quickfix"
+    -- icons in lsp suggestions window
+    use "onsails/lspkind.nvim"
 end)
