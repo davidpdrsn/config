@@ -28,7 +28,7 @@ end
 
 leader("b", function() telescope.buffers() end)
 leader("B", function() telescope.current_buffer_fuzzy_find() end)
-leader("T", function() telescope.builtin() end)
+leader("t", ':TermExec cmd="/Users/david.pedersen/.cargo/bin/t && exit" dir="%" go_back=0<cr>')
 leader("cm", ":!chmod +x %<cr>")
 leader("ev", ":tabedit $MYVIMRC<cr>:lcd ~/.config/nvim/<cr>")
 leader("f", function() telescope.find_files() end)
@@ -44,15 +44,15 @@ leader("la", function() vim.lsp.buf.code_action() end)
 leader("ld", ":Telescope diagnostics severity_limit=warn<cr>")
 leader("lr", function() vim.lsp.buf.rename() end)
 leader("ls", function() telescope.lsp_document_symbols() end)
-leader("R", function() telescope.resume() end)
-leader("rd", ":RustOpenExternalDocs<cr>")
+leader("R", ':TermExec cmd="/Users/david.pedersen/.cargo/bin/t run && exit" dir="%" go_back=0<cr>')
+leader("rd", ":RustLsp externalDocs<cr>")
 leader("rg", function() telescope.live_grep() end)
 leader("rG", function() telescope.grep_string() end)
-leader("rm", ":RustExpandMacro<cr>")
+leader("rm", ":RustLsp expandMacro<cr>")
 leader("rn", ":call RenameFile()<cr>")
-leader("ro", ":sp<cr>:RustOpenCargo<cr>")
-leader("rp", ":RustParentModule<cr>")
-leader("rr", ":RustRunnables<cr>")
+leader("ro", ":sp<cr>:RustLsp openCargo<cr>")
+leader("rp", ":RustLsp parentModule<cr>")
+leader("rr", ":RustLsp runnables<cr>")
 leader(":", function() telescope.commands() end)
 leader("w", ":WinShift<cr>")
 leader("W", ":WinShift swap<cr>")
@@ -131,7 +131,7 @@ nmap(
 
 -- term
 local term = Terminal:new({
-    direction = "float",
+    direction = "horizontal",
     float_opts = {
         border = 'single',
     }

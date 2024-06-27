@@ -144,11 +144,6 @@ _G.packer_plugins = {
     path = "/Users/david.pedersen/.local/share/nvim/site/pack/packer/start/mason.nvim",
     url = "https://github.com/williamboman/mason.nvim"
   },
-  ["move.nvim"] = {
-    loaded = true,
-    path = "/Users/david.pedersen/.local/share/nvim/site/pack/packer/start/move.nvim",
-    url = "https://github.com/fedepujol/move.nvim"
-  },
   neoformat = {
     loaded = true,
     path = "/Users/david.pedersen/.local/share/nvim/site/pack/packer/start/neoformat",
@@ -168,6 +163,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/david.pedersen/.local/share/nvim/site/pack/packer/start/nvim-autopairs",
     url = "https://github.com/windwp/nvim-autopairs"
+  },
+  ["nvim-bqf"] = {
+    loaded = true,
+    path = "/Users/david.pedersen/.local/share/nvim/site/pack/packer/start/nvim-bqf",
+    url = "https://github.com/kevinhwang91/nvim-bqf"
   },
   ["nvim-cmp"] = {
     loaded = true,
@@ -209,10 +209,10 @@ _G.packer_plugins = {
     path = "/Users/david.pedersen/.local/share/nvim/site/pack/packer/start/popup.nvim",
     url = "https://github.com/nvim-lua/popup.nvim"
   },
-  ["rust-tools.nvim"] = {
+  rustaceanvim = {
     loaded = true,
-    path = "/Users/david.pedersen/.local/share/nvim/site/pack/packer/start/rust-tools.nvim",
-    url = "https://github.com/simrat39/rust-tools.nvim"
+    path = "/Users/david.pedersen/.local/share/nvim/site/pack/packer/start/rustaceanvim",
+    url = "https://github.com/mrcjkb/rustaceanvim"
   },
   ["telescope-recent-files"] = {
     loaded = true,
@@ -238,6 +238,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/david.pedersen/.local/share/nvim/site/pack/packer/start/tokyonight.nvim",
     url = "https://github.com/folke/tokyonight.nvim"
+  },
+  treesj = {
+    loaded = true,
+    path = "/Users/david.pedersen/.local/share/nvim/site/pack/packer/start/treesj",
+    url = "https://github.com/Wansmer/treesj"
   },
   undotree = {
     loaded = true,
@@ -339,6 +344,11 @@ _G.packer_plugins = {
     path = "/Users/david.pedersen/.local/share/nvim/site/pack/packer/start/vim-tmux-navigator",
     url = "https://github.com/christoomey/vim-tmux-navigator"
   },
+  ["vim-toggle-quickfix"] = {
+    loaded = true,
+    path = "/Users/david.pedersen/.local/share/nvim/site/pack/packer/start/vim-toggle-quickfix",
+    url = "https://github.com/drmingdrmer/vim-toggle-quickfix"
+  },
   ["vim-toml"] = {
     loaded = true,
     path = "/Users/david.pedersen/.local/share/nvim/site/pack/packer/start/vim-toml",
@@ -358,6 +368,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/david.pedersen/.local/share/nvim/site/pack/packer/start/vim-yaml",
     url = "https://github.com/stephpy/vim-yaml"
+  },
+  ["winshift.nvim"] = {
+    loaded = true,
+    path = "/Users/david.pedersen/.local/share/nvim/site/pack/packer/start/winshift.nvim",
+    url = "https://github.com/sindrets/winshift.nvim"
   }
 }
 
