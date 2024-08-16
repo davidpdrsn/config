@@ -26,8 +26,14 @@ snippet signal
 	[Signal]
 	public delegate void $0EventHandler();
 
+snippet connect
+	$1.Connect($2.SignalName.$3, Callable.From($4));
+
 snippet print
-	GD.Print($0)
+	GD.Print($0);
+
+snippet prints
+	GD.PrintS($0);
 
 snippet export
 	[Export]
@@ -41,7 +47,7 @@ snippet component
 	using Godot;
 
 	[GlobalClass]
-	public partial class $1Component : Node
+	public partial class $1 : Node
 	{
 		$0
 	}

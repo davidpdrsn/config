@@ -44,7 +44,6 @@ leader("la", function() vim.lsp.buf.code_action() end)
 leader("ld", ":Telescope diagnostics severity_limit=warn<cr>")
 leader("lr", function() vim.lsp.buf.rename() end)
 leader("ls", function() telescope.lsp_document_symbols() end)
-leader("R", ':TermExec cmd="/Users/david.pedersen/.cargo/bin/t run && exit" dir="%" go_back=0<cr>')
 leader("rd", ":RustLsp externalDocs<cr>")
 leader("rg", function() telescope.live_grep() end)
 leader("rG", function() telescope.grep_string() end)
@@ -113,6 +112,11 @@ vim.cmd[[
     nnoremap * :let @/ = '\<'.expand('<cword>').'\>'\|set hlsearch<C-M>
 ]]
 
+-- Insert current file name with \f in insert mode
+vim.cmd[[
+    inoremap \f <C-R>=expand("%:t:r")<CR>
+]]
+
 -- show docs
 nmap(
     'K',
@@ -131,7 +135,7 @@ nmap(
 
 -- term
 local term = Terminal:new({
-    direction = "horizontal",
+    direction = "float",
     float_opts = {
         border = 'single',
     }
