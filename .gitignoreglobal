@@ -20,3 +20,5 @@ dump.rdb
 bacon.toml
 .reload-on-demand.toml
 mprocs.yaml
+.temp
+.tmp
