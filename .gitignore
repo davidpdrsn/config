@@ -41,3 +41,5 @@ talks
 .dotnet/
 .nuget/
 .templateengine/
+.wget-hsts
+.graphite_upgrade_message
