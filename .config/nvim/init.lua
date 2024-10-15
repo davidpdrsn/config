@@ -75,10 +75,6 @@ function on_attach(client, bufnr)
   client.server_capabilities.semanticTokensProvider = nil
 end
 
-require('lspconfig').tsserver.setup({
-    on_attach = on_attach,
-})
-
 require('lspconfig').gdscript.setup({
     on_attach = on_attach,
 })
