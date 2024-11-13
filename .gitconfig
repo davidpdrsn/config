@@ -3,3 +3,7 @@
 	email = david.pdrsn@gmail.com
 [core]
 	excludesfile = /Users/davidpdrsn/.gitignoreglobal
+[init]
+	defaultBranch = main
+[diff]
+    external = difft
