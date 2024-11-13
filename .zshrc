@@ -54,7 +54,6 @@ source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 source ~/.fzf.zsh
-source ~/.config/broot/launcher/bash/br
 
 # graphite completion
 _gt_yargs_completions()
