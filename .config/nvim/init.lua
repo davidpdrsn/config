@@ -129,7 +129,7 @@ vim.g.rustaceanvim = {
                         -- "--target",
                         -- "x86_64-unknown-linux-gnu",
                         "--target-dir",
-                        "/Users/david.pedersen/.rust-analyzer-target-dir",
+                        "/Users/davidpdrsn/.rust-analyzer-target-dir",
                         "--workspace",
                     },
                     enable = true,
