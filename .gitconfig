@@ -1,0 +1,5 @@
+[user]
+	name = David Pedersen
+	email = david.pdrsn@gmail.com
+[core]
+	excludesfile = /Users/davidpdrsn/.gitignoreglobal
