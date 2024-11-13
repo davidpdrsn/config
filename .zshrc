@@ -99,6 +99,7 @@ local start="%(?,%{$fg[green]%}$symbol%{$reset_color%},%{$fg[red]%}$symbol%{$res
 # cargo-hack
 # /Users/david.pedersen/code/cli
 # brew install difftastic
+# https://github.com/cargo-limit/cargo-limit
 
 PROMPT=$'
 $(smart-pwd) %{$reset_color%}$(git-prompt)$(is-vim-running)%{$reset_color%}
