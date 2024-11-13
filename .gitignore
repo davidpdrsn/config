@@ -5,7 +5,6 @@
 .cargo
 .config/gh/hosts.yml
 .config/iterm2/
-.gitconfig
 .lesshst
 .local
 .rust-analyzer-target-dir/
