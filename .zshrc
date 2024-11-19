@@ -20,6 +20,7 @@ export CARGO_PROFILE_TEST_SPLIT_DEBUGINFO=unpacked
 export CARGO_INCREMENTAL=1
 export CARGO_UNSTABLE_SPARSE_REGISTRY=true
 export CARGO_TERM_COLOR=always
+export BLENDER_PATH="/Applications/Blender.app/Contents/MacOS/Blender"
 
 export PATH=$PATH:/Users/david.pedersen/.ark/bin
 export PATH=$PATH:/Users/david.pedersen/.bin
