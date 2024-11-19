@@ -133,6 +133,7 @@ alias local-ark-client='/Users/david.pedersen/code/embark/wim-app/wim-app/target
 alias mbark='/Users/david.pedersen/code/embark/wim-mod/mbark'
 alias godot='/Applications/Godot_mono.app/Contents/MacOS/Godot'
 alias x='/Users/davidpdrsn/Games/traffic-signal-sim/x'
+alias blender='/Applications/Blender.app/Contents/MacOS/Blender'
 
 # nvim
 alias vi='nvim'
