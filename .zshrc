@@ -132,6 +132,7 @@ alias at='tmux attach'
 alias local-ark-client='/Users/david.pedersen/code/embark/wim-app/wim-app/target/release/ark-client'
 alias mbark='/Users/david.pedersen/code/embark/wim-mod/mbark'
 alias godot='/Applications/Godot_mono.app/Contents/MacOS/Godot'
+alias x='/Users/davidpdrsn/Games/traffic-signal-sim/x'
 
 # nvim
 alias vi='nvim'
