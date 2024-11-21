@@ -22,11 +22,11 @@ export CARGO_UNSTABLE_SPARSE_REGISTRY=true
 export CARGO_TERM_COLOR=always
 export BLENDER_PATH="/Applications/Blender.app/Contents/MacOS/Blender"
 
-export PATH=$PATH:/Users/david.pedersen/.ark/bin
-export PATH=$PATH:/Users/david.pedersen/.bin
+export PATH=$PATH:/Users/davidpdrsn/.ark/bin
+export PATH=$PATH:/Users/davidpdrsn/.bin
 export PATH=$PATH:/Applications/Postgres.app/Contents/Versions/latest/bin
 export PATH=$PATH:/Applications/wim-dev.app/Contents/MacOS
-export PATH=$PATH:/Users/david.pedersen/.dotnet/tools
+export PATH=$PATH:/Users/davidpdrsn/.dotnet/tools
 
 # make ctrl-p, ctrl-n, etc work in tmux
 bindkey -e
@@ -98,7 +98,7 @@ local start="%(?,%{$fg[green]%}$symbol%{$reset_color%},%{$fg[red]%}$symbol%{$res
 # zoxide
 # exa
 # cargo-hack
-# /Users/david.pedersen/code/cli
+# /Users/davidpdrsn/code/cli
 # brew install difftastic
 # https://github.com/cargo-limit/cargo-limit
 
@@ -122,16 +122,16 @@ alias la='exa -a --long --header --sort name'
 alias mkdir='mkdir -p'
 alias xtask='cargo xtask'
 alias o='open .'
-alias b='/Users/david.pedersen/.cargo/bin/t build'
-alias r='/Users/david.pedersen/.cargo/bin/t run'
+alias b='/Users/davidpdrsn/.cargo/bin/t build'
+alias r='/Users/davidpdrsn/.cargo/bin/t run'
 alias tl='ingestlogs pipe --'
-alias ci='/Users/david.pedersen/.cargo/bin/t "open ci"'
+alias ci='/Users/davidpdrsn/.cargo/bin/t "open ci"'
 alias wim='/Applications/wim-dev.app/Contents/MacOS/ark-client'
 alias wim-app='/Applications/wim-dev.app/Contents/MacOS/ark-client'
 alias commit-config='cd ~ && git add --all && git commit -m "misc changes" && git push && cd -'
 alias at='tmux attach'
-alias local-ark-client='/Users/david.pedersen/code/embark/wim-app/wim-app/target/release/ark-client'
-alias mbark='/Users/david.pedersen/code/embark/wim-mod/mbark'
+alias local-ark-client='/Users/davidpdrsn/code/embark/wim-app/wim-app/target/release/ark-client'
+alias mbark='/Users/davidpdrsn/code/embark/wim-mod/mbark'
 alias godot='/Applications/Godot_mono.app/Contents/MacOS/Godot'
 alias x='/Users/davidpdrsn/Games/traffic-signal-sim/x'
 alias blender='/Applications/Blender.app/Contents/MacOS/Blender'
