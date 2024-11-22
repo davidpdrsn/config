@@ -21,6 +21,7 @@ export CARGO_INCREMENTAL=1
 export CARGO_UNSTABLE_SPARSE_REGISTRY=true
 export CARGO_TERM_COLOR=always
 export BLENDER_PATH="/Applications/Blender.app/Contents/MacOS/Blender"
+export GODOT_PATH="/Applications/Godot_mono.app/Contents/MacOS/Godot"
 
 export PATH=$PATH:/Users/davidpdrsn/.ark/bin
 export PATH=$PATH:/Users/davidpdrsn/.bin

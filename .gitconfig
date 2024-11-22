@@ -7,3 +7,5 @@
 	defaultBranch = main
 [diff]
     external = difft
+[push]
+    autoSetupRemote = true
