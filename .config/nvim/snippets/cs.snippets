@@ -30,10 +30,7 @@ snippet connect
 	$1.Connect($2.SignalName.$3, Callable.From($4));
 
 snippet print
-	GD.Print($0);
-
-snippet prints
-	GD.PrintS($0);
+	Logger.debug($0);
 
 snippet export
 	[Export]
