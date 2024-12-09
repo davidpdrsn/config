@@ -197,6 +197,12 @@ vim.api.nvim_create_autocmd('LspAttach', {
   pattern = "*.cs",
   callback = function(ev)
     local opts = { buffer = ev.buf }
-    vim.keymap.set('n', '<space>lf', ":silent !dotnet csharpier .<cr>", opts)
+    local f = function()
+        vim.api.nvim_command('write')
+        local path = vim.api.nvim_buf_get_name(0)
+        vim.fn.system { 'dotnet', 'csharpier', path }
+        vim.api.nvim_command('edit')
+    end
+    vim.keymap.set('n', '<space>lf', f, opts)
   end,
 })
