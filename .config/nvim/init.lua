@@ -70,8 +70,6 @@ function on_attach(client, bufnr)
       },
   })
 
-  -- require('illuminate').on_attach(client)
-
   client.server_capabilities.semanticTokensProvider = nil
 end
 
@@ -120,14 +118,10 @@ vim.g.rustaceanvim = {
                     overrideCommand = {
                         "cargo",
                         "clippy",
-                        -- "-p",
-                        -- "sandbox-protocols-internal",
                         "--all-features",
                         "--tests",
                         "--message-format=json",
                         "--all-targets",
-                        -- "--target",
-                        -- "x86_64-unknown-linux-gnu",
                         "--target-dir",
                         "/Users/davidpdrsn/.rust-analyzer-target-dir",
                         "--workspace",
