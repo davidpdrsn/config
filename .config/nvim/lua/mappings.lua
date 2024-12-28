@@ -28,7 +28,7 @@ end
 
 leader("b", function() telescope.buffers() end)
 leader("B", function() telescope.current_buffer_fuzzy_find() end)
-leader("t", ':TermExec cmd="/Users/david.pedersen/.cargo/bin/t && exit" dir="%" go_back=0<cr>')
+leader("t", ':TermExec cmd="/Users/davidpdrsn/Games/traffic-signal-sim/x run || exit" dir="%" go_back=1<cr>')
 leader("cm", ":!chmod +x %<cr>")
 leader("ev", ":tabedit $MYVIMRC<cr>:lcd ~/.config/nvim/<cr>")
 leader("f", function() telescope.find_files() end)
