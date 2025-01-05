@@ -9,5 +9,6 @@ cursor-style-blink = false
 macos-non-native-fullscreen = true
 focus-follows-mouse = true
 confirm-close-surface = false
+mouse-hide-while-typing = true
 
 keybind = global:ctrl+backslash=toggle_quick_terminal

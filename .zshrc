@@ -92,6 +92,7 @@ local start="%(?,%{$fg[green]%}$symbol%{$reset_color%},%{$fg[red]%}$symbol%{$res
 # rust things to install
 # https://github.com/davidpdrsn/is-vim-running
 # https://github.com/davidpdrsn/smart-pwd
+# https://github.com/davidpdrsn/smart-pwd-2
 # https://github.com/davidpdrsn/git-prompt
 # https://github.com/davidpdrsn/git-branch-picker
 # https://github.com/davidpdrsn/git-remove-merged-branches
@@ -104,7 +105,7 @@ local start="%(?,%{$fg[green]%}$symbol%{$reset_color%},%{$fg[red]%}$symbol%{$res
 # https://github.com/cargo-limit/cargo-limit
 
 PROMPT=$'
-$(smart-pwd) %{$reset_color%}$(git-prompt)$(is-vim-running)%{$reset_color%}
+$(smart-pwd-2) %{$reset_color%}$(git-prompt)$(is-vim-running)%{$reset_color%}
 ${start} '
 RPROMPT=$''
 
