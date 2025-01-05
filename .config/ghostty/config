@@ -1,0 +1,9 @@
+font-family = "Iosevka Nerd Font Mono"
+font-style-italic = false
+font-style-bold-italic = false
+font-style-bold = false
+theme = tokyonight_night
+cursor-style = block
+shell-integration-features = no-cursor
+cursor-style-blink = false
+macos-non-native-fullscreen = true
