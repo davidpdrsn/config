@@ -7,3 +7,5 @@ cursor-style = block
 shell-integration-features = no-cursor
 cursor-style-blink = false
 macos-non-native-fullscreen = true
+
+keybind = global:cmd+alt+ctrl+c=toggle_quick_terminal
