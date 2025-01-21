@@ -9,6 +9,8 @@ export EDITOR='nvim'
 # for wim noesis, told by robert bragg to set this
 export MACOSX_DEPLOYMENT_TARGET=11.0
 
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
+
 # History
 ISTFILE=$HOME/.zhistory
 setopt APPEND_HISTORY
