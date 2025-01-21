@@ -1,22 +1,40 @@
-snippet ready
+snippet callback_entertree
+	public override void _EnterTree()
+	{
+		$0
+	}
+
+snippet callback_exittree
+	public override void _ExitTree()
+	{
+		$0
+	}
+
+snippet callback_ready
 	public override void _Ready()
 	{
 		$0
 	}
 
-snippet input
+snippet callback_input
 	public override void _Input(InputEvent ev)
 	{
 		$0
 	}
 
-snippet physics_process
+snippet callback_unhandled_input
+	public override void _UnhandledInput(InputEvent ev)
+	{
+		$0
+	}
+
+snippet callback_physics_process
 	public override void _PhysicsProcess(double delta)
 	{
 		$0
 	}
 
-snippet process
+snippet callback_process
 	public override void _Process(double delta)
 	{
 		$0
