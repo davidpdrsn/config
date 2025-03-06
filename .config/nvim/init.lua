@@ -293,6 +293,7 @@ require("telescope").setup {
             ".glb",
             ".ogg",
             ".png",
+            ".uid",
         }
     },
     extensions = {
