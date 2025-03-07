@@ -49,8 +49,8 @@ local function save_profiles(threshold)
 end
 
 time([[Luarocks path setup]], true)
-local package_path_str = "/Users/davidpdrsn/.cache/nvim/packer_hererocks/2.1.1727870382/share/lua/5.1/?.lua;/Users/davidpdrsn/.cache/nvim/packer_hererocks/2.1.1727870382/share/lua/5.1/?/init.lua;/Users/davidpdrsn/.cache/nvim/packer_hererocks/2.1.1727870382/lib/luarocks/rocks-5.1/?.lua;/Users/davidpdrsn/.cache/nvim/packer_hererocks/2.1.1727870382/lib/luarocks/rocks-5.1/?/init.lua"
-local install_cpath_pattern = "/Users/davidpdrsn/.cache/nvim/packer_hererocks/2.1.1727870382/lib/lua/5.1/?.so"
+local package_path_str = "/Users/davidpdrsn/.cache/nvim/packer_hererocks/2.1.1736781742/share/lua/5.1/?.lua;/Users/davidpdrsn/.cache/nvim/packer_hererocks/2.1.1736781742/share/lua/5.1/?/init.lua;/Users/davidpdrsn/.cache/nvim/packer_hererocks/2.1.1736781742/lib/luarocks/rocks-5.1/?.lua;/Users/davidpdrsn/.cache/nvim/packer_hererocks/2.1.1736781742/lib/luarocks/rocks-5.1/?/init.lua"
+local install_cpath_pattern = "/Users/davidpdrsn/.cache/nvim/packer_hererocks/2.1.1736781742/lib/lua/5.1/?.so"
 if not string.find(package.path, package_path_str, 1, true) then
   package.path = package.path .. ';' .. package_path_str
 end
@@ -154,6 +154,11 @@ _G.packer_plugins = {
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/neoformat",
     url = "https://github.com/sbdchd/neoformat"
   },
+  ["netcoredbg-macOS-arm64.nvim"] = {
+    loaded = true,
+    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/netcoredbg-macOS-arm64.nvim",
+    url = "https://github.com/Cliffback/netcoredbg-macOS-arm64.nvim"
+  },
   ["nordic.nvim"] = {
     loaded = true,
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/nordic.nvim",
@@ -179,10 +184,25 @@ _G.packer_plugins = {
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/nvim-cmp",
     url = "https://github.com/hrsh7th/nvim-cmp"
   },
+  ["nvim-dap"] = {
+    loaded = true,
+    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/nvim-dap",
+    url = "https://github.com/mfussenegger/nvim-dap"
+  },
+  ["nvim-dap-ui"] = {
+    loaded = true,
+    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/nvim-dap-ui",
+    url = "https://github.com/rcarriga/nvim-dap-ui"
+  },
   ["nvim-lspconfig"] = {
     loaded = true,
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/nvim-lspconfig",
     url = "https://github.com/neovim/nvim-lspconfig"
+  },
+  ["nvim-nio"] = {
+    loaded = true,
+    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/nvim-nio",
+    url = "https://github.com/nvim-neotest/nvim-nio"
   },
   ["nvim-spectre"] = {
     loaded = true,
