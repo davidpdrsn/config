@@ -25,6 +25,7 @@ export CARGO_TERM_COLOR=always
 export BLENDER_PATH="/Applications/Blender.app/Contents/MacOS/Blender"
 export GODOT_PATH="/Applications/Godot_mono.app/Contents/MacOS/Godot"
 
+export PATH=$PATH:/usr/local
 export PATH=$PATH:/Users/davidpdrsn/.ark/bin
 export PATH=$PATH:/Users/davidpdrsn/.bin
 export PATH=$PATH:/Applications/Postgres.app/Contents/Versions/latest/bin

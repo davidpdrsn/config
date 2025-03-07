@@ -220,20 +220,16 @@ vim.cmd([[
       au!
 
       au FocusLost * silent!
-        \   if getbufinfo('%')[0].name != '' && getbufinfo('%')[0].changed
+        \   if getbufinfo('%')[0].name != '' && getbufinfo('%')[0].changed && stridx(getbufinfo('%')[0].name, "[dap-repl-") == -1
         \ |     write
         \ | endif
 
       au BufLeave * silent!
-        \   if getbufinfo('%')[0].name != '' && getbufinfo('%')[0].changed
+        \   if getbufinfo('%')[0].name != '' && getbufinfo('%')[0].changed && stridx(getbufinfo('%')[0].name, "[dap-repl-") == -1
+        \ |     echom getbufinfo('%')[0].name
         \ |     write
         \ | endif
     augroup END
-
-    " augroup fmt
-    "   autocmd!
-    "   autocmd BufWritePre *.cs undojoin | Neoformat
-    " augroup END
 ]])
 
 --------------------------------------------
@@ -325,3 +321,100 @@ require('bqf').setup({
         winblend = 0,
     }
 })
+
+--------------------------------------------
+-- Debugging
+--------------------------------------------
+
+local overseer = require("overseer")
+overseer.setup({
+    strategy = {
+        "toggleterm",
+        quit_on_exit = "success",
+        direction = "float"
+    }
+})
+overseer.register_template({
+    name = "rust_compile",
+    builder = function(params)
+        return {
+            cmd = {'cargo'},
+            args = {"build"},
+        }
+    end,
+    condition = {
+        filetype = {"rust"},
+    },
+})
+
+local dap = require("dap")
+
+local dapui = require("dapui")
+dapui.setup()
+
+overseer.register_template({
+    name = "cs_compile",
+    builder = function(params)
+        return {
+            cmd = {'dotnet'},
+            args = {"build"},
+        }
+    end,
+    condition = {
+        filetype = {"cs"},
+    },
+})
+
+dap.adapters.lldb = {
+    type = 'executable',
+    command = '/Library/Developer/CommandLineTools/usr/bin/lldb-dap',
+    name = 'lldb'
+}
+
+dap.configurations.rust = {
+    {
+        name = 'Launch',
+        type = 'lldb',
+        request = 'launch',
+        program = function()
+            return vim.fn.getcwd() .. "/target/debug/hello-world"
+        end,
+        preLaunchTask = "rust_compile",
+        cwd = '${workspaceFolder}',
+        stopOnEntry = false,
+        args = {},
+    },
+}
+
+dap.adapters.coreclr_godot = {
+    type = 'executable',
+    command = '/usr/local/netcoredbg',
+    args = {
+        '--interpreter=vscode',
+        '--',
+        "/Applications/Godot_mono.app/Contents/MacOS/Godot",
+    },
+}
+
+dap.configurations.cs = {
+    {
+        type = "coreclr_godot",
+        name = "Launch",
+        request = "launch",
+        program = "/Users/davidpdrsn/Games/traffic-signal-sim/.godot/mono/temp/bin/Debug/Traffic Signal Sim.dll",
+        preLaunchTask = "cs_compile"
+    },
+}
+
+dap.listeners.before.attach.dapui_config = function()
+  dapui.open()
+end
+dap.listeners.before.launch.dapui_config = function()
+  dapui.open()
+end
+dap.listeners.before.event_terminated.dapui_config = function()
+  dapui.close()
+end
+dap.listeners.before.event_exited.dapui_config = function()
+  dapui.close()
+end

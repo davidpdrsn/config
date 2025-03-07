@@ -129,4 +129,8 @@ return require('packer').startup(function(use)
     use "drmingdrmer/vim-toggle-quickfix"
     -- icons in lsp suggestions window
     use "onsails/lspkind.nvim"
+    -- debugging
+    use { "rcarriga/nvim-dap-ui", requires = {"mfussenegger/nvim-dap", "nvim-neotest/nvim-nio"} }
+    use "Cliffback/netcoredbg-macOS-arm64.nvim"
+    use "stevearc/overseer.nvim"
 end)
