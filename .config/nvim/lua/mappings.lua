@@ -1,4 +1,5 @@
 local telescope = require("telescope/builtin")
+local dap = require("dap")
 local Terminal = require('toggleterm.terminal').Terminal
 
 function make_map_fn(mode)
@@ -35,6 +36,15 @@ leader("f", function() telescope.find_files() end)
 leader("F", function() require('telescope').extensions.recent_files.pick() end)
 leader("h", ":nohlsearch<cr>")
 leader("k", function() vim.diagnostic.open_float({ source = true }) end)
+
+leader("dd", dap.toggle_breakpoint)
+leader("dc", dap.continue)
+leader("dr", dap.restart)
+leader("ds", dap.terminate)
+leader("<up>", dap.step_out)
+leader("<down>", dap.step_into)
+leader("<left>", dap.step_back)
+leader("<right>", dap.step_over)
 
 leader("gu", ":UndotreeToggle<cr>")
 leader("lD", ":Telescope diagnostics severity=error<cr>")
