@@ -80,7 +80,7 @@ return require('packer').startup(function(use)
     -- completion
     use 'hrsh7th/nvim-cmp'
     -- UI for nvim-lsp progress
-    use { 'j-hui/fidget.nvim', branch = 'legacy' }
+    use 'j-hui/fidget.nvim'
     -- easy lsp config
     use 'neovim/nvim-lspconfig'
     -- popup api from vim in Neovim
@@ -91,8 +91,6 @@ return require('packer').startup(function(use)
     use 'mrcjkb/rustaceanvim'
     -- peek lines when jumping
     use 'nacro90/numb.nvim'
-    -- search and replace
-    use 'nvim-pack/nvim-spectre'
     -- move around
     use 'ggandor/leap.nvim'
     -- icons
@@ -113,12 +111,8 @@ return require('packer').startup(function(use)
     use "johmsalas/text-case.nvim"
     -- git wrapper
     use "tpope/vim-fugitive"
-    -- git signs
-    use "lewis6991/gitsigns.nvim"
     -- godot
     use "habamax/vim-godot"
-    -- run c# formatter
-    use "sbdchd/neoformat"
     -- arrange windows
     use "sindrets/winshift.nvim"
     -- split/join things on multiple lines
@@ -131,6 +125,6 @@ return require('packer').startup(function(use)
     use "onsails/lspkind.nvim"
     -- debugging
     use { "rcarriga/nvim-dap-ui", requires = {"mfussenegger/nvim-dap", "nvim-neotest/nvim-nio"} }
-    use "Cliffback/netcoredbg-macOS-arm64.nvim"
     use "stevearc/overseer.nvim"
+    use "m00qek/baleia.nvim"
 end)
