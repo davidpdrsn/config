@@ -84,6 +84,11 @@ _G.packer_plugins = {
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/Vim-g-dot",
     url = "https://github.com/christoomey/Vim-g-dot"
   },
+  ["baleia.nvim"] = {
+    loaded = true,
+    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/baleia.nvim",
+    url = "https://github.com/m00qek/baleia.nvim"
+  },
   ["cmp-buffer"] = {
     loaded = true,
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/cmp-buffer",
@@ -114,11 +119,6 @@ _G.packer_plugins = {
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/fidget.nvim",
     url = "https://github.com/j-hui/fidget.nvim"
   },
-  ["gitsigns.nvim"] = {
-    loaded = true,
-    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/gitsigns.nvim",
-    url = "https://github.com/lewis6991/gitsigns.nvim"
-  },
   ["kanagawa.nvim"] = {
     loaded = true,
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/kanagawa.nvim",
@@ -148,16 +148,6 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/mason.nvim",
     url = "https://github.com/williamboman/mason.nvim"
-  },
-  neoformat = {
-    loaded = true,
-    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/neoformat",
-    url = "https://github.com/sbdchd/neoformat"
-  },
-  ["netcoredbg-macOS-arm64.nvim"] = {
-    loaded = true,
-    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/netcoredbg-macOS-arm64.nvim",
-    url = "https://github.com/Cliffback/netcoredbg-macOS-arm64.nvim"
   },
   ["nordic.nvim"] = {
     loaded = true,
@@ -204,11 +194,6 @@ _G.packer_plugins = {
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/nvim-nio",
     url = "https://github.com/nvim-neotest/nvim-nio"
   },
-  ["nvim-spectre"] = {
-    loaded = true,
-    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/nvim-spectre",
-    url = "https://github.com/nvim-pack/nvim-spectre"
-  },
   ["nvim-treesitter"] = {
     loaded = true,
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/nvim-treesitter",
@@ -218,6 +203,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/nvim-web-devicons",
     url = "https://github.com/kyazdani42/nvim-web-devicons"
+  },
+  ["overseer.nvim"] = {
+    loaded = true,
+    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/overseer.nvim",
+    url = "https://github.com/stevearc/overseer.nvim"
   },
   ["packer.nvim"] = {
     loaded = true,

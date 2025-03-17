@@ -240,11 +240,7 @@ require('nvim-autopairs').setup()
 require('nvim-autopairs').remove_rule("'")
 
 require('dressing').setup()
-require("fidget").setup({
-    fmt = {
-        max_width = 50,
-    },
-})
+require("fidget").setup()
 require('numb').setup()
 require("mason").setup()
 
@@ -310,8 +306,6 @@ require("toggleterm").setup()
 require("luasnip.loaders.from_snipmate").lazy_load({paths = "~/.config/nvim/snippets"})
 require("luasnip.loaders.from_vscode").lazy_load()
 
-require('gitsigns').setup()
-
 require('treesj').setup({
     use_default_keymaps = false
 })
@@ -349,6 +343,8 @@ overseer.register_template({
 
 local dap = require("dap")
 
+vim.fn.sign_define('DapBreakpoint', {text='🛑', texthl='', linehl='', numhl=''})
+
 local dapui = require("dapui")
 dapui.setup()
 
@@ -377,13 +373,22 @@ dap.configurations.rust = {
         type = 'lldb',
         request = 'launch',
         program = function()
-            return vim.fn.getcwd() .. "/target/debug/hello-world"
+            local handle = io.popen("/Users/davidpdrsn/.cargo/bin/t \"Path to Rust binary\"")
+            local result = handle:read("*a")
+            handle:close()
+            return result
         end,
         preLaunchTask = "rust_compile",
         cwd = '${workspaceFolder}',
         stopOnEntry = false,
         args = {},
     },
+}
+
+dap.adapters.godot = {
+    type = 'server',
+    host = '127.0.0.1',
+    port = 6006,
 }
 
 dap.adapters.coreclr_godot = {
@@ -399,12 +404,32 @@ dap.adapters.coreclr_godot = {
 dap.configurations.cs = {
     {
         type = "coreclr_godot",
-        name = "Launch",
+        name = "Build and run",
         request = "launch",
         program = "/Users/davidpdrsn/Games/traffic-signal-sim/.godot/mono/temp/bin/Debug/Traffic Signal Sim.dll",
         preLaunchTask = "cs_compile"
     },
+    -- {
+    --     type = "godot",
+    --     request = "launch",
+    --     name = "Run from editor",
+    -- },
+    -- {
+    --     type = "godot",
+    --     request = "attach",
+    --     name = "Attach to editor",
+    -- }
 }
+
+-- Get colors working in the logs/repl window of nvim-dap-ui
+-- https://github.com/mfussenegger/nvim-dap/issues/1114#issuecomment-2407914108
+vim.g.baleia = require("baleia").setup({ })
+vim.api.nvim_create_autocmd({ "FileType" }, {
+   pattern = "dap-repl",
+   callback = function()
+      vim.g.baleia.automatically(vim.api.nvim_get_current_buf())
+   end,
+})
 
 dap.listeners.before.attach.dapui_config = function()
   dapui.open()
