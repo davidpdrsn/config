@@ -40,10 +40,6 @@ snippet callback_process
 		$0
 	}
 
-snippet signal
-	[Signal]
-	public delegate void $0EventHandler();
-
 snippet connect
 	$1.Connect($2.SignalName.$3, Callable.From($4));
 
@@ -380,3 +376,8 @@ snippet unity_OnDestroy
 	{
 		$0
 	}
+
+snippet signal
+	public event Action $0;
+
+	public void Emit$0() => $0?.Invoke();
