@@ -213,3 +213,36 @@ function take() {
   mkdir -p "$1"
   cd "$1"
 }
+
+# --- LUN ------------------
+
+# 🟢 Not a secret - Intercom app id for intercom widget. If not set, will not load intercom. Not a secret.
+export INTERCOM_APP_ID=
+
+# 🟢 Not a secret - Sentry DSN (domain source name) for exception logging. Not a secret.
+export SENTRY_DSN=
+
+# 🟢 Not a secret - Access token for the mapbox widget and geocoding api. 
+export MAPBOX_ACCESS_TOKEN=
+
+# 🟢 Not a secret - Posthog write key for event tracking. Not a secret.
+export POSTHOG_WRITE_KEY=
+
+# 🟢 Not a secret - `true` | `false` | `` - Whether or not current environment 
+# is staging. Needed because NODE_ENV should be "production" on staging. 
+export IS_STAGING=false
+
+# 🟢 Not a secret - `true` | `false` | `` - Whether or not to enable mocks for 
+# development. Not a secret.
+export MOCKS=
+
+# 🟢 Not a secret - Usercentrics settings id for cookie consent.
+export USERCENTRICS_SETTINGS_ID=
+
+export LUN_API_PUBLIC_KEY=less_secret
+
+# ⚠️ SECRET - Secret for cookie creation
+export SESSION_SECRET=
+
+# ⚠️ SECRET - Intercom secret used for generating HMAC to verify user identity.
+export INTERCOM_HASH_KEY=
