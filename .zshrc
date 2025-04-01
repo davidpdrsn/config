@@ -35,6 +35,8 @@ export PATH=$PATH:/Applications/wim-dev.app/Contents/MacOS
 export PATH=$PATH:/Users/davidpdrsn/.dotnet/tools
 export PATH=$PATH:"/opt/homebrew/opt/postgresql@17/bin"
 export PATH=$PATH:/usr/local/go/bin
+export PATH=$PATH:/Users/davidpdrsn/go/bin
+export PATH=/opt/homebrew/opt/make/libexec/gnubin:$PATH
 
 # make ctrl-p, ctrl-n, etc work in tmux
 bindkey -e

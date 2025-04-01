@@ -48,3 +48,6 @@ Applications
 .bin/butler
 .plastic4/
 go/
+.atlas/
+.docker/
+.zcompcache/
