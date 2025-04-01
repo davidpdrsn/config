@@ -54,3 +54,4 @@ go/
 .nvm/
 .pnpm-state/
 .rush/
+.config/gcloud/

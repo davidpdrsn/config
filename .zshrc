@@ -36,6 +36,7 @@ export PATH=$PATH:/Users/davidpdrsn/.dotnet/tools
 export PATH=$PATH:"/opt/homebrew/opt/postgresql@17/bin"
 export PATH=$PATH:/usr/local/go/bin
 export PATH=$PATH:/Users/davidpdrsn/go/bin
+export PATH=$PATH:/Users/davidpdrsn/Code/google-cloud-sdk/bin
 export PATH=/opt/homebrew/opt/make/libexec/gnubin:$PATH
 
 # nvm
@@ -246,3 +247,18 @@ export SESSION_SECRET=hej123112312
 
 # ⚠️ SECRET - Intercom secret used for generating HMAC to verify user identity.
 export INTERCOM_HASH_KEY=12321
+
+# https://lunenergy.slack.com/archives/C07PBSW1E3T/p1732265617614189
+gcp-proxy-dev() {
+    ADBCLUSTER=calor
+    PROJECT_ID=lun-dev  # Use provided project ID or fall back to default
+    REGION="europe-west3"
+    /usr/local/bin/alloydb-auth-proxy $(gcloud beta alloydb instances describe "${ADBCLUSTER}-i1" --cluster="${ADBCLUSTER}" --region="${REGION}" --project="${PROJECT_ID}" --format="value(name)") --port 5439 --public-ip 
+}
+
+gcp-proxy-prod() {
+    ADBCLUSTER=calor
+    PROJECT_ID=lun-prod  # Use provided project ID or fall back to default
+    REGION="europe-west3"
+    /usr/local/bin/alloydb-auth-proxy $(gcloud beta alloydb instances describe "${ADBCLUSTER}-i1" --cluster="${ADBCLUSTER}" --region="${REGION}" --project="${PROJECT_ID}" --format="value(name)") --port 5439 --public-ip 
+}
