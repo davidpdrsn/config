@@ -192,18 +192,22 @@ vim.cmd[[
     command! Uuid lua insert_guid()
 ]]
 
--- https://github.com/neovim/nvim-lspconfig
-vim.api.nvim_create_autocmd('LspAttach', {
-  group = vim.api.nvim_create_augroup('RustUserLspConfig', {}),
-  pattern = "*.rs",
-  callback = function(ev)
-    vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
-    local opts = { buffer = ev.buf }
-    vim.keymap.set('n', '<space>lf', function()
-      vim.lsp.buf.format { async = true }
-    end, opts)
-  end,
-})
+function lsp_format_leader_command(pattern, augroup_name)
+    vim.api.nvim_create_autocmd('LspAttach', {
+      group = vim.api.nvim_create_augroup(augroup_name, {}),
+      pattern = pattern,
+      callback = function(ev)
+        vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+        local opts = { buffer = ev.buf }
+        vim.keymap.set('n', '<space>lf', function()
+          vim.lsp.buf.format { async = true }
+        end, opts)
+      end,
+    })
+end
+
+lsp_format_leader_command("*.rs", "RustUserLspConfig")
+lsp_format_leader_command("*.go", "GoUserLspConfig")
 
 vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('CSharpUserLspConfig', {}),
