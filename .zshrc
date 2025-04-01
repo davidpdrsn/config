@@ -253,12 +253,12 @@ gcp-proxy-dev() {
     ADBCLUSTER=calor
     PROJECT_ID=lun-dev  # Use provided project ID or fall back to default
     REGION="europe-west3"
-    /usr/local/bin/alloydb-auth-proxy $(gcloud beta alloydb instances describe "${ADBCLUSTER}-i1" --cluster="${ADBCLUSTER}" --region="${REGION}" --project="${PROJECT_ID}" --format="value(name)") --port 5439 --public-ip 
+    /Users/davidpdrsn/.bin/alloydb-auth-proxy $(gcloud beta alloydb instances describe "${ADBCLUSTER}-i1" --cluster="${ADBCLUSTER}" --region="${REGION}" --project="${PROJECT_ID}" --format="value(name)") --port 5439 --public-ip 
 }
 
 gcp-proxy-prod() {
     ADBCLUSTER=calor
     PROJECT_ID=lun-prod  # Use provided project ID or fall back to default
     REGION="europe-west3"
-    /usr/local/bin/alloydb-auth-proxy $(gcloud beta alloydb instances describe "${ADBCLUSTER}-i1" --cluster="${ADBCLUSTER}" --region="${REGION}" --project="${PROJECT_ID}" --format="value(name)") --port 5439 --public-ip 
+    /Users/davidpdrsn/.bin/alloydb-auth-proxy $(gcloud beta alloydb instances describe "${ADBCLUSTER}-i1" --cluster="${ADBCLUSTER}" --region="${REGION}" --project="${PROJECT_ID}" --format="value(name)") --port 5439 --public-ip 
 }
