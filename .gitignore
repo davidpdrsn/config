@@ -51,3 +51,4 @@ go/
 .atlas/
 .docker/
 .zcompcache/
+.nvm/

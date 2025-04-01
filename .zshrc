@@ -38,6 +38,11 @@ export PATH=$PATH:/usr/local/go/bin
 export PATH=$PATH:/Users/davidpdrsn/go/bin
 export PATH=/opt/homebrew/opt/make/libexec/gnubin:$PATH
 
+# nvm
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
 # make ctrl-p, ctrl-n, etc work in tmux
 bindkey -e
 
