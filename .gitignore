@@ -55,3 +55,4 @@ go/
 .pnpm-state/
 .rush/
 .config/gcloud/
+.bin/alloydb-auth-proxy
