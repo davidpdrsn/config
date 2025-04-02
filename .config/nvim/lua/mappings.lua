@@ -223,3 +223,23 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', '<space>lf', f, opts)
   end,
 })
+
+-- for whatever reason `vim.lsp.buf.format` doesn't work
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('TypeScriptUserLspConfig', {}),
+  pattern = "*.ts,*.tsx,*.js,*.jsx",
+  callback = function(ev)
+    local opts = { buffer = ev.buf }
+    local f = function()
+        local path = vim.api.nvim_buf_get_name(0)
+
+        vim.api.nvim_command('write')
+        vim.system({ 'prettier', '-w', path  }, { text = true }, function(obj)
+            vim.schedule(function()
+                vim.cmd("edit")
+            end)
+        end)
+    end
+    vim.keymap.set('n', '<space>lf', f, opts)
+  end,
+})
