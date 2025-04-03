@@ -27,6 +27,8 @@ export CARGO_TERM_COLOR=always
 export BLENDER_PATH="/Applications/Blender.app/Contents/MacOS/Blender"
 export GODOT_PATH="/Applications/Godot_mono.app/Contents/MacOS/Godot"
 
+export LUN_DEV_DB_PASS="p!G-inYH3ZxW"
+
 export PATH=$PATH:/usr/local
 export PATH=$PATH:/Users/davidpdrsn/.ark/bin
 export PATH=$PATH:/Users/davidpdrsn/.bin
@@ -213,52 +215,4 @@ function v {
 function take() {
   mkdir -p "$1"
   cd "$1"
-}
-
-# --- LUN ------------------
-
-# 🟢 Not a secret - Intercom app id for intercom widget. If not set, will not load intercom. Not a secret.
-export INTERCOM_APP_ID=
-
-# 🟢 Not a secret - Sentry DSN (domain source name) for exception logging. Not a secret.
-export SENTRY_DSN=https://73b24261af63fa7ee7b0969255fb0037@o4505879287693312.ingest.sentry.io/4505924961370112
-
-# 🟢 Not a secret - Access token for the mapbox widget and geocoding api. 
-export MAPBOX_ACCESS_TOKEN=pk.eyJ1IjoibHVuZW5lcmd5IiwiYSI6ImNsNWtzZGN1eDBkMmszZHFyYXM0a3g2cHAifQ.yTVZe7TCTdRy1GPj20K32w
-
-# 🟢 Not a secret - Posthog write key for event tracking. Not a secret.
-export POSTHOG_WRITE_KEY=phc_BVILl9woiZy8GmDn2vzO10Gem0ZxF7Oac74tGRxRVAx
-
-# 🟢 Not a secret - `true` | `false` | `` - Whether or not current environment 
-# is staging. Needed because NODE_ENV should be "production" on staging. 
-export IS_STAGING=false
-
-# 🟢 Not a secret - `true` | `false` | `` - Whether or not to enable mocks for 
-# development. Not a secret.
-export MOCKS=
-
-# 🟢 Not a secret - Usercentrics settings id for cookie consent.
-export USERCENTRICS_SETTINGS_ID=
-
-export LUN_API_PUBLIC_KEY=less_secret
-
-# ⚠️ SECRET - Secret for cookie creation
-export SESSION_SECRET=hej123112312
-
-# ⚠️ SECRET - Intercom secret used for generating HMAC to verify user identity.
-export INTERCOM_HASH_KEY=12321
-
-# https://lunenergy.slack.com/archives/C07PBSW1E3T/p1732265617614189
-gcp-proxy-dev() {
-    ADBCLUSTER=calor
-    PROJECT_ID=lun-dev  # Use provided project ID or fall back to default
-    REGION="europe-west3"
-    /Users/davidpdrsn/.bin/alloydb-auth-proxy $(gcloud beta alloydb instances describe "${ADBCLUSTER}-i1" --cluster="${ADBCLUSTER}" --region="${REGION}" --project="${PROJECT_ID}" --format="value(name)") --port 5439 --public-ip 
-}
-
-gcp-proxy-prod() {
-    ADBCLUSTER=calor
-    PROJECT_ID=lun-prod  # Use provided project ID or fall back to default
-    REGION="europe-west3"
-    /Users/davidpdrsn/.bin/alloydb-auth-proxy $(gcloud beta alloydb instances describe "${ADBCLUSTER}-i1" --cluster="${ADBCLUSTER}" --region="${REGION}" --project="${PROJECT_ID}" --format="value(name)") --port 5439 --public-ip 
 }
