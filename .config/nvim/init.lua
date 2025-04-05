@@ -430,16 +430,6 @@ dap.configurations.cs = {
         program = "/Users/davidpdrsn/Games/traffic-signal-sim/.godot/mono/temp/bin/Debug/Traffic Signal Sim.dll",
         preLaunchTask = "cs_compile"
     },
-    -- {
-    --     type = "godot",
-    --     request = "launch",
-    --     name = "Run from editor",
-    -- },
-    -- {
-    --     type = "godot",
-    --     request = "attach",
-    --     name = "Attach to editor",
-    -- }
 }
 
 -- Get colors working in the logs/repl window of nvim-dap-ui
