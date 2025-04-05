@@ -127,6 +127,10 @@ return require('packer').startup(function(use)
     use { "rcarriga/nvim-dap-ui", requires = {"mfussenegger/nvim-dap", "nvim-neotest/nvim-nio"} }
     use "stevearc/overseer.nvim"
     use "m00qek/baleia.nvim"
+    use "leoluz/nvim-dap-go"
     -- typescript
     use "pmizio/typescript-tools.nvim"
+    -- more lsp code actions
+    use "nvimtools/none-ls.nvim"
+    use "jgdavey/tslime.vim"
 end)
