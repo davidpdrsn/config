@@ -87,6 +87,17 @@ lspconfig.gopls.setup({
     on_attach = on_attach,
 })
 
+local null_ls = require("null-ls")
+
+null_ls.setup({
+    sources = {
+        null_ls.builtins.formatting.goimports,
+        null_ls.builtins.code_actions.gomodifytags,
+        null_ls.builtins.code_actions.impl
+        -- null_ls.builtins.formatting.golines
+    },
+})
+
 require("typescript-tools").setup({})
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
@@ -348,6 +359,8 @@ overseer.register_template({
         filetype = {"rust"},
     },
 })
+
+require('dap-go').setup()
 
 local dap = require("dap")
 

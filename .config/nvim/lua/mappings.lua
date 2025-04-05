@@ -1,5 +1,8 @@
+local M = {}
+
 local telescope = require("telescope/builtin")
 local dap = require("dap")
+local dap_go = require('dap-go')
 local Terminal = require('toggleterm.terminal').Terminal
 
 function make_map_fn(mode)
@@ -29,7 +32,6 @@ end
 
 leader("b", function() telescope.buffers() end)
 leader("B", function() telescope.current_buffer_fuzzy_find() end)
-leader("t", ':TermExec cmd="/Users/davidpdrsn/Games/traffic-signal-sim/x run || exit" dir="%" go_back=1<cr>')
 leader("cm", ":!chmod +x %<cr>")
 leader("ev", ":tabedit $MYVIMRC<cr>:lcd ~/.config/nvim/<cr>")
 leader("f", function() telescope.find_files() end)
@@ -37,6 +39,36 @@ leader("F", function() require('telescope').extensions.recent_files.pick() end)
 leader("h", ":nohlsearch<cr>")
 leader("k", function() vim.diagnostic.open_float({ source = true }) end)
 
+local go_test_command
+
+function set_go_test_command()
+    local test = require('dap-go-ts').closest_test()
+    go_test_command = "go test -count=1 -run " .. test["name"] .. " " .. test["package"]
+end
+
+function run_go_test_command()
+    vim.cmd("execute \"Tmux " .. go_test_command .. "\"")
+end
+
+function run_and_set_go_test()
+    vim.api.nvim_command('write')
+    set_go_test_command()
+    run_go_test_command()
+end
+
+function run_go_test()
+    vim.api.nvim_command('write')
+    if go_test_command == nil then
+        set_go_test_command()
+    end
+    run_go_test_command()
+end
+
+leader("T", run_and_set_go_test)
+leader("t", run_go_test)
+
+leader("dt", dap_go.debug_test)
+leader("dT", dap_go.debug_last_test)
 leader("dd", dap.toggle_breakpoint)
 leader("dc", dap.continue)
 leader("dr", dap.restart)
@@ -243,3 +275,5 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', '<space>lf', f, opts)
   end,
 })
+
+return M
