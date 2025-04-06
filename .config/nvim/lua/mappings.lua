@@ -3,6 +3,7 @@ local M = {}
 local telescope = require("telescope/builtin")
 local dap = require("dap")
 local dap_go = require('dap-go')
+local dapui = require("dapui")
 local Terminal = require('toggleterm.terminal').Terminal
 
 function make_map_fn(mode)
@@ -76,11 +77,16 @@ leader("ds", function()
     dap.terminate()
     require("dapui").close()
 end)
+leader("D", function()
+    dapui.close()
+    dapui.open()
+end)
 leader("<up>", dap.step_out)
 leader("<down>", dap.step_into)
 leader("<left>", dap.step_back)
 leader("<right>", dap.step_over)
 
+leader("m", ":call MergeTabs()<cr>")
 leader("gu", ":UndotreeToggle<cr>")
 leader("lD", ":Telescope diagnostics severity=error<cr>")
 leader("lS", function() telescope.lsp_dynamic_workspace_symbols() end)
@@ -160,6 +166,24 @@ vim.cmd[[
 -- Insert current file name with \f in insert mode
 vim.cmd[[
     inoremap \f <C-R>=expand("%:t:r")<CR>
+]]
+
+-- from https://github.com/jferris/dotfiles/blob/master/vim/plugin/mergetabs.vim
+vim.cmd[[
+    function! MergeTabs()
+     if tabpagenr() == 1
+        return
+      endif
+      let bufferName = bufname("%")
+      if tabpagenr("$") == tabpagenr()
+        close!
+      else
+        close!
+        tabprev
+      endif
+      split
+      execute "buffer " . bufferName
+    endfunction
 ]]
 
 -- show docs

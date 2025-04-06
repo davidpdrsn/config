@@ -170,23 +170,56 @@ vim.g.rustaceanvim = {
     }
 }
 
+local luasnip = require('luasnip')
 local cmp = require('cmp')
 local lspkind = require('lspkind')
 
 cmp.setup({
+    preselect = cmp.PreselectMode.None,
     snippet = {
         expand = function(args)
-            require('luasnip').lsp_expand(args.body)
+            luasnip.lsp_expand(args.body)
         end,
     },
     mapping = {
-        ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-        ['<C-f>'] = cmp.mapping.scroll_docs(4),
-        ['<C-Space>'] = cmp.mapping.complete(),
-        ['<C-e>'] = cmp.mapping.close(),
         ['<C-y>'] = cmp.mapping.confirm({ select = true }),
         ['<C-n>'] = cmp.mapping(cmp.mapping.select_next_item(), {'i','c'}),
         ['<C-p>'] = cmp.mapping(cmp.mapping.select_prev_item(), {'i','c'}),
+
+        -- tab setup from https://github.com/hrsh7th/nvim-cmp/wiki/Example-mappings#luasnip
+        ['<CR>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+                if luasnip.expandable() then
+                    luasnip.expand()
+                else
+                    cmp.confirm({
+                        select = true,
+                    })
+                end
+            else
+                fallback()
+            end
+        end),
+
+        ["<Tab>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+                cmp.select_next_item()
+            elseif luasnip.locally_jumpable(1) then
+                luasnip.jump(1)
+            else
+                fallback()
+            end
+        end, { "i", "s" }),
+
+        ["<S-Tab>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+                cmp.select_prev_item()
+            elseif luasnip.locally_jumpable(-1) then
+                luasnip.jump(-1)
+            else
+                fallback()
+            end
+        end, { "i", "s" }),
     },
     sources = {
         { name = 'nvim_lsp' },
@@ -363,6 +396,8 @@ overseer.register_template({
 require('dap-go').setup()
 
 local dap = require("dap")
+
+dap.defaults.fallback.switchbuf = 'usetab,uselast'
 
 vim.fn.sign_define('DapBreakpoint', {text='🛑', texthl='', linehl='', numhl=''})
 
