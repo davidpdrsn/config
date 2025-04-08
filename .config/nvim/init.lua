@@ -85,16 +85,36 @@ lspconfig.csharp_ls.setup({
 
 lspconfig.gopls.setup({
     on_attach = on_attach,
+    settings = {
+        gopls = {
+            analyses = {
+                unusedparams = true,
+            },
+        },
+    },
 })
 
 local null_ls = require("null-ls")
 
 null_ls.setup({
     sources = {
-        null_ls.builtins.formatting.goimports,
+        null_ls.builtins.code_actions.impl,
         null_ls.builtins.code_actions.gomodifytags,
-        null_ls.builtins.code_actions.impl
-        -- null_ls.builtins.formatting.golines
+
+        null_ls.builtins.formatting.golines,
+        null_ls.builtins.formatting.goimports,
+
+        null_ls.builtins.diagnostics.golangci_lint.with {
+            args = {
+                -- custom args because golangci_lint v2 isn't officially suported yet
+                -- see https://github.com/nvimtools/none-ls.nvim/issues/256
+                "run",
+                "--output.json.path=stdout",
+                "--show-stats=false",
+                "--allow-parallel-runners",
+                -- "--enable-only=exhaustruct",
+            },
+        },
     },
 })
 
