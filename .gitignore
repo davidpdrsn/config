@@ -56,3 +56,4 @@ go/
 .rush/
 .config/gcloud/
 .bin/alloydb-auth-proxy
+.cli_history

@@ -6,6 +6,13 @@
 
 # Using glob patterns to include/exclude files or folders
 --glob=!.git/*
+--glob=!node_modules
+--glob=!build
+--glob=!.cache
+--glob=!temp
+--glob=!*\.map
+--glob=!target
+--glob=!*\.log
 
 # Because who cares about case!?
 --smart-case

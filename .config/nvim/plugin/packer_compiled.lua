@@ -49,8 +49,8 @@ local function save_profiles(threshold)
 end
 
 time([[Luarocks path setup]], true)
-local package_path_str = "/Users/davidpdrsn/.cache/nvim/packer_hererocks/2.1.1736781742/share/lua/5.1/?.lua;/Users/davidpdrsn/.cache/nvim/packer_hererocks/2.1.1736781742/share/lua/5.1/?/init.lua;/Users/davidpdrsn/.cache/nvim/packer_hererocks/2.1.1736781742/lib/luarocks/rocks-5.1/?.lua;/Users/davidpdrsn/.cache/nvim/packer_hererocks/2.1.1736781742/lib/luarocks/rocks-5.1/?/init.lua"
-local install_cpath_pattern = "/Users/davidpdrsn/.cache/nvim/packer_hererocks/2.1.1736781742/lib/lua/5.1/?.so"
+local package_path_str = "/Users/davidpdrsn/.cache/nvim/packer_hererocks/2.1.1713484068/share/lua/5.1/?.lua;/Users/davidpdrsn/.cache/nvim/packer_hererocks/2.1.1713484068/share/lua/5.1/?/init.lua;/Users/davidpdrsn/.cache/nvim/packer_hererocks/2.1.1713484068/lib/luarocks/rocks-5.1/?.lua;/Users/davidpdrsn/.cache/nvim/packer_hererocks/2.1.1713484068/lib/luarocks/rocks-5.1/?/init.lua"
+local install_cpath_pattern = "/Users/davidpdrsn/.cache/nvim/packer_hererocks/2.1.1713484068/lib/lua/5.1/?.so"
 if not string.find(package.path, package_path_str, 1, true) then
   package.path = package.path .. ';' .. package_path_str
 end
@@ -149,6 +149,16 @@ _G.packer_plugins = {
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/mason.nvim",
     url = "https://github.com/williamboman/mason.nvim"
   },
+  ["neoscroll.nvim"] = {
+    loaded = true,
+    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/neoscroll.nvim",
+    url = "https://github.com/karb94/neoscroll.nvim"
+  },
+  ["none-ls.nvim"] = {
+    loaded = true,
+    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/none-ls.nvim",
+    url = "https://github.com/nvimtools/none-ls.nvim"
+  },
   ["nordic.nvim"] = {
     loaded = true,
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/nordic.nvim",
@@ -178,6 +188,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/nvim-dap",
     url = "https://github.com/mfussenegger/nvim-dap"
+  },
+  ["nvim-dap-go"] = {
+    loaded = true,
+    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/nvim-dap-go",
+    url = "https://github.com/leoluz/nvim-dap-go"
   },
   ["nvim-dap-ui"] = {
     loaded = true,
@@ -259,6 +274,16 @@ _G.packer_plugins = {
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/treesj",
     url = "https://github.com/Wansmer/treesj"
   },
+  ["tslime.vim"] = {
+    loaded = true,
+    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/tslime.vim",
+    url = "https://github.com/jgdavey/tslime.vim"
+  },
+  ["typescript-tools.nvim"] = {
+    loaded = true,
+    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/typescript-tools.nvim",
+    url = "https://github.com/pmizio/typescript-tools.nvim"
+  },
   undotree = {
     loaded = true,
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/undotree",
@@ -294,16 +319,6 @@ _G.packer_plugins = {
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/vim-illuminate",
     url = "https://github.com/RRethy/vim-illuminate"
   },
-  ["vim-jsonnet"] = {
-    loaded = true,
-    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/vim-jsonnet",
-    url = "https://github.com/google/vim-jsonnet"
-  },
-  ["vim-markdown"] = {
-    loaded = true,
-    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/vim-markdown",
-    url = "https://github.com/plasticboy/vim-markdown"
-  },
   ["vim-matchup"] = {
     loaded = true,
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/vim-matchup",
@@ -314,25 +329,10 @@ _G.packer_plugins = {
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/vim-mkdir",
     url = "https://github.com/pbrisbin/vim-mkdir"
   },
-  ["vim-protobuf"] = {
-    loaded = true,
-    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/vim-protobuf",
-    url = "https://github.com/uarun/vim-protobuf"
-  },
   ["vim-repeat"] = {
     loaded = true,
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/vim-repeat",
     url = "https://github.com/tpope/vim-repeat"
-  },
-  ["vim-sort-motion"] = {
-    loaded = true,
-    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/vim-sort-motion",
-    url = "https://github.com/christoomey/vim-sort-motion"
-  },
-  ["vim-speeddating"] = {
-    loaded = true,
-    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/vim-speeddating",
-    url = "https://github.com/tpope/vim-speeddating"
   },
   ["vim-surround"] = {
     loaded = true,
@@ -364,11 +364,6 @@ _G.packer_plugins = {
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/vim-toggle-quickfix",
     url = "https://github.com/drmingdrmer/vim-toggle-quickfix"
   },
-  ["vim-toml"] = {
-    loaded = true,
-    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/vim-toml",
-    url = "https://github.com/cespare/vim-toml"
-  },
   ["vim-vinegar"] = {
     loaded = true,
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/vim-vinegar",
@@ -378,11 +373,6 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/vim-visual-multi",
     url = "https://github.com/mg979/vim-visual-multi"
-  },
-  ["vim-yaml"] = {
-    loaded = true,
-    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/vim-yaml",
-    url = "https://github.com/stephpy/vim-yaml"
   },
   ["winshift.nvim"] = {
     loaded = true,
