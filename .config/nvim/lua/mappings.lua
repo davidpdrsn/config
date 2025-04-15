@@ -42,31 +42,20 @@ leader("k", function() vim.diagnostic.open_float({ source = true }) end)
 
 local go_test_command
 
-function set_go_test_command()
-    local test = require('dap-go-ts').closest_test()
-    go_test_command = "go test -count=1 -run " .. test["name"] .. " " .. test["package"]
-end
-
-function run_go_test_command()
-    vim.cmd("execute \"Tmux " .. go_test_command .. "\"")
-end
-
-function run_and_set_go_test()
-    vim.api.nvim_command('write')
-    set_go_test_command()
-    run_go_test_command()
-end
-
-function run_go_test()
-    vim.api.nvim_command('write')
-    if go_test_command == nil then
-        set_go_test_command()
-    end
-    run_go_test_command()
-end
-
-leader("T", run_and_set_go_test)
-leader("t", run_go_test)
+leader("t", function()
+    vim.fn.system { 'touch', '/Users/davidpdrsn/.config/cli/command' }
+end)
+leader("T", function()
+    local buf = vim.api.nvim_buf_get_name(0)
+    local line = vim.api.nvim_win_get_cursor(0)[1]
+    print(buf, line)
+    vim.fn.system {
+        '/Users/davidpdrsn/.cargo/bin/t',
+        'watch test',
+        buf,
+        line,
+    }
+end)
 
 leader("dt", dap_go.debug_test)
 leader("dT", dap_go.debug_last_test)
