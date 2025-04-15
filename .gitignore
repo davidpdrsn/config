@@ -29,6 +29,7 @@ games
 .config/htop/
 .config/broot/
 .config/cli/
+.dlv
 .npm
 talks
 .bash_history
