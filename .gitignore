@@ -28,6 +28,7 @@ code
 games
 .config/htop/
 .config/broot/
+.config/cli/
 .npm
 talks
 .bash_history

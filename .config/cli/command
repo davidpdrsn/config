@@ -1,5 +1,0 @@
-go
-test
--run
-/TestUpdateRoomByRoomModel$
-./testing/integration/v1/homes
