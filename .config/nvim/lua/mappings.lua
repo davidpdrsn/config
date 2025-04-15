@@ -43,9 +43,12 @@ leader("k", function() vim.diagnostic.open_float({ source = true }) end)
 local go_test_command
 
 leader("t", function()
+    vim.api.nvim_command('write')
     vim.fn.system { 'touch', '/Users/davidpdrsn/.config/cli/command' }
 end)
 leader("T", function()
+    vim.api.nvim_command('write')
+
     local buf = vim.api.nvim_buf_get_name(0)
     local line = vim.api.nvim_win_get_cursor(0)[1]
     print(buf, line)
