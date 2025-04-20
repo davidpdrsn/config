@@ -133,62 +133,75 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
     }
 )
 
-vim.g.rustaceanvim = {
-    server = {
-        root_dir = rust_root_dir,
-        on_attach = on_attach,
-        flags = {
-            debounce_text_changes = 150,
-        },
-        capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities()),
-        settings = {
-            ["rust-analyzer"] = {
-                inlayHints = {
-                    chainingHints = false,
-                },
-                cargo = {
-                    features = "all",
-                    autoreload = true,
-                    buildScripts = {
-                        enable = true,
-                    }
-                },
-                checkOnSave = {
-                    overrideCommand = {
-                        "cargo",
-                        "clippy",
-                        "--all-features",
-                        "--tests",
-                        "--message-format=json",
-                        "--all-targets",
-                        "--target-dir",
-                        "/Users/davidpdrsn/.rust-analyzer-target-dir",
-                        "--workspace",
-                    },
-                    enable = true,
-                },
-                completion = {
-                    autoimport = {
-                        enable = true,
-                    },
-                    postfix = {
-                        enable = true,
-                    },
-                },
-                diagnostics = {
-                    disabled = {"macro-error"},
-                },
-                procMacro = {
-                    enable = true,
-                    attributes = {
-                        enable = true,
-                    },
-                },
-                rustcSource = "discover",
+lspconfig.rust_analyzer.setup({
+    root_dir = rust_root_dir,
+    on_attach = on_attach,
+    flags = {
+        debounce_text_changes = 150,
+    },
+    capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities()),
+    settings = {
+        ['rust-analyzer'] = {
+            inlayHints = {
+                chainingHints = false,
             },
-        },
+            cargo = {
+                features = "all",
+                autoreload = true,
+                buildScripts = {
+                    enable = true,
+                }
+            },
+            checkOnSave = {
+                overrideCommand = {
+                    "cargo",
+                    "clippy",
+                    "--all-features",
+                    "--tests",
+                    "--message-format=json",
+                    "--all-targets",
+                    "--target-dir",
+                    "/Users/davidpdrsn/.rust-analyzer-target-dir",
+                    "--workspace",
+                },
+                enable = true,
+            },
+            completion = {
+                autoimport = {
+                    enable = true,
+                },
+                postfix = {
+                    enable = true,
+                },
+            },
+            diagnostics = {
+                disabled = {"macro-error"},
+            },
+            procMacro = {
+                enable = true,
+                attributes = {
+                    enable = true,
+                },
+            },
+            rustcSource = "discover",
+        }
     }
-}
+})
+
+-- vim.g.rustaceanvim = {
+--     server = {
+--         root_dir = rust_root_dir,
+--         on_attach = on_attach,
+--         flags = {
+--             debounce_text_changes = 150,
+--         },
+--         capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities()),
+--         settings = {
+--             ["rust-analyzer"] = {
+--             },
+--         },
+--     }
+-- }
 
 local luasnip = require('luasnip')
 local cmp = require('cmp')
