@@ -73,8 +73,6 @@ return require('packer').startup(function(use)
     use 'nvim-lua/popup.nvim'
     -- lsp signature hint as you type
     use 'ray-x/lsp_signature.nvim'
-    -- rust things
-    -- use 'mrcjkb/rustaceanvim'
     -- peek lines when jumping
     use 'nacro90/numb.nvim'
     -- move around
