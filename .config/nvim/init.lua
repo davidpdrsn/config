@@ -75,6 +75,10 @@ end
 
 local lspconfig = require('lspconfig')
 
+lspconfig.eslint.setup({
+    on_attach = on_attach,
+})
+
 lspconfig.gdscript.setup({
     on_attach = on_attach,
 })
