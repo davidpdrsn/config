@@ -15,6 +15,7 @@
 --glob=!*\.map
 --glob=!target
 --glob=!*\.log
+--glob=!*\.DS_Store
 
 # Because who cares about case!?
 --smart-case
