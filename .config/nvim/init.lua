@@ -270,6 +270,11 @@ vim.cmd([[
         au WinLeave * setlocal nocursorline
     augroup END
 
+    augroup CursorCol
+        au!
+        au FileType yaml setlocal cursorcolumn
+    augroup END
+
     augroup autosave_buffer
       au!
 
