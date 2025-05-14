@@ -192,7 +192,7 @@ alias gm='git merge'
 alias grbc='git rebase --continue'
 alias grba='git rebase --abort'
 alias grbi='git rebase -i'
-alias gs='git show --ext-diff'
+alias gs='git show'
 
 ## FUNCTIONS
 ## -----------------------
