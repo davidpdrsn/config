@@ -27,6 +27,9 @@ imap("\\u", function()
     insert_guid()
 end)
 
+nmap("ga.", '<cmd>TextCaseOpenTelescope<CR>', { desc = "Telescope" })
+vmap("ga.", '<cmd>TextCaseOpenTelescope<CR>', { desc = "Telescope" })
+
 function leader(mapping, what_to_do, options)
     nmap("<leader>" .. mapping, what_to_do, options)
 end
