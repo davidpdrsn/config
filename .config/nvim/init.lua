@@ -356,9 +356,9 @@ require("telescope").setup {
 
 require("telescope").load_extension("recent_files")
 
-require('telescope').load_extension('textcase')
-
 require('textcase').setup()
+
+require('telescope').load_extension('textcase')
 
 require("toggleterm").setup()
 
