@@ -11,6 +11,7 @@ return require('packer').startup(function(use)
     use 'christoomey/vim-tmux-navigator'
     -- colorscheme
     use 'folke/tokyonight.nvim'
+    use { "catppuccin/nvim", as = "catppuccin" }
     -- status line
     use 'nvim-lualine/lualine.nvim'
     -- "ae" text object

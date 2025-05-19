@@ -30,6 +30,7 @@ export BLENDER_PATH="/Applications/Blender.app/Contents/MacOS/Blender"
 export GODOT_PATH="/Applications/Godot_mono.app/Contents/MacOS/Godot"
 
 export LUN_DEV_DB_PASS="p!G-inYH3ZxW"
+export LUN_PROD_DB_PASS="G5_t;(CU;)uoqUmQ"
 
 export PATH=$PATH:/usr/local
 export PATH=$PATH:/Users/davidpdrsn/.ark/bin
