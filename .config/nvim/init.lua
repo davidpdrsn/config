@@ -34,8 +34,6 @@ vim.opt.tabstop = 4
 vim.opt.foldenable = false
 vim.opt.spell = false
 
--- vim.g.godot_executable = "/Applications/Godot.app/Contents/MacOS/Godot"
-
 require("tokyonight").setup({
   style = "night",
   dim_inactive = true,
@@ -46,8 +44,14 @@ require("tokyonight").setup({
   end
 })
 
+require("catppuccin").setup({
+    flavour = "mocha", -- auto, latte, frappe, macchiato, mocha
+})
+
+-- vim.cmd.colorscheme "tokyonight-night"
+vim.cmd.colorscheme "catppuccin"
+
 vim.cmd[[
-    colorscheme tokyonight-night
     highlight SpecialComment guifg=#6c6c66
 ]]
 
@@ -400,7 +404,20 @@ overseer.register_template({
     },
 })
 
-require('dap-go').setup()
+require('dap-go').setup {
+  dap_configurations = {
+    {
+      type = "go",
+      name = "Attach remote",
+      mode = "remote",
+      request = "attach",
+    },
+  },
+  delve = {
+      -- required for "Attach remote"
+      port = "38697"
+  },
+}
 
 local dap = require("dap")
 
