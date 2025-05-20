@@ -46,6 +46,9 @@ leader("k", function() vim.diagnostic.open_float({ source = true }) end)
 local go_test_command
 
 leader("t", function()
+    dap.disconnect()
+    require("dapui").close()
+
     vim.api.nvim_command('write')
     vim.fn.system { 'touch', '/Users/davidpdrsn/.config/cli/command' }
 end)
@@ -67,6 +70,10 @@ leader("dt", dap_go.debug_test)
 leader("dT", dap_go.debug_last_test)
 leader("dd", dap.toggle_breakpoint)
 leader("dc", dap.continue)
+leader("dC", function()
+    dap.disconnect()
+    require("dapui").close()
+end)
 leader("dr", dap.restart)
 leader("ds", function()
     dap.terminate()
