@@ -23,3 +23,4 @@ bacon.toml
 mprocs.yaml
 .temp
 .tmp
+__debug_bin*
