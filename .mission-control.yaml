@@ -1,0 +1,9 @@
+jobs:
+  google:
+    command:
+      - ping
+      - google.com
+  lun:
+    command:
+      - ping
+      - lun.energy
