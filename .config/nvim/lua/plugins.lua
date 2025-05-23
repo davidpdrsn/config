@@ -8,7 +8,7 @@ return require('packer').startup(function(use)
     -- copy to system clipboard
     use 'christoomey/vim-system-copy'
     -- seamless navigation between vim and tmux
-    use 'christoomey/vim-tmux-navigator'
+    -- use 'christoomey/vim-tmux-navigator'
     -- colorscheme
     use 'folke/tokyonight.nvim'
     use { "catppuccin/nvim", as = "catppuccin" }
@@ -119,4 +119,6 @@ return require('packer').startup(function(use)
     use "nvimtools/none-ls.nvim"
     -- send things to tmux
     use "jgdavey/tslime.vim"
+
+    use 'swaits/zellij-nav.nvim'
 end)

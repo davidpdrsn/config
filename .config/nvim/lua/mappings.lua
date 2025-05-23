@@ -159,6 +159,11 @@ nmap("Q", "<Nop>")
 nmap("<s-up>", "10<C-W>+")
 nmap("<s-down>", "10<C-W>-")
 
+nmap("<c-h>", "<cmd>ZellijNavigateLeft<cr>")
+nmap("<c-j>", "<cmd>ZellijNavigateDown<cr>")
+nmap("<c-k>", "<cmd>ZellijNavigateUp<cr>")
+nmap("<c-l>", "<cmd>ZellijNavigateRight<cr>")
+
 -- Don't jump around when using * to search for word under cursor
 -- Often I just want to see where else a word appears
 vim.cmd[[
