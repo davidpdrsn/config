@@ -149,4 +149,4 @@ require('bqf').setup({
     }
 })
 
-require("zellij-nav").setup()
+require('smart-splits').setup()
