@@ -148,3 +148,5 @@ require('bqf').setup({
         winblend = 0,
     }
 })
+
+require("zellij-nav").setup()
