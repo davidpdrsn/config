@@ -119,6 +119,5 @@ return require('packer').startup(function(use)
     use "nvimtools/none-ls.nvim"
     -- send things to tmux
     use "jgdavey/tslime.vim"
-
-    use 'swaits/zellij-nav.nvim'
+    use 'mrjones2014/smart-splits.nvim'
 end)
