@@ -159,10 +159,11 @@ nmap("Q", "<Nop>")
 nmap("<s-up>", "10<C-W>+")
 nmap("<s-down>", "10<C-W>-")
 
-vim.keymap.set('n', '<C-h>', require('smart-splits').move_cursor_left)
-vim.keymap.set('n', '<C-j>', require('smart-splits').move_cursor_down)
-vim.keymap.set('n', '<C-k>', require('smart-splits').move_cursor_up)
-vim.keymap.set('n', '<C-l>', require('smart-splits').move_cursor_right)
+local smart_splits = require('smart-splits')
+nmap('<c-h>', smart_splits.move_cursor_left)
+nmap('<c-j>', smart_splits.move_cursor_down)
+nmap('<c-k>', smart_splits.move_cursor_up)
+nmap('<c-l>', smart_splits.move_cursor_right)
 
 -- Don't jump around when using * to search for word under cursor
 -- Often I just want to see where else a word appears
