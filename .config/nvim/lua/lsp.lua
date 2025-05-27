@@ -55,6 +55,7 @@ vim.lsp.enable({
     'ts_ls',
     'gopls',
     'eslint',
+    'postgres_lsp',
 })
 
 -- enable completion
