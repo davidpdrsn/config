@@ -131,7 +131,7 @@ vim.cmd[[
 ]]
 
 -- get path to current file in command mode with %%
-cmap("%%", "<C-R>=expand('%:h').'/'<cr>")
+cmap("%%", "<C-R>='\"'.expand('%:h').'/'.'\"'<cr>")
 
 -- quickly insert semicolon or comma at end of line
 leader(";", "maA;<esc>`a")
