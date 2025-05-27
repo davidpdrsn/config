@@ -4,7 +4,8 @@
 source "$HOME/.cargo/env"
 eval "$(/opt/homebrew/bin/brew shellenv)"
 eval "$(zoxide init zsh)"
-eval "$(direnv hook zsh)"
+
+# eval "$(direnv hook zsh)"
 
 export EDITOR='nvim'
 
