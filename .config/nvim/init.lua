@@ -46,6 +46,12 @@ require("tokyonight").setup({
 
 require("catppuccin").setup({
     flavour = "mocha", -- auto, latte, frappe, macchiato, mocha
+    dim_inactive = {
+        enabled = true,
+    },
+    integrations = {
+        leap = true,
+    },
 })
 
 -- vim.cmd.colorscheme "tokyonight-night"
