@@ -9,6 +9,8 @@ return require('packer').startup(function(use)
     use 'christoomey/vim-system-copy'
     -- seamless navigation between vim and tmux
     -- use 'christoomey/vim-tmux-navigator'
+    -- seamless navigation between vim and multiplexers
+    use 'mrjones2014/smart-splits.nvim'
     -- colorscheme
     use 'folke/tokyonight.nvim'
     use { "catppuccin/nvim", as = "catppuccin" }
@@ -119,5 +121,4 @@ return require('packer').startup(function(use)
     use "nvimtools/none-ls.nvim"
     -- send things to tmux
     use "jgdavey/tslime.vim"
-    use 'mrjones2014/smart-splits.nvim'
 end)

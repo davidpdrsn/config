@@ -7,7 +7,7 @@ keybinds clear-defaults=true {
         bind "Ctrl space" { SwitchToMode "normal"; }
         bind "Ctrl h" {
             MessagePlugin "https://github.com/hiasr/vim-zellij-navigator/releases/download/0.2.1/vim-zellij-navigator.wasm" {
-                name "move_focus_or_tab";
+                name "move_focus";
                 payload "left";
 
                 // Plugin Configuration
@@ -35,7 +35,7 @@ keybinds clear-defaults=true {
 
         bind "Ctrl l" {
             MessagePlugin "https://github.com/hiasr/vim-zellij-navigator/releases/download/0.2.1/vim-zellij-navigator.wasm" {
-                name "move_focus_or_tab";
+                name "move_focus";
                 payload "right";
 
                 move_mod "ctrl";
