@@ -210,16 +210,16 @@ nmap(
     { silent = true }
 )
 
--- term
-local term = Terminal:new({
-    direction = "float",
-    float_opts = {
-        border = 'single',
-    }
-})
-nmap('<c-t>', function()
-    term:toggle()
-end)
+-- -- term
+-- local term = Terminal:new({
+--     direction = "float",
+--     float_opts = {
+--         border = 'single',
+--     }
+-- })
+-- nmap('<c-t>', function()
+--     term:toggle()
+-- end)
 
 -- lsp
 nmap('gd', function() vim.lsp.buf.definition() end)
