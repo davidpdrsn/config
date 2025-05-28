@@ -58,16 +58,16 @@ return require('packer').startup(function(use)
         "L3MON4D3/LuaSnip",
         tag = "v2.*",
     }
-    -- nvim-cmp source for snippets
-    use 'saadparwaiz1/cmp_luasnip'
-    -- nvim-cmp source for buffer words
-    use 'hrsh7th/cmp-buffer'
-    -- nvim-cmp source for lsp
-    use 'hrsh7th/cmp-nvim-lsp'
-    -- nvim-cmp source for paths
-    use 'hrsh7th/cmp-path'
-    -- completion
-    use 'hrsh7th/nvim-cmp'
+    -- -- nvim-cmp source for snippets
+    -- use 'saadparwaiz1/cmp_luasnip'
+    -- -- nvim-cmp source for buffer words
+    -- use 'hrsh7th/cmp-buffer'
+    -- -- nvim-cmp source for lsp
+    -- use 'hrsh7th/cmp-nvim-lsp'
+    -- -- nvim-cmp source for paths
+    -- use 'hrsh7th/cmp-path'
+    -- -- completion
+    -- use 'hrsh7th/nvim-cmp'
     -- UI for nvim-lsp progress
     use 'j-hui/fidget.nvim'
     -- easy lsp config
@@ -75,7 +75,7 @@ return require('packer').startup(function(use)
     -- popup api from vim in Neovim
     use 'nvim-lua/popup.nvim'
     -- lsp signature hint as you type
-    use 'ray-x/lsp_signature.nvim'
+    -- use 'ray-x/lsp_signature.nvim'
     -- peek lines when jumping
     use 'nacro90/numb.nvim'
     -- move around
@@ -123,5 +123,13 @@ return require('packer').startup(function(use)
     use "jgdavey/tslime.vim"
     -- in json and yaml files, how path to current line
     use 'JFryy/keytrail.nvim'
-    use 'aaronik/treewalker.nvim'
+    -- completion
+    use {
+        'saghen/blink.cmp',
+        tag = "v1.3.1",
+    }
+    -- DBUI
+    use 'tpope/vim-dadbod'
+    use 'kristijanhusak/vim-dadbod-ui'
+    use 'kristijanhusak/vim-dadbod-completion'
 end)

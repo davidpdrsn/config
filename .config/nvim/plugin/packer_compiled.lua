@@ -49,8 +49,8 @@ local function save_profiles(threshold)
 end
 
 time([[Luarocks path setup]], true)
-local package_path_str = "/Users/davidpdrsn/.cache/nvim/packer_hererocks/2.1.1713484068/share/lua/5.1/?.lua;/Users/davidpdrsn/.cache/nvim/packer_hererocks/2.1.1713484068/share/lua/5.1/?/init.lua;/Users/davidpdrsn/.cache/nvim/packer_hererocks/2.1.1713484068/lib/luarocks/rocks-5.1/?.lua;/Users/davidpdrsn/.cache/nvim/packer_hererocks/2.1.1713484068/lib/luarocks/rocks-5.1/?/init.lua"
-local install_cpath_pattern = "/Users/davidpdrsn/.cache/nvim/packer_hererocks/2.1.1713484068/lib/lua/5.1/?.so"
+local package_path_str = "/Users/davidpdrsn/.cache/nvim/packer_hererocks/2.1.1744318430/share/lua/5.1/?.lua;/Users/davidpdrsn/.cache/nvim/packer_hererocks/2.1.1744318430/share/lua/5.1/?/init.lua;/Users/davidpdrsn/.cache/nvim/packer_hererocks/2.1.1744318430/lib/luarocks/rocks-5.1/?.lua;/Users/davidpdrsn/.cache/nvim/packer_hererocks/2.1.1744318430/lib/luarocks/rocks-5.1/?/init.lua"
+local install_cpath_pattern = "/Users/davidpdrsn/.cache/nvim/packer_hererocks/2.1.1744318430/lib/lua/5.1/?.so"
 if not string.find(package.path, package_path_str, 1, true) then
   package.path = package.path .. ';' .. package_path_str
 end
@@ -89,25 +89,15 @@ _G.packer_plugins = {
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/baleia.nvim",
     url = "https://github.com/m00qek/baleia.nvim"
   },
-  ["cmp-buffer"] = {
+  ["blink.cmp"] = {
     loaded = true,
-    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/cmp-buffer",
-    url = "https://github.com/hrsh7th/cmp-buffer"
+    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/blink.cmp",
+    url = "https://github.com/saghen/blink.cmp"
   },
-  ["cmp-nvim-lsp"] = {
+  catppuccin = {
     loaded = true,
-    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/cmp-nvim-lsp",
-    url = "https://github.com/hrsh7th/cmp-nvim-lsp"
-  },
-  ["cmp-path"] = {
-    loaded = true,
-    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/cmp-path",
-    url = "https://github.com/hrsh7th/cmp-path"
-  },
-  cmp_luasnip = {
-    loaded = true,
-    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/cmp_luasnip",
-    url = "https://github.com/saadparwaiz1/cmp_luasnip"
+    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/catppuccin",
+    url = "https://github.com/catppuccin/nvim"
   },
   ["dressing.nvim"] = {
     loaded = true,
@@ -124,15 +114,15 @@ _G.packer_plugins = {
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/kanagawa.nvim",
     url = "https://github.com/rebelot/kanagawa.nvim"
   },
+  ["keytrail.nvim"] = {
+    loaded = true,
+    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/keytrail.nvim",
+    url = "https://github.com/JFryy/keytrail.nvim"
+  },
   ["leap.nvim"] = {
     loaded = true,
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/leap.nvim",
     url = "https://github.com/ggandor/leap.nvim"
-  },
-  ["lsp_signature.nvim"] = {
-    loaded = true,
-    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/lsp_signature.nvim",
-    url = "https://github.com/ray-x/lsp_signature.nvim"
   },
   ["lspkind.nvim"] = {
     loaded = true,
@@ -173,11 +163,6 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/nvim-bqf",
     url = "https://github.com/kevinhwang91/nvim-bqf"
-  },
-  ["nvim-cmp"] = {
-    loaded = true,
-    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/nvim-cmp",
-    url = "https://github.com/hrsh7th/nvim-cmp"
   },
   ["nvim-dap"] = {
     loaded = true,
@@ -234,6 +219,11 @@ _G.packer_plugins = {
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/popup.nvim",
     url = "https://github.com/nvim-lua/popup.nvim"
   },
+  ["smart-splits.nvim"] = {
+    loaded = true,
+    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/smart-splits.nvim",
+    url = "https://github.com/mrjones2014/smart-splits.nvim"
+  },
   ["telescope-recent-files"] = {
     loaded = true,
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/telescope-recent-files",
@@ -263,6 +253,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/treesj",
     url = "https://github.com/Wansmer/treesj"
+  },
+  ["treewalker.nvim"] = {
+    loaded = true,
+    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/treewalker.nvim",
+    url = "https://github.com/aaronik/treewalker.nvim"
   },
   ["tslime.vim"] = {
     loaded = true,
@@ -343,11 +338,6 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/vim-textobj-user",
     url = "https://github.com/kana/vim-textobj-user"
-  },
-  ["vim-tmux-navigator"] = {
-    loaded = true,
-    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/vim-tmux-navigator",
-    url = "https://github.com/christoomey/vim-tmux-navigator"
   },
   ["vim-toggle-quickfix"] = {
     loaded = true,

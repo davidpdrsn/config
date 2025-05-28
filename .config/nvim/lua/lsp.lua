@@ -58,15 +58,15 @@ vim.lsp.enable({
     'postgres_lsp',
 })
 
--- enable completion
-vim.api.nvim_create_autocmd('LspAttach', {
-  callback = function(ev)
-    local client = vim.lsp.get_client_by_id(ev.data.client_id)
-    if client:supports_method('textDocument/completion') then
-      vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
-    end
-  end,
-})
+-- -- enable completion
+-- vim.api.nvim_create_autocmd('LspAttach', {
+--   callback = function(ev)
+--     local client = vim.lsp.get_client_by_id(ev.data.client_id)
+--     if client:supports_method('textDocument/completion') then
+--       vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
+--     end
+--   end,
+-- })
 
 local null_ls = require("null-ls")
 
@@ -97,41 +97,66 @@ null_ls.setup({
 -- don't automatically select the first result in suggestions
 vim.cmd("set completeopt+=noselect")
 
-require("lsp_signature").setup({
-    handler_opts = {
-        border = "none"
-    },
-})
+-- require("lsp_signature").setup({
+--     handler_opts = {
+--         border = "none"
+--     },
+-- })
 
-local luasnip = require('luasnip')
-local lspkind = require('lspkind')
-local cmp = require('cmp')
+-- local luasnip = require('luasnip')
+-- local lspkind = require('lspkind')
+-- local cmp = require('cmp')
+-- cmp.setup({
+--     preselect = cmp.PreselectMode.None,
+--     snippet = {
+--         expand = function(args)
+--             luasnip.lsp_expand(args.body)
+--         end,
+--     },
+--     mapping = {
+--         ['<C-y>'] = cmp.mapping.confirm({ select = false }),
+--         ['<C-n>'] = cmp.mapping(cmp.mapping.select_next_item(), {'i','c'}),
+--         ['<C-p>'] = cmp.mapping(cmp.mapping.select_prev_item(), {'i','c'}),
+--     },
+--     sources = {
+--         { name = 'nvim_lsp' },
+--         { name = 'buffer' },
+--         { name = 'luasnip' },
+--     },
+--     formatting = {
+--         format = lspkind.cmp_format({
+--             mode = 'symbol', -- show only symbol annotations
+--             maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
+--             -- can also be a function to dynamically calculate max width such as 
+--             -- maxwidth = function() return math.floor(0.45 * vim.o.columns) end,
+--             ellipsis_char = '...', -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
+--             show_labelDetails = true, -- show labelDetails in menu. Disabled by default
+--         })
+--     }
+-- })
 
-cmp.setup({
-    preselect = cmp.PreselectMode.None,
-    snippet = {
-        expand = function(args)
-            luasnip.lsp_expand(args.body)
-        end,
+require("blink.cmp").setup({
+    fuzzy = {
+        prebuilt_binaries = {
+            force_version = "v1.3.1"
+        },
+        implementation = "rust",
     },
-    mapping = {
-        ['<C-y>'] = cmp.mapping.confirm({ select = false }),
-        ['<C-n>'] = cmp.mapping(cmp.mapping.select_next_item(), {'i','c'}),
-        ['<C-p>'] = cmp.mapping(cmp.mapping.select_prev_item(), {'i','c'}),
+    signature = {
+        enabled = true,
+        window = {
+            show_documentation = false,
+        },
+    },
+    completion = {
+        ghost_text = { enabled = true },
     },
     sources = {
-        { name = 'nvim_lsp' },
-        { name = 'buffer' },
-        { name = 'luasnip' },
+        per_filetype = {
+            sql = { 'dadbod', 'buffer' },
+        },
+        providers = {
+            dadbod = { name = "Dadbod", module = "vim_dadbod_completion.blink" },
+        },
     },
-    formatting = {
-        format = lspkind.cmp_format({
-            mode = 'symbol', -- show only symbol annotations
-            maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
-            -- can also be a function to dynamically calculate max width such as 
-            -- maxwidth = function() return math.floor(0.45 * vim.o.columns) end,
-            ellipsis_char = '...', -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
-            show_labelDetails = true, -- show labelDetails in menu. Disabled by default
-        })
-    }
 })
