@@ -221,6 +221,11 @@ nmap(
 --     term:toggle()
 -- end)
 
+nmap('<m-k>', ':Treewalker Up<cr>')
+nmap('<m-j>', ':Treewalker Down<cr>')
+nmap('<m-h>', ':Treewalker Left<cr>')
+nmap('<m-l>', ':Treewalker Right<cr>')
+
 -- lsp
 nmap('gd', function() vim.lsp.buf.definition() end)
 nmap('gy', function() vim.lsp.buf.type_definition() end)

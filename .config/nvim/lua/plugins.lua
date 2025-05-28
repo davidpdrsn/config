@@ -121,4 +121,7 @@ return require('packer').startup(function(use)
     use "nvimtools/none-ls.nvim"
     -- send things to tmux
     use "jgdavey/tslime.vim"
+    -- in json and yaml files, how path to current line
+    use 'JFryy/keytrail.nvim'
+    use 'aaronik/treewalker.nvim'
 end)
