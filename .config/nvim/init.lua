@@ -159,8 +159,4 @@ require('smart-splits').setup()
 
 require("keytrail").setup()
 
-require('treewalker').setup({
-    highlight = false,
-    highlight_group = 'CursorLine',
-    jumplist = true,
-})
+vim.g.db_ui_use_nerd_fonts = 1
