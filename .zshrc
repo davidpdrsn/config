@@ -195,6 +195,7 @@ alias grbc='git rebase --continue'
 alias grba='git rebase --abort'
 alias grbi='git rebase -i'
 alias gs='git show'
+alias gg='lazygit'
 
 ## FUNCTIONS
 ## -----------------------
