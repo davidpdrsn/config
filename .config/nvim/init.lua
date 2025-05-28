@@ -156,3 +156,11 @@ require('bqf').setup({
 })
 
 require('smart-splits').setup()
+
+require("keytrail").setup()
+
+require('treewalker').setup({
+    highlight = false,
+    highlight_group = 'CursorLine',
+    jumplist = true,
+})
