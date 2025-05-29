@@ -7,8 +7,6 @@ return require('packer').startup(function(use)
     use 'christoomey/Vim-g-dot'
     -- copy to system clipboard
     use 'christoomey/vim-system-copy'
-    -- seamless navigation between vim and tmux
-    -- use 'christoomey/vim-tmux-navigator'
     -- seamless navigation between vim and multiplexers
     use 'mrjones2014/smart-splits.nvim'
     -- colorscheme
@@ -36,8 +34,6 @@ return require('packer').startup(function(use)
     use 'tpope/vim-repeat'
     -- Delete/change/add surrounding things with ease
     use 'tpope/vim-surround'
-    -- better netrw
-    use 'tpope/vim-vinegar'
     -- autopairs
     use 'windwp/nvim-autopairs'
     -- improve the default vim.ui interfaces
@@ -58,24 +54,12 @@ return require('packer').startup(function(use)
         "L3MON4D3/LuaSnip",
         tag = "v2.*",
     }
-    -- -- nvim-cmp source for snippets
-    -- use 'saadparwaiz1/cmp_luasnip'
-    -- -- nvim-cmp source for buffer words
-    -- use 'hrsh7th/cmp-buffer'
-    -- -- nvim-cmp source for lsp
-    -- use 'hrsh7th/cmp-nvim-lsp'
-    -- -- nvim-cmp source for paths
-    -- use 'hrsh7th/cmp-path'
-    -- -- completion
-    -- use 'hrsh7th/nvim-cmp'
     -- UI for nvim-lsp progress
     use 'j-hui/fidget.nvim'
     -- easy lsp config
     use 'neovim/nvim-lspconfig'
     -- popup api from vim in Neovim
     use 'nvim-lua/popup.nvim'
-    -- lsp signature hint as you type
-    -- use 'ray-x/lsp_signature.nvim'
     -- peek lines when jumping
     use 'nacro90/numb.nvim'
     -- move around
@@ -88,10 +72,6 @@ return require('packer').startup(function(use)
     use 'mbbill/undotree'
     -- install and manage LSP servers
     use "williamboman/mason.nvim"
-    -- theme
-    use "AlexvZyl/nordic.nvim"
-    -- theme
-    use "rebelot/kanagawa.nvim"
     -- recent files in telescope
     use "smartpde/telescope-recent-files"
     -- change case
@@ -128,8 +108,11 @@ return require('packer').startup(function(use)
         'saghen/blink.cmp',
         tag = "v1.3.1",
     }
-    -- DBUI
+    -- database ui
+    -- (:DBUI)
     use 'tpope/vim-dadbod'
     use 'kristijanhusak/vim-dadbod-ui'
     use 'kristijanhusak/vim-dadbod-completion'
+    -- file explorer
+    use 'stevearc/oil.nvim'
 end)
