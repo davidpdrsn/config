@@ -1,13 +1,4 @@
 vim.cmd([[
-    augroup resumeCursorPosition
-        autocmd!
-
-        autocmd BufReadPost *
-            \ if line("'\"") > 0 && line("'\"") <= line("$") |
-            \     exe "normal g`\"" |
-            \ endif
-    augroup END
-
     augroup miscGroup
         autocmd!
 
@@ -33,12 +24,12 @@ vim.cmd([[
       au!
 
       au FocusLost * silent!
-        \   if getbufinfo('%')[0].name != '' && getbufinfo('%')[0].changed && stridx(getbufinfo('%')[0].name, "[dap-repl-") == -1
+        \   if getbufinfo('%')[0].name != '' && getbufinfo('%')[0].changed && stridx(getbufinfo('%')[0].name, "[dap-repl-") == -1 && stridx(getbufinfo('%')[0].name, "oil://") == -1
         \ |     write
         \ | endif
 
       au BufLeave * silent!
-        \   if getbufinfo('%')[0].name != '' && getbufinfo('%')[0].changed && stridx(getbufinfo('%')[0].name, "[dap-repl-") == -1
+        \   if getbufinfo('%')[0].name != '' && getbufinfo('%')[0].changed && stridx(getbufinfo('%')[0].name, "[dap-repl-") == -1 && stridx(getbufinfo('%')[0].name, "oil://") == -1
         \ |     echom getbufinfo('%')[0].name
         \ |     write
         \ | endif

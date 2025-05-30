@@ -24,6 +24,7 @@ return require('packer').startup(function(use)
     use 'nvim-lua/plenary.nvim'
     -- fuzzy find all the things
     use 'nvim-telescope/telescope.nvim'
+    use 'nvim-telescope/telescope-ui-select.nvim'
     -- mkdir for full path
     use 'pbrisbin/vim-mkdir'
     -- comment stuff
@@ -115,4 +116,8 @@ return require('packer').startup(function(use)
     use 'kristijanhusak/vim-dadbod-completion'
     -- file explorer
     use 'stevearc/oil.nvim'
+    -- ai
+    use 'augmentcode/augment.vim'
+    -- restore cursor position
+    use 'ethanholz/nvim-lastplace'
 end)

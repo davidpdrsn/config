@@ -119,6 +119,14 @@ vim.cmd[[
 ]]
 
 require("telescope").setup {
+    pickers = {
+        find_files = {
+            theme = 'ivy',
+        },
+        code_actions = {
+            theme = 'ivy',
+        }
+    },
     defaults = {
         file_ignore_patterns = { 
             ".glb",
@@ -130,14 +138,17 @@ require("telescope").setup {
     extensions = {
         recent_files = {
             only_cwd = true
+        },
+        ["ui-select"] = {
+            require("telescope.themes").get_cursor()
         }
-    }
+    },
 }
-
-require("telescope").load_extension("recent_files")
 
 require('textcase').setup()
 
+require("telescope").load_extension("ui-select")
+require("telescope").load_extension("recent_files")
 require('telescope').load_extension('textcase')
 
 require("toggleterm").setup()
@@ -164,10 +175,27 @@ vim.g.db_ui_use_nerd_fonts = 1
 require("oil").setup({
     keymaps = {
         ["<C-h>"] = false,
+        ["<C-s>"] = false,
     },
     view_options = {
         show_hidden = true,
-    }
+    },
+    columns = {
+        -- "icon",
+        -- "permissions",
+        -- "size",
+        -- "mtime",
+    },
+    lsp_file_methods = {
+        enabled = false,
+    },
 })
 
-vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+-- for augment ai
+vim.g.augment_disable_completions = true
+vim.g.augment_workspace_folders = {
+    '/Users/davidpdrsn/Code/lun/calor',
+    '/Users/davidpdrsn/Code/lun/web-main',
+}
+
+require('nvim-lastplace').setup({})
