@@ -84,6 +84,11 @@ _G.packer_plugins = {
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/Vim-g-dot",
     url = "https://github.com/christoomey/Vim-g-dot"
   },
+  ["augment.vim"] = {
+    loaded = true,
+    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/augment.vim",
+    url = "https://github.com/augmentcode/augment.vim"
+  },
   ["baleia.nvim"] = {
     loaded = true,
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/baleia.nvim",
@@ -223,6 +228,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/telescope-recent-files",
     url = "https://github.com/smartpde/telescope-recent-files"
+  },
+  ["telescope-ui-select.nvim"] = {
+    loaded = true,
+    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/telescope-ui-select.nvim",
+    url = "https://github.com/nvim-telescope/telescope-ui-select.nvim"
   },
   ["telescope.nvim"] = {
     loaded = true,

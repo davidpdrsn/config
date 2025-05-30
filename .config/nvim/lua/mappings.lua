@@ -88,6 +88,10 @@ leader("<down>", dap.step_into)
 leader("<left>", dap.step_back)
 leader("<right>", dap.step_over)
 
+leader("ac", ":Augment chat<cr>")
+leader("an", ":Augment chat-new<cr>")
+leader("at", ":Augment chat-toggle<cr>")
+
 leader("m", ":call MergeTabs()<cr>")
 leader("gu", ":UndotreeToggle<cr>")
 leader("lD", ":Telescope diagnostics severity=error<cr>")
@@ -151,6 +155,9 @@ nmap("j", "gj")
 
 -- make Y work as expected
 nmap("Y", "y$")
+
+-- open file browser with -
+nmap("-", "<CMD>Oil<CR>")
 
 -- disable useless and annoying keys
 nmap("Q", "<Nop>")
