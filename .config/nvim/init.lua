@@ -119,15 +119,7 @@ vim.cmd[[
 ]]
 
 require("telescope").setup {
-    pickers = {
-        find_files = {
-            theme = 'ivy',
-        },
-        code_actions = {
-            theme = 'ivy',
-        }
-    },
-    defaults = {
+    defaults = require('telescope.themes').get_ivy {
         file_ignore_patterns = { 
             ".glb",
             ".ogg",
@@ -137,7 +129,8 @@ require("telescope").setup {
     },
     extensions = {
         recent_files = {
-            only_cwd = true
+            only_cwd = true,
+            theme = 'ivy',
         },
         ["ui-select"] = {
             require("telescope.themes").get_cursor()
