@@ -84,11 +84,6 @@ _G.packer_plugins = {
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/Vim-g-dot",
     url = "https://github.com/christoomey/Vim-g-dot"
   },
-  ["augment.vim"] = {
-    loaded = true,
-    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/augment.vim",
-    url = "https://github.com/augmentcode/augment.vim"
-  },
   ["baleia.nvim"] = {
     loaded = true,
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/baleia.nvim",
@@ -113,11 +108,6 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/fidget.nvim",
     url = "https://github.com/j-hui/fidget.nvim"
-  },
-  ["keytrail.nvim"] = {
-    loaded = true,
-    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/keytrail.nvim",
-    url = "https://github.com/JFryy/keytrail.nvim"
   },
   ["leap.nvim"] = {
     loaded = true,
@@ -173,6 +163,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/nvim-dap-ui",
     url = "https://github.com/rcarriga/nvim-dap-ui"
+  },
+  ["nvim-lastplace"] = {
+    loaded = true,
+    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/nvim-lastplace",
+    url = "https://github.com/ethanholz/nvim-lastplace"
   },
   ["nvim-lspconfig"] = {
     loaded = true,

@@ -102,8 +102,6 @@ return require('packer').startup(function(use)
     use "nvimtools/none-ls.nvim"
     -- send things to tmux
     use "jgdavey/tslime.vim"
-    -- in json and yaml files, how path to current line
-    use 'JFryy/keytrail.nvim'
     -- completion
     use {
         'saghen/blink.cmp',
@@ -117,7 +115,7 @@ return require('packer').startup(function(use)
     -- file explorer
     use 'stevearc/oil.nvim'
     -- ai
-    use 'augmentcode/augment.vim'
+    -- use 'augmentcode/augment.vim'
     -- restore cursor position
     use 'ethanholz/nvim-lastplace'
 end)

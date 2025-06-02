@@ -161,8 +161,6 @@ require('bqf').setup({
 
 require('smart-splits').setup()
 
-require("keytrail").setup()
-
 vim.g.db_ui_use_nerd_fonts = 1
 
 require("oil").setup({
@@ -185,10 +183,10 @@ require("oil").setup({
 })
 
 -- for augment ai
-vim.g.augment_disable_completions = true
-vim.g.augment_workspace_folders = {
-    '/Users/davidpdrsn/Code/lun/calor',
-    '/Users/davidpdrsn/Code/lun/web-main',
-}
+-- vim.g.augment_disable_completions = true
+-- vim.g.augment_workspace_folders = {
+--     '/Users/davidpdrsn/Code/lun/calor',
+--     '/Users/davidpdrsn/Code/lun/web-main',
+-- }
 
 require('nvim-lastplace').setup({})
