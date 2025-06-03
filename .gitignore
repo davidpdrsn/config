@@ -56,6 +56,7 @@ go/
 .nvm/
 .pnpm-state/
 .rush/
+.config/raycast/
 .config/gcloud/
 .bin/alloydb-auth-proxy
 .cli_history
