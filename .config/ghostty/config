@@ -13,4 +13,5 @@ mouse-hide-while-typing = true
 resize-overlay = never
 shell-integration-features = no-cursor
 theme = catppuccin-mocha
+# theme = catppuccin-latte
 window-inherit-working-directory = true

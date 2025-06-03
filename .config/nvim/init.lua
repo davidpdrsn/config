@@ -45,7 +45,8 @@ require("tokyonight").setup({
 })
 
 require("catppuccin").setup({
-    flavour = "mocha", -- auto, latte, frappe, macchiato, mocha
+    flavour = "mocha",
+    -- flavour = "latte",
     dim_inactive = {
         enabled = true,
     },
