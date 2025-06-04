@@ -117,6 +117,7 @@ local start="%(?,%{$fg[green]%}$symbol%{$reset_color%},%{$fg[red]%}$symbol%{$res
 # https://github.com/davidpdrsn/git-prompt
 # https://github.com/davidpdrsn/git-branch-picker
 # https://github.com/davidpdrsn/git-remove-merged-branches
+# https://github.com/davidpdrsn/build-proxy
 # ripgrep
 # zoxide
 # exa
