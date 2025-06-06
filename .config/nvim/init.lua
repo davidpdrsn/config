@@ -1,4 +1,10 @@
 local common = require("common")
+local cmap = common.cmap
+local nmap = common.nmap
+local vmap = common.vmap
+local imap = common.imap
+local tmap = common.tmap
+local leader = common.leader
 
 --------------------------------------------
 -- General setup
@@ -67,135 +73,225 @@ require("lazy").setup({
 })
 
 --------------------------------------------
--- Requires
+-- Auto commands
 --------------------------------------------
 
-require("mappings")
-require("auto_cmd")
+vim.cmd([[
+    augroup miscGroup
+        autocmd!
+
+        " when in a git commit buffer go the beginning
+        autocmd FileType gitcommit au! BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0])
+    augroup END
+
+    " https://stackoverflow.com/questions/14068751/how-to-hide-cursor-line-when-focus-in-on-other-window-in-vim
+    augroup CursorLine
+        au!
+        au VimEnter * setlocal cursorline
+        au WinEnter * setlocal cursorline
+        au BufWinEnter * setlocal cursorline
+        au WinLeave * setlocal nocursorline
+    augroup END
+
+    augroup CursorCol
+        au!
+        au FileType yaml setlocal cursorcolumn
+    augroup END
+
+    augroup autosave_buffer
+      au!
+
+      au FocusLost * silent!
+        \   if getbufinfo('%')[0].name != '' && getbufinfo('%')[0].changed && stridx(getbufinfo('%')[0].name, "[dap-repl-") == -1 && stridx(getbufinfo('%')[0].name, "oil://") == -1
+        \ |     write
+        \ | endif
+
+      au BufLeave * silent!
+        \   if getbufinfo('%')[0].name != '' && getbufinfo('%')[0].changed && stridx(getbufinfo('%')[0].name, "[dap-repl-") == -1 && stridx(getbufinfo('%')[0].name, "oil://") == -1
+        \ |     echom getbufinfo('%')[0].name
+        \ |     write
+        \ | endif
+    augroup END
+]])
 
 --------------------------------------------
--- Misc plugin setup
+-- Mappings
 --------------------------------------------
 
----- https://github.com/yetone/avante.nvim?tab=readme-ov-file#default-setup-configuration
---require('avante').setup({
---  provider = "claude", -- The provider used in Aider mode or in the planning phase of Cursor Planning Mode
---  ---@alias Mode "agentic" | "legacy"
---  mode = "agentic", -- The default mode for interaction. "agentic" uses tools to automatically generate code, "legacy" uses the old planning method to generate code.
---  -- WARNING: Since auto-suggestions are a high-frequency operation and therefore expensive,
---  -- currently designating it as `copilot` provider is dangerous because: https://github.com/yetone/avante.nvim/issues/1048
---  -- Of course, you can reduce the request frequency by increasing `suggestion.debounce`.
---  auto_suggestions_provider = "claude",
---  providers = {
---    claude = {
---      endpoint = "https://api.anthropic.com",
---      model = "claude-sonnet-4-20250514",
---      extra_request_body = {
---        temperature = 0.75,
---        max_tokens = 4096,
---      },
---    },
---  },
---  dual_boost = {
---    enabled = false,
---  },
---  behaviour = {
---    auto_suggestions = false, -- Experimental stage
---    auto_set_highlight_group = true,
---    auto_set_keymaps = true,
---    auto_apply_diff_after_generation = false,
---    support_paste_from_clipboard = false,
---    minimize_diff = true, -- Whether to remove unchanged lines when applying a code block
---    enable_token_counting = true, -- Whether to enable token counting. Default to true.
---    auto_approve_tool_permissions = false, -- Default: show permission prompts for all tools
---  },
---  mappings = {
---    diff = {
---      ours = "co",
---      theirs = "ct",
---      all_theirs = "ca",
---      both = "cb",
---      cursor = "cc",
---      next = "]x",
---      prev = "[x",
---    },
---    suggestion = {
---      accept = "<M-l>",
---      next = "<M-]>",
---      prev = "<M-[>",
---      dismiss = "<C-]>",
---    },
---    jump = {
---      next = "]]",
---      prev = "[[",
---    },
---    submit = {
---      normal = "<CR>",
---      insert = "<C-s>",
---    },
---    cancel = {
---      normal = { "<C-c>", "<Esc>", "q" },
---      insert = { "<C-c>" },
---    },
---    sidebar = {
---      apply_all = "A",
---      apply_cursor = "a",
---      retry_user_request = "r",
---      edit_user_request = "e",
---      switch_windows = "<Tab>",
---      reverse_switch_windows = "<S-Tab>",
---      remove_file = "d",
---      add_file = "@",
---      close = { "<Esc>", "q" },
---      close_from_input = nil, -- e.g., { normal = "<Esc>", insert = "<C-d>" }
---    },
---  },
---  hints = { enabled = true },
---  windows = {
---    ---@type "right" | "left" | "top" | "bottom"
---    position = "right", -- the position of the sidebar
---    wrap = true, -- similar to vim.o.wrap
---    width = 30, -- default % based on available width
---    sidebar_header = {
---      enabled = true, -- true, false to enable/disable the header
---      align = "center", -- left, center, right for title
---      rounded = true,
---    },
---    input = {
---      prefix = "> ",
---      height = 8, -- Height of the input window in vertical layout
---    },
---    edit = {
---      border = "rounded",
---      start_insert = true, -- Start insert mode when opening the edit window
---    },
---    ask = {
---      floating = false, -- Open the 'AvanteAsk' prompt in a floating window
---      start_insert = true, -- Start insert mode when opening the ask window
---      border = "rounded",
---      ---@type "ours" | "theirs"
---      focus_on_apply = "ours", -- which diff to focus after applying
---    },
---  },
---  highlights = {
---    ---@type AvanteConflictHighlights
---    diff = {
---      current = "DiffText",
---      incoming = "DiffAdd",
---    },
---  },
---  --- @class AvanteConflictUserConfig
---  diff = {
---    autojump = true,
---    ---@type string | fun(): any
---    list_opener = "copen",
---    --- Override the 'timeoutlen' setting while hovering over a diff (see :help timeoutlen).
---    --- Helps to avoid entering operator-pending mode with diff mappings starting with `c`.
---    --- Disable by setting to -1.
---    override_timeoutlen = 500,
---  },
---  suggestion = {
---    debounce = 600,
---    throttle = 600,
---  },
---})
+imap("\\u", function()
+    insert_guid()
+end)
+
+leader("cm", ":!chmod +x %<cr>")
+leader("ev", ":tabedit $MYVIMRC<cr>:lcd ~/.config/nvim/<cr>")
+leader("h", ":nohlsearch<cr>")
+leader("k", function() vim.diagnostic.open_float({ source = true }) end)
+leader("L", ":Lazy<cr>")
+
+leader("m", ":call MergeTabs()<cr>")
+leader("la", function() vim.lsp.buf.code_action() end)
+leader("lr", function() vim.lsp.buf.rename() end)
+leader("rn", ":call RenameFile()<cr>")
+
+leader("x", ":set filetype=")
+
+vim.cmd[[
+    function! RenameFile()
+        let old_name = expand('%')
+        let new_name = input('New file name: ', expand('%'), 'file')
+        if new_name != '' && new_name != old_name
+            exec ':saveas ' . new_name
+            exec ':silent !rm ' . old_name
+            redraw!
+        endif
+    endfunction
+
+    nmap <C-g><C-o> <Plug>window:quickfix:loop
+]]
+
+-- get path to current file in command mode with %%
+cmap("%%", "<C-R>='\"'.expand('%:h').'/'.'\"'<cr>")
+
+-- quickly insert semicolon or comma at end of line
+leader(";", "maA;<esc>`a")
+leader(",", "maA,<esc>`a")
+
+-- exit insert mode and save just by hitting ctrl-s
+imap("<c-s>", "<esc>:w<cr>")
+nmap("<c-s>", ":w<cr>")
+
+-- intuitive movement over long lines
+nmap("k", "gk")
+nmap("j", "gj")
+
+-- make Y work as expected
+nmap("Y", "y$")
+
+-- disable useless and annoying keys
+nmap("Q", "<Nop>")
+
+-- resize windows with the shift+arrow keys
+nmap("<s-up>", "10<C-W>+")
+nmap("<s-down>", "10<C-W>-")
+
+-- Don't jump around when using * to search for word under cursor
+-- Often I just want to see where else a word appears
+vim.cmd[[
+    nnoremap * :let @/ = '\<'.expand('<cword>').'\>'\|set hlsearch<C-M>
+]]
+
+-- Insert current file name with \f in insert mode
+vim.cmd[[
+    inoremap \f <C-R>=expand("%:t:r")<CR>
+]]
+
+-- from https://github.com/jferris/dotfiles/blob/master/vim/plugin/mergetabs.vim
+vim.cmd[[
+    function! MergeTabs()
+     if tabpagenr() == 1
+        return
+      endif
+      let bufferName = bufname("%")
+      if tabpagenr("$") == tabpagenr()
+        close!
+      else
+        close!
+        tabprev
+      endif
+      split
+      execute "buffer " . bufferName
+    endfunction
+]]
+
+-- show docs
+nmap(
+    'K',
+    function()
+        local filetype = vim.bo.filetype
+        if vim.tbl_contains({ 'vim','help' }, filetype) then
+            vim.cmd('h '.. vim.fn.expand('<cword>'))
+        elseif vim.tbl_contains({ 'man' }, filetype) then
+            vim.cmd('Man '.. vim.fn.expand('<cword>'))
+        else
+            vim.lsp.buf.hover()
+        end
+    end,
+    { silent = true }
+)
+
+-- lsp
+nmap('gd', function() vim.lsp.buf.definition() end)
+nmap('gy', function() vim.lsp.buf.type_definition() end)
+nmap('[g', function() vim.diagnostic.goto_prev() end)
+nmap(']g', function() vim.diagnostic.goto_next() end)
+
+vim.cmd[[
+    " don't wanna retrain my fingers
+    command! W w
+    command! Q q
+    command! Qall qall
+]]
+
+math.randomseed(os.time())
+local random = math.random
+function insert_guid()
+    local template ='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+    local le_guid = string.gsub(template, '[xy]', function (c)
+        local v = (c == 'x') and random(0, 0xf) or random(8, 0xb)
+        return string.format('%x', v)
+    end)
+
+    vim.cmd("execute \"norm i" .. le_guid .. "\"")
+end
+
+function lsp_format_leader_command(pattern, augroup_name)
+    vim.api.nvim_create_autocmd('LspAttach', {
+      group = vim.api.nvim_create_augroup(augroup_name, {}),
+      pattern = pattern,
+      callback = function(ev)
+        vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+        local opts = { buffer = ev.buf }
+        vim.keymap.set('n', '<space>lf', function()
+          vim.lsp.buf.format { async = true }
+        end, opts)
+      end,
+    })
+end
+
+lsp_format_leader_command("*.rs", "RustUserLspConfig")
+lsp_format_leader_command("*.go", "GoUserLspConfig")
+
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('CSharpUserLspConfig', {}),
+  pattern = "*.cs",
+  callback = function(ev)
+    local opts = { buffer = ev.buf }
+    local f = function()
+        vim.api.nvim_command('write')
+        local path = vim.api.nvim_buf_get_name(0)
+        vim.fn.system { 'dotnet', 'csharpier', path }
+        vim.api.nvim_command('edit')
+    end
+    vim.keymap.set('n', '<space>lf', f, opts)
+  end,
+})
+
+-- for whatever reason `vim.lsp.buf.format` doesn't work
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('TypeScriptUserLspConfig', {}),
+  pattern = "*.ts,*.tsx,*.js,*.jsx",
+  callback = function(ev)
+    local opts = { buffer = ev.buf }
+    local f = function()
+        local path = vim.api.nvim_buf_get_name(0)
+
+        vim.api.nvim_command('write')
+        vim.system({ 'prettier', '-w', path  }, { text = true }, function(obj)
+            vim.schedule(function()
+                vim.cmd("edit")
+            end)
+        end)
+    end
+    vim.keymap.set('n', '<space>lf', f, opts)
+  end,
+})
