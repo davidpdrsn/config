@@ -244,54 +244,21 @@ function insert_guid()
     vim.cmd("execute \"norm i" .. le_guid .. "\"")
 end
 
-function lsp_format_leader_command(pattern, augroup_name)
-    vim.api.nvim_create_autocmd('LspAttach', {
-      group = vim.api.nvim_create_augroup(augroup_name, {}),
-      pattern = pattern,
-      callback = function(ev)
-        vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
-        local opts = { buffer = ev.buf }
-        vim.keymap.set('n', '<space>lf', function()
-          vim.lsp.buf.format { async = true }
-        end, opts)
-      end,
-    })
-end
+common.lsp_format_leader_command("*.rs", "RustUserLspConfig")
+common.lsp_format_leader_command("*.go", "GoUserLspConfig")
 
-lsp_format_leader_command("*.rs", "RustUserLspConfig")
-lsp_format_leader_command("*.go", "GoUserLspConfig")
+common.custom_format_leader_command(
+    "*.cs",
+    function(path)
+        return { 'dotnet', 'csharpier', path }
+    end,
+    "CSharpUserLspConfig"
+)
 
-vim.api.nvim_create_autocmd('LspAttach', {
-  group = vim.api.nvim_create_augroup('CSharpUserLspConfig', {}),
-  pattern = "*.cs",
-  callback = function(ev)
-    local opts = { buffer = ev.buf }
-    local f = function()
-        vim.api.nvim_command('write')
-        local path = vim.api.nvim_buf_get_name(0)
-        vim.fn.system { 'dotnet', 'csharpier', path }
-        vim.api.nvim_command('edit')
-    end
-    vim.keymap.set('n', '<space>lf', f, opts)
-  end,
-})
-
--- for whatever reason `vim.lsp.buf.format` doesn't work
-vim.api.nvim_create_autocmd('LspAttach', {
-  group = vim.api.nvim_create_augroup('TypeScriptUserLspConfig', {}),
-  pattern = "*.ts,*.tsx,*.js,*.jsx",
-  callback = function(ev)
-    local opts = { buffer = ev.buf }
-    local f = function()
-        local path = vim.api.nvim_buf_get_name(0)
-
-        vim.api.nvim_command('write')
-        vim.system({ 'prettier', '-w', path  }, { text = true }, function(obj)
-            vim.schedule(function()
-                vim.cmd("edit")
-            end)
-        end)
-    end
-    vim.keymap.set('n', '<space>lf', f, opts)
-  end,
-})
+common.custom_format_leader_command(
+    "*.ts,*.tsx,*.js,*.jsx",
+    function(path)
+        return { 'format-prettier', path }
+    end,
+    "TypeScriptUserLspConfig"
+)
