@@ -6,18 +6,6 @@ local imap = common.imap
 local tmap = common.tmap
 local leader = common.leader
 
--- -- debugging
--- -- database ui
--- -- ai
--- use 'MunifTanjim/nui.nvim'
--- use 'MeanderingProgrammer/render-markdown.nvim'
--- use 'Kaiser-Yang/blink-cmp-avante'
--- use {
---     'yetone/avante.nvim',
---     branch = 'main',
---     run = 'make',
--- }
-
 return {
     -- colorscheme
     {
