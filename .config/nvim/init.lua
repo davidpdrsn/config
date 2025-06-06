@@ -4,7 +4,25 @@ local common = require("common")
 -- General setup
 --------------------------------------------
 
+-- Bootstrap lazy.nvim
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+  if vim.v.shell_error ~= 0 then
+    vim.api.nvim_echo({
+      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+      { out, "WarningMsg" },
+      { "\nPress any key to exit..." },
+    }, true, {})
+    vim.fn.getchar()
+    os.exit(1)
+  end
+end
+vim.opt.rtp:prepend(lazypath)
+
 vim.g.mapleader = " "
+vim.g.maplocalleader = "\\"
 vim.opt.scrolljump = 5
 vim.opt.scrolloff = 3
 vim.opt.splitbelow = true
@@ -33,156 +51,31 @@ vim.opt.tabstop = 4
 vim.opt.foldenable = false
 vim.opt.spell = false
 
--- require("tokyonight").setup({
---   style = "night",
---   dim_inactive = true,
---   on_colors = function(colors)
---     -- https://pinetools.com/lighten-color
---     colors.bg = "#1e1f2c"
---     colors.terminal_black = "NONE"
---   end
--- })
+-- don't automatically select the first result in suggestions
+vim.cmd("set completeopt+=noselect")
 
--- require("catppuccin").setup({
---     flavour = "mocha",
---     -- flavour = "latte",
---     dim_inactive = {
---         enabled = true,
---     },
---     integrations = {
---         leap = true,
---     },
--- })
-
--- vim.cmd.colorscheme "tokyonight-night"
--- vim.cmd.colorscheme "catppuccin"
-
-vim.cmd[[
-    highlight SpecialComment guifg=#6c6c66
-]]
+require("lazy").setup({
+  spec = {
+    { import = "plugins" },
+  },
+  install = { colorscheme = { "catppuccin" } },
+  checker = { enabled = true },
+  change_detection = {
+      enabled = true,
+      notify = false,
+  },
+})
 
 --------------------------------------------
 -- Requires
 --------------------------------------------
 
-require("plugins")
 require("mappings")
-require("lsp")
 require("auto_cmd")
-require("debugging")
 
 --------------------------------------------
 -- Misc plugin setup
 --------------------------------------------
-
--- require('nvim-autopairs').setup()
--- require('nvim-autopairs').remove_rule("'")
-
--- require('dressing').setup()
--- require("fidget").setup()
--- require('numb').setup()
--- require("mason").setup()
-
--- require('nvim-treesitter.configs').setup({
---     matchup = {
---         enable = true,
---     },
--- })
-
-vim.g.highlightedyank_highlight_duration = 170
-
--- require('lualine').setup({
---     sections = {
---         lualine_a = { "mode" },
---         lualine_b = { "branch" },
---         lualine_c = { "diagnostics", common.path_to_file },
---         lualine_x = {},
---         lualine_y = {},
---         lualine_z = { common.filetype }
---     },
---     inactive_sections = {
---         lualine_a = {},
---         lualine_b = {
---             "diagnostics",
---         },
---         lualine_c = { common.path_to_file, },
---         lualine_x = {},
---         lualine_y = {},
---         lualine_z = {}
---     },
--- })
-
--- require('leap').add_default_mappings()
-
-vim.cmd[[
-    let g:hardtime_default_on = 1
-]]
-
--- require("telescope").setup {
---     defaults = require('telescope.themes').get_ivy {
---         file_ignore_patterns = { 
---             ".glb",
---             ".ogg",
---             ".png",
---             ".uid",
---         }
---     },
---     extensions = {
---         recent_files = {
---             only_cwd = true,
---             theme = 'ivy',
---         },
---         ["ui-select"] = {
---             require("telescope.themes").get_cursor()
---         }
---     },
--- }
-
--- require('textcase').setup()
-
--- require("telescope").load_extension("ui-select")
--- require("telescope").load_extension("recent_files")
--- require('telescope').load_extension('textcase')
-
--- require("toggleterm").setup()
-
--- require("luasnip.loaders.from_snipmate").lazy_load({paths = "~/.config/nvim/snippets"})
--- require("luasnip.loaders.from_vscode").lazy_load()
-
--- require('treesj').setup({
---     use_default_keymaps = false
--- })
-
--- require('bqf').setup({
---     preview = {
---         winblend = 0,
---     }
--- })
-
--- require('smart-splits').setup()
-
-vim.g.db_ui_use_nerd_fonts = 1
-
--- require("oil").setup({
---     keymaps = {
---         ["<C-h>"] = false,
---         ["<C-s>"] = false,
---     },
---     view_options = {
---         show_hidden = true,
---     },
---     columns = {
---         -- "icon",
---         -- "permissions",
---         -- "size",
---         -- "mtime",
---     },
---     lsp_file_methods = {
---         enabled = false,
---     },
--- })
-
--- require('nvim-lastplace').setup({})
 
 ---- https://github.com/yetone/avante.nvim?tab=readme-ov-file#default-setup-configuration
 --require('avante').setup({
