@@ -1,5 +1,4 @@
 local common = require("common")
-local rust_root_dir = require("rust_root_dir").rust_root_dir
 
 --------------------------------------------
 -- General setup
@@ -34,29 +33,29 @@ vim.opt.tabstop = 4
 vim.opt.foldenable = false
 vim.opt.spell = false
 
-require("tokyonight").setup({
-  style = "night",
-  dim_inactive = true,
-  on_colors = function(colors)
-    -- https://pinetools.com/lighten-color
-    colors.bg = "#1e1f2c"
-    colors.terminal_black = "NONE"
-  end
-})
+-- require("tokyonight").setup({
+--   style = "night",
+--   dim_inactive = true,
+--   on_colors = function(colors)
+--     -- https://pinetools.com/lighten-color
+--     colors.bg = "#1e1f2c"
+--     colors.terminal_black = "NONE"
+--   end
+-- })
 
-require("catppuccin").setup({
-    flavour = "mocha",
-    -- flavour = "latte",
-    dim_inactive = {
-        enabled = true,
-    },
-    integrations = {
-        leap = true,
-    },
-})
+-- require("catppuccin").setup({
+--     flavour = "mocha",
+--     -- flavour = "latte",
+--     dim_inactive = {
+--         enabled = true,
+--     },
+--     integrations = {
+--         leap = true,
+--     },
+-- })
 
 -- vim.cmd.colorscheme "tokyonight-night"
-vim.cmd.colorscheme "catppuccin"
+-- vim.cmd.colorscheme "catppuccin"
 
 vim.cmd[[
     highlight SpecialComment guifg=#6c6c66
@@ -76,234 +75,234 @@ require("debugging")
 -- Misc plugin setup
 --------------------------------------------
 
-require('nvim-autopairs').setup()
-require('nvim-autopairs').remove_rule("'")
+-- require('nvim-autopairs').setup()
+-- require('nvim-autopairs').remove_rule("'")
 
-require('dressing').setup()
-require("fidget").setup()
-require('numb').setup()
-require("mason").setup()
+-- require('dressing').setup()
+-- require("fidget").setup()
+-- require('numb').setup()
+-- require("mason").setup()
 
-require('nvim-treesitter.configs').setup({
-    matchup = {
-        enable = true,
-    },
-})
+-- require('nvim-treesitter.configs').setup({
+--     matchup = {
+--         enable = true,
+--     },
+-- })
 
 vim.g.highlightedyank_highlight_duration = 170
 
-require('lualine').setup({
-    sections = {
-        lualine_a = { "mode" },
-        lualine_b = { "branch" },
-        lualine_c = { "diagnostics", common.path_to_file },
-        lualine_x = {},
-        lualine_y = {},
-        lualine_z = { common.filetype }
-    },
-    inactive_sections = {
-        lualine_a = {},
-        lualine_b = {
-            "diagnostics",
-        },
-        lualine_c = { common.path_to_file, },
-        lualine_x = {},
-        lualine_y = {},
-        lualine_z = {}
-    },
-})
+-- require('lualine').setup({
+--     sections = {
+--         lualine_a = { "mode" },
+--         lualine_b = { "branch" },
+--         lualine_c = { "diagnostics", common.path_to_file },
+--         lualine_x = {},
+--         lualine_y = {},
+--         lualine_z = { common.filetype }
+--     },
+--     inactive_sections = {
+--         lualine_a = {},
+--         lualine_b = {
+--             "diagnostics",
+--         },
+--         lualine_c = { common.path_to_file, },
+--         lualine_x = {},
+--         lualine_y = {},
+--         lualine_z = {}
+--     },
+-- })
 
-require('leap').add_default_mappings()
+-- require('leap').add_default_mappings()
 
 vim.cmd[[
     let g:hardtime_default_on = 1
 ]]
 
-require("telescope").setup {
-    defaults = require('telescope.themes').get_ivy {
-        file_ignore_patterns = { 
-            ".glb",
-            ".ogg",
-            ".png",
-            ".uid",
-        }
-    },
-    extensions = {
-        recent_files = {
-            only_cwd = true,
-            theme = 'ivy',
-        },
-        ["ui-select"] = {
-            require("telescope.themes").get_cursor()
-        }
-    },
-}
+-- require("telescope").setup {
+--     defaults = require('telescope.themes').get_ivy {
+--         file_ignore_patterns = { 
+--             ".glb",
+--             ".ogg",
+--             ".png",
+--             ".uid",
+--         }
+--     },
+--     extensions = {
+--         recent_files = {
+--             only_cwd = true,
+--             theme = 'ivy',
+--         },
+--         ["ui-select"] = {
+--             require("telescope.themes").get_cursor()
+--         }
+--     },
+-- }
 
-require('textcase').setup()
+-- require('textcase').setup()
 
-require("telescope").load_extension("ui-select")
-require("telescope").load_extension("recent_files")
-require('telescope').load_extension('textcase')
+-- require("telescope").load_extension("ui-select")
+-- require("telescope").load_extension("recent_files")
+-- require('telescope').load_extension('textcase')
 
-require("toggleterm").setup()
+-- require("toggleterm").setup()
 
-require("luasnip.loaders.from_snipmate").lazy_load({paths = "~/.config/nvim/snippets"})
-require("luasnip.loaders.from_vscode").lazy_load()
+-- require("luasnip.loaders.from_snipmate").lazy_load({paths = "~/.config/nvim/snippets"})
+-- require("luasnip.loaders.from_vscode").lazy_load()
 
-require('treesj').setup({
-    use_default_keymaps = false
-})
+-- require('treesj').setup({
+--     use_default_keymaps = false
+-- })
 
-require('bqf').setup({
-    preview = {
-        winblend = 0,
-    }
-})
+-- require('bqf').setup({
+--     preview = {
+--         winblend = 0,
+--     }
+-- })
 
-require('smart-splits').setup()
+-- require('smart-splits').setup()
 
 vim.g.db_ui_use_nerd_fonts = 1
 
-require("oil").setup({
-    keymaps = {
-        ["<C-h>"] = false,
-        ["<C-s>"] = false,
-    },
-    view_options = {
-        show_hidden = true,
-    },
-    columns = {
-        -- "icon",
-        -- "permissions",
-        -- "size",
-        -- "mtime",
-    },
-    lsp_file_methods = {
-        enabled = false,
-    },
-})
+-- require("oil").setup({
+--     keymaps = {
+--         ["<C-h>"] = false,
+--         ["<C-s>"] = false,
+--     },
+--     view_options = {
+--         show_hidden = true,
+--     },
+--     columns = {
+--         -- "icon",
+--         -- "permissions",
+--         -- "size",
+--         -- "mtime",
+--     },
+--     lsp_file_methods = {
+--         enabled = false,
+--     },
+-- })
 
-require('nvim-lastplace').setup({})
+-- require('nvim-lastplace').setup({})
 
--- https://github.com/yetone/avante.nvim?tab=readme-ov-file#default-setup-configuration
-require('avante').setup({
-  provider = "claude", -- The provider used in Aider mode or in the planning phase of Cursor Planning Mode
-  ---@alias Mode "agentic" | "legacy"
-  mode = "agentic", -- The default mode for interaction. "agentic" uses tools to automatically generate code, "legacy" uses the old planning method to generate code.
-  -- WARNING: Since auto-suggestions are a high-frequency operation and therefore expensive,
-  -- currently designating it as `copilot` provider is dangerous because: https://github.com/yetone/avante.nvim/issues/1048
-  -- Of course, you can reduce the request frequency by increasing `suggestion.debounce`.
-  auto_suggestions_provider = "claude",
-  providers = {
-    claude = {
-      endpoint = "https://api.anthropic.com",
-      model = "claude-sonnet-4-20250514",
-      extra_request_body = {
-        temperature = 0.75,
-        max_tokens = 4096,
-      },
-    },
-  },
-  dual_boost = {
-    enabled = false,
-  },
-  behaviour = {
-    auto_suggestions = false, -- Experimental stage
-    auto_set_highlight_group = true,
-    auto_set_keymaps = true,
-    auto_apply_diff_after_generation = false,
-    support_paste_from_clipboard = false,
-    minimize_diff = true, -- Whether to remove unchanged lines when applying a code block
-    enable_token_counting = true, -- Whether to enable token counting. Default to true.
-    auto_approve_tool_permissions = false, -- Default: show permission prompts for all tools
-  },
-  mappings = {
-    diff = {
-      ours = "co",
-      theirs = "ct",
-      all_theirs = "ca",
-      both = "cb",
-      cursor = "cc",
-      next = "]x",
-      prev = "[x",
-    },
-    suggestion = {
-      accept = "<M-l>",
-      next = "<M-]>",
-      prev = "<M-[>",
-      dismiss = "<C-]>",
-    },
-    jump = {
-      next = "]]",
-      prev = "[[",
-    },
-    submit = {
-      normal = "<CR>",
-      insert = "<C-s>",
-    },
-    cancel = {
-      normal = { "<C-c>", "<Esc>", "q" },
-      insert = { "<C-c>" },
-    },
-    sidebar = {
-      apply_all = "A",
-      apply_cursor = "a",
-      retry_user_request = "r",
-      edit_user_request = "e",
-      switch_windows = "<Tab>",
-      reverse_switch_windows = "<S-Tab>",
-      remove_file = "d",
-      add_file = "@",
-      close = { "<Esc>", "q" },
-      close_from_input = nil, -- e.g., { normal = "<Esc>", insert = "<C-d>" }
-    },
-  },
-  hints = { enabled = true },
-  windows = {
-    ---@type "right" | "left" | "top" | "bottom"
-    position = "right", -- the position of the sidebar
-    wrap = true, -- similar to vim.o.wrap
-    width = 30, -- default % based on available width
-    sidebar_header = {
-      enabled = true, -- true, false to enable/disable the header
-      align = "center", -- left, center, right for title
-      rounded = true,
-    },
-    input = {
-      prefix = "> ",
-      height = 8, -- Height of the input window in vertical layout
-    },
-    edit = {
-      border = "rounded",
-      start_insert = true, -- Start insert mode when opening the edit window
-    },
-    ask = {
-      floating = false, -- Open the 'AvanteAsk' prompt in a floating window
-      start_insert = true, -- Start insert mode when opening the ask window
-      border = "rounded",
-      ---@type "ours" | "theirs"
-      focus_on_apply = "ours", -- which diff to focus after applying
-    },
-  },
-  highlights = {
-    ---@type AvanteConflictHighlights
-    diff = {
-      current = "DiffText",
-      incoming = "DiffAdd",
-    },
-  },
-  --- @class AvanteConflictUserConfig
-  diff = {
-    autojump = true,
-    ---@type string | fun(): any
-    list_opener = "copen",
-    --- Override the 'timeoutlen' setting while hovering over a diff (see :help timeoutlen).
-    --- Helps to avoid entering operator-pending mode with diff mappings starting with `c`.
-    --- Disable by setting to -1.
-    override_timeoutlen = 500,
-  },
-  suggestion = {
-    debounce = 600,
-    throttle = 600,
-  },
-})
+---- https://github.com/yetone/avante.nvim?tab=readme-ov-file#default-setup-configuration
+--require('avante').setup({
+--  provider = "claude", -- The provider used in Aider mode or in the planning phase of Cursor Planning Mode
+--  ---@alias Mode "agentic" | "legacy"
+--  mode = "agentic", -- The default mode for interaction. "agentic" uses tools to automatically generate code, "legacy" uses the old planning method to generate code.
+--  -- WARNING: Since auto-suggestions are a high-frequency operation and therefore expensive,
+--  -- currently designating it as `copilot` provider is dangerous because: https://github.com/yetone/avante.nvim/issues/1048
+--  -- Of course, you can reduce the request frequency by increasing `suggestion.debounce`.
+--  auto_suggestions_provider = "claude",
+--  providers = {
+--    claude = {
+--      endpoint = "https://api.anthropic.com",
+--      model = "claude-sonnet-4-20250514",
+--      extra_request_body = {
+--        temperature = 0.75,
+--        max_tokens = 4096,
+--      },
+--    },
+--  },
+--  dual_boost = {
+--    enabled = false,
+--  },
+--  behaviour = {
+--    auto_suggestions = false, -- Experimental stage
+--    auto_set_highlight_group = true,
+--    auto_set_keymaps = true,
+--    auto_apply_diff_after_generation = false,
+--    support_paste_from_clipboard = false,
+--    minimize_diff = true, -- Whether to remove unchanged lines when applying a code block
+--    enable_token_counting = true, -- Whether to enable token counting. Default to true.
+--    auto_approve_tool_permissions = false, -- Default: show permission prompts for all tools
+--  },
+--  mappings = {
+--    diff = {
+--      ours = "co",
+--      theirs = "ct",
+--      all_theirs = "ca",
+--      both = "cb",
+--      cursor = "cc",
+--      next = "]x",
+--      prev = "[x",
+--    },
+--    suggestion = {
+--      accept = "<M-l>",
+--      next = "<M-]>",
+--      prev = "<M-[>",
+--      dismiss = "<C-]>",
+--    },
+--    jump = {
+--      next = "]]",
+--      prev = "[[",
+--    },
+--    submit = {
+--      normal = "<CR>",
+--      insert = "<C-s>",
+--    },
+--    cancel = {
+--      normal = { "<C-c>", "<Esc>", "q" },
+--      insert = { "<C-c>" },
+--    },
+--    sidebar = {
+--      apply_all = "A",
+--      apply_cursor = "a",
+--      retry_user_request = "r",
+--      edit_user_request = "e",
+--      switch_windows = "<Tab>",
+--      reverse_switch_windows = "<S-Tab>",
+--      remove_file = "d",
+--      add_file = "@",
+--      close = { "<Esc>", "q" },
+--      close_from_input = nil, -- e.g., { normal = "<Esc>", insert = "<C-d>" }
+--    },
+--  },
+--  hints = { enabled = true },
+--  windows = {
+--    ---@type "right" | "left" | "top" | "bottom"
+--    position = "right", -- the position of the sidebar
+--    wrap = true, -- similar to vim.o.wrap
+--    width = 30, -- default % based on available width
+--    sidebar_header = {
+--      enabled = true, -- true, false to enable/disable the header
+--      align = "center", -- left, center, right for title
+--      rounded = true,
+--    },
+--    input = {
+--      prefix = "> ",
+--      height = 8, -- Height of the input window in vertical layout
+--    },
+--    edit = {
+--      border = "rounded",
+--      start_insert = true, -- Start insert mode when opening the edit window
+--    },
+--    ask = {
+--      floating = false, -- Open the 'AvanteAsk' prompt in a floating window
+--      start_insert = true, -- Start insert mode when opening the ask window
+--      border = "rounded",
+--      ---@type "ours" | "theirs"
+--      focus_on_apply = "ours", -- which diff to focus after applying
+--    },
+--  },
+--  highlights = {
+--    ---@type AvanteConflictHighlights
+--    diff = {
+--      current = "DiffText",
+--      incoming = "DiffAdd",
+--    },
+--  },
+--  --- @class AvanteConflictUserConfig
+--  diff = {
+--    autojump = true,
+--    ---@type string | fun(): any
+--    list_opener = "copen",
+--    --- Override the 'timeoutlen' setting while hovering over a diff (see :help timeoutlen).
+--    --- Helps to avoid entering operator-pending mode with diff mappings starting with `c`.
+--    --- Disable by setting to -1.
+--    override_timeoutlen = 500,
+--  },
+--  suggestion = {
+--    debounce = 600,
+--    throttle = 600,
+--  },
+--})
