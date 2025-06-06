@@ -27,4 +27,25 @@ function M.filetype()
     end
 end
 
+function make_map_fn(mode)
+    return function(mapping, what_to_do, options)
+        options = options or {}
+        if options.noremap == nil then
+            options.noremap = true
+        end
+
+        vim.keymap.set(mode, mapping, what_to_do, options)
+    end
+end
+
+M.cmap = make_map_fn("c")
+M.nmap = make_map_fn("n")
+M.vmap = make_map_fn("v")
+M.imap = make_map_fn("i")
+M.tmap = make_map_fn("t")
+
+function M.leader(mapping, what_to_do, options)
+    M.nmap("<leader>" .. mapping, what_to_do, options)
+end
+
 return M
