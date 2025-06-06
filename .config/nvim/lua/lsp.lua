@@ -97,44 +97,6 @@ null_ls.setup({
 -- don't automatically select the first result in suggestions
 vim.cmd("set completeopt+=noselect")
 
--- require("lsp_signature").setup({
---     handler_opts = {
---         border = "none"
---     },
--- })
-
--- local luasnip = require('luasnip')
--- local lspkind = require('lspkind')
--- local cmp = require('cmp')
--- cmp.setup({
---     preselect = cmp.PreselectMode.None,
---     snippet = {
---         expand = function(args)
---             luasnip.lsp_expand(args.body)
---         end,
---     },
---     mapping = {
---         ['<C-y>'] = cmp.mapping.confirm({ select = false }),
---         ['<C-n>'] = cmp.mapping(cmp.mapping.select_next_item(), {'i','c'}),
---         ['<C-p>'] = cmp.mapping(cmp.mapping.select_prev_item(), {'i','c'}),
---     },
---     sources = {
---         { name = 'nvim_lsp' },
---         { name = 'buffer' },
---         { name = 'luasnip' },
---     },
---     formatting = {
---         format = lspkind.cmp_format({
---             mode = 'symbol', -- show only symbol annotations
---             maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
---             -- can also be a function to dynamically calculate max width such as 
---             -- maxwidth = function() return math.floor(0.45 * vim.o.columns) end,
---             ellipsis_char = '...', -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
---             show_labelDetails = true, -- show labelDetails in menu. Disabled by default
---         })
---     }
--- })
-
 require("blink.cmp").setup({
     fuzzy = {
         prebuilt_binaries = {
@@ -156,11 +118,19 @@ require("blink.cmp").setup({
         }
     },
     sources = {
+        default = { 'avante', 'lsp', 'path', 'snippets', 'buffer' },
         per_filetype = {
             sql = { 'dadbod', 'buffer' },
         },
         providers = {
             dadbod = { name = "Dadbod", module = "vim_dadbod_completion.blink" },
-        },
+            avante = {
+                module = 'blink-cmp-avante',
+                name = 'Avante',
+                opts = {
+                    -- options for blink-cmp-avante
+                }
+            }
+        },           
     },
 })

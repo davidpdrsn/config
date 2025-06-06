@@ -84,10 +84,20 @@ _G.packer_plugins = {
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/Vim-g-dot",
     url = "https://github.com/christoomey/Vim-g-dot"
   },
+  ["avante.nvim"] = {
+    loaded = true,
+    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/avante.nvim",
+    url = "https://github.com/yetone/avante.nvim"
+  },
   ["baleia.nvim"] = {
     loaded = true,
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/baleia.nvim",
     url = "https://github.com/m00qek/baleia.nvim"
+  },
+  ["blink-cmp-avante"] = {
+    loaded = true,
+    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/blink-cmp-avante",
+    url = "https://github.com/Kaiser-Yang/blink-cmp-avante"
   },
   ["blink.cmp"] = {
     loaded = true,
@@ -133,6 +143,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/none-ls.nvim",
     url = "https://github.com/nvimtools/none-ls.nvim"
+  },
+  ["nui.nvim"] = {
+    loaded = true,
+    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/nui.nvim",
+    url = "https://github.com/MunifTanjim/nui.nvim"
   },
   ["numb.nvim"] = {
     loaded = true,
@@ -213,6 +228,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/popup.nvim",
     url = "https://github.com/nvim-lua/popup.nvim"
+  },
+  ["render-markdown.nvim"] = {
+    loaded = true,
+    path = "/Users/davidpdrsn/.local/share/nvim/site/pack/packer/start/render-markdown.nvim",
+    url = "https://github.com/MeanderingProgrammer/render-markdown.nvim"
   },
   ["smart-splits.nvim"] = {
     loaded = true,
