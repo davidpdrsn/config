@@ -5,12 +5,7 @@ source "$HOME/.cargo/env"
 eval "$(/opt/homebrew/bin/brew shellenv)"
 eval "$(zoxide init zsh)"
 
-# eval "$(direnv hook zsh)"
-
 export EDITOR='nvim'
-
-# for wim noesis, told by robert bragg to set this
-export MACOSX_DEPLOYMENT_TARGET=11.0
 
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 
@@ -99,10 +94,12 @@ compdef _gt_yargs_completions gt
 autoload -U colors && colors
 
 # edit current line in vim
-autoload -U edit-command-line
-zle -N edit-command-line
-bindkey '\033' edit-command-line
-export KEYTIMEOUT=1
+if [[ -z "$NVIM" ]]; then
+  autoload -U edit-command-line
+  zle -N edit-command-line
+  bindkey '\033' edit-command-line
+  export KEYTIMEOUT=1
+fi
 
 # Allow for output of commands
 setopt prompt_subst
@@ -139,8 +136,10 @@ RPROMPT=$''
 alias ..='z ..'
 alias c='clear'
 alias ca='cargo'
+alias cd='z'
 alias cat='bat'
 alias dt='cd ~/Desktop'
+alias diff='diff --color'
 alias ea='nvim ~/.zshrc'
 alias rl='source ~/.zshrc'
 alias l='exa --long --header --git --all --sort name'
