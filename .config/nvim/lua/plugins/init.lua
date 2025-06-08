@@ -79,7 +79,7 @@ return {
                 lualine_a = { "mode" },
                 lualine_b = { "branch" },
                 lualine_c = { "diagnostics", common.path_to_file },
-                lualine_x = {},
+                lualine_x = { require("run_tests").statusline },
                 lualine_y = {},
                 lualine_z = { common.filetype }
             },
