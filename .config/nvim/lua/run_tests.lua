@@ -1,10 +1,5 @@
 local M = {}
 
--- vim.keymap.set("n", "<leader>so", function()
---     vim.cmd("source %")
---     print("Sourced " .. vim.fn.expand("%"))
--- end, { desc = "Source current file" })
-
 local prev_test_buffer = nil
 local test_command = nil
 
