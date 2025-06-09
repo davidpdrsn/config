@@ -104,7 +104,12 @@ return {
     -- improve the default vim.ui interfaces
     { 'stevearc/dressing.nvim', opt = {} },
     -- peek lines when jumping
-    { 'nacro90/numb.nvim', opt = {} },
+    {
+        'nacro90/numb.nvim',
+        config = function()
+            require('numb').setup()
+        end,
+    },
     -- "ae" text object
     {
         'kana/vim-textobj-entire',
