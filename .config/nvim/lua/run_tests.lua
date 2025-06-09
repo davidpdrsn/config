@@ -42,8 +42,7 @@ function run_test_command()
     vim.cmd("write")
 
     local original_win_id = vim.api.nvim_get_current_win()
-    -- vim.cmd('botright 20new')
-    vim.cmd('botright new')
+    vim.cmd('botright 20new')
     prev_test_buffer = vim.api.nvim_get_current_buf()
     local job_id = vim.fn.jobstart(
         test_command.command .. " " .. table.concat(test_command.args, " "),
