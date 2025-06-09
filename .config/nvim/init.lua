@@ -78,6 +78,7 @@ require("lazy").setup({
 --------------------------------------------
 
 require("run_tests")
+require("run_project")
 
 --------------------------------------------
 -- Auto commands
