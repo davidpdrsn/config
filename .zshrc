@@ -12,6 +12,7 @@ export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export RIPGREP_CONFIG_PATH=$HOME/.ripgreprc
 
 export ANTHROPIC_API_KEY=***REMOVED***
+export BITS_N_WIRES_PLANE_API_KEY=***REMOVED***
 
 # History
 ISTFILE=$HOME/.zhistory

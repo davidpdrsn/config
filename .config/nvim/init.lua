@@ -56,7 +56,6 @@ vim.opt.softtabstop = 4
 vim.opt.tabstop = 4
 vim.opt.foldenable = false
 vim.opt.spell = false
-vim.opt.equalalways = false
 
 -- don't automatically select the first result in suggestions
 vim.cmd("set completeopt+=noselect")
