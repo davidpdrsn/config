@@ -12,6 +12,7 @@ export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export RIPGREP_CONFIG_PATH=$HOME/.ripgreprc
 
 export ANTHROPIC_API_KEY=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
+export BITS_N_WIRES_PLANE_API_KEY=plane_api_ed28cd5eb1304b3eb9607b5a52c11bbd
 
 # History
 ISTFILE=$HOME/.zhistory
