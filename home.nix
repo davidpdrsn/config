@@ -21,6 +21,8 @@
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
     pkgs.hello
+    pkgs.htop
+    pkgs.neovim
 
     # # It is sometimes useful to fine-tune packages, for example, by applying
     # # overrides. You can do that directly here, just don't forget the
@@ -45,11 +47,43 @@
     enable = true;
     # initExtra = builtins.readFile ./zshrc;
   };
+  
+  programs.fzf = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+  
+  programs.ripgrep = {
+    enable = true;
+    arguments = [
+      # Search hidden files / directories (e.g. dotfiles) by default
+      "--hidden"
+      # Search files in .gitignore
+      "--no-ignore"
+      # Using glob patterns to include/exclude files or folders
+      "--glob=!.git/*"
+      "--glob=!node_modules"
+      "--glob=!.godot/*"
+      "--glob=!build"
+      "--glob=!builds"
+      "--glob=!.cache"
+      "--glob=!temp"
+      "--glob=!*\.map"
+      "--glob=!target"
+      "--glob=!*\.log"
+      "--glob=!*\.DS_Store"
+      # Because who cares about case!?
+      "--smart-case"
+    ];
+  };
+  
+  programs.zoxide.enable = true;
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
   home.file = {
     ".gitignoreglobal".source = ./gitignoreglobal;
+    ".config/ghostty/config".source = ./ghostty/config;
 
     # # You can also set the file content immediately.
     # ".gradle/gradle.properties".text = ''
@@ -75,7 +109,7 @@
   #  /etc/profiles/per-user/davidpdrsn/etc/profile.d/hm-session-vars.sh
   #
   home.sessionVariables = {
-    # EDITOR = "emacs";
+    EDITOR = "nvim";
   };
 
   # Let Home Manager install and manage itself.
