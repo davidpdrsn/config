@@ -73,6 +73,7 @@ return {
 
             nmap("ga.", "<cmd>TextCaseOpenTelescope<CR>")
             vmap("ga.", "<cmd>TextCaseOpenTelescope<CR>")
+            nmap("gaP", function() require('textcase').lsp_rename('to_pascal_case') end)
         end,
     },
 }
