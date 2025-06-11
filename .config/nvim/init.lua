@@ -52,6 +52,7 @@ vim.opt.dir = "/tmp"
 vim.opt.expandtab = true
 vim.opt.shiftwidth = 4
 vim.opt.smartindent = true
+vim.opt.smartcase = true
 vim.opt.softtabstop = 4
 vim.opt.tabstop = 4
 vim.opt.foldenable = false
@@ -61,15 +62,15 @@ vim.opt.spell = false
 vim.cmd("set completeopt+=noselect")
 
 require("lazy").setup({
-  spec = {
-    { import = "plugins" },
-  },
-  install = { colorscheme = { "catppuccin" } },
-  checker = { enabled = true },
-  change_detection = {
-      enabled = true,
-      notify = false,
-  },
+    spec = {
+        { import = "plugins" },
+    },
+    install = { colorscheme = { "catppuccin" } },
+    checker = { enabled = true },
+    change_detection = {
+        enabled = true,
+        notify = false,
+    },
 })
 
 --------------------------------------------
