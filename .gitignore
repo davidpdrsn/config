@@ -4,6 +4,7 @@
 .ark/
 .cargo
 .config/gh/hosts.yml
+.config/gh/config.yml
 .config/iterm2/
 .lesshst
 .local
