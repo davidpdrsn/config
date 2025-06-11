@@ -44,7 +44,7 @@
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
   home.file = {
-    ".gitignoreglobal".source = config/gitignoreglobal;
+    ".gitignoreglobal".source = gitignoreglobal;
 
     # # You can also set the file content immediately.
     # ".gradle/gradle.properties".text = ''
