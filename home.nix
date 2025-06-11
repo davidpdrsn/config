@@ -40,11 +40,16 @@
     enable = true;
     includes = [{ path = "~/config/git/gitconfig"; }];
   };
+  
+  programs.zsh = {
+    enable = true;
+    # initExtra = builtins.readFile ./zshrc;
+  };
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
   home.file = {
-    ".gitignoreglobal".source = gitignoreglobal;
+    ".gitignoreglobal".source = ./gitignoreglobal;
 
     # # You can also set the file content immediately.
     # ".gradle/gradle.properties".text = ''
