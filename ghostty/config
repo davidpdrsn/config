@@ -1,0 +1,17 @@
+confirm-close-surface = false
+cursor-click-to-move = true
+cursor-style = block
+cursor-style-blink = false
+font-family = "Iosevka Nerd Font Mono"
+cursor-opacity = 0.5
+font-style-bold = false
+font-style-bold-italic = false
+font-style-italic = false
+link-url = true
+macos-non-native-fullscreen = true
+mouse-hide-while-typing = true
+resize-overlay = never
+shell-integration-features = no-cursor
+theme = catppuccin-mocha
+# theme = catppuccin-latte
+window-inherit-working-directory = true
