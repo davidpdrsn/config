@@ -11,14 +11,14 @@
 
   outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager }:
   let
-    configuration = import ./configuration.nix;
+    # ...
   in
   {
-    # Build darwin flake using:
-    # $ darwin-rebuild build --flake .#Davids-MacBook-Pro
     darwinConfigurations."Davids-MacBook-Pro" = nix-darwin.lib.darwinSystem {
+      specialArgs = { inherit inputs self; };
+
       modules = [
-        configuration
+        ./configuration.nix
         home-manager.darwinModules.home-manager
         {
           users.users.davidpdrsn.home = "/Users/davidpdrsn";

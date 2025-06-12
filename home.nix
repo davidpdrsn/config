@@ -4,12 +4,13 @@
     # Don't change this value, even when updating home-manager.
     home.stateVersion = "25.05";
 
-    # services.postgresql = {
-    #     enable = true;
-    # };
-
     programs.zoxide.enable = true;
     programs.fd.enable = true;
+
+    programs.direnv = {
+        enable = true;
+        enableZshIntegration = true;
+    };
 
     programs.git = {
         enable = true;
