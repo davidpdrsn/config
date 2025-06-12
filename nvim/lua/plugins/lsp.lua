@@ -13,12 +13,12 @@ return {
         "mason-org/mason-lspconfig.nvim",
         opts = {
             ensure_installed = {
-                'rust_analyzer',
                 -- 'csharp_ls',
-                -- 'ts_ls',
+                'eslint',
                 -- 'gopls',
-                -- 'eslint',
                 -- 'postgres_lsp',
+                'rust_analyzer',
+                'ts_ls',
             },
         },
         dependencies = {
@@ -84,12 +84,12 @@ return {
             })
 
             vim.lsp.enable({
-                'rust_analyzer',
-                'csharp_ls',
-                'ts_ls',
-                'gopls',
+                -- 'csharp_ls',
                 'eslint',
-                'postgres_lsp',
+                -- 'gopls',
+                -- 'postgres_lsp',
+                'rust_analyzer',
+                'ts_ls',
             })
         end,
     },
