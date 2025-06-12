@@ -92,6 +92,7 @@ alias godot='/Applications/Godot_mono.app/Contents/MacOS/Godot'
 alias x='/Users/davidpdrsn/Games/traffic-signal-sim/x'
 alias blender='/Applications/Blender.app/Contents/MacOS/Blender'
 alias ds='sudo darwin-rebuild switch --flake ~/config'
+alias dbui='nvim +DBUI'
 
 # nvim
 alias vi='nvim'

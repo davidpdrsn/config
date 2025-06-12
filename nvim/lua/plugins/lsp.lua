@@ -15,8 +15,8 @@ return {
             ensure_installed = {
                 -- 'csharp_ls',
                 'eslint',
-                -- 'gopls',
-                -- 'postgres_lsp',
+                'gopls',
+                'postgres_lsp',
                 'rust_analyzer',
                 'ts_ls',
             },
@@ -86,8 +86,8 @@ return {
             vim.lsp.enable({
                 -- 'csharp_ls',
                 'eslint',
-                -- 'gopls',
-                -- 'postgres_lsp',
+                'gopls',
+                'postgres_lsp',
                 'rust_analyzer',
                 'ts_ls',
             })
