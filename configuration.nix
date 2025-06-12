@@ -22,6 +22,7 @@ in
   nixpkgs.hostPlatform = "aarch64-darwin";
 
   environment.systemPackages = with pkgs; [
+    # general
     htop
     neovim
     eza
@@ -30,9 +31,14 @@ in
     jq
     curl
     wget
-    google-cloud-sdk
     postgresql
     gh
+    git-lfs
+    tree
+    dust
+    typos
+    dotnet-sdk_9
+    csharpier
 
     # docker
     colima
@@ -40,6 +46,7 @@ in
     docker-compose
 
     # lun
+    google-cloud-sdk
     google-alloydb-auth-proxy
 
     # typescript
@@ -66,5 +73,11 @@ in
     enable = true;
     package = pkgs.postgresql;
     dataDir = "/Users/davidpdrsn/.nix-services/postgresql-17";
+  };
+
+  environment.variables = {
+    # https://www.reddit.com/r/godot/comments/1f0tswq/comment/ljwyvnk/
+    DOTNET_ROOT = "${pkgs.dotnet-sdk_9}/share/dotnet";
+    DOTNET_CLI_TELEMETRY_OPTOUT = "1";
   };
 }
