@@ -2,6 +2,7 @@
 
 let
   oapi_codegen = pkgs.callPackage ./go/oapi_codegen.nix {};
+  sqlboiler = pkgs.callPackage ./go/sqlboiler.nix {};
 in
 {
   # Required because I installed Determinate nix, not vanilla
@@ -33,7 +34,7 @@ in
     wget
     google-cloud-sdk
     postgresql
-    redis
+    gh
 
     # docker
     colima
@@ -45,22 +46,18 @@ in
 
     # typescript
     prettierd
+    # nodejs_22, couldn't get `npm install` or `rush install` working
+    # nvm
 
     # go
     gotools
     golines
     delve
-    atlas # v0.34.0, requires v0.32.0
+    atlas
     mockgen
     golangci-lint
     oapi_codegen
-    # go install github.com/deepmap/oapi-codegen/cmd/oapi-codegen@v1.13.4
-    # go install github.com/volatiletech/sqlboiler/v4@v4.14.2
-    # go install github.com/volatiletech/sqlboiler/v4/drivers/sqlboiler-psql@v4.14.2
-
-    # TODO
-    # nodejs_22, couldn't get `npm install` or `rush install` working
-    # nvm
+    sqlboiler
   ];
 
   fonts.packages = with pkgs; [

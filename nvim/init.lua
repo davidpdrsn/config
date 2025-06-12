@@ -176,6 +176,8 @@ cmap("%%", "<C-R>='\"'.expand('%:h').'/'.'\"'<cr>")
 leader(";", "maA;<esc>`a")
 leader(",", "maA,<esc>`a")
 
+leader("Q", ":qall!<cr>")
+
 -- exit insert mode and save just by hitting ctrl-s
 imap("<c-s>", "<esc>:w<cr>")
 nmap("<c-s>", ":w<cr>")
