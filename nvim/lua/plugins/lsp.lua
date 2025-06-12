@@ -13,7 +13,7 @@ return {
         "mason-org/mason-lspconfig.nvim",
         opts = {
             ensure_installed = {
-                -- 'csharp_ls',
+                'csharp_ls',
                 'eslint',
                 'gopls',
                 'postgres_lsp',
@@ -84,7 +84,7 @@ return {
             })
 
             vim.lsp.enable({
-                -- 'csharp_ls',
+                'csharp_ls',
                 'eslint',
                 'gopls',
                 'postgres_lsp',
