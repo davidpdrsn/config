@@ -19,17 +19,33 @@
         curl
         wget
         google-cloud-sdk
+
+        # lun
         google-alloydb-auth-proxy
+
+        # typescript
         prettierd
+
+        # go
+        gotools
+        golines
+        oapi-codegen
+        mockgen
+        golangci-lint
+        delve
 
         # TODO
         # postgresql
         # nodejs_22, couldn't get `npm install` or `rush install` working
+        # nvm
     ];
 
     # services.postgresql = {
     #     enable = true;
     # };
+
+    programs.zoxide.enable = true;
+    programs.fd.enable = true;
 
     programs.git = {
         enable = true;
@@ -84,8 +100,12 @@
         ];
     };
 
-    programs.zoxide.enable = true;
-    programs.fd.enable = true;
+    programs.go = {
+        enable = true;
+        telemetry = {
+            mode = "off";
+        };
+    };
 
     home.file = {
         ".gitignoreglobal".source = ./gitignoreglobal;
