@@ -1,8 +1,6 @@
 { self, pkgs, ... }:
 
 let
-  oapi_codegen = pkgs.callPackage ./go/oapi_codegen.nix {};
-  sqlboiler = pkgs.callPackage ./go/sqlboiler.nix {};
 in
 {
   # Required because I installed Determinate nix, not vanilla
@@ -56,8 +54,8 @@ in
     atlas
     mockgen
     golangci-lint
-    oapi_codegen
-    sqlboiler
+    (pkgs.callPackage ./go/oapi_codegen.nix {})
+    (pkgs.callPackage ./go/sqlboiler.nix {})
   ];
 
   fonts.packages = with pkgs; [
