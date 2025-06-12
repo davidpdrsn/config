@@ -1,5 +1,6 @@
 export PATH=$PATH:/Users/davidpdrsn/.cargo/bin
 export PATH=$PATH:/Users/davidpdrsn/.bin
+export PATH=$PATH:/Users/davidpdrsn/go/bin
 
 export EDITOR='nvim'
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
@@ -70,7 +71,7 @@ alias cd='z'
 alias cat='bat'
 alias dt='cd ~/Desktop'
 alias diff='diff --color'
-alias ea='nvim ~/.zshrc'
+alias ea='nvim ~/config/zsh/zshrc'
 alias rl='source ~/.zshrc'
 alias l='exa --long --header --git --all --sort name'
 alias la='exa -a --long --header --sort name'
@@ -90,7 +91,7 @@ alias mbark='/Users/davidpdrsn/code/embark/wim-mod/mbark'
 alias godot='/Applications/Godot_mono.app/Contents/MacOS/Godot'
 alias x='/Users/davidpdrsn/Games/traffic-signal-sim/x'
 alias blender='/Applications/Blender.app/Contents/MacOS/Blender'
-alias hms='home-manager switch --flake ~/config'
+alias ds='sudo darwin-rebuild switch --flake ~/config'
 
 # nvim
 alias vi='nvim'
