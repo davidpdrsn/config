@@ -7,10 +7,12 @@
   # Don't change this value, even when updating home-manager.
   home.stateVersion = "25.05";
 
-  home.packages = [
-    pkgs.htop
-    pkgs.neovim
-    pkgs.eza
+  home.packages = with pkgs; [
+    htop
+    neovim
+    eza
+    bat
+    rustup
   ];
   
   programs.git = {
@@ -20,12 +22,20 @@
   
   programs.zsh = {
     enable = true;
-    # initExtra = builtins.readFile ./zshrc;
+    initExtra = builtins.readFile ./zsh/zshrc;
   };
   
   programs.fzf = {
     enable = true;
     enableZshIntegration = true;
+    tmux = {
+      enableShellIntegration = true;
+    };
+  };
+
+  programs.tmux = {
+    enable = true;
+    # extraConfig = builtins.readFile ./tmux/tmux.conf
   };
   
   programs.ripgrep = {
