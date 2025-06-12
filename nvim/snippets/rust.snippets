@@ -1,0 +1,301 @@
+snippet _ "force type error"
+	let _: () = $0;
+
+snippet i "impl"
+	impl $1 {
+		$2
+	}
+
+snippet it "impl trait"
+	impl $1 for $2 {
+		$0
+	}
+
+snippet s "struct"
+	struct $1 {
+		$2
+	}
+
+snippet e "enum"
+	enum $1 {
+		$2
+	}
+
+snippet t "trait"
+	trait $1 {
+		$2
+	}
+
+snippet d "debug"
+	ark::dbg!(&$0);
+
+snippet pl "println"
+	println!("$0");
+
+snippet tests "test module"
+	#[cfg(test)]
+	mod tests {
+		#[allow(unused_imports)]
+		use super::*;
+	}
+
+snippet test "a single test"
+	#[ark::test]
+	fn $1() {
+		$0
+	}
+
+snippet new "new function"
+	fn new($1) -> Self {
+		$0
+	}
+
+snippet todo "todo"
+	// TODO(david): $0
+
+snippet todovar "todo"
+	// TODO(david): $0
+	let todo_ = ();
+
+snippet todoconst "todo"
+	const _: () = {
+		// TODO(david): $0
+		let todo_ = ();
+	};
+
+snippet td "todo!"
+	todo!()
+
+snippet p "panic!"
+	panic!()
+
+snippet ps "panic!"
+	panic!("{:?}", $0)
+
+snippet main "main function"
+	fn main() {
+		$0
+	}
+
+snippet dr "derive"
+	#[derive($0)]
+
+snippet atest "async test"
+	#[tokio::test]
+	async fn $1() {
+		$0
+	}
+
+snippet al
+	#[allow($0)]
+
+snippet all
+	#![allow($0)]
+
+snippet aspect
+	#[derive(Debug, Clone, Reflect, Aspect)]
+	#[aspect(guid = "${UUID}")]
+	#[persisted(kind = None)]
+	pub struct $1Aspect {
+	    $0
+	}
+
+snippet msg
+	#[derive(Debug, Clone)]
+	pub struct $1Msg {
+	    $0
+	}
+	
+	impl Message for $1Msg {
+	    const GUID: MessageGuid =
+	        MessageGuid::const_new_from_str("${UUID}");
+	}
+
+snippet for
+	for $1 in $2 {
+		$3
+	}
+
+snippet if
+	if $1 {
+		$2
+	}
+
+snippet ifl
+	if let Some($1) = $2 {
+		$3
+	}
+
+snippet middleware
+	async fn $1(
+		request: Request,
+		next: Next,
+	) -> Response {
+		let response = next.run(request).await;
+		response
+	}
+
+snippet event
+	#[derive(Event, Reflect, Debug, Clone)]
+	#[event(guid = "${UUID}")]
+	pub struct $1 {}
+
+	impl EventImpl for $1 {
+		// const LOCATION: EndpointLocation = EndpointLocation::Entity;
+		// const AVAILABILITY: EndpointAvailability = EndpointAvailability::Conditional;
+		// const CATEGORIES: &'static [EndpointCategory] = &[];
+	}
+
+snippet operation
+	#[derive(Operation)]
+	#[operation(guid = "${UUID}")]
+	pub struct $1 {}
+
+	impl OperationImpl for $1 {
+		// const LOCATION: EndpointLocation = EndpointLocation::Entity;
+		// const AVAILABILITY: EndpointAvailability = EndpointAvailability::Conditional;
+		// const CATEGORIES: &'static [EndpointCategory] = &[];
+
+		type Data = $2;
+
+		fn init(entity: EntityId, instigator_ctx: InstigatorCtx, api: &dyn BehaviorApi) {
+			todo!();
+		}
+	}
+
+snippet prop
+	#[derive(Property)]
+	#[property(guid = "${UUID}")]
+	pub struct $1;
+	
+	impl PropertyImpl for $1 {
+		// const LOCATION: EndpointLocation = EndpointLocation::Entity;
+		// const AVAILABILITY: EndpointAvailability = EndpointAvailability::Conditional;
+		// const CATEGORIES: &'static [EndpointCategory] = &[];
+		// const READ_ONLY: bool = false;
+	
+	    type Data = $2;
+	    type Aspect = $3;
+	
+	    fn map_aspect(aspect: Option<&Self::Aspect>) -> Self::Data {
+	        todo!()
+	    }
+	
+	    fn init(entity: EntityId, instigator_ctx: InstigatorCtx, api: &dyn BehaviorApi) {
+	        todo!()
+	    }
+	}
+
+snippet behaviordecl
+	#[derive(Clone, Default, serde::Serialize, serde::Deserialize)]
+	pub struct $1Behavior;
+	
+	impl BehaviorDecl for $1Behavior {
+	    const GUID: BehaviorGuid =
+	        BehaviorGuid::const_new_from_str("${UUID}");
+	
+	    // fn default_behavior() -> DefaultBehavior<Self> {
+	    //     DefaultBehavior::default()
+	    // }
+	}
+	
+snippet behaviorimpl
+	#[derive(Default, Clone, Behavior)]
+	#[behavior(declaration = $1Behavior)]
+	#[persisted(kind = ExistenceOnly)]
+	pub struct $1BehaviorImpl {}
+	
+	impl From<$1Behavior> for $1BehaviorImpl {
+		fn from(decl: $1Behavior) -> Self {
+			let $1Behavior {} = decl;
+			Self::default()
+		}
+	}
+	
+	impl BehaviorImpl for $1BehaviorImpl {
+	    fn build(b: &mut impl BehaviorImplBuilder<Self>) {
+	        $0
+	    }
+	}
+
+	impl $1BehaviorImpl {
+
+	}
+
+snippet msgh
+	fn on_$1(&mut self, msg: &$2, api: &dyn BehaviorApi) {
+	}
+
+snippet msgh2
+	fn on_$1(&mut self, msg: &$2, mut api: Api<'_>) {
+	}
+
+snippet ba
+	&dyn BehaviorApi
+
+snippet sandbox-derives
+	#[derive(Debug, Clone, serde::Serialize, serde::Deserialize, speedy::Writable, speedy::Readable)]
+
+snippet init
+	fn on_init(&mut self, msg: &InitMsg, api: &dyn BehaviorApi) {
+		$1
+	}
+
+snippet think
+	fn on_think(&mut self, msg: &ThinkMsg, api: &dyn BehaviorApi) {
+		$1
+	}
+
+snippet sr
+	SandboxResult<$1>
+
+snippet intoiterator
+	impl IntoIterator for $1 {
+		type Item = $2;
+		type IntoIter = $3;
+
+		fn into_iter(self) -> Self::IntoIter {
+			$4
+		}
+	}
+
+snippet onmsg
+	b.on_msg::<$1>(Self::on_$2);
+
+	fn on_$2(&mut self, msg: &$1, api: &dyn BehaviorApi) {
+	}
+
+snippet onmsgclosure
+	b.on_msg::<$1>(
+		|behavior: &mut Self, msg: &$1, api: &dyn BehaviorApi| {
+			$0
+		}
+	);
+
+snippet bingo
+	ark::info!("[{}:{}:{}]: BINGO", file!(), line!(), column!());
+
+snippet info
+	ark::info!("$0 = {:?}", $0);
+
+snippet caller
+	ark::info!("{}", std::panic::Location::caller());
+
+snippet x
+	macro_rules! x {
+		() => {
+			panic!("[{}:{}]", file!(), line!())
+		};
+		($val:expr $(,)?) => {
+			match $val {
+				tmp => {
+					panic!("[{}:{}] {} = {:#?}",
+						file!(), line!(), stringify!($val), &tmp);
+					tmp
+				}
+			}
+		};
+		($($val:expr),+ $(,)?) => {
+			($(x!($val)),+,)
+		};
+	}
