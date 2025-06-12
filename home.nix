@@ -22,7 +22,13 @@
   
   programs.zsh = {
     enable = true;
-    initExtra = builtins.readFile ./zsh/zshrc;
+    initContent = builtins.readFile ./zsh/zshrc;
+    autosuggestion = {
+      enable = true;
+    };
+    syntaxHighlighting = {
+      enable = true;
+    };
   };
   
   programs.fzf = {
@@ -68,10 +74,6 @@
   home.file = {
     ".gitignoreglobal".source = ./gitignoreglobal;
     ".config/ghostty".source = ./ghostty;
-  };
-
-  home.sessionVariables = {
-    EDITOR = "nvim";
   };
 
   programs.home-manager.enable = true;
