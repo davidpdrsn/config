@@ -1,7 +1,7 @@
 { self, pkgs, ... }:
 
 let
-  oapi_codegen = pkgs.callPackage ./oapi_codegen.nix {};
+  oapi_codegen = pkgs.callPackage ./go/oapi_codegen.nix {};
 in
 {
   # Required because I installed Determinate nix, not vanilla
