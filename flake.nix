@@ -79,8 +79,10 @@
         configuration
         home-manager.darwinModules.home-manager
         {
+          users.users.davidpdrsn.home = "/Users/davidpdrsn";
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
+
           home-manager.users.davidpdrsn = import ./home.nix;
         }
       ];
