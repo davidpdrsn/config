@@ -73,6 +73,7 @@
 
   home.file = {
     ".gitignoreglobal".source = ./gitignoreglobal;
+    ".bin".source = ./bin;
     ".config/ghostty".source = ./ghostty;
   };
 
