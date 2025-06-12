@@ -7,6 +7,25 @@ local tmap = common.tmap
 local leader = common.leader
 
 return {
+    -- install and manage LSP servers
+    { "mason-org/mason.nvim", opts = {} },
+    {
+        "mason-org/mason-lspconfig.nvim",
+        opts = {
+            ensure_installed = {
+                'rust_analyzer',
+                -- 'csharp_ls',
+                -- 'ts_ls',
+                -- 'gopls',
+                -- 'eslint',
+                -- 'postgres_lsp',
+            },
+        },
+        dependencies = {
+            { "mason-org/mason.nvim", opts = {} },
+            "neovim/nvim-lspconfig",
+        },
+    },
     -- highlight other occurances of words
     { 'RRethy/vim-illuminate' },
     -- easy lsp config
@@ -156,6 +175,4 @@ return {
     { "pmizio/typescript-tools.nvim" },
     -- UI for nvim-lsp progress
     { "j-hui/fidget.nvim", opts = {} },
-    -- install and manage LSP servers
-    { "mason-org/mason.nvim", opts = {} },
 }
