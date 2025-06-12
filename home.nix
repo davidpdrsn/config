@@ -20,13 +20,16 @@
         wget
         google-cloud-sdk
         google-alloydb-auth-proxy
-        postgresql_17_jit
+        prettierd
+
+        # TODO
+        # postgresql
+        # nodejs_22, couldn't get `npm install` or `rush install` working
     ];
 
-    services.postgresql = {
-        enable = true;
-        ensureDatabases = [ "mydatabase" ];
-    };
+    # services.postgresql = {
+    #     enable = true;
+    # };
 
     programs.git = {
         enable = true;
