@@ -10,6 +10,7 @@
     programs.direnv = {
         enable = true;
         enableZshIntegration = true;
+        nix-direnv.enable = true;
     };
 
     programs.git = {
@@ -60,13 +61,6 @@
             # Because who cares about case!?
             "--smart-case"
         ];
-    };
-
-    programs.go = {
-        enable = true;
-        telemetry = {
-            mode = "off";
-        };
     };
 
     home.file = {

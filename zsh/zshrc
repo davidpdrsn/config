@@ -5,18 +5,26 @@ export PATH=$PATH:$DOTNET_ROOT/tools
 # export PATH=$PATH:/Users/davidpdrsn/.dotnet/tools
 
 export EDITOR='nvim'
-export DOTNET_CLI_TELEMETRY_OPTOUT=1
+
 export ANTHROPIC_API_KEY=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
-export BITS_N_WIRES_PLANE_API_KEY=plane_api_ed28cd5eb1304b3eb9607b5a52c11bbd
+
 export CARGO_PROFILE_DEV_SPLIT_DEBUGINFO=unpacked
 export CARGO_PROFILE_TEST_SPLIT_DEBUGINFO=unpacked
 export CARGO_INCREMENTAL=1
 export CARGO_UNSTABLE_SPARSE_REGISTRY=true
 export CARGO_TERM_COLOR=always
+
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
+export BITS_N_WIRES_PLANE_API_KEY=plane_api_ed28cd5eb1304b3eb9607b5a52c11bbd
 export BLENDER_PATH="/Applications/Blender.app/Contents/MacOS/Blender"
 export GODOT_PATH="/Applications/Godot_mono.app/Contents/MacOS/Godot"
+
 export LUN_DEV_DB_PASS="p!G-inYH3ZxW"
 export LUN_PROD_DB_PASS="G5_t;(CU;)uoqUmQ"
+
+# required for go test containers to work with colima
+# export DOCKER_HOST="unix://${HOME}/.colima/default/docker.sock"
+# export TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE="/var/run/docker.sock"
 
 # make ctrl-p, ctrl-n, etc work in tmux
 bindkey -e
