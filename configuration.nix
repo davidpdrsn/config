@@ -39,14 +39,24 @@ in
     tree
     dust
 
-    code-cursor
-
     # docker
     colima
     docker
     docker-compose
 
+    # gui apps
+    code-cursor
+    blender
+    discord
+    obsidian
+    slack
+    spotify
+    keymapp
+    unnaturalscrollwheels
+    google-chrome
+
     # typescript
+    # TODO: move this to flake.nix in web-main
     prettierd
     # nodejs_22, couldn't get `npm install` or `rush install` working
     # nvm
