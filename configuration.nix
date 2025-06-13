@@ -40,6 +40,9 @@ in
     dust
     procs
     hyperfine
+    cargo-watch
+    tokei
+    cargo-limit
 
     # docker
     colima
