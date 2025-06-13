@@ -58,8 +58,15 @@ setopt prompt_subst
 local symbol="❯"
 local start="%(?,%{$fg[green]%}$symbol%{$reset_color%},%{$fg[red]%}$symbol%{$reset_color%})"
 
+# Function to check if we are in a nix shell
+is_in_nix_shell() {
+  if [ -n "$IN_NIX_SHELL" ]; then
+    echo "[nix:$name] "
+  fi
+}
+
 PROMPT=$'
-$(smart-pwd-2) %{$reset_color%}$(git-prompt)$(is-vim-running)%{$reset_color%}
+$(smart-pwd-2) $(is_in_nix_shell)%{$reset_color%}$(git-prompt)$(is-vim-running)%{$reset_color%}
 ${start} '
 RPROMPT=$''
 
