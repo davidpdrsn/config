@@ -39,6 +39,7 @@ in
     tree
     dust
     procs
+    hyperfine
 
     # docker
     colima
