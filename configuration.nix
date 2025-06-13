@@ -38,6 +38,7 @@ in
     git-lfs
     tree
     dust
+    procs
 
     # docker
     colima
