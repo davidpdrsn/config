@@ -1,6 +1,7 @@
-{ self, pkgs, ... }:
+inputs@{ self, pkgs, ... }:
 
 let
+    dotnet = pkgs.dotnet-sdk_9;
 in
 {
   # Required because I installed Determinate nix, not vanilla
@@ -37,7 +38,7 @@ in
     tree
     dust
     typos
-    dotnet-sdk_9
+    dotnet
     csharpier
 
     # docker
@@ -77,7 +78,7 @@ in
 
   environment.variables = {
     # https://www.reddit.com/r/godot/comments/1f0tswq/comment/ljwyvnk/
-    DOTNET_ROOT = "${pkgs.dotnet-sdk_9}/share/dotnet";
+    DOTNET_ROOT = "${dotnet}/share/dotnet";
     DOTNET_CLI_TELEMETRY_OPTOUT = "1";
   };
 }
