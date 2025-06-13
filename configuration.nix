@@ -46,24 +46,10 @@ in
     docker
     docker-compose
 
-    # lun
-    google-cloud-sdk
-    google-alloydb-auth-proxy
-
     # typescript
     prettierd
     # nodejs_22, couldn't get `npm install` or `rush install` working
     # nvm
-
-    # go
-    gotools
-    golines
-    delve
-    atlas
-    mockgen
-    golangci-lint
-    (pkgs.callPackage ./go/oapi_codegen.nix {})
-    (pkgs.callPackage ./go/sqlboiler.nix {})
   ];
 
   fonts.packages = with pkgs; [
@@ -79,6 +65,5 @@ in
   environment.variables = {
     # https://www.reddit.com/r/godot/comments/1f0tswq/comment/ljwyvnk/
     DOTNET_ROOT = "${dotnet}/share/dotnet";
-    DOTNET_CLI_TELEMETRY_OPTOUT = "1";
   };
 }
