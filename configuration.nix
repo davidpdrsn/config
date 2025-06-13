@@ -1,7 +1,6 @@
 inputs@{ self, pkgs, ... }:
 
 let
-    dotnet = pkgs.dotnet-sdk_9;
 in
 {
   # Required because I installed Determinate nix, not vanilla
@@ -37,9 +36,6 @@ in
     git-lfs
     tree
     dust
-    typos
-    dotnet
-    csharpier
 
     # docker
     colima
@@ -60,10 +56,5 @@ in
     enable = true;
     package = pkgs.postgresql;
     dataDir = "/Users/davidpdrsn/.nix-services/postgresql-17";
-  };
-
-  environment.variables = {
-    # https://www.reddit.com/r/godot/comments/1f0tswq/comment/ljwyvnk/
-    DOTNET_ROOT = "${dotnet}/share/dotnet";
   };
 }
