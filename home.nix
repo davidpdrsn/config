@@ -29,9 +29,13 @@
         };
     };
 
-    programs.fzf = {
+    programs.atuin = {
         enable = true;
         enableZshIntegration = true;
+    };
+
+    programs.fzf = {
+        enable = true;
     };
 
     programs.tmux = {
