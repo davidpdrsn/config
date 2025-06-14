@@ -79,6 +79,7 @@ require("lazy").setup({
 
 require("run_tests")
 require("run_project")
+require("run_project")
 
 --------------------------------------------
 -- Auto commands
@@ -137,6 +138,16 @@ vim.api.nvim_create_autocmd("FileType", {
 --------------------------------------------
 -- Mappings
 --------------------------------------------
+
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "lua",
+    callback = function()
+        vim.keymap.set("n", "<leader>o", function()
+            vim.cmd("source %")
+            print("Loaded " .. vim.fn.expand('%'))
+        end, { buffer = true })
+    end
+})
 
 imap("\\u", function()
     insert_guid()

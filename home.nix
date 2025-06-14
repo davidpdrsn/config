@@ -4,6 +4,8 @@
     # Don't change this value, even when updating home-manager.
     home.stateVersion = "25.05";
 
+    programs.zoxide.enable = true;
+
     programs.direnv = {
         enable = true;
         enableZshIntegration = true;
