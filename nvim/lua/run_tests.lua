@@ -121,6 +121,25 @@ vim.keymap.set("n", "<leader>t", function()
     end
 end)
 
+vim.keymap.set("n", "<leader>T", function()
+    local original_win_id = vim.api.nvim_get_current_win()
+    vim.cmd('botright 20new')
+    term_buf = vim.api.nvim_get_current_buf()
+    local job_id = vim.fn.jobstart(
+        "/Users/davidpdrsn/.cargo/bin/t",
+        {
+            term = true,
+            on_exit = function(_, status)
+                if status == 0 then
+                    vim.api.nvim_set_current_win(original_win_id)
+                    vim.api.nvim_buf_delete(term_buf, { force = false })
+                end
+            end,
+        }
+    )
+    vim.cmd('startinsert')
+end)
+
 M.statusline = function()
     if test_command then
         return test_command.statusline
