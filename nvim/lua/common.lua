@@ -82,4 +82,34 @@ function M.custom_format_leader_command(pattern, command, augroup_name)
     })
 end
 
+function is_not_in_tmux()
+    return os.getenv("TERM_PROGRAM") ~= "tmux"
+end
+
+function M.tmux_wrap(cmd)
+    if is_not_in_tmux() then
+        return { in_tmux = false, cmd = cmd }
+    end
+
+    local handle = io.popen("tmux list-panes -F '#{pane_index} #{pane_current_command}'", 'r')
+    local stdout = handle:read("*a")
+    handle:close()
+
+    for _, line in pairs(vim.split(stdout, '\n')) do
+        if line ~= "" then
+            local words = vim.split(line, ' ')
+            local n = words[1]
+            local pane_cmd = words[2]
+            if pane_cmd == "zsh" then
+                return {
+                    in_tmux = true,
+                    cmd = "tmux send-keys -t " .. n .. " \"" .. cmd .. "\" Enter",
+                }
+            end
+        end
+    end
+
+    return { in_tmux = false, cmd = cmd }
+end
+
 return M
