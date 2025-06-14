@@ -36,6 +36,9 @@ in
     postgresql
     gh
     git-lfs
+    fzf
+    zoxide
+    fd
     tree
     dust
     procs
