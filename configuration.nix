@@ -45,6 +45,7 @@ in
     cargo-watch
     tokei
     cargo-limit
+    alejandra
 
     # docker
     colima
