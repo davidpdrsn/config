@@ -277,21 +277,26 @@ function insert_guid()
     vim.cmd("execute \"norm i" .. le_guid .. "\"")
 end
 
-common.lsp_format_leader_command("*.rs", "RustUserLspConfig")
-common.lsp_format_leader_command("*.go", "GoUserLspConfig")
+common.lsp_format_leader_command("rust")
+common.lsp_format_leader_command("go")
 
 common.custom_format_leader_command(
-    "*.cs",
+    "cs",
     function(path)
         return { 'dotnet', 'csharpier', path }
-    end,
-    "CSharpUserLspConfig"
+    end
 )
 
 common.custom_format_leader_command(
-    "*.ts,*.tsx,*.js,*.jsx",
+    "typescriptreact,typescript",
     function(path)
         return { 'format-prettier', path }
-    end,
-    "TypeScriptUserLspConfig"
+    end
+)
+
+common.custom_format_leader_command(
+    "nix",
+    function(path)
+        return { 'alejandra', path }
+    end
 )
