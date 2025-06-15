@@ -54,7 +54,6 @@ in
     # gui apps
     code-cursor
     blender
-    discord
     obsidian
     slack
     spotify

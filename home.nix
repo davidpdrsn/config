@@ -52,6 +52,7 @@
             "--glob=!build"
             "--glob=!builds"
             "--glob=!.cache"
+            "--glob=!.direnv"
             "--glob=!temp"
             "--glob=!*\.map"
             "--glob=!target"
