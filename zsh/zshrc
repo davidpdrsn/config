@@ -22,8 +22,8 @@ export LUN_PROD_DB_PASS="G5_t;(CU;)uoqUmQ"
 # export DOCKER_HOST="unix://${HOME}/.colima/default/docker.sock"
 # export TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE="/var/run/docker.sock"
 
-# make ctrl-p, ctrl-n, etc work in tmux
-bindkey -e
+# open atuin with ctrl-p
+bindkey '^p' atuin-up-search
 
 # make completion with tab look not terrible
 setopt auto_menu
