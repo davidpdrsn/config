@@ -134,10 +134,9 @@ return {
         version = '1.*',
         opts = {
             fuzzy = {
-                prebuilt_binaries = {
-                    force_version = "v1.3.1"
-                },
-                implementation = "rust",
+                implementation = 'prefer_rust_with_warning',
+                use_frecency = true,
+                use_proximity = true,
             },
             signature = {
                 enabled = true,
