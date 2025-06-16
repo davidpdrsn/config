@@ -47,6 +47,7 @@ in {
     cargo-limit
     alejandra
 
+    amp-cli
     claude-code
 
     # docker
