@@ -189,6 +189,13 @@ leader(",", "maA,<esc>`a")
 
 leader("Q", ":qall!<cr>")
 
+-- copy current file path to system clipboard
+leader("cp", function()
+    local path = vim.fn.expand('%')
+    vim.fn.setreg('+', path)
+    print('Copied to clipboard: ' .. path)
+end)
+
 -- exit insert mode and save just by hitting ctrl-s
 imap("<c-s>", "<esc>:w<cr>")
 nmap("<c-s>", ":w<cr>")
