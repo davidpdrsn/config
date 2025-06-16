@@ -24,3 +24,4 @@ mprocs.yaml
 .temp
 .tmp
 __debug_bin*
+.direnv
