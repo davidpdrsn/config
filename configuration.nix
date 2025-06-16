@@ -64,12 +64,6 @@ in {
     keymapp
     unnaturalscrollwheels
     google-chrome
-
-    # typescript
-    # TODO: move this to flake.nix in web-main
-    prettierd
-    # nodejs_22, couldn't get `npm install` or `rush install` working
-    # nvm
   ];
 
   fonts.packages = with pkgs; [

@@ -13,12 +13,10 @@ return {
         "mason-org/mason-lspconfig.nvim",
         opts = {
             ensure_installed = {
+                -- can't be installed via nix on arm :(
                 'csharp_ls',
-                'eslint',
-                'gopls',
-                'postgres_lsp',
+                -- not installed with nix because its updated all the time
                 'rust_analyzer',
-                'ts_ls',
             },
         },
         dependencies = {
@@ -87,7 +85,6 @@ return {
                 'csharp_ls',
                 'eslint',
                 'gopls',
-                'postgres_lsp',
                 'rust_analyzer',
                 'ts_ls',
             })

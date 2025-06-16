@@ -108,6 +108,7 @@
       "--glob=!builds"
       "--glob=!.cache"
       "--glob=!.direnv"
+      "--glob=!.pnpm-global"
       "--glob=!temp"
       "--glob=!*\.map"
       "--glob=!target"
