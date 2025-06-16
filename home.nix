@@ -61,6 +61,7 @@
       ".tmp"
       "__debug_bin*"
       ".direnv"
+      ".claude"
     ];
     delta = {
       enable = true;

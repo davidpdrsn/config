@@ -154,8 +154,8 @@ return {
             leader("u", ":UndotreeToggle<cr>")
         end,
     },
-    -- git wrapper
-    { "tpope/vim-fugitive" },
+    -- git signs
+    { "lewis6991/gitsigns.nvim" },
     -- godot
     { "habamax/vim-godot" },
     -- jump to matching thing
