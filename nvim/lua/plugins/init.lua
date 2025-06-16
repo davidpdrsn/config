@@ -25,33 +25,33 @@ return {
                 },
             })
 
-            vim.cmd.colorscheme "catppuccin"
-            vim.cmd[[
+            vim.cmd.colorscheme("catppuccin")
+            vim.cmd([[
                 highlight SpecialComment guifg=#6c6c66
-            ]]
-        end
+            ]])
+        end,
     },
     -- repeat things with "g."
     { "christoomey/Vim-g-dot" },
     -- copy to system clipboard
-    { 'christoomey/vim-system-copy' },
+    { "christoomey/vim-system-copy" },
     -- seamless navigation between vim and multiplexers
     {
-        'mrjones2014/smart-splits.nvim',
+        "mrjones2014/smart-splits.nvim",
         config = function()
-            require('smart-splits').setup()
-            local smart_splits = require('smart-splits')
-            nmap('<c-h>', smart_splits.move_cursor_left)
-            nmap('<c-j>', smart_splits.move_cursor_down)
-            nmap('<c-k>', smart_splits.move_cursor_up)
-            nmap('<c-l>', smart_splits.move_cursor_right)
+            require("smart-splits").setup()
+            local smart_splits = require("smart-splits")
+            nmap("<c-h>", smart_splits.move_cursor_left)
+            nmap("<c-j>", smart_splits.move_cursor_down)
+            nmap("<c-k>", smart_splits.move_cursor_up)
+            nmap("<c-l>", smart_splits.move_cursor_right)
         end,
     },
     -- Delete/change/add surrounding things with ease
-    { 'tpope/vim-surround' },
+    { "tpope/vim-surround" },
     -- file explorer
     {
-        'stevearc/oil.nvim',
+        "stevearc/oil.nvim",
         lazy = false,
         config = function()
             require("oil").setup({
@@ -69,11 +69,11 @@ return {
             })
 
             nmap("-", "<CMD>Oil<CR>")
-        end
+        end,
     },
     -- status line
     {
-        'nvim-lualine/lualine.nvim',
+        "nvim-lualine/lualine.nvim",
         opts = {
             sections = {
                 lualine_a = { "mode" },
@@ -81,75 +81,75 @@ return {
                 lualine_c = { "diagnostics", common.path_to_file },
                 lualine_x = { require("run_tests").statusline },
                 lualine_y = {},
-                lualine_z = { common.filetype }
+                lualine_z = { common.filetype },
             },
             inactive_sections = {
                 lualine_a = {},
                 lualine_b = {
                     "diagnostics",
                 },
-                lualine_c = { common.path_to_file, },
+                lualine_c = { common.path_to_file },
                 lualine_x = {},
                 lualine_y = {},
-                lualine_z = {}
+                lualine_z = {},
             },
         },
     },
     -- autopairs
     {
-        'windwp/nvim-autopairs',
+        "windwp/nvim-autopairs",
         event = "InsertEnter",
-        config = true
+        config = true,
     },
     -- improve the default vim.ui interfaces
-    { 'stevearc/dressing.nvim', opt = {} },
+    { "stevearc/dressing.nvim", opt = {} },
     -- peek lines when jumping
     {
-        'nacro90/numb.nvim',
+        "nacro90/numb.nvim",
         config = function()
-            require('numb').setup()
+            require("numb").setup()
         end,
     },
     -- "ae" text object
     {
-        'kana/vim-textobj-entire',
+        "kana/vim-textobj-entire",
         dependencies = {
-            'kana/vim-textobj-user',
+            "kana/vim-textobj-user",
         },
     },
     -- highlight yanked text
     {
-        'machakann/vim-highlightedyank',
+        "machakann/vim-highlightedyank",
         config = function()
             vim.g.highlightedyank_highlight_duration = 170
-        end
+        end,
     },
     -- dependency of other plugins
-    { 'nvim-lua/plenary.nvim' },
+    { "nvim-lua/plenary.nvim" },
     -- mkdir for full path
-    { 'pbrisbin/vim-mkdir' },
+    { "pbrisbin/vim-mkdir" },
     -- comment stuff
-    { 'tpope/vim-commentary' },
+    { "tpope/vim-commentary" },
     -- helpers for UNIX
-    { 'tpope/vim-eunuch' },
+    { "tpope/vim-eunuch" },
     -- enable repeating supported plugin maps with "."
-    { 'tpope/vim-repeat' },
+    { "tpope/vim-repeat" },
     -- move around
     {
-        'ggandor/leap.nvim',
+        "ggandor/leap.nvim",
         config = function()
-            require('leap').add_default_mappings()
+            require("leap").add_default_mappings()
 
             leader("s", "<Plug>(leap-cross-window)")
-        end
+        end,
     },
     -- icons
-    { 'kyazdani42/nvim-web-devicons' },
+    { "kyazdani42/nvim-web-devicons" },
     -- popup api from vim in Neovim
-    { 'nvim-lua/popup.nvim' },
+    { "nvim-lua/popup.nvim" },
     -- undo history tree
     {
-        'mbbill/undotree',
+        "mbbill/undotree",
         config = function()
             leader("u", ":UndotreeToggle<cr>")
         end,
@@ -158,23 +158,23 @@ return {
     {
         "lewis6991/gitsigns.nvim",
         config = function()
-            require('gitsigns').setup({
+            require("gitsigns").setup({
                 on_attach = function(bufnr)
-                    local gitsigns = require('gitsigns')
+                    local gitsigns = require("gitsigns")
 
-                    vim.keymap.set('n', ']c', function()
+                    vim.keymap.set("n", "]c", function()
                         if vim.wo.diff then
-                            vim.cmd.normal({']c', bang = true})
+                            vim.cmd.normal({ "]c", bang = true })
                         else
-                            gitsigns.nav_hunk('next')
+                            gitsigns.nav_hunk("next")
                         end
                     end, { buffer = bufnr })
 
-                    vim.keymap.set('n', '[c', function()
+                    vim.keymap.set("n", "[c", function()
                         if vim.wo.diff then
-                            vim.cmd.normal({'[c', bang = true})
+                            vim.cmd.normal({ "[c", bang = true })
                         else
-                            gitsigns.nav_hunk('prev')
+                            gitsigns.nav_hunk("prev")
                         end
                     end, { buffer = bufnr })
                 end,
@@ -186,16 +186,16 @@ return {
     -- jump to matching thing
     { "andymass/vim-matchup" },
     -- multiple cursors
-    { 'mg979/vim-visual-multi' },
+    { "mg979/vim-visual-multi" },
     -- split/join things on multiple lines
     {
         "Wansmer/treesj",
         config = function()
             require("treesj").setup({
-                use_default_keymaps = false
+                use_default_keymaps = false,
             })
-            leader("j", require('treesj').toggle)
-        end
+            leader("j", require("treesj").toggle)
+        end,
     },
     -- better quickfix window
     {
@@ -208,11 +208,11 @@ return {
     },
     {
         "nvim-treesitter/nvim-treesitter",
-        branch = 'master',
+        branch = "master",
         lazy = false,
         build = ":TSUpdate",
         config = function()
-            require('nvim-treesitter.configs').setup({
+            require("nvim-treesitter.configs").setup({
                 matchup = {
                     enable = true,
                 },
@@ -234,31 +234,37 @@ return {
         version = "v2.*",
         build = "make install_jsregexp",
         config = function()
-            require("luasnip.loaders.from_snipmate").lazy_load({paths = "~/.config/nvim/snippets"})
+            require("luasnip.loaders.from_snipmate").lazy_load({ paths = "~/.config/nvim/snippets" })
             require("luasnip.loaders.from_vscode").lazy_load()
 
-            imap('<c-k>', require("luasnip").expand, { silent = true })
-            imap('<c-j>', function() require("luasnip").jump(1) end, { silent = true })
-        end
+            imap("<c-k>", require("luasnip").expand, { silent = true })
+            imap("<c-j>", function()
+                require("luasnip").jump(1)
+            end, { silent = true })
+        end,
     },
     -- toggle quickfix
     { "drmingdrmer/vim-toggle-quickfix" },
     -- restore cursor position
     {
-        'ethanholz/nvim-lastplace',
+        "ethanholz/nvim-lastplace",
         opts = {},
     },
     {
-        'kristijanhusak/vim-dadbod-ui',
+        "kristijanhusak/vim-dadbod-ui",
         dependencies = {
-            { 'tpope/vim-dadbod', lazy = true },
-            { 'kristijanhusak/vim-dadbod-completion', ft = { 'sql', 'mysql', 'plsql' }, lazy = true },
+            { "tpope/vim-dadbod", lazy = true },
+            {
+                "kristijanhusak/vim-dadbod-completion",
+                ft = { "sql", "mysql", "plsql" },
+                lazy = true,
+            },
         },
         cmd = {
-            'DBUI',
-            'DBUIToggle',
-            'DBUIAddConnection',
-            'DBUIFindBuffer',
+            "DBUI",
+            "DBUIToggle",
+            "DBUIAddConnection",
+            "DBUIFindBuffer",
         },
         init = function()
             -- Your DBUI configuration

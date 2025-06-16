@@ -13,17 +13,24 @@ local leader = common.leader
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
-  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
-  if vim.v.shell_error ~= 0 then
-    vim.api.nvim_echo({
-      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-      { out, "WarningMsg" },
-      { "\nPress any key to exit..." },
-    }, true, {})
-    vim.fn.getchar()
-    os.exit(1)
-  end
+    local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+    local out = vim.fn.system({
+        "git",
+        "clone",
+        "--filter=blob:none",
+        "--branch=stable",
+        lazyrepo,
+        lazypath,
+    })
+    if vim.v.shell_error ~= 0 then
+        vim.api.nvim_echo({
+            { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+            { out, "WarningMsg" },
+            { "\nPress any key to exit..." },
+        }, true, {})
+        vim.fn.getchar()
+        os.exit(1)
+    end
 end
 vim.opt.rtp:prepend(lazypath)
 
@@ -124,15 +131,15 @@ vim.cmd([[
 ]])
 
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = "nix",
-  callback = function()
-    vim.opt_local.shiftwidth = 2
-    vim.opt_local.tabstop = 2
-    vim.opt_local.softtabstop = 2
-    vim.opt_local.expandtab = true
-    vim.opt_local.smartindent = false
-    vim.opt_local.cindent = false
-  end,
+    pattern = "nix",
+    callback = function()
+        vim.opt_local.shiftwidth = 2
+        vim.opt_local.tabstop = 2
+        vim.opt_local.softtabstop = 2
+        vim.opt_local.expandtab = true
+        vim.opt_local.smartindent = false
+        vim.opt_local.cindent = false
+    end,
 })
 
 --------------------------------------------
@@ -144,9 +151,9 @@ vim.api.nvim_create_autocmd("FileType", {
     callback = function()
         vim.keymap.set("n", "<leader>o", function()
             vim.cmd("source %")
-            print("Loaded " .. vim.fn.expand('%'))
+            print("Loaded " .. vim.fn.expand("%"))
         end, { buffer = true })
-    end
+    end,
 })
 
 imap("\\u", function()
@@ -156,17 +163,23 @@ end)
 leader("cm", ":!chmod +x %<cr>")
 leader("ev", ":tabedit $MYVIMRC<cr>:lcd ~/.config/nvim/<cr>")
 leader("h", ":nohlsearch<cr>")
-leader("k", function() vim.diagnostic.open_float({ source = true }) end)
+leader("k", function()
+    vim.diagnostic.open_float({ source = true })
+end)
 leader("L", ":Lazy<cr>")
 
 leader("m", ":call MergeTabs()<cr>")
-leader("la", function() vim.lsp.buf.code_action() end)
-leader("lr", function() vim.lsp.buf.rename() end)
+leader("la", function()
+    vim.lsp.buf.code_action()
+end)
+leader("lr", function()
+    vim.lsp.buf.rename()
+end)
 leader("rn", ":call RenameFile()<cr>")
 
 leader("x", ":set filetype=")
 
-vim.cmd[[
+vim.cmd([[
     function! RenameFile()
         let old_name = expand('%')
         let new_name = input('New file name: ', expand('%'), 'file')
@@ -178,7 +191,7 @@ vim.cmd[[
     endfunction
 
     nmap <C-g><C-o> <Plug>window:quickfix:loop
-]]
+]])
 
 -- get path to current file in command mode with %%
 cmap("%%", "<C-R>='\"'.expand('%:h').'/'.'\"'<cr>")
@@ -191,9 +204,9 @@ leader("Q", ":qall!<cr>")
 
 -- copy current file path to system clipboard
 leader("cp", function()
-    local path = vim.fn.expand('%')
-    vim.fn.setreg('+', path)
-    print('Copied to clipboard: ' .. path)
+    local path = vim.fn.expand("%")
+    vim.fn.setreg("+", path)
+    print("Copied to clipboard: " .. path)
 end)
 
 -- exit insert mode and save just by hitting ctrl-s
@@ -216,17 +229,17 @@ nmap("<s-down>", "10<C-W>-")
 
 -- Don't jump around when using * to search for word under cursor
 -- Often I just want to see where else a word appears
-vim.cmd[[
+vim.cmd([[
     nnoremap * :let @/ = '\<'.expand('<cword>').'\>'\|set hlsearch<C-M>
-]]
+]])
 
 -- Insert current file name with \f in insert mode
-vim.cmd[[
+vim.cmd([[
     inoremap \f <C-R>=expand("%:t:r")<CR>
-]]
+]])
 
 -- from https://github.com/jferris/dotfiles/blob/master/vim/plugin/mergetabs.vim
-vim.cmd[[
+vim.cmd([[
     function! MergeTabs()
      if tabpagenr() == 1
         return
@@ -241,44 +254,48 @@ vim.cmd[[
       split
       execute "buffer " . bufferName
     endfunction
-]]
+]])
 
 -- show docs
-nmap(
-    'K',
-    function()
-        local filetype = vim.bo.filetype
-        if vim.tbl_contains({ 'vim','help' }, filetype) then
-            vim.cmd('h '.. vim.fn.expand('<cword>'))
-        elseif vim.tbl_contains({ 'man' }, filetype) then
-            vim.cmd('Man '.. vim.fn.expand('<cword>'))
-        else
-            vim.lsp.buf.hover()
-        end
-    end,
-    { silent = true }
-)
+nmap("K", function()
+    local filetype = vim.bo.filetype
+    if vim.tbl_contains({ "vim", "help" }, filetype) then
+        vim.cmd("h " .. vim.fn.expand("<cword>"))
+    elseif vim.tbl_contains({ "man" }, filetype) then
+        vim.cmd("Man " .. vim.fn.expand("<cword>"))
+    else
+        vim.lsp.buf.hover()
+    end
+end, { silent = true })
 
 -- lsp
-nmap('gd', function() vim.lsp.buf.definition() end)
-nmap('gy', function() vim.lsp.buf.type_definition() end)
-nmap('[g', function() vim.diagnostic.goto_prev() end)
-nmap(']g', function() vim.diagnostic.goto_next() end)
+nmap("gd", function()
+    vim.lsp.buf.definition()
+end)
+nmap("gy", function()
+    vim.lsp.buf.type_definition()
+end)
+nmap("[g", function()
+    vim.diagnostic.goto_prev()
+end)
+nmap("]g", function()
+    vim.diagnostic.goto_next()
+end)
 
-vim.cmd[[
+vim.cmd([[
     " don't wanna retrain my fingers
     command! W w
     command! Q q
     command! Qall qall
-]]
+]])
 
 math.randomseed(os.time())
 local random = math.random
 function insert_guid()
-    local template ='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
-    local le_guid = string.gsub(template, '[xy]', function (c)
-        local v = (c == 'x') and random(0, 0xf) or random(8, 0xb)
-        return string.format('%x', v)
+    local template = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx"
+    local le_guid = string.gsub(template, "[xy]", function(c)
+        local v = (c == "x") and random(0, 0xf) or random(8, 0xb)
+        return string.format("%x", v)
     end)
 
     vim.cmd("execute \"norm i" .. le_guid .. "\"")
@@ -287,23 +304,18 @@ end
 common.lsp_format_leader_command("rust")
 common.lsp_format_leader_command("go")
 
-common.custom_format_leader_command(
-    "cs",
-    function(path)
-        return { 'dotnet', 'csharpier', path }
-    end
-)
+common.custom_format_leader_command("cs", function(path)
+    return { "dotnet", "csharpier", path }
+end)
 
-common.custom_format_leader_command(
-    "typescriptreact,typescript",
-    function(path)
-        return { 'format-prettier', path }
-    end
-)
+common.custom_format_leader_command("typescriptreact,typescript", function(path)
+    return { "format-prettier", path }
+end)
 
-common.custom_format_leader_command(
-    "nix",
-    function(path)
-        return { 'alejandra', path }
-    end
-)
+common.custom_format_leader_command("nix", function(path)
+    return { "alejandra", path }
+end)
+
+common.custom_format_leader_command("lua", function(path)
+    return { "stylua", path }
+end)

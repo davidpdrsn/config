@@ -14,9 +14,9 @@ return {
         opts = {
             ensure_installed = {
                 -- can't be installed via nix on arm :(
-                'csharp_ls',
+                "csharp_ls",
                 -- not installed with nix because its updated all the time
-                'rust_analyzer',
+                "rust_analyzer",
             },
         },
         dependencies = {
@@ -25,16 +25,16 @@ return {
         },
     },
     -- highlight other occurances of words
-    { 'RRethy/vim-illuminate' },
+    { "RRethy/vim-illuminate" },
     -- easy lsp config
     {
-        'neovim/nvim-lspconfig',
+        "neovim/nvim-lspconfig",
         config = function()
-            local lspconfig = require('lspconfig')
+            local lspconfig = require("lspconfig")
 
             lspconfig.rust_analyzer.setup({
                 settings = {
-                    ['rust-analyzer'] = {
+                    ["rust-analyzer"] = {
                         inlayHints = {
                             chainingHints = true,
                         },
@@ -43,7 +43,7 @@ return {
                             autoreload = true,
                             buildScripts = {
                                 enable = true,
-                            }
+                            },
                         },
                         checkOnSave = {
                             overrideCommand = {
@@ -68,7 +68,7 @@ return {
                             },
                         },
                         diagnostics = {
-                            disabled = {"macro-error"},
+                            disabled = { "macro-error" },
                         },
                         procMacro = {
                             enable = true,
@@ -77,16 +77,16 @@ return {
                             },
                         },
                         rustcSource = "discover",
-                    }
-                }
+                    },
+                },
             })
 
             vim.lsp.enable({
-                'csharp_ls',
-                'eslint',
-                'gopls',
-                'rust_analyzer',
-                'ts_ls',
+                "csharp_ls",
+                "eslint",
+                "gopls",
+                "rust_analyzer",
+                "ts_ls",
             })
         end,
     },
@@ -123,15 +123,15 @@ return {
     },
     -- completion
     {
-        'saghen/blink.cmp',
+        "saghen/blink.cmp",
         dependencies = {
-            'rafamadriz/friendly-snippets',
-            'Kaiser-Yang/blink-cmp-avante',
+            "rafamadriz/friendly-snippets",
+            "Kaiser-Yang/blink-cmp-avante",
         },
-        version = '1.*',
+        version = "1.*",
         opts = {
             fuzzy = {
-                implementation = 'prefer_rust_with_warning',
+                implementation = "prefer_rust_with_warning",
                 use_frecency = true,
                 use_proximity = true,
             },
@@ -146,24 +146,24 @@ return {
                 documentation = {
                     auto_show = true,
                     auto_show_delay_ms = 500,
-                }
+                },
             },
-            snippets = { preset = 'luasnip' },
+            snippets = { preset = "luasnip" },
             sources = {
-                default = { 'avante', 'snippets', 'lsp', 'path', 'buffer' },
+                default = { "avante", "snippets", "lsp", "path", "buffer" },
                 per_filetype = {
-                    sql = { 'dadbod', 'buffer' },
+                    sql = { "dadbod", "buffer" },
                 },
                 providers = {
                     dadbod = { name = "Dadbod", module = "vim_dadbod_completion.blink" },
                     avante = {
-                        module = 'blink-cmp-avante',
-                        name = 'Avante',
+                        module = "blink-cmp-avante",
+                        name = "Avante",
                         opts = {
                             -- options for blink-cmp-avante
-                        }
-                    }
-                },           
+                        },
+                    },
+                },
             },
         },
     },
