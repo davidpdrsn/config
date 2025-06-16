@@ -1,8 +1,9 @@
-inputs@{ self, pkgs, ... }:
-
-let
-in
-{
+inputs @ {
+  self,
+  pkgs,
+  ...
+}: let
+in {
   # Required because I installed Determinate nix, not vanilla
   nix.enable = false;
 
@@ -35,7 +36,6 @@ in
     wget
     postgresql
     gh
-    git-lfs
     fzf
     fd
     tree
@@ -46,6 +46,8 @@ in
     tokei
     cargo-limit
     alejandra
+
+    claude-code
 
     # docker
     colima
