@@ -26,29 +26,35 @@ in {
 
   environment.systemPackages = with pkgs; [
     # general
-    htop
-    neovim
-    eza
-    bat
-    rustup
-    jq
-    curl
-    wget
-    postgresql
-    gh
-    fzf
-    fd
-    tree
-    dust
-    procs
-    hyperfine
-    cargo-watch
-    tokei
-    cargo-limit
     alejandra
-    stylua
+    bat
+    cargo-limit
     cargo-outdated
+    cargo-watch
+    curl
+    dust
+    eza
+    fd
+    fzf
+    gh
+    htop
+    hyperfine
+    jq
+    neovim
+    postgresql
+    procs
+    stylua
+    tokei
+    tree
+    wget
 
+    # rust
+    cargo
+    clippy
+    rustc
+    rustfmt
+
+    # ai
     amp-cli
     claude-code
 

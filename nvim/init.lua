@@ -276,10 +276,10 @@ nmap("gy", function()
     vim.lsp.buf.type_definition()
 end)
 nmap("[g", function()
-    vim.diagnostic.goto_prev()
+    vim.diagnostic.jump({ count = -1 })
 end)
 nmap("]g", function()
-    vim.diagnostic.goto_next()
+    vim.diagnostic.jump({ count = 1 })
 end)
 
 vim.cmd([[
