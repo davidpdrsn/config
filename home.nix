@@ -120,8 +120,8 @@
   };
 
   home.file = {
-    ".gitignoreglobal".source = ./gitignoreglobal;
     ".bin".source = ./bin;
+    ".config/balance/config.toml".source = ./balance.toml;
     ".config/ghostty".source = ./ghostty;
   };
 
