@@ -22,7 +22,9 @@ return {
                 },
                 integrations = {
                     leap = true,
+                    gitsigns = true,
                 },
+                no_italic = true,
             })
 
             vim.cmd.colorscheme("catppuccin")

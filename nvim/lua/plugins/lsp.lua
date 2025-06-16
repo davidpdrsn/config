@@ -32,7 +32,7 @@ return {
         config = function()
             local lspconfig = require("lspconfig")
 
-            lspconfig.rust_analyzer.setup({
+            vim.lsp.config("rust_analyzer", {
                 settings = {
                     ["rust-analyzer"] = {
                         inlayHints = {
@@ -171,4 +171,14 @@ return {
     { "pmizio/typescript-tools.nvim" },
     -- UI for nvim-lsp progress
     { "j-hui/fidget.nvim", opts = {} },
+    -- prettier diagnostic messages
+    {
+        "rachartier/tiny-inline-diagnostic.nvim",
+        event = "VeryLazy",
+        priority = 1000,
+        config = function()
+            require("tiny-inline-diagnostic").setup()
+            vim.diagnostic.config({ virtual_text = false })
+        end,
+    },
 }
