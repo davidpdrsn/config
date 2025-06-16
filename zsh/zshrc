@@ -18,6 +18,8 @@ export GODOT_PATH="/Applications/Godot_mono.app/Contents/MacOS/Godot"
 export LUN_DEV_DB_PASS="p!G-inYH3ZxW"
 export LUN_PROD_DB_PASS="G5_t;(CU;)uoqUmQ"
 
+export TERM=tmux-256color
+
 # required for go test containers to work with colima
 # export DOCKER_HOST="unix://${HOME}/.colima/default/docker.sock"
 # export TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE="/var/run/docker.sock"
