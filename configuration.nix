@@ -47,6 +47,7 @@ in {
     cargo-limit
     alejandra
     stylua
+    cargo-outdated
 
     amp-cli
     claude-code
