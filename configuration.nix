@@ -46,6 +46,7 @@ in {
     tokei
     cargo-limit
     alejandra
+    stylua
 
     amp-cli
     claude-code

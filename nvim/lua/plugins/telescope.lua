@@ -9,30 +9,30 @@ local leader = common.leader
 return {
     -- fuzzy find all the things
     {
-        'nvim-telescope/telescope.nvim',
+        "nvim-telescope/telescope.nvim",
         config = function()
-            require("telescope").setup {
-                defaults = require('telescope.themes').get_ivy {
-                    file_ignore_patterns = { 
+            require("telescope").setup({
+                defaults = require("telescope.themes").get_ivy({
+                    file_ignore_patterns = {
                         ".glb",
                         ".ogg",
                         ".png",
                         ".uid",
-                    }
-                },
+                    },
+                }),
                 extensions = {
                     recent_files = {
                         only_cwd = true,
-                        theme = 'ivy',
+                        theme = "ivy",
                     },
                     ["ui-select"] = {
-                        require("telescope.themes").get_cursor()
-                    }
+                        require("telescope.themes").get_cursor(),
+                    },
                 },
-            }
+            })
 
-            local telescope = require("telescope");
-            local builtin = require("telescope/builtin");
+            local telescope = require("telescope")
+            local builtin = require("telescope/builtin")
 
             leader("b", builtin.buffers)
             leader("B", builtin.current_buffer_fuzzy_find)
@@ -50,11 +50,11 @@ return {
 
             leader(":", builtin.commands)
 
-            nmap('gr', builtin.lsp_references)
-        end
+            nmap("gr", builtin.lsp_references)
+        end,
     },
     {
-        'nvim-telescope/telescope-ui-select.nvim',
+        "nvim-telescope/telescope-ui-select.nvim",
         config = function()
             require("telescope").load_extension("ui-select")
         end,
@@ -68,12 +68,14 @@ return {
     {
         "johmsalas/text-case.nvim",
         config = function()
-            require('textcase').setup()
-            require('telescope').load_extension('textcase')
+            require("textcase").setup()
+            require("telescope").load_extension("textcase")
 
             nmap("ga.", "<cmd>TextCaseOpenTelescope<CR>")
             vmap("ga.", "<cmd>TextCaseOpenTelescope<CR>")
-            nmap("gaP", function() require('textcase').lsp_rename('to_pascal_case') end)
+            nmap("gaP", function()
+                require("textcase").lsp_rename("to_pascal_case")
+            end)
         end,
     },
 }
