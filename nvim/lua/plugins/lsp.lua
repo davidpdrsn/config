@@ -170,7 +170,17 @@ return {
     -- typescript
     { "pmizio/typescript-tools.nvim" },
     -- UI for nvim-lsp progress
-    { "j-hui/fidget.nvim", opts = {} },
+    {
+        "j-hui/fidget.nvim",
+        opts = {
+            notification = {
+                window = {
+                    max_width = 30,
+                    max_height = 5,
+                },
+            },
+        },
+    },
     -- prettier diagnostic messages
     {
         "rachartier/tiny-inline-diagnostic.nvim",
