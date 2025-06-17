@@ -1,8 +1,4 @@
 local common = require("common")
-local cmap = common.cmap
-local vmap = common.vmap
-local imap = common.imap
-local tmap = common.tmap
 local leader = common.leader
 
 return {

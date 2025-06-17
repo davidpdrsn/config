@@ -1,8 +1,4 @@
 local common = require("common")
-local cmap = common.cmap
-local vmap = common.vmap
-local imap = common.imap
-local tmap = common.tmap
 local leader = common.leader
 
 return {
@@ -238,8 +234,8 @@ return {
             require("luasnip.loaders.from_snipmate").lazy_load({ paths = "~/.config/nvim/snippets" })
             require("luasnip.loaders.from_vscode").lazy_load()
 
-            imap("<c-k>", require("luasnip").expand, { silent = true })
-            imap("<c-j>", function()
+            vim.keymap.set("i", "<c-k>", require("luasnip").expand, { silent = true })
+            vim.keymap.set("i", "<c-j>", function()
                 require("luasnip").jump(1)
             end, { silent = true })
         end,
