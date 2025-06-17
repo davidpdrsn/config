@@ -96,9 +96,6 @@ return {
 
             vim.keymap.set("n", "ga.", "<cmd>TextCaseOpenTelescope<CR>", { desc = "Change case" })
             vim.keymap.set("v", "ga.", "<cmd>TextCaseOpenTelescope<CR>", { desc = "Change case" })
-            vim.keymap.set("n", "gaP", function()
-                require("textcase").lsp_rename("to_pascal_case")
-            end, { desc = "Change case to PascalCase" })
         end,
     },
 }
