@@ -126,7 +126,13 @@ in {
     wvous-tr-corner = 4; # desktop
   };
 
+  # fast key repeat
+  system.defaults.NSGlobalDomain.KeyRepeat = 2;
+
   system.defaults.finder = {
+    # use column view by default
+    FXPreferredViewStyle = "clmv";
+
     # show all file extensions
     AppleShowAllExtensions = true;
 
