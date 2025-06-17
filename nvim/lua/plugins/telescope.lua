@@ -1,8 +1,4 @@
 local common = require("common")
-local cmap = common.cmap
-local vmap = common.vmap
-local imap = common.imap
-local tmap = common.tmap
 local leader = common.leader
 
 return {
@@ -71,7 +67,7 @@ return {
             require("telescope").load_extension("textcase")
 
             vim.keymap.set("n", "ga.", "<cmd>TextCaseOpenTelescope<CR>")
-            vmap("ga.", "<cmd>TextCaseOpenTelescope<CR>")
+            vim.keymap.set("v", "ga.", "<cmd>TextCaseOpenTelescope<CR>")
             vim.keymap.set("n", "gaP", function()
                 require("textcase").lsp_rename("to_pascal_case")
             end)

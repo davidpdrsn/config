@@ -1,8 +1,4 @@
 local common = require("common")
-local cmap = common.cmap
-local vmap = common.vmap
-local imap = common.imap
-local tmap = common.tmap
 local leader = common.leader
 
 --------------------------------------------
@@ -165,7 +161,7 @@ vim.keymap.set("n", "<leader>rt", function()
     set_test_command_with_line()
 end)
 
-imap("\\u", function()
+vim.keymap.set("i", "\\u", function()
     insert_guid()
 end)
 
@@ -202,9 +198,6 @@ vim.cmd([[
 
 vim.keymap.set("n", "<C-g><C-o>", "<Plug>window:quickfix:loop")
 
--- get path to current file in command mode with %%
-cmap("%%", "<C-R>='\"'.expand('%:h').'/'.'\"'<cr>")
-
 -- quickly insert semicolon or comma at end of line
 leader(";", "maA;<esc>`a")
 leader(",", "maA,<esc>`a")
@@ -219,7 +212,7 @@ leader("cp", function()
 end)
 
 -- exit insert mode and save just by hitting ctrl-s
-imap("<c-s>", "<esc>:w<cr>")
+vim.keymap.set("i", "<c-s>", "<esc>:w<cr>")
 vim.keymap.set("n", "<c-s>", ":w<cr>")
 
 -- intuitive movement over long lines
