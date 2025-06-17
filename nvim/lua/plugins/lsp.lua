@@ -85,8 +85,8 @@ return {
                 "csharp_ls",
                 "eslint",
                 "gopls",
-                "rust_analyzer",
                 "ts_ls",
+                "rust_analyzer",
             })
         end,
     },
