@@ -32,10 +32,9 @@ function M.lsp_format_leader_command(pattern)
         pattern = pattern,
         callback = function(ev)
             vim.bo[ev.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
-            local opts = { buffer = ev.buf }
             vim.keymap.set("n", "<space>lf", function()
                 vim.lsp.buf.format({ async = true })
-            end, opts)
+            end, { buffer = ev.buf, desc = "Format" })
         end,
     })
 end
@@ -44,7 +43,7 @@ function M.custom_format_leader_command(pattern, command)
     vim.api.nvim_create_autocmd("FileType", {
         pattern = pattern,
         callback = function(ev)
-            local opts = { buffer = true }
+            local opts = { buffer = true, desc = "Format" }
             local f = function()
                 vim.api.nvim_command("write")
                 local path = vim.api.nvim_buf_get_name(0)

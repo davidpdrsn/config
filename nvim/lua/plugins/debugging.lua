@@ -82,40 +82,58 @@ return {
                 },
             }
 
+            function set_mappings()
+                vim.keymap.set("n", "<leader><up>", dap.step_out, { desc = "Step out" })
+                vim.keymap.set("n", "<leader><down>", dap.step_into, { desc = "Step into" })
+                vim.keymap.set("n", "<leader><left>", dap.step_back, { desc = "Step back" })
+                vim.keymap.set("n", "<leader><right>", dap.step_over, { desc = "Step over" })
+
+                vim.keymap.set("n", "<leader>dC", function()
+                    dap.disconnect()
+                    require("dapui").close()
+                end, { desc = "Disconnect from debugger" })
+                vim.keymap.set("n", "<leader>dr", dap.restart, { desc = "Restart debugger" })
+                vim.keymap.set("n", "<leader>ds", function()
+                    dap.terminate()
+                    require("dapui").close()
+                end, { desc = "Kill debugger" })
+                vim.keymap.set("n", "<leader>D", function()
+                    dapui.close()
+                    dapui.open()
+                end, { desc = "Toggle debugger UI" })
+            end
+
+            function del_mappings()
+                vim.keymap.del("n", "<leader><up>")
+                vim.keymap.del("n", "<leader><down>")
+                vim.keymap.del("n", "<leader><left>")
+                vim.keymap.del("n", "<leader><right>")
+
+                vim.keymap.del("n", "<leader>dC")
+                vim.keymap.del("n", "<leader>dr")
+                vim.keymap.del("n", "<leader>ds")
+                vim.keymap.del("n", "<leader>D")
+            end
+
             dap.listeners.before.attach.dapui_config = function()
+                set_mappings()
                 dapui.open()
             end
             dap.listeners.before.launch.dapui_config = function()
+                set_mappings()
                 dapui.open()
             end
             dap.listeners.before.event_terminated.dapui_config = function()
+                del_mappings()
                 dapui.close()
             end
             dap.listeners.before.event_exited.dapui_config = function()
+                del_mappings()
                 dapui.close()
             end
 
-            vim.keymap.set("n", "<leader>dt", dap_go.debug_test)
-            vim.keymap.set("n", "<leader>dT", dap_go.debug_last_test)
-            vim.keymap.set("n", "<leader>dd", dap.toggle_breakpoint)
-            vim.keymap.set("n", "<leader>dc", dap.continue)
-            vim.keymap.set("n", "<leader>dC", function()
-                dap.disconnect()
-                require("dapui").close()
-            end)
-            vim.keymap.set("n", "<leader>dr", dap.restart)
-            vim.keymap.set("n", "<leader>ds", function()
-                dap.terminate()
-                require("dapui").close()
-            end)
-            vim.keymap.set("n", "<leader>D", function()
-                dapui.close()
-                dapui.open()
-            end)
-            vim.keymap.set("n", "<leader><up>", dap.step_out)
-            vim.keymap.set("n", "<leader><down>", dap.step_into)
-            vim.keymap.set("n", "<leader><left>", dap.step_back)
-            vim.keymap.set("n", "<leader><right>", dap.step_over)
+            vim.keymap.set("n", "<leader>dd", dap.toggle_breakpoint, { desc = "Toggle breakpoint" })
+            vim.keymap.set("n", "<leader>dc", dap.continue, { desc = "Continue debugging" })
         end,
     },
     {
