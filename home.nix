@@ -66,8 +66,8 @@
     delta = {
       enable = true;
       options = {
-          line-numbers = true;
-          side-by-side = false;
+        line-numbers = true;
+        side-by-side = false;
       };
     };
   };
@@ -126,4 +126,25 @@
   };
 
   programs.home-manager.enable = true;
+
+  home.activation.createFolders = ''
+    mkdir -p ~/.config
+    mkdir -p ~/Desktop/screenshots
+    mkdir -p ~/code/dev-tools
+  '';
+
+  # Dev tools:
+  # - test-command
+  # - smart-pwd-2
+  # - parse-dotenv
+  # - replace
+  # - git-remove-merged-branches
+  # - is-vim-running
+  # - git-prompt
+  # - git-branch-picker
+  # - git-diff-ai-summarize
+  # - format-prettier
+  # - build-proxy
+  # - cli
+  # - balance
 }
