@@ -49,11 +49,7 @@ in {
     wget
 
     # rust
-    cargo
-    clippy
-    rustc
-    rustfmt
-    rust-analyzer
+    rustup
 
     # ai
     amp-cli
