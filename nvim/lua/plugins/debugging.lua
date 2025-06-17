@@ -73,6 +73,15 @@ return {
                 },
             }
 
+            dap.configurations.go = {
+                {
+                    type = "go",
+                    name = "Attach remote",
+                    mode = "remote",
+                    request = "attach",
+                },
+            }
+
             dap.listeners.before.attach.dapui_config = function()
                 dapui.open()
             end
@@ -161,14 +170,6 @@ return {
         "leoluz/nvim-dap-go",
         config = function()
             require("dap-go").setup({
-                dap_configurations = {
-                    {
-                        type = "go",
-                        name = "Attach remote",
-                        mode = "remote",
-                        request = "attach",
-                    },
-                },
                 delve = {
                     -- required for "Attach remote"
                     port = "38697",
