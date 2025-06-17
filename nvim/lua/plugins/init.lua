@@ -1,6 +1,5 @@
 local common = require("common")
 local cmap = common.cmap
-local nmap = common.nmap
 local vmap = common.vmap
 local imap = common.imap
 local tmap = common.tmap
@@ -43,10 +42,10 @@ return {
         config = function()
             require("smart-splits").setup()
             local smart_splits = require("smart-splits")
-            nmap("<c-h>", smart_splits.move_cursor_left)
-            nmap("<c-j>", smart_splits.move_cursor_down)
-            nmap("<c-k>", smart_splits.move_cursor_up)
-            nmap("<c-l>", smart_splits.move_cursor_right)
+            vim.keymap.set("n", "<c-h>", smart_splits.move_cursor_left)
+            vim.keymap.set("n", "<c-j>", smart_splits.move_cursor_down)
+            vim.keymap.set("n", "<c-k>", smart_splits.move_cursor_up)
+            vim.keymap.set("n", "<c-l>", smart_splits.move_cursor_right)
         end,
     },
     -- Delete/change/add surrounding things with ease
@@ -70,7 +69,7 @@ return {
                 },
             })
 
-            nmap("-", "<CMD>Oil<CR>")
+            vim.keymap.set("n", "-", "<CMD>Oil<CR>")
         end,
     },
     -- status line

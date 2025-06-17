@@ -1,6 +1,5 @@
 local common = require("common")
 local cmap = common.cmap
-local nmap = common.nmap
 local vmap = common.vmap
 local imap = common.imap
 local tmap = common.tmap
@@ -84,6 +83,8 @@ require("lazy").setup({
     },
 })
 
+vim.notify = require("notify")
+
 --------------------------------------------
 -- Require components
 --------------------------------------------
@@ -160,6 +161,10 @@ vim.api.nvim_create_autocmd("FileType", {
     end,
 })
 
+vim.keymap.set("n", "<leader>rt", function()
+    set_test_command_with_line()
+end)
+
 imap("\\u", function()
     insert_guid()
 end)
@@ -193,9 +198,9 @@ vim.cmd([[
             redraw!
         endif
     endfunction
-
-    nmap <C-g><C-o> <Plug>window:quickfix:loop
 ]])
+
+vim.keymap.set("n", "<C-g><C-o>", "<Plug>window:quickfix:loop")
 
 -- get path to current file in command mode with %%
 cmap("%%", "<C-R>='\"'.expand('%:h').'/'.'\"'<cr>")
@@ -210,26 +215,26 @@ leader("Q", ":qall!<cr>")
 leader("cp", function()
     local path = vim.fn.expand("%")
     vim.fn.setreg("+", path)
-    print("Copied to clipboard: " .. path)
+    vim.notify(path, "info", { title = "Copied to clipboard" })
 end)
 
 -- exit insert mode and save just by hitting ctrl-s
 imap("<c-s>", "<esc>:w<cr>")
-nmap("<c-s>", ":w<cr>")
+vim.keymap.set("n", "<c-s>", ":w<cr>")
 
 -- intuitive movement over long lines
-nmap("k", "gk")
-nmap("j", "gj")
+vim.keymap.set("n", "k", "gk")
+vim.keymap.set("n", "j", "gj")
 
 -- make Y work as expected
-nmap("Y", "y$")
+vim.keymap.set("n", "Y", "y$")
 
 -- disable useless and annoying keys
-nmap("Q", "<Nop>")
+vim.keymap.set("n", "Q", "<Nop>")
 
 -- resize windows with the shift+arrow keys
-nmap("<s-up>", "10<C-W>+")
-nmap("<s-down>", "10<C-W>-")
+vim.keymap.set("n", "<s-up>", "10<C-W>+")
+vim.keymap.set("n", "<s-down>", "10<C-W>-")
 
 -- Don't jump around when using * to search for word under cursor
 -- Often I just want to see where else a word appears
@@ -261,7 +266,7 @@ vim.cmd([[
 ]])
 
 -- show docs
-nmap("K", function()
+vim.keymap.set("n", "K", function()
     local filetype = vim.bo.filetype
     if vim.tbl_contains({ "vim", "help" }, filetype) then
         vim.cmd("h " .. vim.fn.expand("<cword>"))
@@ -273,16 +278,16 @@ nmap("K", function()
 end, { silent = true })
 
 -- lsp
-nmap("gd", function()
+vim.keymap.set("n", "gd", function()
     vim.lsp.buf.definition()
 end)
-nmap("gy", function()
+vim.keymap.set("n", "gy", function()
     vim.lsp.buf.type_definition()
 end)
-nmap("[g", function()
+vim.keymap.set("n", "[g", function()
     vim.diagnostic.jump({ count = -1 })
 end)
-nmap("]g", function()
+vim.keymap.set("n", "]g", function()
     vim.diagnostic.jump({ count = 1 })
 end)
 

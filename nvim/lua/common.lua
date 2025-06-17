@@ -39,13 +39,12 @@ function make_map_fn(mode)
 end
 
 M.cmap = make_map_fn("c")
-M.nmap = make_map_fn("n")
 M.vmap = make_map_fn("v")
 M.imap = make_map_fn("i")
 M.tmap = make_map_fn("t")
 
 function M.leader(mapping, what_to_do, options)
-    M.nmap("<leader>" .. mapping, what_to_do, options)
+    vim.keymap.set("n", "<leader>" .. mapping, what_to_do, options)
 end
 
 function M.lsp_format_leader_command(pattern)
