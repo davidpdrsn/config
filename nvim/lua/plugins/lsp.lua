@@ -1,5 +1,4 @@
 local common = require("common")
-local leader = common.leader
 
 return {
     -- install and manage LSP servers

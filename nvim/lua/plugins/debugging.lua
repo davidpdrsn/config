@@ -1,5 +1,4 @@
 local common = require("common")
-local leader = common.leader
 
 return {
     {
@@ -87,27 +86,27 @@ return {
                 dapui.close()
             end
 
-            leader("dt", dap_go.debug_test)
-            leader("dT", dap_go.debug_last_test)
-            leader("dd", dap.toggle_breakpoint)
-            leader("dc", dap.continue)
-            leader("dC", function()
+            vim.keymap.set("n", "<leader>dt", dap_go.debug_test)
+            vim.keymap.set("n", "<leader>dT", dap_go.debug_last_test)
+            vim.keymap.set("n", "<leader>dd", dap.toggle_breakpoint)
+            vim.keymap.set("n", "<leader>dc", dap.continue)
+            vim.keymap.set("n", "<leader>dC", function()
                 dap.disconnect()
                 require("dapui").close()
             end)
-            leader("dr", dap.restart)
-            leader("ds", function()
+            vim.keymap.set("n", "<leader>dr", dap.restart)
+            vim.keymap.set("n", "<leader>ds", function()
                 dap.terminate()
                 require("dapui").close()
             end)
-            leader("D", function()
+            vim.keymap.set("n", "<leader>D", function()
                 dapui.close()
                 dapui.open()
             end)
-            leader("<up>", dap.step_out)
-            leader("<down>", dap.step_into)
-            leader("<left>", dap.step_back)
-            leader("<right>", dap.step_over)
+            vim.keymap.set("n", "<leader><up>", dap.step_out)
+            vim.keymap.set("n", "<leader><down>", dap.step_into)
+            vim.keymap.set("n", "<leader><left>", dap.step_back)
+            vim.keymap.set("n", "<leader><right>", dap.step_over)
         end,
     },
     {

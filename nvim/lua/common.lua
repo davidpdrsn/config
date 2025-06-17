@@ -27,10 +27,6 @@ function M.filetype()
     end
 end
 
-function M.leader(mapping, what_to_do, options)
-    vim.keymap.set("n", "<leader>" .. mapping, what_to_do, options)
-end
-
 function M.lsp_format_leader_command(pattern)
     vim.api.nvim_create_autocmd("FileType", {
         pattern = pattern,

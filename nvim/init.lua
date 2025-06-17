@@ -1,5 +1,4 @@
 local common = require("common")
-local leader = common.leader
 
 --------------------------------------------
 -- General setup
@@ -165,24 +164,24 @@ vim.keymap.set("i", "\\u", function()
     insert_guid()
 end)
 
-leader("cm", ":!chmod +x %<cr>")
-leader("h", ":nohlsearch<cr>")
-leader("k", function()
+vim.keymap.set("n", "<leader>cm", ":!chmod +x %<cr>")
+vim.keymap.set("n", "<leader>h", ":nohlsearch<cr>")
+vim.keymap.set("n", "<leader>k", function()
     vim.diagnostic.open_float({ source = true })
 end)
-leader("L", ":Lazy<cr>")
-leader("lu", ":Lazy update<cr>")
+vim.keymap.set("n", "<leader>L", ":Lazy<cr>")
+vim.keymap.set("n", "<leader>lu", ":Lazy update<cr>")
 
-leader("m", ":call MergeTabs()<cr>")
-leader("la", function()
+vim.keymap.set("n", "<leader>m", ":call MergeTabs()<cr>")
+vim.keymap.set("n", "<leader>la", function()
     vim.lsp.buf.code_action()
 end)
-leader("lr", function()
+vim.keymap.set("n", "<leader>lr", function()
     vim.lsp.buf.rename()
 end)
-leader("rn", ":call RenameFile()<cr>")
+vim.keymap.set("n", "<leader>rn", ":call RenameFile()<cr>")
 
-leader("x", ":set filetype=")
+vim.keymap.set("n", "<leader>x", ":set filetype=")
 
 vim.cmd([[
     function! RenameFile()
@@ -199,13 +198,13 @@ vim.cmd([[
 vim.keymap.set("n", "<C-g><C-o>", "<Plug>window:quickfix:loop")
 
 -- quickly insert semicolon or comma at end of line
-leader(";", "maA;<esc>`a")
-leader(",", "maA,<esc>`a")
+vim.keymap.set("n", "<leader>;", "maA;<esc>`a")
+vim.keymap.set("n", "<leader>,", "maA,<esc>`a")
 
-leader("Q", ":qall!<cr>")
+vim.keymap.set("n", "<leader>Q", ":qall!<cr>")
 
 -- copy current file path to system clipboard
-leader("cp", function()
+vim.keymap.set("n", "<leader>cp", function()
     local path = vim.fn.expand("%")
     vim.fn.setreg("+", path)
     vim.notify(path, "info", { title = "Copied to clipboard" })
