@@ -80,4 +80,70 @@ in {
     package = pkgs.postgresql;
     dataDir = "/Users/davidpdrsn/.nix-services/postgresql-17";
   };
+
+  system.keyboard.enableKeyMapping = true;
+  system.keyboard.remapCapsLockToControl = true;
+
+  system.defaults.dock = {
+    autohide = true;
+    orientation = "bottom";
+    tilesize = 48;
+    show-recents = false;
+    showhidden = true;
+    slow-motion-allowed = true;
+    persistent-apps = [
+      # no apps in the dock plz
+    ];
+    magnification = false;
+    # hot corners
+    # bottom left
+    wvous-bl-corner = 2; # mission control
+    # bottom right
+    wvous-br-corner = 1; # disabled
+    # top left
+    wvous-tl-corner = 1; # disabled
+    # top right
+    wvous-tr-corner = 4; # desktop
+  };
+
+  system.defaults.finder = {
+    # show all file extensions
+    AppleShowAllExtensions = true;
+
+    # open new finder windows in home directory
+    NewWindowTarget = "Home";
+
+    # allow quitting finder
+    QuitMenuItem = true;
+
+    # show path bar
+    ShowPathbar = true;
+  };
+
+  # where to save screenshots
+  system.defaults.screencapture.location = "~/Desktop/screenshots/";
+
+  # disable the fn key
+  system.defaults.hitoolbox.AppleFnUsageType = "Do Nothing";
+
+  # disable guest account
+  system.defaults.loginwindow.GuestEnabled = false;
+
+  # don't show screenshot thumbnail before saving to file
+  system.defaults.screencapture.show-thumbnail = false;
+
+  # enable tap to click
+  system.defaults.trackpad.Clicking = true;
+
+  # use scroll gesture with the Ctrl (^) modifier key to zoom
+  system.defaults.universalaccess.closeViewScrollWheelToggle = true;
+
+  # disable startup chime
+  system.startup.chime = false;
+
+  system.defaults.WindowManager.EnableStandardClickToShowDesktop = false;
+  system.defaults.WindowManager.EnableTiledWindowMargins = false;
+  system.defaults.WindowManager.EnableTilingByEdgeDrag = false;
+  system.defaults.WindowManager.EnableTilingOptionAccelerator = false;
+  system.defaults.WindowManager.EnableTopTilingByEdgeDrag = false;
 }
