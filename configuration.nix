@@ -53,6 +53,7 @@ in {
     clippy
     rustc
     rustfmt
+    rust-analyzer
 
     # ai
     amp-cli
