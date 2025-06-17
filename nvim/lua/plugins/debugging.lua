@@ -61,7 +61,7 @@ return {
 
             dap.adapters.coreclr_godot = {
                 type = "executable",
-                command = "/usr/local/netcoredbg",
+                command = "netcoredbg",
                 args = {
                     "--interpreter=vscode",
                     "--",
@@ -74,7 +74,7 @@ return {
                     type = "coreclr_godot",
                     name = "Build and run",
                     request = "launch",
-                    program = "/Users/davidpdrsn/Games/traffic-signal-sim/.godot/mono/temp/bin/Debug/Traffic Signal Sim.dll",
+                    program = "/Users/davidpdrsn/code/traffic-signal-sim/.godot/mono/temp/bin/Debug/Traffic Signal Sim.dll",
                     preLaunchTask = "cs_compile",
                 },
             }
@@ -120,13 +120,7 @@ return {
         config = function()
             local overseer = require("overseer")
 
-            overseer.setup({
-                strategy = {
-                    "toggleterm",
-                    quit_on_exit = "success",
-                    direction = "float",
-                },
-            })
+            overseer.setup({})
 
             overseer.register_template({
                 name = "rust_compile",
@@ -186,6 +180,12 @@ return {
                     port = "38697",
                 },
             })
+        end,
+    },
+    {
+        "theHamsta/nvim-dap-virtual-text",
+        config = function()
+            require("nvim-dap-virtual-text").setup()
         end,
     },
 }

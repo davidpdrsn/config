@@ -35,6 +35,14 @@ function set_test_command_with_line()
     set_test_command_with(cmd)
 end
 
+function set_test_command_with_line_and_debugger()
+    local path = vim.api.nvim_buf_get_name(0)
+    local line = vim.api.nvim_win_get_cursor(0)[1]
+
+    local cmd = "test-command --file " .. path .. " --line " .. line .. " --debugger"
+    set_test_command_with(cmd)
+end
+
 function run_test_command()
     if not test_command then
         vim.cmd("echoerr \"No test command found\"")
@@ -80,6 +88,10 @@ end)
 
 vim.keymap.set("n", "<leader>rt", function()
     set_test_command_with_line()
+end)
+
+vim.keymap.set("n", "<leader>drt", function()
+    set_test_command_with_line_and_debugger()
 end)
 
 vim.keymap.set("n", "<leader>t", function()
