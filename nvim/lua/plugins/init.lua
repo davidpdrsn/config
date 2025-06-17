@@ -1,5 +1,4 @@
 local common = require("common")
-local leader = common.leader
 
 return {
     -- colorscheme
@@ -137,7 +136,7 @@ return {
         config = function()
             require("leap").add_default_mappings()
 
-            leader("s", "<Plug>(leap-cross-window)")
+            vim.keymap.set("n", "<leader>s", "<Plug>(leap-cross-window)")
         end,
     },
     -- icons
@@ -148,7 +147,7 @@ return {
     {
         "mbbill/undotree",
         config = function()
-            leader("u", ":UndotreeToggle<cr>")
+            vim.keymap.set("n", "<leader>u", ":UndotreeToggle<cr>")
         end,
     },
     -- git signs
@@ -191,7 +190,7 @@ return {
             require("treesj").setup({
                 use_default_keymaps = false,
             })
-            leader("j", require("treesj").toggle)
+            vim.keymap.set("n", "<leader>j", require("treesj").toggle)
         end,
     },
     -- better quickfix window
@@ -220,8 +219,8 @@ return {
     {
         "sindrets/winshift.nvim",
         config = function()
-            leader("w", ":WinShift<cr>")
-            leader("W", ":WinShift swap<cr>")
+            vim.keymap.set("n", "<leader>w", ":WinShift<cr>")
+            vim.keymap.set("n", "<leader>W", ":WinShift swap<cr>")
         end,
     },
     -- snippets
