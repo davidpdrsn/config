@@ -71,6 +71,26 @@ in {
     google-chrome
   ];
 
+  homebrew = {
+    enable = true;
+    casks = [
+      "discord"
+      "ghostty"
+      "godot-mono"
+      "obs"
+      "raycast"
+      "signal"
+      # steam, will this uninstall my games?
+    ];
+    masApps = {
+      # photomator
+      # front and center
+    };
+    onActivation.cleanup = "zap";
+    onActivation.autoUpdate = true;
+    onActivation.upgrade = true;
+  };
+
   fonts.packages = with pkgs; [
     nerd-fonts.iosevka
   ];
