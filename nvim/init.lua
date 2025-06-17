@@ -73,7 +73,11 @@ require("lazy").setup({
         { import = "plugins" },
     },
     install = { colorscheme = { "catppuccin" } },
-    checker = { enabled = true },
+    checker = {
+        enabled = false,
+        notify = true,
+        frequency = 3600,
+    },
     change_detection = {
         enabled = true,
         notify = false,
@@ -161,7 +165,6 @@ imap("\\u", function()
 end)
 
 leader("cm", ":!chmod +x %<cr>")
-leader("ev", ":tabedit $MYVIMRC<cr>:lcd ~/.config/nvim/<cr>")
 leader("h", ":nohlsearch<cr>")
 leader("k", function()
     vim.diagnostic.open_float({ source = true })
