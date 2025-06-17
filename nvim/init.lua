@@ -167,6 +167,7 @@ leader("k", function()
     vim.diagnostic.open_float({ source = true })
 end)
 leader("L", ":Lazy<cr>")
+leader("lu", ":Lazy update<cr>")
 
 leader("m", ":call MergeTabs()<cr>")
 leader("la", function()
