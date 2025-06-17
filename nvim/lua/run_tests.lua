@@ -84,15 +84,15 @@ end
 
 vim.keymap.set("n", "<leader>rr", function()
     set_test_command()
-end)
+end, { desc = "Set test command" })
 
 vim.keymap.set("n", "<leader>rt", function()
     set_test_command_with_line()
-end)
+end, { desc = "Set test command at line" })
 
 vim.keymap.set("n", "<leader>drt", function()
     set_test_command_with_line_and_debugger()
-end)
+end, { desc = "Set test command in debugger" })
 
 vim.keymap.set("n", "<leader>t", function()
     if prev_test_buffer and vim.api.nvim_buf_is_valid(prev_test_buffer) then
@@ -101,7 +101,7 @@ vim.keymap.set("n", "<leader>t", function()
     else
         run_test_command()
     end
-end)
+end, { desc = "Run test" })
 
 vim.keymap.set("n", "<leader>T", function()
     local original_win_id = vim.api.nvim_get_current_win()
@@ -117,7 +117,7 @@ vim.keymap.set("n", "<leader>T", function()
         end,
     })
     vim.cmd("startinsert")
-end)
+end, { desc = "Run CLI" })
 
 M.statusline = function()
     if test_command then

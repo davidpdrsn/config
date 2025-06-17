@@ -34,4 +34,4 @@ end
 
 vim.keymap.set("n", "<leader>R", function()
     run_project()
-end)
+end, { desc = "Run project" })

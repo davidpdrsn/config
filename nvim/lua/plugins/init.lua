@@ -37,10 +37,10 @@ return {
         config = function()
             require("smart-splits").setup()
             local smart_splits = require("smart-splits")
-            vim.keymap.set("n", "<c-h>", smart_splits.move_cursor_left)
-            vim.keymap.set("n", "<c-j>", smart_splits.move_cursor_down)
-            vim.keymap.set("n", "<c-k>", smart_splits.move_cursor_up)
-            vim.keymap.set("n", "<c-l>", smart_splits.move_cursor_right)
+            vim.keymap.set("n", "<c-h>", smart_splits.move_cursor_left, { desc = "Move left" })
+            vim.keymap.set("n", "<c-j>", smart_splits.move_cursor_down, { desc = "Move down" })
+            vim.keymap.set("n", "<c-k>", smart_splits.move_cursor_up, { desc = "Move up" })
+            vim.keymap.set("n", "<c-l>", smart_splits.move_cursor_right, { desc = "Move right" })
         end,
     },
     -- Delete/change/add surrounding things with ease
@@ -64,7 +64,7 @@ return {
                 },
             })
 
-            vim.keymap.set("n", "-", "<CMD>Oil<CR>")
+            vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "File browser" })
         end,
     },
     -- status line
@@ -136,7 +136,7 @@ return {
         config = function()
             require("leap").add_default_mappings()
 
-            vim.keymap.set("n", "<leader>s", "<Plug>(leap-cross-window)")
+            vim.keymap.set("n", "<leader>s", "<Plug>(leap-cross-window)", { desc = "Big leap" })
         end,
     },
     -- icons
@@ -147,7 +147,7 @@ return {
     {
         "mbbill/undotree",
         config = function()
-            vim.keymap.set("n", "<leader>u", ":UndotreeToggle<cr>")
+            vim.keymap.set("n", "<leader>u", ":UndotreeToggle<cr>", { desc = "Toggle undo tree" })
         end,
     },
     -- git signs
@@ -164,7 +164,7 @@ return {
                         else
                             gitsigns.nav_hunk("next")
                         end
-                    end, { buffer = bufnr })
+                    end, { buffer = bufnr, desc = "Next hunk" })
 
                     vim.keymap.set("n", "[c", function()
                         if vim.wo.diff then
@@ -172,7 +172,7 @@ return {
                         else
                             gitsigns.nav_hunk("prev")
                         end
-                    end, { buffer = bufnr })
+                    end, { buffer = bufnr, desc = "Prev hunk" })
                 end,
             })
         end,
@@ -190,7 +190,12 @@ return {
             require("treesj").setup({
                 use_default_keymaps = false,
             })
-            vim.keymap.set("n", "<leader>j", require("treesj").toggle)
+            vim.keymap.set(
+                "n",
+                "<leader>j",
+                require("treesj").toggle,
+                { desc = "Join/split lines" }
+            )
         end,
     },
     -- better quickfix window
@@ -219,8 +224,8 @@ return {
     {
         "sindrets/winshift.nvim",
         config = function()
-            vim.keymap.set("n", "<leader>w", ":WinShift<cr>")
-            vim.keymap.set("n", "<leader>W", ":WinShift swap<cr>")
+            vim.keymap.set("n", "<leader>w", ":WinShift<cr>", { desc = "Arrange windows" })
+            vim.keymap.set("n", "<leader>W", ":WinShift swap<cr>", { desc = "Swap windows" })
         end,
     },
     -- snippets
@@ -233,10 +238,11 @@ return {
             require("luasnip.loaders.from_snipmate").lazy_load({ paths = "~/.config/nvim/snippets" })
             require("luasnip.loaders.from_vscode").lazy_load()
 
-            vim.keymap.set("i", "<c-k>", require("luasnip").expand, { silent = true })
-            vim.keymap.set("i", "<c-j>", function()
-                require("luasnip").jump(1)
-            end, { silent = true })
+            -- Not sure what these do
+            -- vim.keymap.set("i", "<c-k>", require("luasnip").expand, { silent = true })
+            -- vim.keymap.set("i", "<c-j>", function()
+            --     require("luasnip").jump(1)
+            -- end, { silent = true })
         end,
     },
     -- toggle quickfix
@@ -269,4 +275,23 @@ return {
     },
     -- notifications
     { "rcarriga/nvim-notify" },
+    -- which key
+    {
+        "folke/which-key.nvim",
+        event = "VeryLazy",
+        opts = {
+            -- your configuration comes here
+            -- or leave it empty to use the default settings
+            -- refer to the configuration section below
+        },
+        keys = {
+            {
+                "<leader>?",
+                function()
+                    require("which-key").show({ global = false })
+                end,
+                desc = "Buffer Local Keymaps (which-key)",
+            },
+        },
+    },
 }

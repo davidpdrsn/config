@@ -152,36 +152,32 @@ vim.api.nvim_create_autocmd("FileType", {
         vim.keymap.set("n", "<leader>o", function()
             vim.cmd("source %")
             print("Loaded " .. vim.fn.expand("%"))
-        end, { buffer = true })
+        end, { buffer = true, desc = "Source current file" })
     end,
 })
 
-vim.keymap.set("n", "<leader>rt", function()
-    set_test_command_with_line()
-end)
-
 vim.keymap.set("i", "\\u", function()
     insert_guid()
-end)
+end, { desc = "Insert GUID" })
 
-vim.keymap.set("n", "<leader>cm", ":!chmod +x %<cr>")
-vim.keymap.set("n", "<leader>h", ":nohlsearch<cr>")
+vim.keymap.set("n", "<leader>cm", ":!chmod +x %<cr>", { desc = "Make file executable" })
+vim.keymap.set("n", "<leader>h", ":nohlsearch<cr>", { desc = "Remove search highlight" })
 vim.keymap.set("n", "<leader>k", function()
     vim.diagnostic.open_float({ source = true })
-end)
-vim.keymap.set("n", "<leader>L", ":Lazy<cr>")
-vim.keymap.set("n", "<leader>lu", ":Lazy update<cr>")
+end, { desc = "Open diagnostic for curret line" })
+vim.keymap.set("n", "<leader>L", ":Lazy<cr>", { desc = "Open Lazy" })
+vim.keymap.set("n", "<leader>lu", ":Lazy update<cr>", { desc = "Update plugins" })
 
-vim.keymap.set("n", "<leader>m", ":call MergeTabs()<cr>")
+vim.keymap.set("n", "<leader>m", ":call MergeTabs()<cr>", { desc = "Merge tab" })
 vim.keymap.set("n", "<leader>la", function()
     vim.lsp.buf.code_action()
-end)
+end, { desc = "LSP code actions" })
 vim.keymap.set("n", "<leader>lr", function()
     vim.lsp.buf.rename()
-end)
-vim.keymap.set("n", "<leader>rn", ":call RenameFile()<cr>")
+end, { desc = "LSP rename" })
+vim.keymap.set("n", "<leader>rn", ":call RenameFile()<cr>", { desc = "Rename file" })
 
-vim.keymap.set("n", "<leader>x", ":set filetype=")
+vim.keymap.set("n", "<leader>x", ":set filetype=", { desc = "Set filetype" })
 
 vim.cmd([[
     function! RenameFile()
@@ -195,38 +191,38 @@ vim.cmd([[
     endfunction
 ]])
 
-vim.keymap.set("n", "<C-g><C-o>", "<Plug>window:quickfix:loop")
+vim.keymap.set("n", "<C-g><C-o>", "<Plug>window:quickfix:loop", { desc = "Close quickfix" })
 
 -- quickly insert semicolon or comma at end of line
-vim.keymap.set("n", "<leader>;", "maA;<esc>`a")
-vim.keymap.set("n", "<leader>,", "maA,<esc>`a")
+vim.keymap.set("n", "<leader>;", "maA;<esc>`a", { desc = "Insert ; at end of line" })
+vim.keymap.set("n", "<leader>,", "maA,<esc>`a", { desc = "Insert , at end of line" })
 
-vim.keymap.set("n", "<leader>Q", ":qall!<cr>")
+vim.keymap.set("n", "<leader>Q", ":qall!<cr>", { desc = "Force quit" })
 
 -- copy current file path to system clipboard
 vim.keymap.set("n", "<leader>cp", function()
     local path = vim.fn.expand("%")
     vim.fn.setreg("+", path)
     vim.notify(path, "info", { title = "Copied to clipboard" })
-end)
+end, { desc = "Copy path to current file" })
 
 -- exit insert mode and save just by hitting ctrl-s
-vim.keymap.set("i", "<c-s>", "<esc>:w<cr>")
-vim.keymap.set("n", "<c-s>", ":w<cr>")
+vim.keymap.set("i", "<c-s>", "<esc>:w<cr>", { desc = "Save and leave insert mode" })
+vim.keymap.set("n", "<c-s>", ":w<cr>", { desc = "Save" })
 
 -- intuitive movement over long lines
-vim.keymap.set("n", "k", "gk")
-vim.keymap.set("n", "j", "gj")
+vim.keymap.set("n", "k", "gk", { desc = "Move one line up" })
+vim.keymap.set("n", "j", "gj", { desc = "Move one line down" })
 
 -- make Y work as expected
-vim.keymap.set("n", "Y", "y$")
+vim.keymap.set("n", "Y", "y$", { desc = "Yank until end of line" })
 
 -- disable useless and annoying keys
-vim.keymap.set("n", "Q", "<Nop>")
+vim.keymap.set("n", "Q", "<Nop>", { desc = "NOP" })
 
 -- resize windows with the shift+arrow keys
-vim.keymap.set("n", "<s-up>", "10<C-W>+")
-vim.keymap.set("n", "<s-down>", "10<C-W>-")
+vim.keymap.set("n", "<s-up>", "10<C-W>+", { desc = "Increase window size" })
+vim.keymap.set("n", "<s-down>", "10<C-W>-", { desc = "Decrease window size" })
 
 -- Don't jump around when using * to search for word under cursor
 -- Often I just want to see where else a word appears
@@ -267,21 +263,21 @@ vim.keymap.set("n", "K", function()
     else
         vim.lsp.buf.hover()
     end
-end, { silent = true })
+end, { silent = true, desc = "Show docs" })
 
 -- lsp
 vim.keymap.set("n", "gd", function()
     vim.lsp.buf.definition()
-end)
+end, { desc = "Goto definition" })
 vim.keymap.set("n", "gy", function()
     vim.lsp.buf.type_definition()
-end)
+end, { desc = "Goto type definition" })
 vim.keymap.set("n", "[g", function()
     vim.diagnostic.jump({ count = -1 })
-end)
+end, { desc = "Prev diagnostic" })
 vim.keymap.set("n", "]g", function()
     vim.diagnostic.jump({ count = 1 })
-end)
+end, { desc = "Next diagnostic" })
 
 vim.cmd([[
     " don't wanna retrain my fingers
