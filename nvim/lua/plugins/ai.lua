@@ -2,6 +2,13 @@ return {
     "yetone/avante.nvim",
     event = "VeryLazy",
     version = false, -- Never set this value to "*"! Never!
+    keys = {
+        {
+            "<leader>af",
+            "<cmd>AvanteFocus<cr>",
+            desc = "Focus on avante",
+        },
+    },
     opts = {
         provider = "claude", -- The provider used in Aider mode or in the planning phase of Cursor Planning Mode
         ---@alias Mode "agentic" | "legacy"
