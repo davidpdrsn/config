@@ -1,20 +1,22 @@
-vim.keymap.set("n", "<leader>so", function()
-    vim.cmd("source %")
-    print("Sourced " .. vim.fn.expand("%"))
-end, { desc = "Source current file" })
+local common = require("common")
 
 function run_project()
     vim.cmd("write")
 
-    local original_win_id = vim.api.nvim_get_current_win()
-    vim.cmd('botright 20new')
-    local buf = vim.api.nvim_get_current_buf()
-    local job_id = vim.fn.jobstart(
-        "t run",
-        {
+    local wrapped_cmd = common.tmux_wrap("t run")
+
+    if wrapped_cmd.in_tmux then
+        vim.fn.jobstart(wrapped_cmd.cmd)
+    else
+        local original_win_id = vim.api.nvim_get_current_win()
+        vim.cmd("botright 20new")
+        local buf = vim.api.nvim_get_current_buf()
+        local job_id = vim.fn.jobstart("t run", {
             term = true,
             on_exit = function(_, status)
-                vim.api.nvim_buf_delete(buf, { force = false })
+                if status == 0 then
+                    vim.api.nvim_buf_delete(buf, { force = false })
+                end
             end,
             on_stdout = function(_, data, _)
                 vim.schedule(function()
@@ -25,11 +27,11 @@ function run_project()
                     end)
                 end)
             end,
-        }
-    )
-    vim.api.nvim_set_current_win(original_win_id)
+        })
+        vim.api.nvim_set_current_win(original_win_id)
+    end
 end
 
 vim.keymap.set("n", "<leader>R", function()
     run_project()
-end)
+end, { desc = "Run project" })

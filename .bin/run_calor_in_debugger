@@ -1,4 +1,0 @@
-#!/bin/bash
-set -e
-
-/Users/davidpdrsn/.cargo/bin/t "Lun: Run calor in debugger"

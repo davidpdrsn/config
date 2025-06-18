@@ -1,23 +1,34 @@
 local common = require("common")
-local cmap = common.cmap
-local nmap = common.nmap
-local vmap = common.vmap
-local imap = common.imap
-local tmap = common.tmap
-local leader = common.leader
 
 return {
+    -- install and manage LSP servers
+    { "mason-org/mason.nvim", opts = {} },
+    {
+        "mason-org/mason-lspconfig.nvim",
+        opts = {
+            ensure_installed = {
+                -- can't be installed via nix on arm :(
+                "csharp_ls",
+                -- not installed with nix because its updated all the time
+                "rust_analyzer",
+            },
+        },
+        dependencies = {
+            { "mason-org/mason.nvim", opts = {} },
+            "neovim/nvim-lspconfig",
+        },
+    },
     -- highlight other occurances of words
-    { 'RRethy/vim-illuminate' },
+    { "RRethy/vim-illuminate" },
     -- easy lsp config
     {
-        'neovim/nvim-lspconfig',
+        "neovim/nvim-lspconfig",
         config = function()
-            local lspconfig = require('lspconfig')
+            local lspconfig = require("lspconfig")
 
-            lspconfig.rust_analyzer.setup({
+            vim.lsp.config("rust_analyzer", {
                 settings = {
-                    ['rust-analyzer'] = {
+                    ["rust-analyzer"] = {
                         inlayHints = {
                             chainingHints = true,
                         },
@@ -26,7 +37,7 @@ return {
                             autoreload = true,
                             buildScripts = {
                                 enable = true,
-                            }
+                            },
                         },
                         checkOnSave = {
                             overrideCommand = {
@@ -51,7 +62,7 @@ return {
                             },
                         },
                         diagnostics = {
-                            disabled = {"macro-error"},
+                            disabled = { "macro-error" },
                         },
                         procMacro = {
                             enable = true,
@@ -60,17 +71,16 @@ return {
                             },
                         },
                         rustcSource = "discover",
-                    }
-                }
+                    },
+                },
             })
 
             vim.lsp.enable({
-                'rust_analyzer',
-                'csharp_ls',
-                'ts_ls',
-                'gopls',
-                'eslint',
-                'postgres_lsp',
+                "csharp_ls",
+                "eslint",
+                "gopls",
+                "ts_ls",
+                "rust_analyzer",
             })
         end,
     },
@@ -107,18 +117,17 @@ return {
     },
     -- completion
     {
-        'saghen/blink.cmp',
+        "saghen/blink.cmp",
         dependencies = {
-            'rafamadriz/friendly-snippets',
-            'Kaiser-Yang/blink-cmp-avante',
+            "rafamadriz/friendly-snippets",
+            "Kaiser-Yang/blink-cmp-avante",
         },
-        version = '1.*',
+        version = "1.*",
         opts = {
             fuzzy = {
-                prebuilt_binaries = {
-                    force_version = "v1.3.1"
-                },
-                implementation = "rust",
+                implementation = "prefer_rust_with_warning",
+                use_frecency = true,
+                use_proximity = true,
             },
             signature = {
                 enabled = true,
@@ -131,31 +140,49 @@ return {
                 documentation = {
                     auto_show = true,
                     auto_show_delay_ms = 500,
-                }
+                },
             },
-            snippets = { preset = 'luasnip' },
+            snippets = { preset = "luasnip" },
             sources = {
-                default = { 'avante', 'snippets', 'lsp', 'path', 'buffer' },
+                default = { "avante", "snippets", "lsp", "path", "buffer" },
                 per_filetype = {
-                    sql = { 'dadbod', 'buffer' },
+                    sql = { "dadbod", "buffer" },
                 },
                 providers = {
                     dadbod = { name = "Dadbod", module = "vim_dadbod_completion.blink" },
                     avante = {
-                        module = 'blink-cmp-avante',
-                        name = 'Avante',
+                        module = "blink-cmp-avante",
+                        name = "Avante",
                         opts = {
                             -- options for blink-cmp-avante
-                        }
-                    }
-                },           
+                        },
+                    },
+                },
             },
         },
     },
     -- typescript
     { "pmizio/typescript-tools.nvim" },
     -- UI for nvim-lsp progress
-    { "j-hui/fidget.nvim", opts = {} },
-    -- install and manage LSP servers
-    { "mason-org/mason.nvim", opts = {} },
+    {
+        "j-hui/fidget.nvim",
+        opts = {
+            notification = {
+                window = {
+                    max_width = 30,
+                    max_height = 5,
+                },
+            },
+        },
+    },
+    -- prettier diagnostic messages
+    {
+        "rachartier/tiny-inline-diagnostic.nvim",
+        event = "VeryLazy",
+        priority = 1000,
+        config = function()
+            require("tiny-inline-diagnostic").setup()
+            vim.diagnostic.config({ virtual_text = false })
+        end,
+    },
 }
