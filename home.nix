@@ -121,7 +121,8 @@
 
   home.file = {
     ".bin".source = ./bin;
-    ".config/balance/config.toml".source = ./balance.toml;
+    ".config/balance/config.toml".source = ./balance/balance.toml;
+    ".stylua.toml".source = ./stylua/stylua.toml;
     ".config/ghostty".source = ./ghostty;
   };
 
