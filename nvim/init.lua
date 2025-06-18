@@ -314,5 +314,5 @@ common.custom_format_leader_command("nix", function(path)
 end)
 
 common.custom_format_leader_command("lua", function(path)
-    return { "stylua", path }
+    return { "stylua", "--config-path", "/Users/davidpdrsn/.stylua.toml", path }
 end)
