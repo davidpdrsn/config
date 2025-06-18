@@ -20,6 +20,15 @@
       url = "github:homebrew/homebrew-cask";
       flake = false;
     };
+
+    # private repos requires /etc/nix/nix.custom.conf with gh personal access token (classic)
+    # token is in Passwords.app under "GitHub nix-darwin access token"
+
+    # personal dev tools
+    smart-pwd-2.url = "github:davidpdrsn/smart-pwd-2";
+    is-vim-running.url = "github:davidpdrsn/is-vim-running";
+    git-prompt.url = "github:davidpdrsn/git-prompt";
+    git-remove-merged-branches.url = "github:davidpdrsn/git-remove-merged-branches";
   };
 
   outputs = inputs @ {

@@ -17,6 +17,24 @@
         "type": "github"
       }
     },
+    "git-prompt": {
+      "inputs": {
+        "nixpkgs": "nixpkgs"
+      },
+      "locked": {
+        "lastModified": 1750270880,
+        "narHash": "sha256-6SbblupiuHt9Tapb98w1pl2ikobWcjfKs2uLI5kO6WQ=",
+        "owner": "davidpdrsn",
+        "repo": "git-prompt",
+        "rev": "ac46c1de403efad1327aab0677e04c4e2583e206",
+        "type": "github"
+      },
+      "original": {
+        "owner": "davidpdrsn",
+        "repo": "git-prompt",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -69,6 +87,24 @@
         "type": "github"
       }
     },
+    "is-vim-running": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_2"
+      },
+      "locked": {
+        "lastModified": 1750269964,
+        "narHash": "sha256-RTBNBUz0W6VfRxy+dCOg8UthbxuBGUHKEZFaFakJyvg=",
+        "owner": "davidpdrsn",
+        "repo": "is-vim-running",
+        "rev": "bbb6ae6e2f50a71440b4f9358aa1b439a65a47c9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "davidpdrsn",
+        "repo": "is-vim-running",
+        "type": "github"
+      }
+    },
     "nix-darwin": {
       "inputs": {
         "nixpkgs": [
@@ -110,6 +146,38 @@
     },
     "nixpkgs": {
       "locked": {
+        "lastModified": 1750134718,
+        "narHash": "sha256-v263g4GbxXv87hMXMCpjkIxd/viIF7p3JpJrwgKdNiI=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "9e83b64f727c88a7711a2c463a7b16eedb69a84c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1750134718,
+        "narHash": "sha256-v263g4GbxXv87hMXMCpjkIxd/viIF7p3JpJrwgKdNiI=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "9e83b64f727c88a7711a2c463a7b16eedb69a84c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_3": {
+      "locked": {
         "lastModified": 1749619289,
         "narHash": "sha256-qX6gXVjaCXXbcn6A9eSLUf8Fm07MgPGe5ir3++y2O1Q=",
         "owner": "NixOS",
@@ -124,14 +192,51 @@
         "type": "github"
       }
     },
+    "nixpkgs_4": {
+      "locked": {
+        "lastModified": 1750134718,
+        "narHash": "sha256-v263g4GbxXv87hMXMCpjkIxd/viIF7p3JpJrwgKdNiI=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "9e83b64f727c88a7711a2c463a7b16eedb69a84c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
+        "git-prompt": "git-prompt",
         "home-manager": "home-manager",
         "homebrew-cask": "homebrew-cask",
         "homebrew-core": "homebrew-core",
+        "is-vim-running": "is-vim-running",
         "nix-darwin": "nix-darwin",
         "nix-homebrew": "nix-homebrew",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs_3",
+        "smart-pwd-2": "smart-pwd-2"
+      }
+    },
+    "smart-pwd-2": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_4"
+      },
+      "locked": {
+        "lastModified": 1750266974,
+        "narHash": "sha256-U1rRQ1Y5ApQX2ccyBp7Hn5cfaHEmc7t5DfMA1hX1dNc=",
+        "owner": "davidpdrsn",
+        "repo": "smart-pwd-2",
+        "rev": "164d638a78ae5182fc30e43903f184c7c300b0e7",
+        "type": "github"
+      },
+      "original": {
+        "owner": "davidpdrsn",
+        "repo": "smart-pwd-2",
+        "type": "github"
       }
     }
   },
