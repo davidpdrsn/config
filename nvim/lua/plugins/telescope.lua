@@ -74,6 +74,10 @@ return {
             vim.keymap.set("n", "<leader>:", builtin.commands, { desc = "Find command" })
 
             vim.keymap.set("n", "gr", builtin.lsp_references, { desc = "Find references" })
+
+            vim.keymap.set("n", "<leader>sn", function()
+                builtin.find_files({ cwd = "~/config" })
+            end, { desc = "Open file in config" })
         end,
     },
     {
