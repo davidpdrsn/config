@@ -41,7 +41,7 @@ in {
     hyperfine
     jq
     neovim
-    postgresql
+    # postgresql
     procs
     stylua
     tokei
@@ -98,11 +98,11 @@ in {
     nerd-fonts.iosevka
   ];
 
-  services.postgresql = {
-    enable = true;
-    package = pkgs.postgresql;
-    dataDir = "/Users/davidpdrsn/.nix-services/postgresql-17";
-  };
+  # services.postgresql = {
+  #   enable = true;
+  #   package = pkgs.postgresql;
+  #   dataDir = "/Users/davidpdrsn/.nix-services/postgresql-17";
+  # };
 
   system.keyboard.enableKeyMapping = true;
   system.keyboard.remapCapsLockToControl = true;
