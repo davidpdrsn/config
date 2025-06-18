@@ -29,6 +29,17 @@
     is-vim-running.url = "github:davidpdrsn/is-vim-running";
     git-prompt.url = "github:davidpdrsn/git-prompt";
     git-remove-merged-branches.url = "github:davidpdrsn/git-remove-merged-branches";
+    replace.url = "github:davidpdrsn/replace";
+    git-branch-picker.url = "github:davidpdrsn/git-branch-picker";
+
+    # other dev tools not in nix:
+    # - test-command
+    # - parse-dotenv
+    # - git-diff-ai-summarize
+    # - format-prettier
+    # - build-proxy
+    # - cli
+    # - balance
   };
 
   outputs = inputs @ {

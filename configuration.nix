@@ -66,7 +66,9 @@ in {
       "smart-pwd-2"
       "is-vim-running"
       "git-prompt"
-      # "git-remove-merged-branches"
+      "git-remove-merged-branches"
+      "replace"
+      "git-branch-picker"
     ];
 
   homebrew = {
