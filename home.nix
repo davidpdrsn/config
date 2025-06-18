@@ -129,6 +129,14 @@
 
   home.activation.createFolders = ''
     mkdir -p ~/.config
+
+    mkdir -p .config/cli
+    touch .config/cli/history
+
+    if [ ! -e ~/.config/nvim ]; then
+      ln -s ~/config/nvim ~/.config
+    fi
+
     mkdir -p ~/Desktop/screenshots
     mkdir -p ~/code/dev-tools
   '';
