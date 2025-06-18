@@ -308,3 +308,7 @@ end)
 common.custom_format_leader_command("lua", function(path)
     return { "stylua", "--config-path", "/Users/davidpdrsn/.stylua.toml", path }
 end)
+
+vim.keymap.set("n", "<leader>v", function()
+    common.tmux_run(vim.api.nvim_get_current_line())
+end, { desc = "Send current line to tmux" })
