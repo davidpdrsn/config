@@ -170,11 +170,13 @@ in {
   # disable startup chime
   system.startup.chime = false;
 
+  # disable all the tiling window stuff in macos
   system.defaults.WindowManager.EnableStandardClickToShowDesktop = false;
   system.defaults.WindowManager.EnableTiledWindowMargins = false;
   system.defaults.WindowManager.EnableTilingByEdgeDrag = false;
   system.defaults.WindowManager.EnableTilingOptionAccelerator = false;
   system.defaults.WindowManager.EnableTopTilingByEdgeDrag = false;
 
+  # allow using touch id for sudo
   security.pam.services.sudo_local.touchIdAuth = true;
 }
