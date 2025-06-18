@@ -73,6 +73,9 @@ in {
 
   homebrew = {
     enable = true;
+    taps = [
+      "homebrew/cask"
+    ];
     casks = [
       "discord"
       "ghostty"
@@ -80,11 +83,11 @@ in {
       "obs"
       "raycast"
       "signal"
-      # steam, will this uninstall my games?
+      "steam"
     ];
     masApps = {
-      # photomator
-      # front and center
+      "Front and Center" = 1493996622;
+      # "Photomator" = 1444636541;
     };
     onActivation.cleanup = "zap";
     onActivation.autoUpdate = true;
@@ -172,4 +175,6 @@ in {
   system.defaults.WindowManager.EnableTilingByEdgeDrag = false;
   system.defaults.WindowManager.EnableTilingOptionAccelerator = false;
   system.defaults.WindowManager.EnableTopTilingByEdgeDrag = false;
+
+  security.pam.services.sudo_local.touchIdAuth = true;
 }
