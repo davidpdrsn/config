@@ -20,6 +20,10 @@ export LUN_PROD_DB_PASS="***REMOVED***"
 
 export TERM=tmux-256color
 
+# required for go test containers to work with colima
+export DOCKER_HOST="unix://${HOME}/.colima/default/docker.sock"
+export TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE="/var/run/docker.sock"
+
 # open atuin with ctrl-p
 bindkey '^p' atuin-up-search
 
