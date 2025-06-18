@@ -1,0 +1,11 @@
+[settings]
+show_help = true
+selected_filter = "work"
+updated_at_cut_off = "2025-05-19T00:00:00Z"
+
+[filters]
+work = [
+    "lun-energy/calor",
+    "lun-energy/web-main",
+    "NixOS/nixpkgs",
+]
