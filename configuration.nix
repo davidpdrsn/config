@@ -46,9 +46,8 @@ in {
     tokei
     tree
     wget
-
-    # rust
     rustup
+    mas
 
     # ai
     amp-cli
@@ -57,17 +56,6 @@ in {
     # docker
     colima
     docker
-    docker-compose
-
-    # gui apps
-    code-cursor
-    blender
-    obsidian
-    slack
-    spotify
-    keymapp
-    unnaturalscrollwheels
-    google-chrome
   ];
 
   homebrew = {
@@ -75,18 +63,32 @@ in {
     taps = [
       "homebrew/cask"
     ];
+    brews = [
+      # install things with nixpkgs if at all possible!
+    ];
     casks = [
+      "1password"
+      "airtame"
+      "blender"
       "discord"
       "ghostty"
       "godot-mono"
+      "google-chrome"
+      "keyboard-maestro"
+      "keymapp"
       "obs"
+      "obsidian"
       "raycast"
       "signal"
+      "slack"
+      "spotify"
       "steam"
+      "unnaturalscrollwheels"
     ];
     masApps = {
+      "Fantastical" = 975937182;
       "Front and Center" = 1493996622;
-      # "Photomator" = 1444636541;
+      "Photomator" = 1444636541;
     };
     onActivation.cleanup = "zap";
     onActivation.autoUpdate = true;
