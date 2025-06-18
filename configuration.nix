@@ -1,4 +1,5 @@
-inputs @ {
+{
+  inputs,
   self,
   pkgs,
   ...
@@ -24,39 +25,49 @@ in {
 
   nixpkgs.config.allowUnfree = true;
 
-  environment.systemPackages = with pkgs; [
-    # general
-    alejandra
-    bat
-    cargo-limit
-    cargo-outdated
-    cargo-watch
-    curl
-    dust
-    eza
-    fd
-    fzf
-    gh
-    htop
-    hyperfine
-    jq
-    neovim
-    procs
-    stylua
-    tokei
-    tree
-    wget
-    rustup
-    mas
+  environment.systemPackages = with pkgs;
+    [
+      # general
+      alejandra
+      bat
+      cargo-limit
+      cargo-outdated
+      cargo-watch
+      curl
+      dust
+      eza
+      fd
+      fzf
+      gh
+      htop
+      hyperfine
+      jq
+      neovim
+      procs
+      stylua
+      tokei
+      tree
+      wget
+      rustup
+      mas
 
-    # ai
-    amp-cli
-    claude-code
+      # ai
+      amp-cli
+      claude-code
 
-    # docker
-    colima
-    docker
-  ];
+      # docker
+      colima
+      docker
+    ]
+    # personal dev tools
+    ++ builtins.map
+    (pkg: inputs.${pkg}.packages.${pkgs.system}.default)
+    [
+      "smart-pwd-2"
+      "is-vim-running"
+      "git-prompt"
+      # "git-remove-merged-branches"
+    ];
 
   homebrew = {
     enable = true;
