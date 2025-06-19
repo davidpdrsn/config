@@ -1,5 +1,10 @@
-snippet dbg "fmt.Printf(...)"
-	fmt.Printf("DBG: $1 = %+v\n", ${1:${VISUAL}})
+snippet sq "suite.Require()"
+    suite.Require().$0
 
-snippet fn "fmt.Println(...)"
-	fmt.Println("${1:${VISUAL}}")
+snippet for "for _, item"
+	for _, $2 := range $1 {
+		$0
+	}
+
+snippet _ "ignore variable"
+	_ = $0
