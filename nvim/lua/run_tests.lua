@@ -2,7 +2,10 @@ local common = require("common")
 
 local M = {}
 
-function run_test_command(test_command)
+local prev_test_buffer = nil
+local test_command = nil
+
+local function run_test_command(cmd)
     if prev_test_buffer and vim.api.nvim_buf_is_valid(prev_test_buffer) then
         vim.api.nvim_buf_delete(prev_test_buffer, { force = false })
         prev_test_buffer = nil
@@ -12,7 +15,7 @@ function run_test_command(test_command)
     vim.cmd("write")
 
     local wrapped_cmd =
-        common.tmux_wrap(test_command.command .. " " .. table.concat(test_command.args, " "))
+        common.tmux_wrap(cmd.command .. " " .. table.concat(cmd.args, " "))
 
     if wrapped_cmd.in_tmux then
         vim.fn.jobstart(wrapped_cmd.cmd)
@@ -42,7 +45,7 @@ function run_test_command(test_command)
     end
 end
 
-function json_shell(cmd)
+local function json_shell(cmd)
     local handle = io.popen(cmd, "r")
     local stdout = handle:read("*a")
     handle:close()
@@ -57,45 +60,42 @@ function json_shell(cmd)
     return data
 end
 
-local prev_test_buffer = nil
-local test_command = nil
-
-function set_test_command()
+local function set_test_command()
     local path = vim.api.nvim_buf_get_name(0)
     local line = vim.api.nvim_win_get_cursor(0)[1]
     local cmd = "test-command --file " .. path .. " --line " .. line
     test_command = json_shell(cmd)
 end
 
-function test_file()
+local function test_file()
     if not test_command then
         set_test_command()
     end
     run_test_command(test_command.file)
 end
 
-function test_line()
+local function test_line()
     if not test_command then
         set_test_command()
     end
     run_test_command(test_command.file_and_line)
 end
 
-function test_file_debugger()
+local function test_file_debugger()
     if not test_command then
         set_test_command()
     end
     run_test_command(test_command.file_debugger)
 end
 
-function test_line_debugger()
+local function test_line_debugger()
     if not test_command then
         set_test_command()
     end
     run_test_command(test_command.file_and_line_debugger)
 end
 
-function chain(f, g)
+local function chain(f, g)
     return function()
         f()
         g()

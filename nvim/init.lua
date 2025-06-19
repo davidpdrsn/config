@@ -58,6 +58,7 @@ vim.opt.softtabstop = 4
 vim.opt.tabstop = 4
 vim.opt.foldenable = false
 vim.opt.spell = false
+vim.o.confirm = true
 
 -- don't automatically select the first result in suggestions
 vim.cmd("set completeopt+=noselect")
@@ -156,8 +157,16 @@ vim.api.nvim_create_autocmd("FileType", {
     end,
 })
 
+math.randomseed(os.time())
+local random = math.random
+
 vim.keymap.set("i", "\\u", function()
-    insert_guid()
+    local template = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx"
+    local le_guid = string.gsub(template, "[xy]", function(c)
+        local v = (c == "x") and random(0, 0xf) or random(8, 0xb)
+        return string.format("%x", v)
+    end)
+    vim.cmd("execute \"norm i" .. le_guid .. "\"")
 end, { desc = "Insert GUID" })
 
 vim.keymap.set("n", "<leader>cm", ":!chmod +x %<cr>", { desc = "Make file executable" })
@@ -197,7 +206,7 @@ vim.keymap.set("n", "<leader>Q", ":qall!<cr>", { desc = "Force quit" })
 vim.keymap.set("n", "<leader>cp", function()
     local path = vim.fn.expand("%")
     vim.fn.setreg("+", path)
-    vim.notify(path, "info", { title = "Copied to clipboard" })
+    -- vim.notify(path, "info", { title = "Copied to clipboard" })
 end, { desc = "Copy path to current file" })
 
 -- exit insert mode and save just by hitting ctrl-s
@@ -261,15 +270,27 @@ end, { silent = true, desc = "Show docs" })
 
 -- lsp
 vim.keymap.set("n", "<leader>la", vim.lsp.buf.code_action, { desc = "LSP code actions" })
+
 vim.keymap.set("n", "<leader>lr", vim.lsp.buf.rename, { desc = "LSP rename" })
+
 vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Goto definition" })
+
 vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, { desc = "Goto type definition" })
+
 vim.keymap.set("n", "[g", function()
     vim.diagnostic.jump({ count = -1 })
 end, { desc = "Prev diagnostic" })
+
 vim.keymap.set("n", "]g", function()
     vim.diagnostic.jump({ count = 1 })
 end, { desc = "Next diagnostic" })
+
+vim.keymap.set(
+    "n",
+    "<leader>q",
+    vim.diagnostic.setloclist,
+    { desc = "Open diagnostic [Q]uickfix list" }
+)
 
 vim.cmd([[
     " don't wanna retrain my fingers
@@ -277,18 +298,6 @@ vim.cmd([[
     command! Q q
     command! Qall qall
 ]])
-
-math.randomseed(os.time())
-local random = math.random
-function insert_guid()
-    local template = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx"
-    local le_guid = string.gsub(template, "[xy]", function(c)
-        local v = (c == "x") and random(0, 0xf) or random(8, 0xb)
-        return string.format("%x", v)
-    end)
-
-    vim.cmd("execute \"norm i" .. le_guid .. "\"")
-end
 
 common.lsp_format_leader_command("rust")
 common.lsp_format_leader_command("go")
@@ -313,18 +322,18 @@ vim.keymap.set("n", "<leader>v", function()
     common.tmux_run(vim.api.nvim_get_current_line())
 end, { desc = "Send current line to tmux" })
 
--- vim.keymap.set("n", "<leader>T", function()
---     local original_win_id = vim.api.nvim_get_current_win()
---     vim.cmd("botright 20new")
---     term_buf = vim.api.nvim_get_current_buf()
---     local job_id = vim.fn.jobstart("/Users/davidpdrsn/.cargo/bin/t", {
---         term = true,
---         on_exit = function(_, status)
---             if status == 0 then
---                 vim.api.nvim_set_current_win(original_win_id)
---                 vim.api.nvim_buf_delete(term_buf, { force = false })
---             end
---         end,
---     })
---     vim.cmd("startinsert")
--- end, { desc = "Run CLI" })
+vim.keymap.set("n", "<leader><leader>", function()
+    local original_win_id = vim.api.nvim_get_current_win()
+    vim.cmd("botright 20new")
+    local term_buf = vim.api.nvim_get_current_buf()
+    vim.fn.jobstart("/Users/davidpdrsn/.cargo/bin/t", {
+        term = true,
+        on_exit = function(_, status)
+            if status == 0 then
+                vim.api.nvim_set_current_win(original_win_id)
+                vim.api.nvim_buf_delete(term_buf, { force = false })
+            end
+        end,
+    })
+    vim.cmd("startinsert")
+end, { desc = "Run CLI" })

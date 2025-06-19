@@ -51,6 +51,8 @@ in {
       rustup
       mas
       postgresql
+      lldb_20
+      lua-language-server
 
       pkgs.master.zed-editor
 
