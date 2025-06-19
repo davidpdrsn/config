@@ -2,15 +2,12 @@ local common = require("common")
 
 return {
     {
-        "rcarriga/nvim-dap-ui",
+        "mfussenegger/nvim-dap",
         dependencies = {
-            "mfussenegger/nvim-dap",
-            "nvim-neotest/nvim-nio",
+            { "igorlfs/nvim-dap-view", opts = {} },
         },
         config = function()
             local dap = require("dap")
-            local dap_go = require("dap-go")
-            local dapui = require("dapui")
 
             dap.defaults.fallback.switchbuf = "usetab,uselast"
 
@@ -19,38 +16,45 @@ return {
                 { text = "🛑", texthl = "", linehl = "", numhl = "" }
             )
 
-            local dapui = require("dapui")
-            dapui.setup()
-
             dap.adapters.lldb = {
                 type = "executable",
-                command = "/Library/Developer/CommandLineTools/usr/bin/lldb-dap",
+                command = "/run/current-system/sw/bin/lldb-dap",
                 name = "lldb",
             }
+
+            function path_to_rust_binary()
+                local handle = io.popen("/Users/davidpdrsn/.cargo/bin/t \"Path to Rust binary\"")
+                local result = handle:read("*a")
+                handle:close()
+                return result
+            end
 
             dap.configurations.rust = {
                 {
                     name = "Launch",
                     type = "lldb",
                     request = "launch",
-                    program = function()
-                        local handle =
-                            io.popen("/Users/davidpdrsn/.cargo/bin/t \"Path to Rust binary\"")
-                        local result = handle:read("*a")
-                        handle:close()
-                        return result
-                    end,
+                    program = path_to_rust_binary,
                     preLaunchTask = "rust_compile",
                     cwd = "${workspaceFolder}",
                     stopOnEntry = false,
                     args = {},
                 },
-            }
-
-            dap.adapters.godot = {
-                type = "server",
-                host = "127.0.0.1",
-                port = 6006,
+                -- {
+                --     name = "Test",
+                --     type = "lldb",
+                --     request = "launch",
+                --     program = function()
+                --         -- TODO: parse `cargo test --no-run --message-format=json`
+                --         return "/Users/davidpdrsn/code/dev-tools/test-command/target/debug/deps/test_command-eb9db06ed68b4515"
+                --     end,
+                --     args = function()
+                --         -- TODO: get this using `test-command`
+                --         return { "test_one" }
+                --     end,
+                --     cwd = "${workspaceFolder}",
+                --     stopOnEntry = false,
+                -- },
             }
 
             dap.adapters.coreclr_godot = {
@@ -82,58 +86,57 @@ return {
                 },
             }
 
-            function set_mappings()
-                vim.keymap.set("n", "<leader><up>", dap.step_out, { desc = "Step out" })
-                vim.keymap.set("n", "<leader><down>", dap.step_into, { desc = "Step into" })
-                vim.keymap.set("n", "<leader><left>", dap.step_back, { desc = "Step back" })
-                vim.keymap.set("n", "<leader><right>", dap.step_over, { desc = "Step over" })
+            vim.keymap.set("n", "<leader><up>", dap.step_out, { desc = "Step out" })
+            vim.keymap.set("n", "<leader><down>", dap.step_into, { desc = "Step into" })
+            vim.keymap.set("n", "<leader><left>", dap.step_back, { desc = "Step back" })
+            vim.keymap.set("n", "<leader><right>", dap.step_over, { desc = "Step over" })
 
-                vim.keymap.set("n", "<leader>dC", function()
-                    dap.disconnect()
-                    require("dapui").close()
-                end, { desc = "Disconnect from debugger" })
-                vim.keymap.set("n", "<leader>dr", dap.restart, { desc = "Restart debugger" })
-                vim.keymap.set("n", "<leader>ds", function()
-                    dap.terminate()
-                    require("dapui").close()
-                end, { desc = "Kill debugger" })
-                vim.keymap.set("n", "<leader>D", function()
-                    dapui.close()
-                    dapui.open()
-                end, { desc = "Toggle debugger UI" })
-            end
-
-            function del_mappings()
-                vim.keymap.del("n", "<leader><up>")
-                vim.keymap.del("n", "<leader><down>")
-                vim.keymap.del("n", "<leader><left>")
-                vim.keymap.del("n", "<leader><right>")
-
-                vim.keymap.del("n", "<leader>dC")
-                vim.keymap.del("n", "<leader>dr")
-                vim.keymap.del("n", "<leader>ds")
-                vim.keymap.del("n", "<leader>D")
-            end
-
-            dap.listeners.before.attach.dapui_config = function()
-                set_mappings()
-                dapui.open()
-            end
-            dap.listeners.before.launch.dapui_config = function()
-                set_mappings()
-                dapui.open()
-            end
-            dap.listeners.before.event_terminated.dapui_config = function()
-                del_mappings()
-                dapui.close()
-            end
-            dap.listeners.before.event_exited.dapui_config = function()
-                del_mappings()
-                dapui.close()
-            end
+            vim.keymap.set("n", "<leader>dr", dap.restart, { desc = "Restart debugger" })
 
             vim.keymap.set("n", "<leader>dd", dap.toggle_breakpoint, { desc = "Toggle breakpoint" })
             vim.keymap.set("n", "<leader>dc", dap.continue, { desc = "Continue debugging" })
+        end,
+    },
+    {
+        "igorlfs/nvim-dap-view",
+        config = function()
+            local dap = require("dap")
+            local dv = require("dap-view")
+
+            dv.setup({
+                winbar = {
+                    show = true,
+                    sections = {
+                        "scopes",
+                        "threads",
+                        "watches",
+                        "repl",
+                    },
+                    default_section = "scopes",
+                    controls = {
+                        enabled = true,
+                    },
+                },
+                windows = {
+                    height = 12,
+                    position = "below",
+                    terminal = {
+                        hide = { "go", "lldb", "coreclr_godot" },
+                    },
+                },
+            })
+
+            dap.listeners.before.attach["dap-view-config"] = dv.open
+            dap.listeners.before.launch["dap-view-config"] = dv.open
+            dap.listeners.before.event_terminated["dap-view-config"] = dv.close
+            dap.listeners.before.event_exited["dap-view-config"] = dv.close
+
+            vim.keymap.set("n", "<leader>dC", function()
+                dap.disconnect()
+            end, { desc = "Disconnect from debugger" })
+            vim.keymap.set("n", "<leader>ds", function()
+                dap.terminate()
+            end, { desc = "Kill debugger" })
         end,
     },
     {
@@ -148,7 +151,7 @@ return {
                 builder = function(params)
                     return {
                         cmd = { "cargo" },
-                        args = { "build" },
+                        args = { "build", "--all-features" },
                     }
                 end,
                 condition = {
