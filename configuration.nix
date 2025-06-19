@@ -50,6 +50,9 @@ in {
       wget
       rustup
       mas
+      postgresql
+
+      pkgs.master.zed-editor
 
       # ai
       amp-cli

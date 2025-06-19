@@ -2,50 +2,10 @@ local common = require("common")
 
 local M = {}
 
-local prev_test_buffer = nil
-local test_command = nil
-
-function set_test_command_with(cmd)
-    local handle = io.popen(cmd, "r")
-    local stdout = handle:read("*a")
-    handle:close()
-
-    local data, err = vim.json.decode(stdout)
-    if err then
-        print("Error decoding JSON:", err)
-        test_command = nil
-        return
-    end
-
-    test_command = data
-end
-
-function set_test_command()
-    local path = vim.api.nvim_buf_get_name(0)
-
-    local cmd = "test-command --file " .. path .. " --line " .. 0
-    set_test_command_with(cmd)
-end
-
-function set_test_command_with_line()
-    local path = vim.api.nvim_buf_get_name(0)
-    local line = vim.api.nvim_win_get_cursor(0)[1]
-
-    local cmd = "test-command --file " .. path .. " --line " .. line
-    set_test_command_with(cmd)
-end
-
-function set_test_command_with_line_and_debugger()
-    local path = vim.api.nvim_buf_get_name(0)
-    local line = vim.api.nvim_win_get_cursor(0)[1]
-
-    local cmd = "test-command --file " .. path .. " --line " .. line .. " --debugger"
-    set_test_command_with(cmd)
-end
-
-function run_test_command()
-    if not test_command then
-        vim.cmd("echoerr \"No test command found\"")
+function run_test_command(test_command)
+    if prev_test_buffer and vim.api.nvim_buf_is_valid(prev_test_buffer) then
+        vim.api.nvim_buf_delete(prev_test_buffer, { force = false })
+        prev_test_buffer = nil
         return
     end
 
@@ -82,49 +42,90 @@ function run_test_command()
     end
 end
 
-vim.keymap.set("n", "<leader>rr", function()
-    set_test_command()
-end, { desc = "Set test command" })
+function json_shell(cmd)
+    local handle = io.popen(cmd, "r")
+    local stdout = handle:read("*a")
+    handle:close()
 
-vim.keymap.set("n", "<leader>rt", function()
-    set_test_command_with_line()
-end, { desc = "Set test command at line" })
-
-vim.keymap.set("n", "<leader>drt", function()
-    set_test_command_with_line_and_debugger()
-end, { desc = "Set test command in debugger" })
-
-vim.keymap.set("n", "<leader>t", function()
-    if prev_test_buffer and vim.api.nvim_buf_is_valid(prev_test_buffer) then
-        vim.api.nvim_buf_delete(prev_test_buffer, { force = false })
-        prev_test_buffer = nil
-    else
-        run_test_command()
+    local data, err = vim.json.decode(stdout)
+    if err then
+        print("Error decoding JSON:", err)
+        test_command = nil
+        return
     end
-end, { desc = "Run test" })
 
-vim.keymap.set("n", "<leader>T", function()
-    local original_win_id = vim.api.nvim_get_current_win()
-    vim.cmd("botright 20new")
-    term_buf = vim.api.nvim_get_current_buf()
-    local job_id = vim.fn.jobstart("/Users/davidpdrsn/.cargo/bin/t", {
-        term = true,
-        on_exit = function(_, status)
-            if status == 0 then
-                vim.api.nvim_set_current_win(original_win_id)
-                vim.api.nvim_buf_delete(term_buf, { force = false })
-            end
-        end,
-    })
-    vim.cmd("startinsert")
-end, { desc = "Run CLI" })
+    return data
+end
 
-M.statusline = function()
-    if test_command then
-        return test_command.statusline
-    else
-        return ""
+local prev_test_buffer = nil
+local test_command = nil
+
+function set_test_command()
+    local path = vim.api.nvim_buf_get_name(0)
+    local line = vim.api.nvim_win_get_cursor(0)[1]
+    local cmd = "test-command --file " .. path .. " --line " .. line
+    test_command = json_shell(cmd)
+end
+
+function test_file()
+    if not test_command then
+        set_test_command()
+    end
+    run_test_command(test_command.file)
+end
+
+function test_line()
+    if not test_command then
+        set_test_command()
+    end
+    run_test_command(test_command.file_and_line)
+end
+
+function test_file_debugger()
+    if not test_command then
+        set_test_command()
+    end
+    run_test_command(test_command.file_debugger)
+end
+
+function test_line_debugger()
+    if not test_command then
+        set_test_command()
+    end
+    run_test_command(test_command.file_and_line_debugger)
+end
+
+function chain(f, g)
+    return function()
+        f()
+        g()
     end
 end
+
+vim.keymap.set("n", "<leader>t", test_file, { desc = "Run test file" })
+
+vim.keymap.set("n", "<leader>T", chain(set_test_command, test_file), { desc = "Run+set test file" })
+
+vim.keymap.set("n", "<leader>k", test_line, { desc = "Run test line" })
+
+vim.keymap.set("n", "<leader>K", chain(set_test_command, test_line), { desc = "Run+set test line" })
+
+vim.keymap.set("n", "<leader>dt", test_file_debugger, { desc = "Run test file, in debugger" })
+
+vim.keymap.set(
+    "n",
+    "<leader>DT",
+    chain(set_test_command, test_file_debugger),
+    { desc = "Run+set test file, in debugger" }
+)
+
+vim.keymap.set("n", "<leader>dk", test_line_debugger, { desc = "Run test line, in debugger" })
+
+vim.keymap.set(
+    "n",
+    "<leader>DK",
+    chain(set_test_command, test_line_debugger),
+    { desc = "Run+set test line, in debugger" }
+)
 
 return M
