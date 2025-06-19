@@ -3,6 +3,10 @@ export PATH=$PATH:/Users/davidpdrsn/.bin
 
 export EDITOR='nvim'
 
+# personal lun key
+# export ANTHROPIC_API_KEY=***REMOVED***
+
+# lun org key
 export ANTHROPIC_API_KEY=***REMOVED***
 
 export CARGO_PROFILE_DEV_SPLIT_DEBUGINFO=unpacked

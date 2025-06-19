@@ -162,9 +162,9 @@ end, { desc = "Insert GUID" })
 
 vim.keymap.set("n", "<leader>cm", ":!chmod +x %<cr>", { desc = "Make file executable" })
 vim.keymap.set("n", "<leader>h", ":nohlsearch<cr>", { desc = "Remove search highlight" })
-vim.keymap.set("n", "<leader>k", function()
-    vim.diagnostic.open_float({ source = true })
-end, { desc = "Open diagnostic for curret line" })
+-- vim.keymap.set("n", "<leader>K", function()
+--     vim.diagnostic.open_float({ source = true })
+-- end, { desc = "Open diagnostic for curret line" })
 vim.keymap.set("n", "<leader>L", ":Lazy<cr>", { desc = "Open Lazy" })
 vim.keymap.set("n", "<leader>lu", ":Lazy update<cr>", { desc = "Update plugins" })
 
@@ -312,3 +312,19 @@ end)
 vim.keymap.set("n", "<leader>v", function()
     common.tmux_run(vim.api.nvim_get_current_line())
 end, { desc = "Send current line to tmux" })
+
+-- vim.keymap.set("n", "<leader>T", function()
+--     local original_win_id = vim.api.nvim_get_current_win()
+--     vim.cmd("botright 20new")
+--     term_buf = vim.api.nvim_get_current_buf()
+--     local job_id = vim.fn.jobstart("/Users/davidpdrsn/.cargo/bin/t", {
+--         term = true,
+--         on_exit = function(_, status)
+--             if status == 0 then
+--                 vim.api.nvim_set_current_win(original_win_id)
+--                 vim.api.nvim_buf_delete(term_buf, { force = false })
+--             end
+--         end,
+--     })
+--     vim.cmd("startinsert")
+-- end, { desc = "Run CLI" })
