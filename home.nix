@@ -56,7 +56,6 @@
       "/tmp"
       "bacon.toml"
       ".reload-on-demand.toml"
-      "mprocs.yaml"
       ".temp"
       ".tmp"
       "__debug_bin*"
@@ -125,6 +124,7 @@
   home.file = {
     ".bin".source = ./bin;
     ".config/balance/config.toml".source = ./balance/balance.toml;
+    # ".config/mprocs/mprocs.yaml".source = ./mprocs/mprocs.yaml;
     ".stylua.toml".source = ./stylua/stylua.toml;
     ".config/ghostty".source = ./ghostty;
   };
