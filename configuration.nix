@@ -53,6 +53,10 @@ in {
       postgresql
       lldb_20
       lua-language-server
+      yt-dlp
+      xh
+      mprocs
+      ncspot
 
       pkgs.master.zed-editor
 
