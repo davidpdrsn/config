@@ -21,7 +21,6 @@ return {
                 no_italic = true,
             })
 
-            vim.cmd.colorscheme("catppuccin")
             vim.cmd([[
                 highlight SpecialComment guifg=#6c6c66
             ]])

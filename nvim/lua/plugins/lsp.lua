@@ -81,7 +81,6 @@ return {
                 "gopls",
                 "ts_ls",
                 "rust_analyzer",
-                "lua_ls",
             })
         end,
     },
@@ -133,7 +132,7 @@ return {
             },
             snippets = { preset = "luasnip" },
             sources = {
-                default = { "lazydev", "avante", "snippets", "lsp", "path", "buffer" },
+                default = { "avante", "snippets", "lsp", "path", "buffer" },
                 per_filetype = {
                     sql = { "dadbod", "buffer" },
                 },
@@ -145,12 +144,6 @@ return {
                         opts = {
                             -- options for blink-cmp-avante
                         },
-                    },
-                    lazydev = {
-                        name = "LazyDev",
-                        module = "lazydev.integrations.blink",
-                        -- make lazydev completions top priority (see `:h blink.cmp`)
-                        score_offset = 100,
                     },
                 },
             },
@@ -179,17 +172,5 @@ return {
             require("tiny-inline-diagnostic").setup()
             vim.diagnostic.config({ virtual_text = false })
         end,
-    },
-    -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
-    -- used for completion, annotations and signatures of Neovim apis
-    {
-        "folke/lazydev.nvim",
-        ft = "lua",
-        opts = {
-            library = {
-                -- Load luvit types when the `vim.uv` word is found
-                { path = "${3rd}/luv/library", words = { "vim%.uv" } },
-            },
-        },
     },
 }
