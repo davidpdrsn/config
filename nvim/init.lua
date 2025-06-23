@@ -79,6 +79,8 @@ require("lazy").setup({
     },
 })
 
+vim.cmd.colorscheme("catppuccin")
+
 vim.notify = require("notify")
 
 --------------------------------------------
