@@ -78,7 +78,11 @@ function M.tmux_wrap(cmd)
             if pane_cmd == "zsh" then
                 return {
                     in_tmux = true,
-                    cmd = "tmux send-keys -t " .. n .. " \"" .. cmd .. "\" Enter",
+                    cmd = "tmux send-keys -t "
+                        .. n
+                        .. " \""
+                        .. cmd:gsub("\\", "\\\\"):gsub("\"", "\\\"")
+                        .. "\" Enter",
                 }
             end
         end
