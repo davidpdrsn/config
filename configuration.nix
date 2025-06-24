@@ -57,6 +57,7 @@ in {
       xh
       mprocs
       ncspot
+      graphite-cli
 
       pkgs.master.zed-editor
 
@@ -106,6 +107,7 @@ in {
       "spotify"
       "steam"
       "unnaturalscrollwheels"
+      "vlc"
     ];
     masApps = {
       "Fantastical" = 975937182;
@@ -139,7 +141,7 @@ in {
     # bottom left
     wvous-bl-corner = 2; # mission control
     # bottom right
-    wvous-br-corner = 1; # disabled
+    wvous-br-corner = 3; # application windows
     # top left
     wvous-tl-corner = 1; # disabled
     # top right
