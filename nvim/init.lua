@@ -324,6 +324,24 @@ vim.keymap.set("n", "<leader>v", function()
     common.tmux_run(vim.api.nvim_get_current_line())
 end, { desc = "Send current line to tmux" })
 
+vim.keymap.set("v", "<leader>v", function()
+    -- leave visual mode so the marks update
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Esc>', true, false, true), 'n', false)
+
+    vim.schedule(function()
+        local vstart = vim.fn.getpos("'<")
+        local vend = vim.fn.getpos("'>")
+        local line_start = vstart[2]
+        local line_end = vend[2]
+
+        local lines = vim.fn.getline(line_start, line_end)
+
+        for _, line in pairs(lines) do
+            common.tmux_run(line)
+        end
+    end)
+end, { desc = "Send current selection to tmux" })
+
 vim.keymap.set("n", "<leader><leader>", function()
     local original_win_id = vim.api.nvim_get_current_win()
     vim.cmd("botright 20new")
