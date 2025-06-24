@@ -109,6 +109,7 @@ alias blender='/Applications/Blender.app/Contents/MacOS/Blender'
 alias ds='sudo darwin-rebuild switch --flake ~/config'
 alias dbui='nvim +DBUI'
 alias format-lua='stylua --config-path ~/.stylua.toml $(fd .lua)'
+alias claude-json='claude --print --output-format json'
 
 # nvim
 alias vi='nvim'
