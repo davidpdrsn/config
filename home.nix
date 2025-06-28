@@ -12,6 +12,9 @@
 
   programs.git = {
     enable = true;
+    aliases = {
+      wt = "worktree";
+    };
     extraConfig = {
       user = {
         name = "David Pedersen";

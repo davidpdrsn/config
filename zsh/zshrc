@@ -6,8 +6,9 @@ export EDITOR='nvim'
 # personal lun key
 # export ANTHROPIC_API_KEY=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
 
-# lun org key
+# lun org keys
 export ANTHROPIC_API_KEY=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
+export GEMINI_API_KEY=AIzaSyA3yQ94vd6WwJSNVOK4dNwXSdojhPzJlRo
 
 export CARGO_PROFILE_DEV_SPLIT_DEBUGINFO=unpacked
 export CARGO_PROFILE_TEST_SPLIT_DEBUGINFO=unpacked
