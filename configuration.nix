@@ -58,12 +58,12 @@ in {
       mprocs
       ncspot
       graphite-cli
-
-      pkgs.master.gemini-cli
+      lazydocker
 
       # ai
       amp-cli
       claude-code
+      gemini-cli
 
       # docker
       colima
@@ -78,7 +78,7 @@ in {
       "git-prompt"
       "git-remove-merged-branches"
       "replace"
-      "git-branch-picker"
+      # "git-branch-picker"
     ];
 
   homebrew = {

@@ -52,7 +52,6 @@
       ".bloop"
       ".jvmopts"
       ".bsp"
-      ".envrc"
       "project/project/"
       ".vim"
       "dump.rdb"
