@@ -6,8 +6,9 @@ export EDITOR='nvim'
 # personal lun key
 # export ANTHROPIC_API_KEY=***REMOVED***
 
-# lun org key
+# lun org keys
 export ANTHROPIC_API_KEY=***REMOVED***
+export GEMINI_API_KEY=***REMOVED***
 
 export CARGO_PROFILE_DEV_SPLIT_DEBUGINFO=unpacked
 export CARGO_PROFILE_TEST_SPLIT_DEBUGINFO=unpacked

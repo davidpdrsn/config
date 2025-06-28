@@ -59,7 +59,7 @@ in {
       ncspot
       graphite-cli
 
-      pkgs.master.zed-editor
+      pkgs.master.gemini-cli
 
       # ai
       amp-cli
