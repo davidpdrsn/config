@@ -128,6 +128,7 @@
     ".config/balance/config.toml".source = ./balance/balance.toml;
     ".stylua.toml".source = ./stylua/stylua.toml;
     ".config/ghostty".source = ./ghostty;
+    ".config/alacritty".source = ./alacritty;
   };
 
   programs.home-manager.enable = true;
