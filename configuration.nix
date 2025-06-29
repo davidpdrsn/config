@@ -78,7 +78,8 @@ in {
       "git-prompt"
       "git-remove-merged-branches"
       "replace"
-      # "git-branch-picker"
+      "remove-indentation"
+      "git-branch-picker"
     ];
 
   homebrew = {

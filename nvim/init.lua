@@ -90,6 +90,7 @@ vim.notify = require("notify")
 require("run_tests")
 require("run_project")
 require("run_project")
+require("test_file")
 
 --------------------------------------------
 -- Auto commands
@@ -208,7 +209,7 @@ vim.keymap.set("n", "<leader>Q", ":qall!<cr>", { desc = "Force quit" })
 vim.keymap.set("n", "<leader>cp", function()
     local path = vim.fn.expand("%")
     vim.fn.setreg("+", path)
-    -- vim.notify(path, "info", { title = "Copied to clipboard" })
+    vim.notify(path, "info", { title = "Copied to clipboard" })
 end, { desc = "Copy path to current file" })
 
 -- exit insert mode and save just by hitting ctrl-s
@@ -357,3 +358,47 @@ vim.keymap.set("n", "<leader><leader>", function()
     })
     vim.cmd("startinsert")
 end, { desc = "Run CLI" })
+
+vim.keymap.set("v", "<leader>cp", function()
+    vim.api.nvim_set_hl(0, "FlashyCopy", { bg = "#C3B1E1", fg = "#000000" })
+
+    -- leave visual mode so the marks update
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", false)
+
+    vim.schedule(function()
+        local vstart = vim.fn.getpos("'<")
+        local vend = vim.fn.getpos("'>")
+        local line_start = vstart[2]
+        local line_end = vend[2]
+
+        local bufnr = vim.api.nvim_get_current_buf()
+        local ns_id = vim.api.nvim_create_namespace("copy_highlight")
+
+        local received_data = {}
+
+        local job_id = vim.fn.jobstart({ "remove-indentation" }, {
+            on_stdout = function(job_id, data, event)
+                for _, line in ipairs(data) do
+                    table.insert(received_data, line)
+                end
+            end,
+
+            on_exit = function(job_id, exit_code, event)
+                vim.fn.setreg("+", table.concat(received_data, "\n"))
+
+                for i = line_start, line_end do
+                    vim.api.nvim_buf_add_highlight(bufnr, ns_id, "FlashyCopy", i - 1, 0, -1)
+                end
+                vim.defer_fn(function()
+                    vim.api.nvim_buf_clear_namespace(bufnr, ns_id, 0, -1)
+                end, 200)
+            end,
+        })
+
+        local lines = vim.fn.getline(line_start, line_end)
+        for _, line in pairs(lines) do
+            vim.fn.jobsend(job_id, line .. "\n")
+        end
+        vim.fn.chanclose(job_id, "stdin")
+    end)
+end, { desc = "Copy selection (unindented)" })

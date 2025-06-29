@@ -33,6 +33,7 @@
     git-remove-merged-branches.url = "github:davidpdrsn/git-remove-merged-branches";
     replace.url = "github:davidpdrsn/replace";
     git-branch-picker.url = "github:davidpdrsn/git-branch-picker";
+    remove-indentation.url = "github:davidpdrsn/remove-indentation";
 
     # other dev tools not in nix:
     # - test-command
