@@ -128,7 +128,46 @@
     ".config/balance/config.toml".source = ./balance/balance.toml;
     ".stylua.toml".source = ./stylua/stylua.toml;
     ".config/ghostty".source = ./ghostty;
-    ".config/alacritty".source = ./alacritty;
+  };
+
+  programs.alacritty = {
+    enable = true;
+    theme = "catppuccin_mocha";
+    settings = {
+      window = {
+        padding = {
+          x = 3;
+          y = 3;
+        };
+      };
+      font = {
+        normal = {
+          family = "Iosevka Nerd Font Mono";
+          style = "Light";
+        };
+        bold = {
+          family = "Iosevka Nerd Font Mono";
+          style = "Light";
+        };
+        italic = {
+          family = "Iosevka Nerd Font Mono";
+          style = "Light";
+        };
+        size = 13;
+      };
+      mouse = {
+        hide_when_typing = true;
+      };
+      keyboard = {
+        bindings = [
+          {
+            key = "Enter";
+            mods = "Command";
+            action = "ToggleSimpleFullscreen";
+          }
+        ];
+      };
+    };
   };
 
   programs.home-manager.enable = true;
