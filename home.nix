@@ -133,6 +133,9 @@
     enable = true;
     theme = "catppuccin_mocha";
     settings = {
+      general = {
+        working_directory = "/Users/davidpdrsn/config/";
+      };
       window = {
         padding = {
           x = 3;

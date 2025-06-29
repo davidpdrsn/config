@@ -133,6 +133,7 @@ in {
     show-recents = false;
     showhidden = true;
     slow-motion-allowed = true;
+    autohide-delay = 0.0;
     persistent-apps = [
       # no apps in the dock plz
     ];
@@ -172,7 +173,7 @@ in {
   system.defaults.screencapture.location = "~/Desktop/screenshots/";
 
   # disable the fn key
-  system.defaults.hitoolbox.AppleFnUsageType = "Start Dictation";
+  system.defaults.hitoolbox.AppleFnUsageType = "Do Nothing";
 
   # disable guest account
   system.defaults.loginwindow.GuestEnabled = false;
@@ -190,11 +191,22 @@ in {
   system.startup.chime = false;
 
   # disable all the tiling window stuff in macos
-  system.defaults.WindowManager.EnableStandardClickToShowDesktop = false;
-  system.defaults.WindowManager.EnableTiledWindowMargins = false;
-  system.defaults.WindowManager.EnableTilingByEdgeDrag = false;
-  system.defaults.WindowManager.EnableTilingOptionAccelerator = false;
-  system.defaults.WindowManager.EnableTopTilingByEdgeDrag = false;
+  system.defaults = {
+    WindowManager.EnableStandardClickToShowDesktop = false;
+    WindowManager.EnableTiledWindowMargins = false;
+    WindowManager.EnableTilingByEdgeDrag = false;
+    WindowManager.EnableTilingOptionAccelerator = false;
+    WindowManager.EnableTopTilingByEdgeDrag = false;
+  };
+
+  # system.defaults.CustomSystemPreferences = {
+  #   NSGlobalDomain = {
+  #     TISRomanSwitchState = 1;
+  #   };
+  #   "com.apple.Safari" = {
+  #     "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" = true;
+  #   };
+  # };
 
   # allow using touch id for sudo
   security.pam.services.sudo_local.touchIdAuth = true;
