@@ -111,6 +111,7 @@ alias ds='t "darwin-rebuild switch"'
 alias dbui='nvim +DBUI'
 alias format-lua='stylua --config-path ~/.stylua.toml $(fd .lua)'
 alias claude-json='claude --print --output-format json'
+alias claude-yolo='claude --dangerously-skip-permissions'
 
 # nvim
 alias vi='nvim'
