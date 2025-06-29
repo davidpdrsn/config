@@ -95,7 +95,6 @@ in {
       "airtame"
       "blender"
       "discord"
-      "ghostty"
       "godot-mono"
       "google-chrome"
       "keyboard-maestro"
@@ -109,7 +108,6 @@ in {
       "steam"
       "unnaturalscrollwheels"
       "vlc"
-      # "alacritty"
     ];
     masApps = {
       "Fantastical" = 975937182;
@@ -174,7 +172,7 @@ in {
   system.defaults.screencapture.location = "~/Desktop/screenshots/";
 
   # disable the fn key
-  system.defaults.hitoolbox.AppleFnUsageType = "Do Nothing";
+  system.defaults.hitoolbox.AppleFnUsageType = "Start Dictation";
 
   # disable guest account
   system.defaults.loginwindow.GuestEnabled = false;
