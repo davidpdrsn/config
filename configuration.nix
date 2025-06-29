@@ -109,6 +109,7 @@ in {
       "steam"
       "unnaturalscrollwheels"
       "vlc"
+      "alacritty"
     ];
     masApps = {
       "Fantastical" = 975937182;
