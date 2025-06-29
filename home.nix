@@ -111,6 +111,7 @@
       "--glob=!build"
       "--glob=!builds"
       "--glob=!.cache"
+      "--glob=!.go"
       "--glob=!.direnv"
       "--glob=!.pnpm-global"
       "--glob=!temp"
