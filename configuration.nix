@@ -80,6 +80,7 @@ in {
       "replace"
       "remove-indentation"
       "git-branch-picker"
+      "go-insert-error"
     ];
 
   homebrew = {
