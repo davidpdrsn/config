@@ -34,7 +34,7 @@
     replace.url = "github:davidpdrsn/replace";
     git-branch-picker.url = "github:davidpdrsn/git-branch-picker";
     remove-indentation.url = "github:davidpdrsn/remove-indentation";
-    go-insert-error.url = "github:davidpdrsn/go-insert-error/1ec733b9b48a0017838f02d082111458699bd00b";
+    go-insert-error.url = "github:davidpdrsn/go-insert-error/b4aff99d348f1ba1a1d24c0c9c1447e4a5939a65";
 
     # other dev tools not in nix:
     # - test-command
