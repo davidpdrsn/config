@@ -28,6 +28,7 @@ vim.api.nvim_create_autocmd("FileType", {
       if #lines > 0 then
         local current_line = vim.fn.line(".")
         vim.fn.append(current_line, lines)
+        vim.cmd("write")
       end
     end, { 
       buffer = true, 
