@@ -91,6 +91,7 @@ require("run_tests")
 require("run_project")
 require("run_project")
 require("test_file")
+require("go_error_handling")
 
 --------------------------------------------
 -- Auto commands
