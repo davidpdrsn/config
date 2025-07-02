@@ -119,6 +119,7 @@
       "--glob=!target"
       "--glob=!*\.log"
       "--glob=!*\.DS_Store"
+      "--glob=!*\.js"
       # Because who cares about case!?
       "--smart-case"
     ];
