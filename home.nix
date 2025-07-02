@@ -120,6 +120,7 @@
       "--glob=!*\.log"
       "--glob=!*\.DS_Store"
       "--glob=!*\.js"
+      "--glob=!*\.d\.ts"
       # Because who cares about case!?
       "--smart-case"
     ];
