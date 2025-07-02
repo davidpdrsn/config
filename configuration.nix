@@ -59,6 +59,7 @@ in {
       ncspot
       graphite-cli
       lazydocker
+      neofetch
 
       # ai
       amp-cli
