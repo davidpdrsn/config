@@ -161,7 +161,7 @@
         size = 13;
       };
       mouse = {
-        hide_when_typing = true;
+        hide_when_typing = false;
       };
       keyboard = {
         bindings = [
