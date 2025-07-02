@@ -68,7 +68,7 @@ local start="%(?,%{$fg[green]%}$symbol%{$reset_color%},%{$fg[red]%}$symbol%{$res
 # Function to check if we are in a nix shell
 is_in_nix_shell() {
   if [ -n "$IN_NIX_SHELL" ]; then
-    echo "[nix:$name] "
+    echo "[nix] "
   fi
 }
 
