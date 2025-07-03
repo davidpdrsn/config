@@ -77,7 +77,7 @@ return {
 
             vim.lsp.enable({
                 "csharp_ls",
-                -- "eslint",
+                "eslint",
                 "gopls",
                 "ts_ls",
                 "rust_analyzer",
