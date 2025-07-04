@@ -196,6 +196,10 @@
     enable = true;
     # extraConfig = builtins.readFile ./tmux/tmux.conf;
     prefix = "C-space";
+    mouse = true;
+    historyLimit = 10000;
+    focusEvents = true;
+    escapeTime = 0;
   };
 
   programs.ripgrep = {
