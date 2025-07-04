@@ -10,11 +10,11 @@ export EDITOR='nvim'
 export ANTHROPIC_API_KEY=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
 export GEMINI_API_KEY=AIzaSyA3yQ94vd6WwJSNVOK4dNwXSdojhPzJlRo
 
-export CARGO_PROFILE_DEV_SPLIT_DEBUGINFO=unpacked
-export CARGO_PROFILE_TEST_SPLIT_DEBUGINFO=unpacked
-export CARGO_INCREMENTAL=1
-export CARGO_UNSTABLE_SPARSE_REGISTRY=true
-export CARGO_TERM_COLOR=always
+# export CARGO_PROFILE_DEV_SPLIT_DEBUGINFO=unpacked
+# export CARGO_PROFILE_TEST_SPLIT_DEBUGINFO=unpacked
+# export CARGO_INCREMENTAL=1
+# export CARGO_UNSTABLE_SPARSE_REGISTRY=true
+# export CARGO_TERM_COLOR=always
 
 export BITS_N_WIRES_PLANE_API_KEY=plane_api_ed28cd5eb1304b3eb9607b5a52c11bbd
 export BLENDER_PATH="/Applications/Blender.app/Contents/MacOS/Blender"
