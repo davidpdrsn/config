@@ -109,6 +109,7 @@
       CARGO_TERM_COLOR = "always";
     };
     shellAliases = let
+      neovim = "${pkgs.neovim}/bin/nvim";
     in {
       ".." = "z ..";
       c = "clear";
@@ -137,7 +138,7 @@
       format-lua = "stylua --config-path ~/.stylua.toml $(fd .lua)";
       claude-json = "claude --print --output-format json";
       claude-yolo = "claude --dangerously-skip-permissions";
-      vi = "${pkgs.neovim}/bin/nvim";
+      vi = neovim;
       vim = "nvim";
       vimconflicts = "nvim $(rg -l -. \"[<>=]{7}\")";
       vv = "nvim $(rg --files | fzf)";
