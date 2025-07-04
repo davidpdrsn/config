@@ -200,6 +200,7 @@
     historyLimit = 10000;
     focusEvents = true;
     escapeTime = 0;
+    baseIndex = 1;
   };
 
   programs.ripgrep = {
