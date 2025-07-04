@@ -83,8 +83,25 @@
       enable = true;
     };
     sessionVariables = {
+      EDITOR = "nvim";
+
+      # required for go test containers to work with colima
+      DOCKER_HOST = "unix:///Users/davidpdrsn/.colima/default/docker.sock";
+      TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE = "/var/run/docker.sock";
+
+      BITS_N_WIRES_PLANE_API_KEY = "plane_api_ed28cd5eb1304b3eb9607b5a52c11bbd";
+      BLENDER_PATH = "/Applications/Blender.app/Contents/MacOS/Blender";
+      GODOT_PATH = "/Applications/Godot_mono.app/Contents/MacOS/Godot";
+
       LUN_DEV_DB_PASS = "p!G-inYH3ZxW";
       LUN_PROD_DB_PASS = "G5_t;(CU;)uoqUmQ";
+
+      # lun org keys
+      ANTHROPIC_API_KEY = "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";
+      GEMINI_API_KEY = "AIzaSyA3yQ94vd6WwJSNVOK4dNwXSdojhPzJlRo";
+
+      TERM = "tmux-256color";
+
       CARGO_PROFILE_DEV_SPLIT_DEBUGINFO = "unpacked";
       CARGO_PROFILE_TEST_SPLIT_DEBUGINFO = "unpacked";
       CARGO_INCREMENTAL = 1;
