@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{pkgs, nixpkgs, ...}: {
   # Don't change this value, even when updating home-manager.
   home.stateVersion = "25.05";
 
@@ -136,7 +136,7 @@
       format-lua = "stylua --config-path ~/.stylua.toml $(fd .lua)";
       claude-json = "claude --print --output-format json";
       claude-yolo = "claude --dangerously-skip-permissions";
-      vi = "nvim";
+      # vi = pkgs.nvim;
       vim = "nvim";
       vimconflicts = "nvim $(rg -l -. \"[<>=]{7}\")";
       vv = "nvim $(rg --files | fzf)";
