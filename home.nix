@@ -1,4 +1,4 @@
-{pkgs, nixpkgs, ...}: {
+{pkgs, ...}: {
   # Don't change this value, even when updating home-manager.
   home.stateVersion = "25.05";
 
@@ -108,7 +108,8 @@
       CARGO_UNSTABLE_SPARSE_REGISTRY = "true";
       CARGO_TERM_COLOR = "always";
     };
-    shellAliases = {
+    shellAliases = let
+    in {
       ".." = "z ..";
       c = "clear";
       ca = "cargo";
@@ -136,7 +137,7 @@
       format-lua = "stylua --config-path ~/.stylua.toml $(fd .lua)";
       claude-json = "claude --print --output-format json";
       claude-yolo = "claude --dangerously-skip-permissions";
-      # vi = pkgs.nvim;
+      vi = "${pkgs.neovim}/bin/nvim";
       vim = "nvim";
       vimconflicts = "nvim $(rg -l -. \"[<>=]{7}\")";
       vv = "nvim $(rg --files | fzf)";
