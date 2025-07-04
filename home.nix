@@ -74,14 +74,14 @@
   };
 
   programs.zsh = let
-      nvim = "${pkgs.neovim}/bin/nvim";
-      exa = "${pkgs.eza}/bin/exa";
-      tmux = "${pkgs.tmux}/bin/tmux";
       bat = "${pkgs.bat}/bin/bat";
-      stylua = "${pkgs.stylua}/bin/stylua";
-      rg = "${pkgs.ripgrep}/bin/rg";
-      git = "${pkgs.ripgrep}/bin/git";
       claude = "${pkgs.claude-code}/bin/claude";
+      exa = "${pkgs.eza}/bin/exa";
+      git = "${pkgs.git}/bin/git";
+      nvim = "${pkgs.neovim}/bin/nvim";
+      rg = "${pkgs.ripgrep}/bin/rg";
+      stylua = "${pkgs.stylua}/bin/stylua";
+      tmux = "${pkgs.tmux}/bin/tmux";
   in {
     enable = true;
     initContent = builtins.readFile ./zsh/zshrc;
