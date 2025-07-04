@@ -84,14 +84,10 @@ RPROMPT=$''
 # alias format-lua='stylua --config-path ~/.stylua.toml $(fd .lua)'
 # alias claude-json='claude --print --output-format json'
 # alias claude-yolo='claude --dangerously-skip-permissions'
-
-# # nvim
 # alias vi='nvim'
 # alias vim='nvim'
 # alias vimconflicts='nvim $(rg -l -. "[<>=]{7}")'
 # alias vv='nvim $(rg --files | fzf)'
-
-# # git
 # alias gaa='git add --all'
 # alias gac='git add --all && git commit --verbose'
 # alias gap='git add -p'
