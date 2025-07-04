@@ -1,25 +1,6 @@
 export PATH=$PATH:/Users/davidpdrsn/.cargo/bin
 export PATH=$PATH:/Users/davidpdrsn/.bin
 
-export EDITOR='nvim'
-
-# personal lun key
-# export ANTHROPIC_API_KEY=***REMOVED***
-
-# lun org keys
-export ANTHROPIC_API_KEY=***REMOVED***
-export GEMINI_API_KEY=***REMOVED***
-
-export BITS_N_WIRES_PLANE_API_KEY=***REMOVED***
-export BLENDER_PATH="/Applications/Blender.app/Contents/MacOS/Blender"
-export GODOT_PATH="/Applications/Godot_mono.app/Contents/MacOS/Godot"
-
-export TERM=tmux-256color
-
-# required for go test containers to work with colima
-export DOCKER_HOST="unix://${HOME}/.colima/default/docker.sock"
-export TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE="/var/run/docker.sock"
-
 # open atuin with ctrl-p
 bindkey '^p' atuin-up-search
 
