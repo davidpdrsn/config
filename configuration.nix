@@ -60,6 +60,7 @@ in {
       graphite-cli
       lazydocker
       neofetch
+      jujutsu
 
       # ai
       amp-cli
