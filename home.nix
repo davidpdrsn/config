@@ -108,6 +108,9 @@
       CARGO_UNSTABLE_SPARSE_REGISTRY = "true";
       CARGO_TERM_COLOR = "always";
     };
+    shellAliases = {
+
+    };
   };
 
   programs.atuin = {
