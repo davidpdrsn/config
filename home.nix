@@ -73,6 +73,10 @@
     };
   };
 
+  # programs.neovim = {
+  #   enable = true;
+  # };
+
   programs.zsh = let
     bat = "${pkgs.bat}/bin/bat";
     claude = "${pkgs.claude-code}/bin/claude";

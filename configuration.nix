@@ -42,7 +42,7 @@ in {
       htop
       hyperfine
       jq
-      neovim
+      # neovim
       procs
       stylua
       tokei
