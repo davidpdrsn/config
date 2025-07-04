@@ -52,14 +52,9 @@ in {
       mas
       postgresql
       lldb_20
-      lua-language-server
       yt-dlp
       xh
-      mprocs
-      ncspot
       graphite-cli
-      lazydocker
-      neofetch
       jujutsu
 
       # ai
