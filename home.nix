@@ -76,6 +76,10 @@
   programs.zsh = let
       nvim = "${pkgs.neovim}/bin/nvim";
       exa = "${pkgs.eza}/bin/exa";
+      tmux = "${pkgs.tmux}/bin/tmux";
+      bat = "${pkgs.bat}/bin/bat";
+      stylua = "${pkgs.stylua}/bin/stylua";
+      claude = "${pkgs.claude-code}/bin/claude";
   in {
     enable = true;
     initContent = builtins.readFile ./zsh/zshrc;
@@ -116,7 +120,7 @@
       c = "clear";
       ca = "cargo";
       cd = "z";
-      cat = "bat";
+      cat = bat;
       dt = "cd ~/Desktop";
       diff = "diff --color";
       ea = "cd ~/config && ${nvim} ~/config/configuration.nix";
@@ -128,17 +132,16 @@
       o = "open .";
       b = "/Users/davidpdrsn/.cargo/bin/t build";
       r = "/Users/davidpdrsn/.cargo/bin/t run";
-      tl = "ingestlogs pipe --";
       ci = "/Users/davidpdrsn/.cargo/bin/t \"open ci\"";
-      at = "tmux attach";
+      at = "${tmux} attach";
       godot = "/Applications/Godot_mono.app/Contents/MacOS/Godot";
       x = "/Users/davidpdrsn/code/bits-n-wires/x";
       blender = "/Applications/Blender.app/Contents/MacOS/Blender";
       ds = "t \"darwin-rebuild switch\"";
       dbui = "${nvim} +DBUI";
-      format-lua = "stylua --config-path ~/.stylua.toml $(fd .lua)";
-      claude-json = "claude --print --output-format json";
-      claude-yolo = "claude --dangerously-skip-permissions";
+      format-lua = "${stylua} --config-path ~/.stylua.toml $(fd .lua)";
+      claude-json = "${claude} --print --output-format json";
+      claude-yolo = "${claude} --dangerously-skip-permissions";
       vi = nvim;
       vim = nvim;
       vimconflicts = "${nvim} $(rg -l -. \"[<>=]{7}\")";
