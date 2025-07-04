@@ -73,7 +73,9 @@
     };
   };
 
-  programs.zsh = {
+  programs.zsh = let
+      nvim = "${pkgs.neovim}/bin/nvim";
+  in {
     enable = true;
     initContent = builtins.readFile ./zsh/zshrc;
     autosuggestion = {
@@ -83,7 +85,7 @@
       enable = true;
     };
     sessionVariables = {
-      EDITOR = "nvim";
+      EDITOR = "${nvim}";
 
       # required for go test containers to work with colima
       DOCKER_HOST = "unix:///Users/davidpdrsn/.colima/default/docker.sock";
@@ -108,9 +110,7 @@
       CARGO_UNSTABLE_SPARSE_REGISTRY = "true";
       CARGO_TERM_COLOR = "always";
     };
-    shellAliases = let
-      neovim = "${pkgs.neovim}/bin/nvim";
-    in {
+    shellAliases = {
       ".." = "z ..";
       c = "clear";
       ca = "cargo";
@@ -118,7 +118,7 @@
       cat = "bat";
       dt = "cd ~/Desktop";
       diff = "diff --color";
-      ea = "cd ~/config && nvim ~/config/configuration.nix";
+      ea = "cd ~/config && ${nvim} ~/config/configuration.nix";
       rl = "source ~/.zshrc";
       l = "exa --long --header --git --all --sort name";
       la = "exa -a --long --header --sort name";
@@ -134,14 +134,14 @@
       x = "/Users/davidpdrsn/code/bits-n-wires/x";
       blender = "/Applications/Blender.app/Contents/MacOS/Blender";
       ds = "t \"darwin-rebuild switch\"";
-      dbui = "nvim +DBUI";
+      dbui = "${nvim} +DBUI";
       format-lua = "stylua --config-path ~/.stylua.toml $(fd .lua)";
       claude-json = "claude --print --output-format json";
       claude-yolo = "claude --dangerously-skip-permissions";
-      vi = neovim;
-      vim = "nvim";
-      vimconflicts = "nvim $(rg -l -. \"[<>=]{7}\")";
-      vv = "nvim $(rg --files | fzf)";
+      vi = nvim;
+      vim = nvim;
+      vimconflicts = "${nvim} $(rg -l -. \"[<>=]{7}\")";
+      vv = "${nvim} $(rg --files | fzf)";
       gaa = "git add --all";
       gac = "git add --all && git commit --verbose";
       gap = "git add -p";
