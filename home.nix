@@ -73,9 +73,9 @@
     };
   };
 
-  # programs.neovim = {
-  #   enable = true;
-  # };
+  programs.neovim = {
+    enable = true;
+  };
 
   programs.zsh = let
     bat = "${pkgs.bat}/bin/bat";
