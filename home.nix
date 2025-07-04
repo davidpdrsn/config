@@ -74,14 +74,14 @@
   };
 
   programs.zsh = let
-      bat = "${pkgs.bat}/bin/bat";
-      claude = "${pkgs.claude-code}/bin/claude";
-      exa = "${pkgs.eza}/bin/exa";
-      git = "${pkgs.git}/bin/git";
-      nvim = "${pkgs.neovim}/bin/nvim";
-      rg = "${pkgs.ripgrep}/bin/rg";
-      stylua = "${pkgs.stylua}/bin/stylua";
-      tmux = "${pkgs.tmux}/bin/tmux";
+    bat = "${pkgs.bat}/bin/bat";
+    claude = "${pkgs.claude-code}/bin/claude";
+    exa = "${pkgs.eza}/bin/exa";
+    git = "${pkgs.git}/bin/git";
+    nvim = "${pkgs.neovim}/bin/nvim";
+    rg = "${pkgs.ripgrep}/bin/rg";
+    stylua = "${pkgs.stylua}/bin/stylua";
+    tmux = "${pkgs.tmux}/bin/tmux";
   in {
     enable = true;
     initContent = builtins.readFile ./zsh/zshrc;
@@ -201,6 +201,10 @@
     focusEvents = true;
     escapeTime = 0;
     baseIndex = 1;
+    newSession = true;
+    plugins = with pkgs; [
+      tmuxPlugins.yank
+    ];
   };
 
   programs.ripgrep = {
