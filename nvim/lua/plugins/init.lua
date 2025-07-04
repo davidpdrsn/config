@@ -192,13 +192,13 @@ return {
         end,
     },
     -- arrange windows
-    -- {
-    --     "sindrets/winshift.nvim",
-    --     config = function()
-    --         vim.keymap.set("n", "<leader>w", ":WinShift<cr>", { desc = "Arrange windows" })
-    --         vim.keymap.set("n", "<leader>W", ":WinShift swap<cr>", { desc = "Swap windows" })
-    --     end,
-    -- },
+    {
+        "sindrets/winshift.nvim",
+        config = function()
+            vim.keymap.set("n", "<leader>w", ":WinShift<cr>", { desc = "Arrange windows" })
+            vim.keymap.set("n", "<leader>W", ":WinShift swap<cr>", { desc = "Swap windows" })
+        end,
+    },
     -- snippets
     {
         "L3MON4D3/LuaSnip",
