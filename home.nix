@@ -83,6 +83,8 @@
       enable = true;
     };
     sessionVariables = {
+      LUN_DEV_DB_PASS = "p!G-inYH3ZxW";
+      LUN_PROD_DB_PASS = "G5_t;(CU;)uoqUmQ";
       CARGO_PROFILE_DEV_SPLIT_DEBUGINFO = "unpacked";
       CARGO_PROFILE_TEST_SPLIT_DEBUGINFO = "unpacked";
       CARGO_INCREMENTAL = 1;
