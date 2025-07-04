@@ -194,7 +194,8 @@
 
   programs.tmux = {
     enable = true;
-    extraConfig = builtins.readFile ./tmux/tmux.conf;
+    # extraConfig = builtins.readFile ./tmux/tmux.conf;
+    prefix = "C-space";
   };
 
   programs.ripgrep = {
