@@ -204,6 +204,7 @@
     newSession = true;
     plugins = with pkgs; [
       tmuxPlugins.yank
+      tmuxPlugins.fuzzback
     ];
   };
 
