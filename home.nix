@@ -75,6 +75,7 @@
 
   programs.zsh = let
       nvim = "${pkgs.neovim}/bin/nvim";
+      exa = "${pkgs.eza}/bin/exa";
   in {
     enable = true;
     initContent = builtins.readFile ./zsh/zshrc;
@@ -120,8 +121,8 @@
       diff = "diff --color";
       ea = "cd ~/config && ${nvim} ~/config/configuration.nix";
       rl = "source ~/.zshrc";
-      l = "exa --long --header --git --all --sort name";
-      la = "exa -a --long --header --sort name";
+      l = "${exa} --long --header --git --all --sort name";
+      la = "${exa} -a --long --header --sort name";
       mkdir = "mkdir -p";
       xtask = "cargo xtask";
       o = "open .";
