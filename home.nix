@@ -81,7 +81,7 @@
         name = "David Pedersen";
       };
       ui = {
-        pager = "builtin";
+        pager = ":builtin";
         # pager = "never";
       };
     };
