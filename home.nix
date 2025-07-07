@@ -89,13 +89,11 @@
 
   programs.zellij = {
     enable = true;
+    enableZshIntegration = true;
     settings = {
       theme = "catppuccin-macchiato";
+      simplified_ui = true;
     };
-    # themes.custom.fg = "#ffffff";
-    # themes = {
-    #   "catppuccin-macchiato"
-    # };
   };
 
   programs.neovim = {
