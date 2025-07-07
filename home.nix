@@ -81,8 +81,8 @@
         name = "David Pedersen";
       };
       ui = {
+        default-command = "log";
         pager = ":builtin";
-        # pager = "never";
       };
     };
   };
