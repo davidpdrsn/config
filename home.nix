@@ -99,16 +99,7 @@
     enable = true;
   };
 
-  programs.zsh = let
-    bat = "${pkgs.bat}/bin/bat";
-    claude = "${pkgs.claude-code}/bin/claude";
-    exa = "${pkgs.eza}/bin/exa";
-    git = "${pkgs.git}/bin/git";
-    nvim = "${pkgs.neovim}/bin/nvim";
-    rg = "${pkgs.ripgrep}/bin/rg";
-    stylua = "${pkgs.stylua}/bin/stylua";
-    tmux = "${pkgs.tmux}/bin/tmux";
-  in {
+  programs.zsh = {
     enable = true;
     initContent = builtins.readFile ./zsh/zshrc;
     autosuggestion = {
@@ -118,7 +109,7 @@
       enable = true;
     };
     sessionVariables = {
-      EDITOR = "${nvim}";
+      EDITOR = "nvim";
 
       # required for go test containers to work with colima
       DOCKER_HOST = "unix:///Users/davidpdrsn/.colima/default/docker.sock";
@@ -148,65 +139,65 @@
       c = "clear";
       ca = "cargo";
       cd = "z";
-      cat = bat;
+      cat = "bat";
       dt = "cd ~/Desktop";
       diff = "diff --color";
-      ea = "cd ~/config && ${nvim} ~/config/configuration.nix";
+      ea = "cd ~/config && nvim ~/config/configuration.nix";
       rl = "source ~/.zshrc";
-      l = "${exa} --long --header --git --all --sort name";
-      la = "${exa} -a --long --header --sort name";
+      l = "exa --long --header --git --all --sort name";
+      la = "exa -a --long --header --sort name";
       mkdir = "mkdir -p";
       xtask = "cargo xtask";
       o = "open .";
       b = "/Users/davidpdrsn/.cargo/bin/t build";
       r = "/Users/davidpdrsn/.cargo/bin/t run";
       ci = "/Users/davidpdrsn/.cargo/bin/t \"open ci\"";
-      at = "${tmux} attach";
+      at = "tmux attach";
       godot = "/Applications/Godot_mono.app/Contents/MacOS/Godot";
       x = "/Users/davidpdrsn/code/bits-n-wires/x";
       blender = "/Applications/Blender.app/Contents/MacOS/Blender";
       ds = "t \"darwin-rebuild switch\"";
-      dbui = "${nvim} +DBUI";
-      format-lua = "${stylua} --config-path ~/.stylua.toml $(fd .lua)";
-      claude-json = "${claude} --print --output-format json";
-      claude-yolo = "${claude} --dangerously-skip-permissions";
-      vi = nvim;
-      vim = nvim;
-      vimconflicts = "${nvim} $(${rg} -l -. \"[<>=]{7}\")";
-      vv = "${nvim} $(${rg} --files | fzf)";
-      gaa = "${git} add --all";
-      gac = "${git} add --all && ${git} commit --verbose";
-      gap = "${git} add -p";
-      gb = "${git} branch";
-      gc = "${git} commit --verbose";
-      gcai = "${git} commit --verbose -e -m \"$(git-diff-ai-summarize)\"";
-      gco = "${git} checkout";
-      gcob = "${git} checkout -b";
-      gcof = "${git}-branch-picker checkout";
-      gmf = "${git}-branch-picker merge";
-      git-cargo-lock-conflict = "${git} checkout main -- Cargo.lock";
-      gl = "${git} log --decorate --oneline -20";
-      gll = "${git} log --decorate --oneline";
-      ggl = "${git} log --decorate --oneline -20";
-      ggll = "${git} log --decorate --oneline";
-      gp = "${git} push";
-      gpf = "${git} push --force-with-lease";
-      gd = "${git} diff";
-      d = "${git} diff";
-      gdc = "${git} diff --cached";
-      gr = "${git} reset";
-      grh = "${git} reset --hard";
-      grs = "${git} reset --soft";
-      gca = "${git} commit --amend --verbose";
+      dbui = "nvim +DBUI";
+      format-lua = "stylua --config-path ~/.stylua.toml $(fd .lua)";
+      claude-json = "claude --print --output-format json";
+      claude-yolo = "claude --dangerously-skip-permissions";
+      vi = "nvim";
+      vim = "nvim";
+      vimconflicts = "nvim $(rg -l -. \"[<>=]{7}\")";
+      vv = "nvim $(rg --files | fzf)";
+      gaa = "git add --all";
+      gac = "git add --all && git commit --verbose";
+      gap = "git add -p";
+      gb = "git branch";
+      gc = "git commit --verbose";
+      gcai = "git commit --verbose -e -m \"$(git-diff-ai-summarize)\"";
+      gco = "git checkout";
+      gcob = "git checkout -b";
+      gcof = "git-branch-picker checkout";
+      gmf = "git-branch-picker merge";
+      git-cargo-lock-conflict = "git checkout main -- Cargo.lock";
+      gl = "git log --decorate --oneline -20";
+      gll = "git log --decorate --oneline";
+      ggl = "git log --decorate --oneline -20";
+      ggll = "git log --decorate --oneline";
+      gp = "git push";
+      gpf = "git push --force-with-lease";
+      gd = "git diff";
+      d = "git diff";
+      gdc = "git diff --cached";
+      gr = "git reset";
+      grh = "git reset --hard";
+      grs = "git reset --soft";
+      gca = "git commit --amend --verbose";
       gpr = "cargo fmt -- --check && gh pr create";
-      gpll = "${git} pull";
-      ga = "${git} add";
-      grb = "${git} rebase";
-      gm = "${git} merge";
-      grbc = "${git} rebase --continue";
-      grba = "${git} rebase --abort";
-      grbi = "${git} rebase -i";
-      gs = "${git} show";
+      gpll = "git pull";
+      ga = "git add";
+      grb = "git rebase";
+      gm = "git merge";
+      grbc = "git rebase --continue";
+      grba = "git rebase --abort";
+      grbi = "git rebase -i";
+      gs = "git show";
     };
   };
 
@@ -232,6 +223,7 @@
       "--no-ignore"
       # Using glob patterns to include/exclude files or folders
       "--glob=!.git/*"
+      "--glob=!.jj/*"
       "--glob=!node_modules"
       "--glob=!.godot/*"
       "--glob=!build"
