@@ -87,15 +87,13 @@
     };
   };
 
-  programs.zellij = {
-    enable = true;
-    enableZshIntegration = true;
-    settings = {
-      # theme = "catppuccin-macchiato";
-      # theme = "ayu_light";
-      # simplified_ui = true;
-    };
-  };
+  # programs.zellij = {
+  #   enable = true;
+  #   settings = {
+  #     theme = "catppuccin-frappe";
+  #     simplified_ui = true;
+  #   };
+  # };
 
   programs.neovim = {
     enable = true;
