@@ -87,13 +87,13 @@
     };
   };
 
-  # programs.zellij = {
-  #   enable = true;
-  #   settings = {
-  #     theme = "catppuccin-frappe";
-  #     simplified_ui = true;
-  #   };
-  # };
+  programs.zellij = {
+    enable = false;
+    settings = {
+      theme = "catppuccin-frappe";
+      simplified_ui = true;
+    };
+  };
 
   programs.neovim = {
     enable = true;
