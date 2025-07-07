@@ -55,6 +55,7 @@ in {
       yt-dlp
       xh
       graphite-cli
+      watchexec
 
       # ai
       amp-cli
