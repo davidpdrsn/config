@@ -92,8 +92,8 @@
     enableZshIntegration = true;
     settings = {
       # theme = "catppuccin-macchiato";
-      theme = "ayu_light";
-      simplified_ui = true;
+      # theme = "ayu_light";
+      # simplified_ui = true;
     };
   };
 
