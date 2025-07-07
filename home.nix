@@ -87,6 +87,15 @@
     };
   };
 
+  programs.zellij = {
+    enable = true;
+    settings = {
+      theme = "catppuccin-macchiato";
+    };
+    # themes = {
+    # };
+  };
+
   programs.neovim = {
     enable = true;
   };
