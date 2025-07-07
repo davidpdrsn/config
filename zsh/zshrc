@@ -46,7 +46,7 @@ is_in_nix_shell() {
 
 jj-status() {
     if jj log --no-graph -T '' >/dev/null 2>&1; then
-        jj log -r @ --no-graph -T 'if(bookmarks.len() != 0, bookmarks.map(|b| label("timestamp", b)) ++ " @ ") ++ change_id.short(8) ++ " " ++ commit_id.short(8)'
+        jj log --color always -r @ --no-graph -T '"[" ++ if(bookmarks.len() != 0, bookmarks.map(|b| label("timestamp", b)) ++ " @ ") ++ change_id.short(8) ++ " " ++ commit_id.short(8) ++ "]"'
     fi
 }
 
