@@ -73,6 +73,8 @@
     };
   };
 
+  # programs.jujutsu = {};
+
   programs.neovim = {
     enable = true;
   };

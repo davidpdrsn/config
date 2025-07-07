@@ -55,7 +55,6 @@ in {
       yt-dlp
       xh
       graphite-cli
-      jujutsu
 
       # ai
       amp-cli
