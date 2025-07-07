@@ -44,8 +44,12 @@ is_in_nix_shell() {
   fi
 }
 
+jj-status() {
+    jj log -r @ --no-graph -T 'if(bookmarks.len() != 0, bookmarks.map(|b| label("timestamp", b)) ++ " @ ") ++ change_id.short(8) ++ " " ++ commit_id.short(8)'
+}
+
 PROMPT=$'
-$(smart-pwd-2) $(is_in_nix_shell)%{$reset_color%}$(git-prompt)$(is-vim-running)%{$reset_color%}
+$(smart-pwd-2) $(is_in_nix_shell)%{$reset_color%}$(git-prompt)$(jj-status)$(is-vim-running)%{$reset_color%}
 ${start} '
 RPROMPT=$''
 
