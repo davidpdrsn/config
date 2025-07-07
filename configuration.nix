@@ -54,7 +54,7 @@ in {
       yt-dlp
       xh
       graphite-cli
-      watchexec
+      unixtools.watch
 
       # ai
       amp-cli
