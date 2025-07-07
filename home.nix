@@ -73,7 +73,15 @@
     };
   };
 
-  # programs.jujutsu = {};
+  programs.jujutsu = {
+    enable = true;
+    settings = {
+      user = {
+        email = "david.pdrsn@gmail.com";
+        name = "David Pedersen";
+      };
+    };
+  };
 
   programs.neovim = {
     enable = true;
