@@ -80,6 +80,10 @@
         email = "david.pdrsn@gmail.com";
         name = "David Pedersen";
       };
+      ui = {
+        pager = "builtin";
+        # pager = "never";
+      };
     };
   };
 
