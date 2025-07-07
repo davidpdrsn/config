@@ -198,6 +198,8 @@
       grba = "git rebase --abort";
       grbi = "git rebase -i";
       gs = "git show";
+      jp = "jj git push";
+      jpll = "jj git pull";
     };
   };
 
