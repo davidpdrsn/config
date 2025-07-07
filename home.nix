@@ -92,8 +92,9 @@
     settings = {
       theme = "catppuccin-macchiato";
     };
-    themes.custom.fg = "#ffffff";
+    # themes.custom.fg = "#ffffff";
     # themes = {
+    #   "catppuccin-macchiato"
     # };
   };
 
