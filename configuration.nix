@@ -42,7 +42,6 @@ in {
       htop
       hyperfine
       jq
-      # neovim
       procs
       stylua
       tokei
@@ -72,7 +71,7 @@ in {
     [
       "smart-pwd-2"
       "is-vim-running"
-      "git-prompt"
+      # "git-prompt"
       "git-remove-merged-branches"
       "replace"
       "remove-indentation"
