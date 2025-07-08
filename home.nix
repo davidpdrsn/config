@@ -304,9 +304,9 @@
     mkdir -p .config/cli
     touch .config/cli/history
 
-    # if [ ! -e ~/.config/nvim ]; then
-    #   ln -s ~/config/nvim ~/.config
-    # fi
+    if [ ! -e ~/.config/nvim ]; then
+      ln -s ~/config/nvim ~/.config
+    fi
 
     mkdir -p ~/Desktop/screenshots
     mkdir -p ~/code/dev-tools
