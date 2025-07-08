@@ -84,6 +84,11 @@
         default-command = "log";
         pager = ":builtin";
       };
+      colors = {
+        "diff token" = {underline = false;};
+        "diff removed token" = {bg = "#221111";};
+        "diff added token" = {bg = "#002200";};
+      };
     };
   };
 
