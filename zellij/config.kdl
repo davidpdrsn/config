@@ -233,60 +233,12 @@ load_plugins {
   // "https://example.com/my-plugin.wasm"
 }
 
-// Choose what to do when zellij receives SIGTERM, SIGINT, SIGQUIT or SIGHUP
-// eg. when terminal window with an active zellij session is closed
-// (Requires restart)
-// Options:
-//   - detach (Default)
-//   - quit
-//
-// on_force_close "quit"
-
-//  Send a request for a simplified ui (without arrow fonts) to plugins
-//  Options:
-//    - true
-//    - false (Default)
-//
+on_force_close "quit"
 simplified_ui true
-
-// Choose the path to the default shell that zellij will use for opening new panes
-// Default: $SHELL
-//
-// default_shell "fish"
-
-// Choose the path to override cwd that zellij will use for opening new panes
-//
-// default_cwd ""
-
-// Toggle between having pane frames around the panes
-// Options:
-//   - true (default)
-//   - false
-//
-// pane_frames true
-
-// Toggle between having Zellij lay out panes according to a predefined set of layouts whenever possible
-// Options:
-//   - true (default)
-//   - false
-//
-// auto_layout true
-
-// Whether sessions should be serialized to the cache folder (including their tabs/panes, cwds and running commands) so that they can later be resurrected
-// (Requires restart)
-// Options:
-//   - true (default)
-//   - false
-//
-// session_serialization false
-
-// Whether pane viewports are serialized along with the session, default is false
-// (Requires restart)
-// Options:
-//   - true
-//   - false (default)
-//
-// serialize_pane_viewport true
+pane_frames false
+default_mode "locked"
+mouse_mode true
+show_startup_tips false
 
 // Scrollback lines to serialize along with the pane viewport when serializing sessions, 0
 // defaults to the scrollback size. If this number is higher than the scrollback size, it will
@@ -325,21 +277,6 @@ simplified_ui true
 // (Requires restart)
 //
 // default_layout "compact"
-
-// Choose the mode that zellij uses when starting up.
-// Default: normal
-//
-default_mode "locked"
-
-// Toggle enabling the mouse mode.
-// On certain configurations, or terminals this could
-// potentially interfere with copying text.
-// (Requires restart)
-// Options:
-//   - true (default)
-//   - false
-//
-mouse_mode true
 
 // Configure the scroll back buffer size
 // This is the number of lines zellij stores for each pane in the scroll back
@@ -427,7 +364,3 @@ mouse_mode true
 //
 // show_release_notes false
 
-// Whether to show startup tips on session start
-// Default: true
-//
-// show_startup_tips false
