@@ -99,14 +99,14 @@
       default_mode = "locked";
       keybinds = {
         clear-defaults = true;
-        locked = [
-          {
-            "Ctrl b" = {
+        locked = {
+          "Ctrl b" = [
+            {
               action = "SwitchToMode";
               payload = "Normal";
-            };
-          }
-        ];
+            }
+          ];
+        };
       };
     };
   };
