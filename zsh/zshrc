@@ -56,7 +56,7 @@ jj-status() {
 # RPROMPT=$''
 
 PROMPT=$'$(smart-pwd-2) ${start} '
-RPROMPT=$'$(is_in_nix_shell)$(git-prompt)$(jj-status)'
+RPROMPT=$'%{$reset_color%}$(is_in_nix_shell)$(git-prompt)$(jj-status)%{$reset_color%}'
 
 function g {
   if [[ $# > 0 ]]; then
