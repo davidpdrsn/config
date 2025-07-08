@@ -94,20 +94,20 @@
 
   programs.zellij = {
     enable = true;
-    settings = {
-      simplified_ui = true;
-      default_mode = "locked";
-      keybinds = {
-        locked = {
-          "\"Ctrl b\"" = [
-            {
-              action = "SwitchToMode";
-              payload = "Normal";
-            }
-          ];
-        };
-      };
-    };
+    # settings = {
+    #   simplified_ui = true;
+    #   default_mode = "locked";
+    #   keybinds = {
+    #     locked = {
+    #       "\"Ctrl b\"" = [
+    #         {
+    #           action = "SwitchToMode";
+    #           payload = "Normal";
+    #         }
+    #       ];
+    #     };
+    #   };
+    # };
   };
 
   programs.neovim = {
