@@ -50,9 +50,12 @@ jj-status() {
     fi
 }
 
-PROMPT=$'
-$(smart-pwd-2) $(is_in_nix_shell)%{$reset_color%}$(git-prompt)$(jj-status)$(is-vim-running)%{$reset_color%}
-${start} '
+# PROMPT=$'
+# $(smart-pwd-2) $(is_in_nix_shell)%{$reset_color%}$(git-prompt)$(jj-status)$(is-vim-running)%{$reset_color%}
+# ${start} '
+# RPROMPT=$''
+
+PROMPT=$'${start} '
 RPROMPT=$''
 
 function g {
