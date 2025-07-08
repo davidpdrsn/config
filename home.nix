@@ -98,7 +98,6 @@
       simplified_ui = true;
       default_mode = "locked";
       keybinds = {
-        clear-defaults = true;
         locked = {
           "\"Ctrl b\"" = [
             {
