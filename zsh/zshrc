@@ -55,7 +55,7 @@ jj-status() {
 # ${start} '
 # RPROMPT=$''
 
-PROMPT=$'${start} '
+PROMPT=$'$(smart-pwd-2) ${start} '
 RPROMPT=$''
 
 function g {
