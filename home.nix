@@ -94,20 +94,6 @@
 
   programs.zellij = {
     enable = true;
-    # settings = {
-    #   simplified_ui = true;
-    #   default_mode = "locked";
-    #   keybinds = {
-    #     locked = {
-    #       "\"Ctrl b\"" = [
-    #         {
-    #           action = "SwitchToMode";
-    #           payload = "Normal";
-    #         }
-    #       ];
-    #     };
-    #   };
-    # };
   };
 
   programs.neovim = {
@@ -318,9 +304,9 @@
     mkdir -p .config/cli
     touch .config/cli/history
 
-    if [ ! -e ~/.config/nvim ]; then
-      ln -s ~/config/nvim ~/.config
-    fi
+    # if [ ! -e ~/.config/nvim ]; then
+    #   ln -s ~/config/nvim ~/.config
+    # fi
 
     mkdir -p ~/Desktop/screenshots
     mkdir -p ~/code/dev-tools
