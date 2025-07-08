@@ -55,7 +55,6 @@ in {
       xh
       graphite-cli
       unixtools.watch
-      home-manager
 
       # ai
       amp-cli
