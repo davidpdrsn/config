@@ -250,6 +250,7 @@
   home.file = {
     ".bin".source = ./bin;
     ".config/balance/config.toml".source = ./balance/balance.toml;
+    ".config/zellij/config.kdl".source = ./zellij/config.kdl;
     ".stylua.toml".source = ./stylua/stylua.toml;
   };
 
