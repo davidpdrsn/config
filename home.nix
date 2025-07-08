@@ -100,7 +100,7 @@
       keybinds = {
         clear-defaults = true;
         locked = {
-          "Ctrl b" = [
+          "\"Ctrl b\"" = [
             {
               action = "SwitchToMode";
               payload = "Normal";
