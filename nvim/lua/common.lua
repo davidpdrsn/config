@@ -80,7 +80,7 @@ function M.tmux_wrap(cmd)
                     in_tmux = true,
                     cmd = "tmux send-keys -t "
                         .. n
-                        .. " \"time "
+                        .. " \""
                         .. cmd:gsub("\\", "\\\\"):gsub("\"", "\\\"")
                         .. "\" Enter",
                 }
