@@ -86,6 +86,7 @@ in {
       "airtame"
       "blender"
       "discord"
+      "ghostty"
       "godot-mono"
       "google-chrome"
       "keyboard-maestro"
