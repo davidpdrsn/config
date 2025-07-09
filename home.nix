@@ -309,6 +309,10 @@
       ln -s ~/config/nvim ~/.config
     fi
 
+    if [ ! -e ~/.config/ghostty ]; then
+      ln -s ~/config/ghostty ~/.config
+    fi
+
     mkdir -p ~/Desktop/screenshots
     mkdir -p ~/code/dev-tools
   '';
