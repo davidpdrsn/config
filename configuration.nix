@@ -55,6 +55,7 @@ in {
       xh
       graphite-cli
       unixtools.watch
+      ruby
 
       # ai
       amp-cli
