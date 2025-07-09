@@ -254,6 +254,18 @@
     ".stylua.toml".source = ./stylua/stylua.toml;
   };
 
+  # programs.ghostty = {
+  #   enable = true;
+  #   settings = {
+  #     theme = "catppuccin-mocha";
+  #     font-size = 10;
+  #     keybind = [
+  #       # "ctrl+h=goto_split:left"
+  #       # "ctrl+l=goto_split:right"
+  #     ];
+  #   };
+  # };
+
   programs.alacritty = {
     enable = true;
     theme = "catppuccin_mocha";
