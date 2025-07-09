@@ -34,15 +34,12 @@ in {
       cargo-outdated
       cargo-watch
       curl
-      dust
       eza
       fd
       fzf
       gh
       htop
-      hyperfine
       jq
-      procs
       stylua
       tokei
       tree
@@ -53,14 +50,10 @@ in {
       lldb_20
       yt-dlp
       xh
-      graphite-cli
-      unixtools.watch
       ruby
 
       # ai
-      amp-cli
       claude-code
-      gemini-cli
 
       # docker
       colima
