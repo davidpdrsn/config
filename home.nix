@@ -1,4 +1,8 @@
-{config, lib, ...}: let
+{
+  config,
+  lib,
+  ...
+}: let
   envVars = {
     EDITOR = "nvim";
 
@@ -208,6 +212,11 @@ in {
         # "$package"
         # "$line_break"
         "$directory"
+        "$git_branch"
+        "$git_commit"
+        "$git_state"
+        "$git_metrics"
+        "$git_status"
         "$character"
       ];
       # scan_timeout = 10;
