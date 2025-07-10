@@ -209,7 +209,8 @@ in {
       add_newline = false;
       format = lib.concatStrings [
         "$directory"
-        "$custom"
+        "$custom.foo"
+        "$custom.bar"
         "$line_break"
         "$character"
       ];
