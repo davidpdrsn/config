@@ -25,6 +25,70 @@
     CARGO_UNSTABLE_SPARSE_REGISTRY = "true";
     CARGO_TERM_COLOR = "always";
   };
+  shellAliases = {
+    # aliases that work in all shells
+    ".." = "z ..";
+    c = "clear";
+    ca = "cargo";
+    cd = "z";
+    cat = "bat";
+    dt = "cd ~/Desktop";
+    diff = "diff --color";
+    j = "jj";
+    jd = "jj desc";
+    jn = "jj new";
+    jp = "jj git push";
+    jpll = "jj git pull";
+    gaa = "git add --all";
+    gap = "git add -p";
+    gb = "git branch";
+    gc = "git commit --verbose";
+    gcai = "git commit --verbose -e -m \"$(git-diff-ai-summarize)\"";
+    gco = "git checkout";
+    gcob = "git checkout -b";
+    gcof = "git-branch-picker checkout";
+    gmf = "git-branch-picker merge";
+    git-cargo-lock-conflict = "git checkout main -- Cargo.lock";
+    gl = "git log --decorate --oneline -20";
+    gll = "git log --decorate --oneline";
+    ggl = "git log --decorate --oneline -20";
+    ggll = "git log --decorate --oneline";
+    gp = "git push";
+    gpf = "git push --force-with-lease";
+    gd = "git diff";
+    d = "git diff";
+    gdc = "git diff --cached";
+    gr = "git reset";
+    grh = "git reset --hard";
+    grs = "git reset --soft";
+    gca = "git commit --amend --verbose";
+    gpr = "cargo fmt -- --check && gh pr create";
+    gpll = "git pull";
+    ga = "git add";
+    grb = "git rebase";
+    gm = "git merge";
+    grbc = "git rebase --continue";
+    grba = "git rebase --abort";
+    grbi = "git rebase -i";
+    gs = "git show";
+    l = "exa --long --header --git --all --sort name";
+    la = "exa -a --long --header --sort name";
+    mkdir = "mkdir -p";
+    xtask = "cargo xtask";
+    o = "open .";
+    b = "/Users/davidpdrsn/.cargo/bin/t build";
+    r = "/Users/davidpdrsn/.cargo/bin/t run";
+    at = "tmux attach";
+    godot = "/Applications/Godot_mono.app/Contents/MacOS/Godot";
+    x = "/Users/davidpdrsn/code/bits-n-wires/x";
+    blender = "/Applications/Blender.app/Contents/MacOS/Blender";
+    ds = "t \"darwin-rebuild switch\"";
+    dbui = "nvim +DBUI";
+    claude-json = "claude --print --output-format json";
+    claude-yolo = "claude --dangerously-skip-permissions";
+    vi = "nvim";
+    vim = "nvim";
+  };
 in {
   # Don't change this value, even when updating home-manager.
   home.stateVersion = "25.05";
@@ -141,10 +205,11 @@ in {
       #   max_results = 200;
       # };
     };
-    shellAliases = {
-      # g = "git";
-      # ll = "ls -l";
-    };
+    shellAliases =
+      {
+        # nushell specific aliases
+      }
+      // shellAliases;
     environmentVariables = envVars;
   };
 
@@ -158,76 +223,15 @@ in {
       enable = true;
     };
     sessionVariables = envVars;
-    shellAliases = {
-      ".." = "z ..";
-      c = "clear";
-      ca = "cargo";
-      cd = "z";
-      cat = "bat";
-      dt = "cd ~/Desktop";
-      diff = "diff --color";
-      ea = "cd ~/config && nvim ~/config/configuration.nix";
-      rl = "source ~/.zshrc";
-      l = "exa --long --header --git --all --sort name";
-      la = "exa -a --long --header --sort name";
-      mkdir = "mkdir -p";
-      xtask = "cargo xtask";
-      o = "open .";
-      b = "/Users/davidpdrsn/.cargo/bin/t build";
-      r = "/Users/davidpdrsn/.cargo/bin/t run";
-      ci = "/Users/davidpdrsn/.cargo/bin/t \"open ci\"";
-      at = "tmux attach";
-      godot = "/Applications/Godot_mono.app/Contents/MacOS/Godot";
-      x = "/Users/davidpdrsn/code/bits-n-wires/x";
-      blender = "/Applications/Blender.app/Contents/MacOS/Blender";
-      ds = "t \"darwin-rebuild switch\"";
-      dbui = "nvim +DBUI";
-      format-lua = "stylua --config-path ~/.stylua.toml $(fd .lua)";
-      claude-json = "claude --print --output-format json";
-      claude-yolo = "claude --dangerously-skip-permissions";
-      vi = "nvim";
-      vim = "nvim";
-      vimconflicts = "nvim $(rg -l -. \"[<>=]{7}\")";
-      vv = "nvim $(rg --files | fzf)";
-      gaa = "git add --all";
-      gac = "git add --all && git commit --verbose";
-      gap = "git add -p";
-      gb = "git branch";
-      gc = "git commit --verbose";
-      gcai = "git commit --verbose -e -m \"$(git-diff-ai-summarize)\"";
-      gco = "git checkout";
-      gcob = "git checkout -b";
-      gcof = "git-branch-picker checkout";
-      gmf = "git-branch-picker merge";
-      git-cargo-lock-conflict = "git checkout main -- Cargo.lock";
-      gl = "git log --decorate --oneline -20";
-      gll = "git log --decorate --oneline";
-      ggl = "git log --decorate --oneline -20";
-      ggll = "git log --decorate --oneline";
-      gp = "git push";
-      gpf = "git push --force-with-lease";
-      gd = "git diff";
-      d = "git diff";
-      gdc = "git diff --cached";
-      gr = "git reset";
-      grh = "git reset --hard";
-      grs = "git reset --soft";
-      gca = "git commit --amend --verbose";
-      gpr = "cargo fmt -- --check && gh pr create";
-      gpll = "git pull";
-      ga = "git add";
-      grb = "git rebase";
-      gm = "git merge";
-      grbc = "git rebase --continue";
-      grba = "git rebase --abort";
-      grbi = "git rebase -i";
-      gs = "git show";
-      j = "jj";
-      jd = "jj desc";
-      jn = "jj new";
-      jp = "jj git push";
-      jpll = "jj git pull";
-    };
+    shellAliases =
+      {
+        # zsh specific aliases
+        ea = "cd ~/config && nvim ~/config/configuration.nix";
+        format-lua = "stylua --config-path ~/.stylua.toml $(fd .lua)";
+        vimconflicts = "nvim $(rg -l -. \"[<>=]{7}\")";
+        vv = "nvim $(rg --files | fzf)";
+      }
+      // shellAliases;
   };
 
   programs.atuin = {
