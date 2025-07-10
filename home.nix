@@ -285,7 +285,8 @@
         working_directory = "/Users/davidpdrsn/config/";
       };
       terminal = {
-        shell = "zsh";
+        # shell = "zsh";
+        shell = "nu";
       };
       window = {
         padding = {
