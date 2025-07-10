@@ -209,7 +209,7 @@ in {
       add_newline = false;
       format = lib.concatStrings [
         "$directory"
-        "$my_git_prompt"
+        "$custom.my_git_prompt"
         "$character"
       ];
       right_format = lib.concatStrings [
