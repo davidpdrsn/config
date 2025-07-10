@@ -207,6 +207,7 @@ in {
         # "$line_break"
         # "$package"
         # "$line_break"
+        "$directory"
         "$character"
       ];
       # scan_timeout = 10;
