@@ -218,8 +218,8 @@ in {
       ];
       custom = {
         git_prompt = {
-          command = "git-prompt";
-          format = "[$output]($style)";
+          command = "echo foo";
+          format = "$output";
           when = true;
         };
       };
