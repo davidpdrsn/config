@@ -1,4 +1,4 @@
-{pkgs, ...}: let
+{config, ...}: let
   envVars = {
     EDITOR = "nvim";
 
@@ -193,10 +193,15 @@ in {
     enable = true;
   };
 
+  home.sessionPath = [
+    "${config.home.homeDirectory}/.cargo/bin"
+    "${config.home.homeDirectory}/.bin"
+  ];
+
   programs.nushell = {
     enable = true;
     settings = {
-      # show_banner = false;
+      show_banner = false;
       # completions.external = {
       #   enable = true;
       #   max_results = 200;
@@ -206,6 +211,8 @@ in {
       {
         # nushell specific aliases
         v = "nvim";
+        fg = "job unfreeze";
+        g = "git log --decorate --oneline -20";
       }
       // shellAliases;
     environmentVariables = envVars;
@@ -294,25 +301,9 @@ in {
       };
       terminal = {
         shell = {
-          # The program to run. Your existing login shell (zsh)
-          # which knows how to set up the environment.
           program = "/bin/zsh";
-
-          # Arguments to pass to zsh
-          args = [
-            # 1. Start as a LOGIN shell. This is crucial.
-            #    It forces zsh to source the profile scripts that set up your PATH.
-            "-l"
-            # 2. Execute the following command string.
-            "-c"
-            # 3. The command to run. `exec` replaces the zsh process with nu,
-            #    so you don't have a useless zsh process hanging around.
-            "exec nu"
-          ];
+          args = ["-l" "-c" "exec nu"];
         };
-        # shell = "${pkgs.zsh}/bin/zsh";
-        # shell = "${pkgs.nushell}/bin/nu";
-        # shell = "nu";
       };
       window = {
         padding = {
