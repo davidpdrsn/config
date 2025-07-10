@@ -209,7 +209,7 @@ in {
       add_newline = false;
       format = lib.concatStrings [
         "$directory"
-        "$git_prompt"
+        "$my_git_prompt"
         "$character"
       ];
       right_format = lib.concatStrings [
@@ -221,7 +221,7 @@ in {
         "$nix_shell"
       ];
       custom = {
-        git_prompt = {
+        my_git_prompt = {
           command = "echo foo";
           detect_files = [];
           when = "true";
