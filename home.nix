@@ -217,8 +217,13 @@ in {
         "$nix_shell"
       ];
       custom = {
-        git_prompt = {
+        foo = {
           command = "echo foo";
+          format = "$output";
+          when = true;
+        };
+        bar = {
+          command = "echo bar";
           format = "$output";
           when = true;
         };
