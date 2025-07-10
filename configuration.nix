@@ -51,6 +51,7 @@ in {
       yt-dlp
       xh
       ruby
+      nil
 
       # ai
       claude-code
