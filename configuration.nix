@@ -54,6 +54,7 @@ in {
       xh
       ruby
       nil
+      nushell
 
       # ai
       claude-code
