@@ -210,6 +210,7 @@ in {
       format = lib.concatStrings [
         "$directory"
         "$custom.git_prompt"
+        "$line_break"
         "$character"
       ];
       right_format = lib.concatStrings [
