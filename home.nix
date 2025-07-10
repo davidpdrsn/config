@@ -223,6 +223,9 @@ in {
           when = true;
         };
       };
+      directory = {
+        fish_style_pwd_dir_length = 1;
+      };
       nix_shell = {
         symbol = "";
         format = "[$symbol$state( \($name\))]($style) ";
