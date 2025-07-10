@@ -206,7 +206,7 @@ in {
     enable = true;
     enableNushellIntegration = true;
     settings = {
-      add_newline = false;
+      add_newline = true;
       format = lib.concatStrings [
         "$directory"
         "\${custom.git_prompt}"
