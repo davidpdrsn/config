@@ -230,7 +230,8 @@ in {
       };
       nix_shell = {
         symbol = "";
-        format = "[$symbol$state( \($name\))]($style) ";
+        # format = "[$symbol$state( \($name\))]($style) ";
+        format = "[$name]($style)";
       };
     };
   };
