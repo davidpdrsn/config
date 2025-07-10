@@ -294,8 +294,8 @@ in {
       };
       terminal = {
         # shell = "${pkgs.zsh}/bin/zsh";
-        # shell = "${pkgs.nushell}/bin/nu";
-        shell = "nu";
+        shell = "${pkgs.nushell}/bin/nu";
+        # shell = "nu";
       };
       window = {
         padding = {
