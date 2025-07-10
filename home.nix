@@ -208,7 +208,6 @@ in {
     settings = {
       add_newline = true;
       format = lib.concatStrings [
-        "$line_break"
         "$directory"
         "$git_branch"
         "$git_commit"
