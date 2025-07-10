@@ -219,12 +219,13 @@ in {
       custom = {
         git_prompt = {
           command = "git-prompt";
-          format = "$output";
+          format = "[$output]($style)";
           when = true;
         };
       };
       nix_shell = {
         symbol = "";
+        format = "[$symbol$state( \($name\))]($style) ";
       };
     };
   };
