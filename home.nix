@@ -217,6 +217,7 @@ in {
         "$git_state"
         "$git_metrics"
         "$git_status"
+        "$nix_shell"
         "$character"
       ];
       # scan_timeout = 10;
