@@ -286,7 +286,7 @@
       };
       terminal = {
         # shell = "zsh";
-        shell = pkgs.nushell;
+        shell = "${pkgs.nushell}/bin/nu";
       };
       window = {
         padding = {
