@@ -1,4 +1,31 @@
-{pkgs, ...}: {
+{pkgs, ...}: let
+  envVars = {
+    EDITOR = "nvim";
+
+    # required for go test containers to work with colima
+    DOCKER_HOST = "unix:///Users/davidpdrsn/.colima/default/docker.sock";
+    TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE = "/var/run/docker.sock";
+
+    BITS_N_WIRES_PLANE_API_KEY = "***REMOVED***";
+    BLENDER_PATH = "/Applications/Blender.app/Contents/MacOS/Blender";
+    GODOT_PATH = "/Applications/Godot_mono.app/Contents/MacOS/Godot";
+
+    LUN_DEV_DB_PASS = "***REMOVED***";
+    LUN_PROD_DB_PASS = "***REMOVED***";
+
+    # lun org keys
+    ANTHROPIC_API_KEY = "***REMOVED***";
+    GEMINI_API_KEY = "***REMOVED***";
+
+    TERM = "tmux-256color";
+
+    CARGO_PROFILE_DEV_SPLIT_DEBUGINFO = "unpacked";
+    CARGO_PROFILE_TEST_SPLIT_DEBUGINFO = "unpacked";
+    CARGO_INCREMENTAL = 1;
+    CARGO_UNSTABLE_SPARSE_REGISTRY = "true";
+    CARGO_TERM_COLOR = "always";
+  };
+in {
   # Don't change this value, even when updating home-manager.
   home.stateVersion = "25.05";
 
@@ -132,32 +159,7 @@
     syntaxHighlighting = {
       enable = true;
     };
-    sessionVariables = {
-      EDITOR = "nvim";
-
-      # required for go test containers to work with colima
-      DOCKER_HOST = "unix:///Users/davidpdrsn/.colima/default/docker.sock";
-      TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE = "/var/run/docker.sock";
-
-      BITS_N_WIRES_PLANE_API_KEY = "***REMOVED***";
-      BLENDER_PATH = "/Applications/Blender.app/Contents/MacOS/Blender";
-      GODOT_PATH = "/Applications/Godot_mono.app/Contents/MacOS/Godot";
-
-      LUN_DEV_DB_PASS = "***REMOVED***";
-      LUN_PROD_DB_PASS = "***REMOVED***";
-
-      # lun org keys
-      ANTHROPIC_API_KEY = "***REMOVED***";
-      GEMINI_API_KEY = "***REMOVED***";
-
-      TERM = "tmux-256color";
-
-      CARGO_PROFILE_DEV_SPLIT_DEBUGINFO = "unpacked";
-      CARGO_PROFILE_TEST_SPLIT_DEBUGINFO = "unpacked";
-      CARGO_INCREMENTAL = 1;
-      CARGO_UNSTABLE_SPARSE_REGISTRY = "true";
-      CARGO_TERM_COLOR = "always";
-    };
+    sessionVariables = envVars;
     shellAliases = {
       ".." = "z ..";
       c = "clear";
@@ -289,8 +291,8 @@
         working_directory = "/Users/davidpdrsn/config/";
       };
       terminal = {
-        # shell = "zsh";
-        shell = "${pkgs.nushell}/bin/nu";
+        shell = "${pkgs.zsh}/bin/zsh";
+        # shell = "${pkgs.nushell}/bin/nu";
       };
       window = {
         padding = {
