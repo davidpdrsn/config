@@ -223,6 +223,9 @@ in {
       custom = {
         git_prompt = {
           command = "echo foo";
+          detect_files = [];
+          when = "true";
+          format = " transcending [$output]($style)";
         };
       };
       nix_shell = {
