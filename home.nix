@@ -285,7 +285,6 @@ in {
 
   programs.tmux = {
     enable = true;
-    # shell = "/bin/zsh -l -c exec nu";
     shell = "${pkgs.nushell}/bin/nu";
     extraConfig = builtins.readFile ./tmux/tmux.conf;
   };
