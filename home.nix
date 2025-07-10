@@ -214,6 +214,7 @@ in {
         "$character"
       ];
       right_format = lib.concatStrings [
+        "$cmd_duration"
         "$nix_shell"
       ];
       custom = {
