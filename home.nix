@@ -92,14 +92,14 @@ in {
 
   programs.zoxide = {
     enable = true;
-    enableNushellIntegration = true;
+    # enableNushellIntegration = true;
     enableZshIntegration = true;
   };
 
   programs.direnv = {
     enable = true;
     enableZshIntegration = true;
-    enableNushellIntegration = true;
+    # enableNushellIntegration = true;
     nix-direnv.enable = true;
   };
 
@@ -236,7 +236,7 @@ in {
   programs.atuin = {
     enable = true;
     enableZshIntegration = true;
-    enableNushellIntegration = true;
+    # enableNushellIntegration = true;
     settings = {
       enter_accept = false;
     };
