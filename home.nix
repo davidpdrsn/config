@@ -209,8 +209,8 @@ in {
       add_newline = false;
       format = lib.concatStrings [
         "$directory"
-        "$custom.foo"
-        "$custom.bar"
+        "\${custom.foo}"
+        "\${custom.bar}"
         "$line_break"
         "$character"
       ];
