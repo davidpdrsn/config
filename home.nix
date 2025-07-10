@@ -206,11 +206,9 @@ in {
     enable = true;
     enableNushellIntegration = true;
     settings = {
-      add_newline = false;
+      add_newline = true;
       format = lib.concatStrings [
-        # "$line_break"
-        # "$package"
-        # "$line_break"
+        "$line_break"
         "$directory"
         "$git_branch"
         "$git_commit"
@@ -218,6 +216,7 @@ in {
         "$git_metrics"
         "$git_status"
         "$nix_shell"
+        "$line_break"
         "$character"
       ];
       nix_shell = {
