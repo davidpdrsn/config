@@ -25,6 +25,10 @@ in {
 
   nixpkgs.config.allowUnfree = true;
 
+  users.users.davidpdrsn = {
+    shell = pkgs.zsh;
+  };
+
   environment.systemPackages = with pkgs;
     [
       # general

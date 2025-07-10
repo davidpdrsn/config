@@ -100,6 +100,24 @@
     enable = true;
   };
 
+  programs.nushell = {
+    enable = true;
+    settings = {
+      # show_banner = false;
+      # completions.external = {
+      #   enable = true;
+      #   max_results = 200;
+      # };
+    };
+    shellAliases = {
+      # g = "git";
+      # ll = "ls -l";
+    };
+    environmentVariables = {
+      # ...
+    };
+  };
+
   programs.zsh = {
     enable = true;
     initContent = builtins.readFile ./zsh/zshrc;
