@@ -225,6 +225,7 @@ in {
       };
       directory = {
         fish_style_pwd_dir_length = 1;
+        style = "";
       };
       nix_shell = {
         symbol = "";
