@@ -206,29 +206,28 @@ in {
     enable = true;
     enableNushellIntegration = true;
     settings = {
-      add_newline = true;
+      add_newline = false;
       format = lib.concatStrings [
         "$directory"
-        "$git_branch"
-        "$git_commit"
-        "$git_state"
-        "$git_metrics"
-        "$git_status"
-        "$nix_shell"
-        "$line_break"
+        "$git_prompt"
         "$character"
       ];
       right_format = lib.concatStrings [
+        # "$git_branch"
+        # "$git_commit"
+        # "$git_state"
+        # "$git_metrics"
+        # "$git_status"
         "$nix_shell"
       ];
+      custom = {
+        git_prompt = {
+          command = "git-prompt";
+        };
+      };
       nix_shell = {
         symbol = "";
       };
-      # scan_timeout = 10;
-      # character = {
-      #   success_symbol = "➜";
-      #   error_symbol = "➜";
-      # };
     };
   };
 
