@@ -217,7 +217,7 @@ in {
       ];
       custom = {
         my_git_prompt = {
-          command = "echo foo";
+          command = "/bin/echo foo";
           when = true;
           format = " transcending [$output]($style)";
         };
