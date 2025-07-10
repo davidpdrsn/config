@@ -81,6 +81,7 @@ return {
                 "gopls",
                 "ts_ls",
                 "rust_analyzer",
+                "nil_ls",
             })
         end,
     },
