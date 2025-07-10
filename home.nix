@@ -218,7 +218,6 @@ in {
       custom = {
         my_git_prompt = {
           command = "echo foo";
-          # detect_files = [];
           when = true;
           format = " transcending [$output]($style)";
         };
