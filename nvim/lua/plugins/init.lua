@@ -28,7 +28,14 @@ return {
     -- repeat things with "g."
     { "christoomey/Vim-g-dot" },
     -- copy to system clipboard
-    { "christoomey/vim-system-copy" },
+    {
+        "christoomey/vim-system-copy",
+        config = function()
+            -- otherwise it doesn't work with nushell
+            vim.g["system_copy#copy_command"] = "pbcopy"
+            vim.g["system_copy#paste_command"] = "pbpaste"
+        end,
+    },
     -- seamless navigation between vim and multiplexers
     {
         "mrjones2014/smart-splits.nvim",
