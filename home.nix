@@ -220,6 +220,9 @@ in {
         "$nix_shell"
         "$character"
       ];
+      nix_shell = {
+        symbol = "";
+      };
       # scan_timeout = 10;
       # character = {
       #   success_symbol = "➜";
