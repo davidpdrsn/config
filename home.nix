@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }: let
   envVars = {
@@ -284,7 +285,8 @@ in {
 
   programs.tmux = {
     enable = true;
-    shell = "nu";
+    # shell = "/bin/zsh -l -c exec nu";
+    shell = "${pkgs.nushell}/bin/nu";
     extraConfig = builtins.readFile ./tmux/tmux.conf;
   };
 
