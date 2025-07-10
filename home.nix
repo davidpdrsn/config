@@ -199,6 +199,9 @@
       grba = "git rebase --abort";
       grbi = "git rebase -i";
       gs = "git show";
+      j = "jj";
+      jd = "jj desc";
+      jn = "jj new";
       jp = "jj git push";
       jpll = "jj git pull";
     };
