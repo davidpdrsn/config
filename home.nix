@@ -71,7 +71,6 @@
     gs = "git show";
     l = "exa --long --header --git --all --sort name";
     la = "exa -a --long --header --sort name";
-    mkdir = "mkdir -p";
     xtask = "cargo xtask";
     o = "open .";
     b = "/Users/davidpdrsn/.cargo/bin/t build";
@@ -229,6 +228,7 @@ in {
         vimconflicts = "nvim $(rg -l -. \"[<>=]{7}\")";
         gcai = "git commit --verbose -e -m \"$(git-diff-ai-summarize)\"";
         vv = "nvim $(rg --files | fzf)";
+        mkdir = "mkdir -p";
       }
       // shellAliases;
   };
