@@ -213,18 +213,13 @@ in {
         "$character"
       ];
       right_format = lib.concatStrings [
-        # "$git_branch"
-        # "$git_commit"
-        # "$git_state"
-        # "$git_metrics"
-        # "$git_status"
         "$nix_shell"
       ];
       custom = {
         my_git_prompt = {
           command = "echo foo";
           detect_files = [];
-          when = "true";
+          when = true;
           format = " transcending [$output]($style)";
         };
       };
