@@ -222,7 +222,7 @@ in {
       ];
       custom = {
         git_prompt = {
-          command = "git-prompt";
+          command = "echo foo";
         };
       };
       nix_shell = {
