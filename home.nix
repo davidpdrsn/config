@@ -7,6 +7,7 @@
   programs.direnv = {
     enable = true;
     enableZshIntegration = true;
+    enableNushellIntegration = true;
     nix-direnv.enable = true;
   };
 
@@ -228,6 +229,7 @@
   programs.atuin = {
     enable = true;
     enableZshIntegration = true;
+    enableNushellIntegration = true;
     settings = {
       enter_accept = false;
     };
