@@ -293,8 +293,25 @@ in {
         working_directory = "/Users/davidpdrsn/config/";
       };
       terminal = {
+        shell = {
+          # The program to run. Your existing login shell (zsh)
+          # which knows how to set up the environment.
+          program = "/bin/zsh";
+
+          # Arguments to pass to zsh
+          args = [
+            # 1. Start as a LOGIN shell. This is crucial.
+            #    It forces zsh to source the profile scripts that set up your PATH.
+            "-l"
+            # 2. Execute the following command string.
+            "-c"
+            # 3. The command to run. `exec` replaces the zsh process with nu,
+            #    so you don't have a useless zsh process hanging around.
+            "exec nu"
+          ];
+        };
         # shell = "${pkgs.zsh}/bin/zsh";
-        shell = "${pkgs.nushell}/bin/nu";
+        # shell = "${pkgs.nushell}/bin/nu";
         # shell = "nu";
       };
       window = {
