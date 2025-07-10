@@ -284,6 +284,7 @@ in {
 
   programs.tmux = {
     enable = true;
+    shell = "nu";
     extraConfig = builtins.readFile ./tmux/tmux.conf;
   };
 
