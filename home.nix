@@ -219,6 +219,7 @@ in {
       custom = {
         git_prompt = {
           command = "git-prompt";
+          format = "$output";
           when = true;
         };
       };
