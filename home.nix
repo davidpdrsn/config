@@ -209,17 +209,16 @@ in {
       add_newline = false;
       format = lib.concatStrings [
         "$directory"
-        "$custom.my_git_prompt"
+        "$custom.git_prompt"
         "$character"
       ];
       right_format = lib.concatStrings [
         "$nix_shell"
       ];
       custom = {
-        my_git_prompt = {
-          command = "/bin/echo foo";
+        git_prompt = {
+          command = "git-prompt";
           when = true;
-          format = " transcending [$output]($style)";
         };
       };
       nix_shell = {
