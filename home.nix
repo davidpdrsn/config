@@ -209,8 +209,7 @@ in {
       add_newline = false;
       format = lib.concatStrings [
         "$directory"
-        "\${custom.foo}"
-        "\${custom.bar}"
+        "\${custom.git_prompt}"
         "$line_break"
         "$character"
       ];
@@ -218,13 +217,8 @@ in {
         "$nix_shell"
       ];
       custom = {
-        foo = {
-          command = "echo foo";
-          format = "$output";
-          when = true;
-        };
-        bar = {
-          command = "echo bar";
+        git_prompt = {
+          command = "git-prompt";
           format = "$output";
           when = true;
         };
