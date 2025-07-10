@@ -198,6 +198,14 @@ in {
     "${config.home.homeDirectory}/.bin"
   ];
 
+  programs.starship = {
+    enable = true;
+    enableNushellIntegration = true;
+    settings = {
+      # ...
+    };
+  };
+
   programs.nushell = {
     enable = true;
     settings = {
