@@ -145,9 +145,7 @@ in {
       # g = "git";
       # ll = "ls -l";
     };
-    environmentVariables = {
-      # ...
-    };
+    environmentVariables = envVars;
   };
 
   programs.zsh = {
@@ -291,8 +289,8 @@ in {
         working_directory = "/Users/davidpdrsn/config/";
       };
       terminal = {
-        shell = "${pkgs.zsh}/bin/zsh";
-        # shell = "${pkgs.nushell}/bin/nu";
+        # shell = "${pkgs.zsh}/bin/zsh";
+        shell = "${pkgs.nushell}/bin/nu";
       };
       window = {
         padding = {
