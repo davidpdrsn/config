@@ -25,9 +25,7 @@ in {
 
   nixpkgs.config.allowUnfree = true;
 
-  users.users.davidpdrsn = {
-    shell = pkgs.nushell;
-  };
+  environment.shells = with pkgs; [nushell zsh];
 
   environment.systemPackages = with pkgs;
     [

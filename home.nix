@@ -284,6 +284,9 @@
       general = {
         working_directory = "/Users/davidpdrsn/config/";
       };
+      terminal = {
+        shell = "zsh";
+      };
       window = {
         padding = {
           x = 3;
