@@ -43,7 +43,6 @@
     gap = "git add -p";
     gb = "git branch";
     gc = "git commit --verbose";
-    gcai = "git commit --verbose -e -m \"$(git-diff-ai-summarize)\"";
     gco = "git checkout";
     gcob = "git checkout -b";
     gcof = "git-branch-picker checkout";
@@ -62,7 +61,6 @@
     grh = "git reset --hard";
     grs = "git reset --soft";
     gca = "git commit --amend --verbose";
-    gpr = "cargo fmt -- --check && gh pr create";
     gpll = "git pull";
     ga = "git add";
     grb = "git rebase";
@@ -229,6 +227,7 @@ in {
         ea = "cd ~/config && nvim ~/config/configuration.nix";
         format-lua = "stylua --config-path ~/.stylua.toml $(fd .lua)";
         vimconflicts = "nvim $(rg -l -. \"[<>=]{7}\")";
+        gcai = "git commit --verbose -e -m \"$(git-diff-ai-summarize)\"";
         vv = "nvim $(rg --files | fzf)";
       }
       // shellAliases;
