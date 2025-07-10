@@ -218,6 +218,9 @@ in {
         "$line_break"
         "$character"
       ];
+      right_format = lib.concatStrings [
+        "$nix_shell"
+      ];
       nix_shell = {
         symbol = "";
       };
