@@ -229,8 +229,6 @@ in {
         style = "white";
       };
       nix_shell = {
-        symbol = "";
-        # format = "[$symbol$state( \($name\))]($style) ";
         format = "[$name]($style)";
       };
     };
