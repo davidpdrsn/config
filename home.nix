@@ -205,6 +205,7 @@ in {
     shellAliases =
       {
         # nushell specific aliases
+        v = "nvim";
       }
       // shellAliases;
     environmentVariables = envVars;
@@ -293,7 +294,8 @@ in {
       };
       terminal = {
         # shell = "${pkgs.zsh}/bin/zsh";
-        shell = "${pkgs.nushell}/bin/nu";
+        # shell = "${pkgs.nushell}/bin/nu";
+        shell = "nu";
       };
       window = {
         padding = {
