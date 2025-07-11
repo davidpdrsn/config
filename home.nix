@@ -43,6 +43,7 @@
     jd = "jj desc";
     jn = "jj new";
     jp = "jj git push";
+    jll = "jj log -r 'root()..'";
     jpll = "jj git pull";
     gaa = "git add --all";
     gap = "git add -p";
