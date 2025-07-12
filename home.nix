@@ -205,7 +205,7 @@ in {
               indent("JJ:     ", diff.stat(72)),
             ),
             "\nJJ: ignore-rest\n",
-            diff.color-words(),
+            diff.git(),
           )
         '';
       };
