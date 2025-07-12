@@ -39,7 +39,6 @@
     cat = "bat";
     dt = "cd ~/Desktop";
     diff = "diff --color";
-    j = "jj";
     jd = "jj desc";
     jn = "jj new";
     jp = "jj git push";
@@ -206,7 +205,7 @@ in {
               indent("JJ:     ", diff.stat(72)),
             ),
             "\nJJ: ignore-rest\n",
-            diff.git(),
+            diff.color-words(),
           )
         '';
       };
