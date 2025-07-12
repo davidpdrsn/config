@@ -187,6 +187,9 @@ in {
         "diff added token" = {bg = "#002200";};
         "log commit change_id shortest" = "green";
       };
+      aliases = {
+        "sync-prs" = ["util" "exec" "--" "jj-sync-prs" ""];
+      };
       "template-aliases" = {
         "format_short_signature(signature)" = "";
         # "format_short_commit_id(id)" = "id.shortest()";
