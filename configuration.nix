@@ -3,8 +3,7 @@
   self,
   pkgs,
   ...
-}: let
-in {
+}: {
   # Required because I installed Determinate nix, not vanilla
   nix.enable = false;
 
@@ -24,6 +23,10 @@ in {
   nixpkgs.hostPlatform = "aarch64-darwin";
 
   nixpkgs.config.allowUnfree = true;
+
+  services.postgresql = {
+    enable = true;
+  };
 
   environment.shells = with pkgs; [nushell zsh];
 
