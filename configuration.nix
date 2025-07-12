@@ -24,10 +24,6 @@
 
   nixpkgs.config.allowUnfree = true;
 
-  services.postgresql = {
-    enable = true;
-  };
-
   environment.shells = with pkgs; [nushell zsh];
 
   environment.systemPackages = with pkgs;
