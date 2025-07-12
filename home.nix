@@ -250,10 +250,7 @@ in {
       }
       // shellAliases;
     environmentVariables = envVars;
-    extraConfig = ''
-      # Load completions for the jj command
-      jj util completion nushell | source-env
-    '';
+    extraConfig = builtins.readFile ./jj/jj-completions.nu;
   };
 
   programs.zsh = {
