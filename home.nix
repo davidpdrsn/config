@@ -185,6 +185,14 @@ in {
         "diff token" = {underline = false;};
         "diff removed token" = {bg = "#221111";};
         "diff added token" = {bg = "#002200";};
+        "log commit change_id shortest" = "green";
+      };
+      "template-aliases" = {
+        "format_short_signature(signature)" = "";
+        # "format_short_commit_id(id)" = "id.shortest()";
+        "format_short_commit_id(id)" = "";
+        "format_short_change_id(id)" = "id.shortest()";
+        "format_timestamp(timestamp)" = "";
       };
     };
   };
