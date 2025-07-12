@@ -75,8 +75,6 @@
     grba = "git rebase --abort";
     grbi = "git rebase -i";
     gs = "git show";
-    l = "exa --long --header --git --all --sort name";
-    la = "exa -a --long --header --sort name";
     xtask = "cargo xtask";
     o = "open .";
     b = "/Users/davidpdrsn/.cargo/bin/t build";
@@ -247,6 +245,8 @@ in {
         v = "nvim";
         fg = "job unfreeze";
         g = "git log --decorate --oneline -20";
+        l = "ls";
+        la = "ls -la";
       }
       // shellAliases;
     environmentVariables = envVars;
@@ -271,6 +271,8 @@ in {
         gcai = "git commit --verbose -e -m \"$(git-diff-ai-summarize)\"";
         vv = "nvim $(rg --files | fzf)";
         mkdir = "mkdir -p";
+        l = "exa --long --header --git --all --sort name";
+        la = "exa -a --long --header --sort name";
       }
       // shellAliases;
   };
