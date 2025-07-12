@@ -39,6 +39,7 @@
     cat = "bat";
     dt = "cd ~/Desktop";
     diff = "diff --color";
+    j = "jj";
     jd = "jj desc";
     jn = "jj new";
     jp = "jj git push";
