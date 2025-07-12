@@ -188,7 +188,7 @@ in {
         "log commit change_id shortest" = "green";
       };
       aliases = {
-        "sync-prs" = ["util" "exec" "--" "jj-sync-prs" ""];
+        "sync-prs" = ["util" "exec" "--" "jj-sync-prs"];
       };
       "template-aliases" = {
         "format_short_signature(signature)" = "";
