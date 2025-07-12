@@ -76,7 +76,6 @@
     grbi = "git rebase -i";
     gs = "git show";
     xtask = "cargo xtask";
-    o = "open .";
     b = "/Users/davidpdrsn/.cargo/bin/t build";
     r = "/Users/davidpdrsn/.cargo/bin/t run";
     at = "tmux attach";
@@ -271,6 +270,7 @@ in {
         g = "git log --decorate --oneline -20";
         l = "ls";
         la = "ls -la";
+        o = "^open";
       }
       // shellAliases;
     environmentVariables = envVars;
@@ -297,6 +297,7 @@ in {
         vv = "nvim $(rg --files | fzf)";
         mkdir = "mkdir -p";
         l = "exa --long --header --git --all --sort name";
+        o = "open .";
         la = "exa -a --long --header --sort name";
       }
       // shellAliases;
