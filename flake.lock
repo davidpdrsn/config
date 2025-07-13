@@ -234,22 +234,6 @@
         "type": "github"
       }
     },
-    "nixpkgs-master": {
-      "locked": {
-        "lastModified": 1752077130,
-        "narHash": "sha256-+j1wjNNcBxjnlvy8OB6UnV42inW0x9GnzTHL2e/LpeI=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "939c72712e4544a9e71905b49712054d4e9b5d45",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "master",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "nixpkgs_2": {
       "locked": {
         "lastModified": 1750134718,
@@ -427,7 +411,6 @@
         "nix-darwin": "nix-darwin",
         "nix-homebrew": "nix-homebrew",
         "nixpkgs": "nixpkgs_6",
-        "nixpkgs-master": "nixpkgs-master",
         "remove-indentation": "remove-indentation",
         "replace": "replace",
         "smart-pwd-2": "smart-pwd-2"
