@@ -65,8 +65,7 @@
       docker
     ]
     # personal dev tools
-    ++ builtins.map
-    (pkg: inputs.${pkg}.packages.${pkgs.system}.default)
+    ++ map (pkg: inputs.${pkg}.packages.${pkgs.system}.default)
     [
       "smart-pwd-2"
       "is-vim-running"
