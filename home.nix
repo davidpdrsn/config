@@ -11,6 +11,8 @@
     DOCKER_HOST = "unix:///Users/davidpdrsn/.colima/default/docker.sock";
     TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE = "/var/run/docker.sock";
 
+    GH_AUTH_TOKEN = "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";
+
     BITS_N_WIRES_PLANE_API_KEY = "plane_api_ed28cd5eb1304b3eb9607b5a52c11bbd";
     BLENDER_PATH = "/Applications/Blender.app/Contents/MacOS/Blender";
     GODOT_PATH = "/Applications/Godot_mono.app/Contents/MacOS/Godot";
@@ -92,6 +94,8 @@
 in {
   # Don't change this value, even when updating home-manager.
   home.stateVersion = "25.05";
+
+  programs.home-manager.enable = true;
 
   programs.zoxide = {
     enable = true;
@@ -403,8 +407,6 @@ in {
       };
     };
   };
-
-  programs.home-manager.enable = true;
 
   home.activation.createFolders = ''
     mkdir -p ~/.config
