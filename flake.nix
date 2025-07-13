@@ -3,7 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    nixpkgs-master.url = "github:NixOS/nixpkgs/master";
 
     nix-darwin.url = "github:nix-darwin/nix-darwin/master";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
@@ -55,23 +54,13 @@
     homebrew-core,
     homebrew-cask,
     ...
-  }: let
-    master-overlay = final: prev: {
-      master = import inputs.nixpkgs-master {
-        system = prev.system;
-      };
-    };
-  in {
+  }: {
     darwinConfigurations."Davids-MacBook-Pro" = nix-darwin.lib.darwinSystem {
       specialArgs = {
         inherit inputs self;
       };
 
       modules = [
-        {
-          nixpkgs.overlays = [master-overlay];
-        }
-
         ./configuration.nix
 
         home-manager.darwinModules.home-manager
