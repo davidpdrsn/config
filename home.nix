@@ -1,97 +1,15 @@
 {
   config,
-  lib,
   pkgs,
   ...
-}: let
-  envVars = {
-    EDITOR = "nvim";
+}: {
+  imports = [
+    ./nix/sh.nix
+    ./nix/vcs.nix
+    ./nix/term.nix
+    ./nix/ripgrep.nix
+  ];
 
-    # required for go test containers to work with colima
-    DOCKER_HOST = "unix:///Users/davidpdrsn/.colima/default/docker.sock";
-    TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE = "/var/run/docker.sock";
-
-    GH_AUTH_TOKEN = "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";
-
-    BITS_N_WIRES_PLANE_API_KEY = "plane_api_ed28cd5eb1304b3eb9607b5a52c11bbd";
-    BLENDER_PATH = "/Applications/Blender.app/Contents/MacOS/Blender";
-    GODOT_PATH = "/Applications/Godot_mono.app/Contents/MacOS/Godot";
-
-    LUN_DEV_DB_PASS = "p!G-inYH3ZxW";
-    LUN_PROD_DB_PASS = "G5_t;(CU;)uoqUmQ";
-
-    # lun org keys
-    ANTHROPIC_API_KEY = "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";
-    GEMINI_API_KEY = "AIzaSyA3yQ94vd6WwJSNVOK4dNwXSdojhPzJlRo";
-
-    TERM = "tmux-256color";
-
-    CARGO_PROFILE_DEV_SPLIT_DEBUGINFO = "unpacked";
-    CARGO_PROFILE_TEST_SPLIT_DEBUGINFO = "unpacked";
-    CARGO_INCREMENTAL = 1;
-    CARGO_UNSTABLE_SPARSE_REGISTRY = "true";
-    CARGO_TERM_COLOR = "always";
-  };
-  shellAliases = {
-    # aliases that work in all shells
-    ".." = "z ..";
-    c = "clear";
-    ca = "cargo";
-    cd = "z";
-    cat = "bat";
-    dt = "cd ~/Desktop";
-    diff = "diff --color";
-    j = "jj";
-    jd = "jj desc";
-    jn = "jj new";
-    jp = "jj git push";
-    jll = "jj log -r 'root()..'";
-    jpll = "jj git pull";
-    gaa = "git add --all";
-    gap = "git add -p";
-    gb = "git branch";
-    gc = "git commit --verbose";
-    gco = "git checkout";
-    gcob = "git checkout -b";
-    gcof = "git-branch-picker checkout";
-    gmf = "git-branch-picker merge";
-    git-cargo-lock-conflict = "git checkout main -- Cargo.lock";
-    gl = "git log --decorate --oneline -20";
-    gll = "git log --decorate --oneline";
-    ggl = "git log --decorate --oneline -20";
-    ggll = "git log --decorate --oneline";
-    gp = "git push";
-    gpf = "git push --force-with-lease";
-    gd = "git diff";
-    d = "git diff";
-    gdc = "git diff --cached";
-    gr = "git reset";
-    grh = "git reset --hard";
-    grs = "git reset --soft";
-    gca = "git commit --amend --verbose";
-    gpll = "git pull";
-    ga = "git add";
-    grb = "git rebase";
-    gm = "git merge";
-    grbc = "git rebase --continue";
-    grba = "git rebase --abort";
-    grbi = "git rebase -i";
-    gs = "git show";
-    xtask = "cargo xtask";
-    b = "/Users/davidpdrsn/.cargo/bin/t build";
-    r = "/Users/davidpdrsn/.cargo/bin/t run";
-    at = "tmux attach";
-    godot = "/Applications/Godot_mono.app/Contents/MacOS/Godot";
-    x = "/Users/davidpdrsn/code/bits-n-wires/x";
-    blender = "/Applications/Blender.app/Contents/MacOS/Blender";
-    ds = "t \"darwin-rebuild switch\"";
-    dbui = "nvim +DBUI";
-    claude-json = "claude --print --output-format json";
-    claude-yolo = "claude --dangerously-skip-permissions";
-    vi = "nvim";
-    vim = "nvim";
-  };
-in {
   # Don't change this value, even when updating home-manager.
   home.stateVersion = "25.05";
 
@@ -110,112 +28,6 @@ in {
     nix-direnv.enable = true;
   };
 
-  programs.git = {
-    enable = true;
-    aliases = {
-      wt = "worktree";
-    };
-    extraConfig = {
-      user = {
-        name = "David Pedersen";
-        email = "david.pdrsn@gmail.com";
-      };
-      init = {
-        defaultBranch = "main";
-      };
-      push = {
-        autoSetupRemote = "true";
-      };
-      "filter \"lfs\"" = {
-        smudge = "git-lfs smudge -- %f";
-        process = "git-lfs filter-process";
-        required = "true";
-        clean = "git-lfs clean -- %f";
-      };
-    };
-    lfs = {
-      enable = true;
-    };
-    ignores = [
-      "*.swp"
-      "*.blend1"
-      ".DS_Store"
-      "/tags"
-      ".sass-cache"
-      "xterm-256color.ti"
-      "screen-256color.ti"
-      "tags.lock"
-      "tags.temp"
-      "target"
-      "rusty-tags.vi"
-      ".metals"
-      ".bloop"
-      ".jvmopts"
-      ".bsp"
-      "project/project/"
-      ".vim"
-      "dump.rdb"
-      "/tmp"
-      "bacon.toml"
-      ".reload-on-demand.toml"
-      ".temp"
-      ".tmp"
-      "__debug_bin*"
-      ".direnv"
-      ".claude"
-    ];
-    delta = {
-      enable = true;
-      options = {
-        line-numbers = true;
-        side-by-side = false;
-      };
-    };
-  };
-
-  programs.jujutsu = {
-    enable = true;
-    settings = {
-      user = {
-        email = "david.pdrsn@gmail.com";
-        name = "David Pedersen";
-      };
-      ui = {
-        default-command = "log";
-        pager = ":builtin";
-      };
-      colors = {
-        "diff token" = {underline = false;};
-        "diff removed token" = {bg = "#221111";};
-        "diff added token" = {bg = "#002200";};
-        "log commit change_id shortest" = "green";
-      };
-      aliases = {
-        "sync-prs" = ["util" "exec" "--" "jj-sync-prs"];
-      };
-      "template-aliases" = {
-        "format_short_signature(signature)" = "";
-        # "format_short_commit_id(id)" = "id.shortest()";
-        "format_short_commit_id(id)" = "";
-        "format_short_change_id(id)" = "id.shortest()";
-        "format_timestamp(timestamp)" = "";
-      };
-      templates = {
-        draft_commit_description = ''
-          concat(
-            coalesce(description, default_commit_description, "\n"),
-            surround(
-              "\nJJ: This commit contains the following changes:\n", "",
-              indent("JJ:     ", diff.stat(72)),
-            ),
-            "\nJJ: ignore-rest\n",
-            diff.git(),
-          )
-        '';
-      };
-    };
-  };
-
   programs.zellij = {
     enable = true;
   };
@@ -228,84 +40,6 @@ in {
     "${config.home.homeDirectory}/.cargo/bin"
     "${config.home.homeDirectory}/.bin"
   ];
-
-  programs.starship = {
-    enable = true;
-    enableNushellIntegration = true;
-    settings = {
-      add_newline = true;
-      format = lib.concatStrings [
-        "$directory"
-        "\${custom.git_prompt}"
-        "$line_break"
-        "$character"
-      ];
-      right_format = lib.concatStrings [
-        "$cmd_duration"
-        "$nix_shell"
-      ];
-      custom = {
-        git_prompt = {
-          command = "git-prompt";
-          format = "$output";
-          when = true;
-        };
-      };
-      directory = {
-        fish_style_pwd_dir_length = 1;
-        style = "white";
-      };
-      nix_shell = {
-        format = "[$name]($style)";
-      };
-    };
-  };
-
-  programs.nushell = {
-    enable = true;
-    settings = {
-      show_banner = false;
-    };
-    shellAliases =
-      {
-        # nushell specific aliases
-        v = "nvim";
-        fg = "job unfreeze";
-        g = "git log --decorate --oneline -20";
-        l = "ls";
-        la = "ls -la";
-        o = "^open";
-      }
-      // shellAliases;
-    environmentVariables = envVars;
-    extraConfig = builtins.readFile ./jj/jj-completions.nu;
-  };
-
-  programs.zsh = {
-    enable = true;
-    initContent = builtins.readFile ./zsh/zshrc;
-    autosuggestion = {
-      enable = true;
-    };
-    syntaxHighlighting = {
-      enable = true;
-    };
-    sessionVariables = envVars;
-    shellAliases =
-      {
-        # zsh specific aliases
-        ea = "cd ~/config && nvim ~/config/configuration.nix";
-        format-lua = "stylua --config-path ~/.stylua.toml $(fd .lua)";
-        vimconflicts = "nvim $(rg -l -. \"[<>=]{7}\")";
-        gcai = "git commit --verbose -e -m \"$(git-diff-ai-summarize)\"";
-        vv = "nvim $(rg --files | fzf)";
-        mkdir = "mkdir -p";
-        l = "exa --long --header --git --all --sort name";
-        o = "open .";
-        la = "exa -a --long --header --sort name";
-      }
-      // shellAliases;
-  };
 
   programs.atuin = {
     enable = true;
@@ -322,90 +56,11 @@ in {
     extraConfig = builtins.readFile ./tmux/tmux.conf;
   };
 
-  programs.ripgrep = {
-    enable = true;
-    arguments = [
-      # Search hidden files / directories (e.g. dotfiles) by default
-      "--hidden"
-      # Search files in .gitignore
-      "--no-ignore"
-      # Using glob patterns to include/exclude files or folders
-      "--glob=!.git/*"
-      "--glob=!.jj/*"
-      "--glob=!node_modules"
-      "--glob=!.godot/*"
-      "--glob=!build"
-      "--glob=!builds"
-      "--glob=!.cache"
-      "--glob=!.go"
-      "--glob=!.direnv"
-      "--glob=!.pnpm-global"
-      "--glob=!temp"
-      "--glob=!*\.map"
-      "--glob=!target"
-      "--glob=!*\.log"
-      "--glob=!*\.DS_Store"
-      "--glob=!*\.js"
-      "--glob=!*\.d\.ts"
-      # Because who cares about case!?
-      "--smart-case"
-    ];
-  };
-
   home.file = {
     ".bin".source = ./bin;
     ".config/balance/config.toml".source = ./balance/balance.toml;
     ".config/zellij/config.kdl".source = ./zellij/config.kdl;
     ".stylua.toml".source = ./stylua/stylua.toml;
-  };
-
-  programs.alacritty = {
-    enable = true;
-    theme = "catppuccin_mocha";
-    settings = {
-      general = {
-        working_directory = "/Users/davidpdrsn/config/";
-      };
-      terminal = {
-        shell = {
-          program = "/bin/zsh";
-          args = ["-l" "-c" "exec nu"];
-        };
-      };
-      window = {
-        padding = {
-          x = 3;
-          y = 3;
-        };
-      };
-      font = {
-        normal = {
-          family = "Iosevka Nerd Font Mono";
-          style = "Light";
-        };
-        bold = {
-          family = "Iosevka Nerd Font Mono";
-          style = "Light";
-        };
-        italic = {
-          family = "Iosevka Nerd Font Mono";
-          style = "Light";
-        };
-        size = 13;
-      };
-      mouse = {
-        hide_when_typing = false;
-      };
-      keyboard = {
-        bindings = [
-          {
-            key = "Enter";
-            mods = "Command";
-            action = "ToggleSimpleFullscreen";
-          }
-        ];
-      };
-    };
   };
 
   home.activation.createFolders = ''
