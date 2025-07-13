@@ -49,7 +49,6 @@
       tokei
       tree
       wget
-      rustup
       postgresql
       lldb_20
       yt-dlp
