@@ -36,6 +36,7 @@
       "tags.lock"
       "tags.temp"
       "target"
+      "result"
       "rusty-tags.vi"
       ".metals"
       ".bloop"
