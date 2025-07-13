@@ -9,8 +9,6 @@ return {
             ensure_installed = {
                 -- can't be installed via nix on arm :(
                 "csharp_ls",
-                -- not installed with nix because its updated all the time
-                "rust_analyzer",
             },
         },
         dependencies = {
