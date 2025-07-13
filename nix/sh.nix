@@ -147,6 +147,7 @@ in {
       right_format = lib.concatStrings [
         "$cmd_duration"
         "$nix_shell"
+        "$rust"
       ];
       custom = {
         git_prompt = {
@@ -160,7 +161,10 @@ in {
         style = "white";
       };
       nix_shell = {
-        format = "[$name]($style)";
+        format = "[$name]($style) ";
+      };
+      rust = {
+        format = "[$symbol($version )]($style)";
       };
     };
   };
