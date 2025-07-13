@@ -43,6 +43,7 @@
     # - build-proxy
     # - cli
     # - balance
+    # - jj-sync-prs
   };
 
   outputs = inputs @ {
