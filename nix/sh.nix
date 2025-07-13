@@ -73,18 +73,19 @@
     grbi = "git rebase -i";
     gs = "git show";
     xtask = "cargo xtask";
-    b = "/Users/davidpdrsn/.cargo/bin/t build";
-    r = "/Users/davidpdrsn/.cargo/bin/t run";
+    b = "/Users/davidpdrsn/code/dev-tools/cli/result/bin/t build";
+    r = "/Users/davidpdrsn/code/dev-tools/cli/result/bin/t run";
     at = "tmux attach";
     godot = "/Applications/Godot_mono.app/Contents/MacOS/Godot";
     x = "/Users/davidpdrsn/code/bits-n-wires/x";
     blender = "/Applications/Blender.app/Contents/MacOS/Blender";
-    ds = "t \"darwin-rebuild switch\"";
+    ds = "/Users/davidpdrsn/code/dev-tools/cli/result/bin/t \"darwin-rebuild switch\"";
     dbui = "nvim +DBUI";
     claude-json = "claude --print --output-format json";
     claude-yolo = "claude --dangerously-skip-permissions";
     vi = "nvim";
     vim = "nvim";
+    t = "/Users/davidpdrsn/code/dev-tools/cli/result/bin/t";
   };
 in {
   programs.nushell = {
@@ -147,7 +148,6 @@ in {
       right_format = lib.concatStrings [
         "$cmd_duration"
         "$nix_shell"
-        "$rust"
       ];
       custom = {
         git_prompt = {
@@ -161,10 +161,16 @@ in {
         style = "white";
       };
       nix_shell = {
-        format = "[$name]($style) ";
+        format = "[$name]($style)";
       };
       rust = {
-        format = "[$symbol($version )]($style)";
+        format = "[$symbol($version)]($style)";
+      };
+      golang = {
+        format = "[$symbol($version)]($style)";
+      };
+      nodejs = {
+        format = "[$symbol($version)]($style)";
       };
     };
   };
