@@ -4,6 +4,10 @@
   pkgs,
   ...
 }: {
+  imports = [
+    ./nix/homebrew.nix
+  ];
+
   # Required because I installed Determinate nix, not vanilla
   nix.enable = false;
 
@@ -46,7 +50,6 @@
       tree
       wget
       rustup
-      mas
       postgresql
       lldb_20
       yt-dlp
@@ -74,44 +77,6 @@
       "git-branch-picker"
       "go-insert-error"
     ];
-
-  homebrew = {
-    enable = true;
-    taps = [
-      "homebrew/cask"
-    ];
-    brews = [
-      # install things with nixpkgs if at all possible!
-    ];
-    casks = [
-      "1password"
-      "airtame"
-      "blender"
-      "discord"
-      "ghostty"
-      "godot-mono"
-      "google-chrome"
-      "keyboard-maestro"
-      "keymapp"
-      "obs"
-      "obsidian"
-      "raycast"
-      "signal"
-      "slack"
-      "spotify"
-      "steam"
-      "unnaturalscrollwheels"
-      "vlc"
-    ];
-    masApps = {
-      "Fantastical" = 975937182;
-      "Front and Center" = 1493996622;
-      "Photomator" = 1444636541;
-    };
-    onActivation.cleanup = "zap";
-    onActivation.autoUpdate = true;
-    onActivation.upgrade = true;
-  };
 
   fonts.packages = with pkgs; [
     nerd-fonts.iosevka
