@@ -73,7 +73,7 @@
       ln -s ~/config/nvim ~/.config
     fi
 
-    if [ ! -e ~/.config/hammerspoon ]; then
+    if [ ! -e ~/.hammerspoon ]; then
       ln -s ~/config/hammerspoon ~/.hammerspoon
     fi
 
