@@ -1,7 +1,3 @@
-hs.hotkey.bind({ "cmd", "ctrl" }, "r", function()
-    hs.reload()
-end)
-
 hs.hotkey.bind({ "cmd", "alt" }, "V", function()
     hs.eventtap.keyStrokes(hs.pasteboard.getContents())
 end)
@@ -55,30 +51,39 @@ hs.audiodevice.watcher.setCallback(function()
 end)
 hs.audiodevice.watcher.start()
 
-hs.hotkey.bind(hyper, "r", function()
+local function resizeWindowTo1080p()
     local win = hs.window.focusedWindow()
     if win then
         local screen = win:screen()
         local screenFrame = screen:frame()
-        
+
         local targetWidth = 1920
         local targetHeight = 1080
-        
+
         -- Scale down if window doesn't fit, maintaining 16:9 aspect ratio
         if targetWidth > screenFrame.w or targetHeight > screenFrame.h then
             local scaleX = screenFrame.w / targetWidth
             local scaleY = screenFrame.h / targetHeight
             local scale = math.min(scaleX, scaleY)
-            
+
             targetWidth = targetWidth * scale
             targetHeight = targetHeight * scale
         end
-        
+
         -- Calculate center position
         local x = (screenFrame.w - targetWidth) / 2
         local y = (screenFrame.h - targetHeight) / 2
-        
+
         -- Set frame with calculated position and size
         win:setFrame(hs.geometry.rect(x, y, targetWidth, targetHeight))
     end
-end)
+end
+
+-- Menu bar item
+local menubar = hs.menubar.new()
+menubar:setTitle("🤖")
+menubar:setMenu({
+    { title = "Resize Window to 1080p", fn = resizeWindowTo1080p },
+    { title = "-" },
+    { title = "Reload Config", fn = hs.reload },
+})
