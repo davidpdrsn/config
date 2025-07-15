@@ -8,6 +8,7 @@
     ./nix/vcs.nix
     ./nix/term.nix
     ./nix/ripgrep.nix
+    ./nix/aerospace.nix
   ];
 
   # Don't change this value, even when updating home-manager.
