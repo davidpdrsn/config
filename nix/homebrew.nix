@@ -29,7 +29,6 @@
       "steam"
       "unnaturalscrollwheels"
       "vlc"
-      "hammerspoon"
     ];
     masApps = {
       "Fantastical" = 975937182;

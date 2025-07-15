@@ -73,10 +73,6 @@
       ln -s ~/config/nvim ~/.config
     fi
 
-    if [ ! -e ~/.hammerspoon ]; then
-      ln -s ~/config/hammerspoon ~/.hammerspoon
-    fi
-
     if [ ! -e ~/.config/ghostty ]; then
       ln -s ~/config/ghostty ~/.config
     fi
