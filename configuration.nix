@@ -55,6 +55,7 @@
       xh
       ruby
       nil
+      cmatrix
 
       # ai
       claude-code
@@ -156,14 +157,8 @@
     WindowManager.EnableTopTilingByEdgeDrag = false;
   };
 
-  # system.defaults.CustomSystemPreferences = {
-  #   NSGlobalDomain = {
-  #     TISRomanSwitchState = 1;
-  #   };
-  #   "com.apple.Safari" = {
-  #     "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" = true;
-  #   };
-  # };
+  # enable window dragging with gesture
+  system.defaults.NSGlobalDomain.NSWindowShouldDragOnGesture = true;
 
   # allow using touch id for sudo
   security.pam.services.sudo_local.touchIdAuth = true;
