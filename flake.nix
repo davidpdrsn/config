@@ -22,6 +22,10 @@
       flake = false;
     };
 
+    zjstatus = {
+      url = "github:dj95/zjstatus";
+    };
+
     # private repos requires /etc/nix/nix.custom.conf with gh personal access token (classic)
     # token is in Passwords.app under "GitHub nix-darwin access token"
 
@@ -54,9 +58,19 @@
     nix-homebrew,
     homebrew-core,
     homebrew-cask,
+    zjstatus,
     ...
   }: {
     darwinConfigurations."Davids-MacBook-Pro" = nix-darwin.lib.darwinSystem {
+      inherit (inputs.nixpkgs.lib) attrValues;
+
+      overlays = with inputs; [
+        # ...
+        (final: prev: {
+          zjstatus = zjstatus.packages.${prev.system}.default;
+        })
+      ];
+
       specialArgs = {
         inherit inputs self;
       };

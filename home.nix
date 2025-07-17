@@ -42,7 +42,6 @@
   programs.tmux = {
     enable = true;
     shell = "${pkgs.nushell}/bin/nu";
-    # extraConfig = builtins.readFile ./tmux/tmux.conf;
   };
 
   home.file = {
