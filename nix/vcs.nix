@@ -80,12 +80,8 @@
         "diff added token" = {bg = "#002200";};
         "log commit change_id shortest" = "green";
       };
-      aliases = {
-        "sync-prs" = ["util" "exec" "--" "/Users/davidpdrsn/code/dev-tools/jj-sync-prs/result/bin/jj-sync-prs"];
-      };
       "template-aliases" = {
         "format_short_signature(signature)" = "";
-        # "format_short_commit_id(id)" = "id.shortest()";
         "format_short_commit_id(id)" = "";
         "format_short_change_id(id)" = "id.shortest()";
         "format_timestamp(timestamp)" = "";

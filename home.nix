@@ -1,5 +1,4 @@
 {
-  config,
   pkgs,
   ...
 }: {
@@ -37,11 +36,6 @@
     enable = true;
   };
 
-  home.sessionPath = [
-    "${config.home.homeDirectory}/.cargo/bin"
-    "${config.home.homeDirectory}/.bin"
-  ];
-
   programs.atuin = {
     enable = true;
     enableZshIntegration = true;
@@ -54,7 +48,7 @@
   programs.tmux = {
     enable = true;
     shell = "${pkgs.nushell}/bin/nu";
-    extraConfig = builtins.readFile ./tmux/tmux.conf;
+    # extraConfig = builtins.readFile ./tmux/tmux.conf;
   };
 
   home.file = {
