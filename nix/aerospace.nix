@@ -106,7 +106,7 @@
   };
 in {
   programs.aerospace = {
-    enable = true;
+    enable = false;
     userSettings = aerospaceConfig;
   };
 }

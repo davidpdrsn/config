@@ -348,7 +348,7 @@ vim.keymap.set("n", "<leader><leader>", function()
     local original_win_id = vim.api.nvim_get_current_win()
     vim.cmd("botright 20new")
     local term_buf = vim.api.nvim_get_current_buf()
-    vim.fn.jobstart("/Users/davidpdrsn/code/dev-tools/cli/result/bin/t", {
+    vim.fn.jobstart("/Users/davidpdrsn/.cargo/bin/t", {
         term = true,
         on_exit = function(_, status)
             if status == 0 then
