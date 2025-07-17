@@ -55,7 +55,7 @@
       xh
       ruby
       nil
-      cmatrix
+      watchexec
       autoraise
 
       # ai
@@ -84,6 +84,8 @@
 
   system.keyboard.enableKeyMapping = true;
   system.keyboard.remapCapsLockToControl = true;
+
+  system.defaults.NSGlobalDomain._HIHideMenuBar = false;
 
   system.defaults.dock = {
     autohide = true;
@@ -144,7 +146,8 @@
   system.defaults.trackpad.Clicking = true;
 
   # use scroll gesture with the Ctrl (^) modifier key to zoom
-  system.defaults.universalaccess.closeViewScrollWheelToggle = true;
+  # system.defaults.universalaccess.closeViewScrollWheelToggle = true;
+  # ^^^ sometimes fails to be applied
 
   # disable startup chime
   system.startup.chime = false;

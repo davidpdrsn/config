@@ -3,7 +3,19 @@
     enable = true;
   };
 
-  xdg.configFile."zellij/config.kdl".text = ''
+  xdg.configFile."zellij/config.kdl".text = let
+    gotoTab = ''
+      bind "1" { GoToTab 1; SwitchToMode "Locked"; }
+      bind "2" { GoToTab 2; SwitchToMode "Locked"; }
+      bind "3" { GoToTab 3; SwitchToMode "Locked"; }
+      bind "4" { GoToTab 4; SwitchToMode "Locked"; }
+      bind "5" { GoToTab 5; SwitchToMode "Locked"; }
+      bind "6" { GoToTab 6; SwitchToMode "Locked"; }
+      bind "7" { GoToTab 7; SwitchToMode "Locked"; }
+      bind "8" { GoToTab 8; SwitchToMode "Locked"; }
+      bind "9" { GoToTab 9; SwitchToMode "Locked"; }
+    '';
+  in ''
     on_force_close "quit"
     simplified_ui true
     pane_frames false
@@ -33,6 +45,7 @@
             bind "]" { GoToNextTab; }
             bind "i" { ToggleTab; SwitchToMode "Locked"; }
             bind "Space" "Enter" "Esc" { SwitchToMode "Locked"; }
+            ${gotoTab}
         }
         shared_except "locked" {
             bind "Ctrl Space" { SwitchToMode "Locked"; }
@@ -83,15 +96,7 @@
             bind "b" { BreakPane; SwitchToMode "Locked"; }
             bind "]" { BreakPaneRight; SwitchToMode "Locked"; }
             bind "[" { BreakPaneLeft; SwitchToMode "Locked"; }
-            bind "1" { GoToTab 1; SwitchToMode "Locked"; }
-            bind "2" { GoToTab 2; SwitchToMode "Locked"; }
-            bind "3" { GoToTab 3; SwitchToMode "Locked"; }
-            bind "4" { GoToTab 4; SwitchToMode "Locked"; }
-            bind "5" { GoToTab 5; SwitchToMode "Locked"; }
-            bind "6" { GoToTab 6; SwitchToMode "Locked"; }
-            bind "7" { GoToTab 7; SwitchToMode "Locked"; }
-            bind "8" { GoToTab 8; SwitchToMode "Locked"; }
-            bind "9" { GoToTab 9; SwitchToMode "Locked"; }
+            ${gotoTab}
             bind "Tab" { ToggleTab; SwitchToMode "Locked"; }
             bind "Left" { MoveTab "Left"; }
             bind "Right" { MoveTab "Right"; }

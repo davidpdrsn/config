@@ -85,6 +85,7 @@
     claude-yolo = "claude --dangerously-skip-permissions";
     vi = "nvim";
     vim = "nvim";
+    zz = "zellij";
   };
 in {
   home.sessionPath = [
