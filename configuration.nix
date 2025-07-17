@@ -56,6 +56,7 @@
       ruby
       nil
       cmatrix
+      autoraise
 
       # ai
       claude-code

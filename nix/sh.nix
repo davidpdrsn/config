@@ -1,4 +1,4 @@
-{lib, ...}: let
+{lib, config, ...}: let
   envVars = {
     EDITOR = "nvim";
 
@@ -85,9 +85,13 @@
     claude-yolo = "claude --dangerously-skip-permissions";
     vi = "nvim";
     vim = "nvim";
-    t = "/Users/davidpdrsn/code/dev-tools/cli/result/bin/t";
   };
 in {
+  home.sessionPath = [
+    "${config.home.homeDirectory}/.cargo/bin"
+    "${config.home.homeDirectory}/.bin"
+  ];
+
   programs.nushell = {
     enable = true;
     settings = {
