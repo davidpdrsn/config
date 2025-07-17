@@ -1,7 +1,4 @@
-{
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   imports = [
     ./nix/sh.nix
     ./nix/vcs.nix
@@ -28,10 +25,6 @@
     nix-direnv.enable = true;
   };
 
-  programs.zellij = {
-    enable = true;
-  };
-
   programs.neovim = {
     enable = true;
   };
@@ -49,6 +42,10 @@
     enable = true;
     shell = "${pkgs.nushell}/bin/nu";
     # extraConfig = builtins.readFile ./tmux/tmux.conf;
+  };
+
+  programs.zellij = {
+    enable = true;
   };
 
   home.file = {
