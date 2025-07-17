@@ -20,7 +20,8 @@ keybinds clear-defaults=true {
         bind "k" { MoveFocus "Up"; }
         bind "[" { GoToPreviousTab; }
         bind "]" { GoToNextTab; }
-        bind "Enter" "Esc" { SwitchToMode "Locked"; }
+        bind "i" { ToggleTab; SwitchToMode "Locked"; }
+        bind "Space" "Enter" "Esc" { SwitchToMode "Locked"; }
     }
     locked {
         bind "Ctrl Space" { SwitchToMode "Normal"; }
@@ -30,7 +31,7 @@ keybinds clear-defaults=true {
         bind "Ctrl q" { Quit; }
     }
     shared_except "normal" "renametab" "locked" {
-        bind "Enter" "Esc" { SwitchToMode "Normal"; }
+        bind "Space" "Enter" "Esc" { SwitchToMode "Locked"; }
     }
     shared_except "pane" "renametab" "entersearch" "locked" {
         bind "p" { SwitchToMode "Pane"; }
@@ -39,7 +40,7 @@ keybinds clear-defaults=true {
         bind "h" { SwitchToMode "Move"; }
     }
     shared_except "resize" "renametab" "entersearch" "locked" {
-        bind "n" { SwitchToMode "Resize"; }
+        bind "r" { SwitchToMode "Resize"; }
     }
     shared_except "scroll" "renametab" "entersearch" "locked" {
         bind "s" { SwitchToMode "Scroll"; }
@@ -83,7 +84,7 @@ keybinds clear-defaults=true {
         bind "7" { GoToTab 7; SwitchToMode "Locked"; }
         bind "8" { GoToTab 8; SwitchToMode "Locked"; }
         bind "9" { GoToTab 9; SwitchToMode "Locked"; }
-        bind "Tab" { ToggleTab; }
+        bind "Tab" { ToggleTab; SwitchToMode "Locked"; }
         bind "Left" { MoveTab "Left"; }
         bind "Right" { MoveTab "Right"; }
     }
@@ -113,7 +114,7 @@ keybinds clear-defaults=true {
         bind "s" { SwitchToMode "Normal"; }
         bind "e" { EditScrollback; SwitchToMode "Locked"; }
         bind "s" { SwitchToMode "EnterSearch"; SearchInput 0; }
-        bind "Ctrl c" { ScrollToBottom; SwitchToMode "Normal"; }
+        bind "Ctrl c" { ScrollToBottom; SwitchToMode "Locked"; }
         bind "j" "Down" { ScrollDown; }
         bind "k" "Up" { ScrollUp; }
         bind "Ctrl f" "PageDown" "Right" "l" { PageScrollDown; }

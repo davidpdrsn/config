@@ -5,6 +5,7 @@
     ./nix/term.nix
     ./nix/ripgrep.nix
     ./nix/aerospace.nix
+    ./nix/zellij.nix
   ];
 
   # Don't change this value, even when updating home-manager.
@@ -44,14 +45,9 @@
     # extraConfig = builtins.readFile ./tmux/tmux.conf;
   };
 
-  programs.zellij = {
-    enable = true;
-  };
-
   home.file = {
     ".bin".source = ./bin;
     ".config/balance/config.toml".source = ./balance/balance.toml;
-    ".config/zellij/config.kdl".source = ./zellij/config.kdl;
     ".stylua.toml".source = ./stylua/stylua.toml;
   };
 
