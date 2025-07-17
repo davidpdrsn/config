@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{...}: {
   programs.zellij = {
     enable = true;
   };
@@ -21,6 +21,9 @@
     }
 
     keybinds clear-defaults=true {
+        locked {
+            bind "Ctrl Space" { SwitchToMode "Normal"; }
+        }
         normal {
             bind "h" { MoveFocus "Left"; }
             bind "l" { MoveFocus "Right"; }
@@ -30,9 +33,6 @@
             bind "]" { GoToNextTab; }
             bind "i" { ToggleTab; SwitchToMode "Locked"; }
             bind "Space" "Enter" "Esc" { SwitchToMode "Locked"; }
-        }
-        locked {
-            bind "Ctrl Space" { SwitchToMode "Normal"; }
         }
         shared_except "locked" {
             bind "Ctrl Space" { SwitchToMode "Locked"; }
@@ -188,59 +188,5 @@
             }
         }
     }
-
-    plugins {
-      zjstatus location="file:${pkgs.zjstatus}/bin/zjstatus.wasm" {
-        hide_frame_for_single_pane "false"
-
-        // catppuccin
-        color_bg     "#0e0801"
-        color_fg     "#9399B2"
-        color_fg_dim "#6C7086"
-        color_blue   "#89b4fa"
-        color_orange "#ffc387"
-
-        format_left  "#[fg=$fg,bg=$bg,bold] {session}#[bg=$bg] {tabs}"
-        format_right "{notifications}{command_aws}{command_kubectx}{command_kubens}{datetime}"
-        format_space "#[bg=$bg]"
-
-        notification_format_unread           "#[fg=$blue,bg=$bg,blink]  #[fg=$blue,bg=$bg] {message} "
-        notification_format_no_notifications ""
-        notification_show_interval           "10"
-
-        mode_normal          "#[bg=$blue] "
-        mode_tmux            "#[bg=$orange] "
-        mode_default_to_mode "tmux"
-
-        tab_normal               "#[fg=$fg_dim,bg=$bg] {index} {name} {fullscreen_indicator}{sync_indicator}{floating_indicator}"
-        tab_active               "#[fg=$fg,bg=$bg,bold] {index} {name} {fullscreen_indicator}{sync_indicator}{floating_indicator}"
-        tab_sync_indicator       " "
-        tab_fullscreen_indicator "󰊓 "
-        tab_floating_indicator   "󰹙 "
-
-        command_kubectx_command  "${pkgs.kubectx}/bin/kubectx -c"
-        command_kubectx_format   "#[fg=$fg_dim,bg=$bg,italic]{stdout}#[fg=#424554,bg=$bg]::"
-        command_kubectx_interval "2"
-
-        command_kubens_command  "${pkgs.kubectx}/bin/kubens -c"
-        command_kubens_format   "#[fg=$fg_dim,bg=$bg]{stdout} "
-        command_kubens_interval "2"
-
-        command_aws_command    "${pkgs.fish}/bin/fish -c 'if test $AWS_PROFILE; echo -n \"#[fg=#928374,bg=#1d2021,italic]aws#[fg=#424554,bg=#1d2021]::#[fg=#928374,bg=#1d2021]$AWS_PROFILE  \"; end'"
-        command_aws_format     "{stdout}"
-        command_aws_interval   "2"
-        command_aws_rendermode "dynamic"
-
-        datetime          "#[fg=$fg,bg=$bg] {format} "
-        datetime_format   "%A, %d %b %Y %H:%M"
-        datetime_timezone "Europe/Berlin"
-      }
-
-    // load_plugins {
-    // }
   '';
-
-  # home.file = {
-  #   ".config/zellij/config.kdl".source = ../zellij/config.kdl;
-  # };
 }
