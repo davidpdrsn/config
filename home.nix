@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{pkgs, config, ...}: {
   imports = [
     ./nix/sh.nix
     ./nix/vcs.nix
@@ -48,6 +48,8 @@
     ".bin".source = ./bin;
     ".config/balance/config.toml".source = ./balance/balance.toml;
     ".stylua.toml".source = ./stylua/stylua.toml;
+    ".config/ghostty".source = config.lib.file.mkOutOfStoreSymlink ./ghostty;
+    ".config/nvim".source = config.lib.file.mkOutOfStoreSymlink ./nvim;
   };
 
   home.activation.createFolders = ''
@@ -55,14 +57,6 @@
 
     mkdir -p .config/cli
     touch .config/cli/history
-
-    if [ ! -e ~/.config/nvim ]; then
-      ln -s ~/config/nvim ~/.config
-    fi
-
-    if [ ! -e ~/.config/ghostty ]; then
-      ln -s ~/config/ghostty ~/.config
-    fi
 
     mkdir -p ~/Desktop/screenshots
     mkdir -p ~/code/dev-tools

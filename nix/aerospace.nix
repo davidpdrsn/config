@@ -17,14 +17,9 @@
     };
     on-window-detected = [
       {
+        # make all windows floating
         "if" = {
-          app-id = "com.apple.MobileSMS";
-        };
-        run = ["layout floating"];
-      }
-      {
-        "if" = {
-          app-id = "com.apple.finder";
+          "app-name-regex-substring" = ".*";
         };
         run = ["layout floating"];
       }
