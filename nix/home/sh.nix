@@ -110,12 +110,12 @@ in {
       }
       // shellAliases;
     environmentVariables = envVars;
-    extraConfig = builtins.readFile ../jj/jj-completions.nu;
+    extraConfig = builtins.readFile ./../../jj/jj-completions.nu;
   };
 
   programs.zsh = {
     enable = true;
-    initContent = builtins.readFile ../zsh/zshrc;
+    initContent = builtins.readFile ./../../zsh/zshrc;
     autosuggestion = {
       enable = true;
     };

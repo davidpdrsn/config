@@ -62,7 +62,7 @@
       };
 
       modules = [
-        ./configuration.nix
+        ./nix/machines/macbook-pro/configuration.nix
 
         home-manager.darwinModules.home-manager
         {
@@ -70,7 +70,7 @@
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
 
-          home-manager.users.davidpdrsn = import ./home.nix;
+          home-manager.users.davidpdrsn = import ./nix/home/home.nix;
         }
 
         nix-homebrew.darwinModules.nix-homebrew
