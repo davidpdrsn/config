@@ -4,6 +4,10 @@
   pkgs,
   ...
 }: {
+  imports = [
+    ./../common.nix
+  ];
+
   # Required because I installed Determinate nix, not vanilla
   nix.enable = false;
 
@@ -28,42 +32,12 @@
 
   environment.systemPackages = with pkgs;
     [
-      # general
-      alejandra
-      bat
-      cargo-limit
-      cargo-outdated
-      cargo-watch
-      curl
-      eza
-      fd
-      fzf
-      gh
-      htop
-      jq
-      stylua
-      tokei
-      tree
-      wget
-      postgresql
-      lldb_20
-      yt-dlp
-      xh
-      ruby
-      nil
-      watchexec
       autoraise
       mas
-
-      # ai
-      claude-code
-
-      # docker
-      colima
-      docker
     ]
+    ++
     # personal dev tools
-    ++ map (pkg: inputs.${pkg}.packages.${pkgs.system}.default)
+    map (pkg: inputs.${pkg}.packages.${pkgs.system}.default)
     [
       "smart-pwd-2"
       "is-vim-running"
@@ -101,8 +75,6 @@
       "steam"
       "unnaturalscrollwheels"
       "vlc"
-      "linear-linear"
-      "utm"
     ];
     masApps = {
       "Fantastical" = 975937182;
@@ -113,10 +85,6 @@
     onActivation.autoUpdate = true;
     onActivation.upgrade = true;
   };
-
-  fonts.packages = with pkgs; [
-    nerd-fonts.iosevka
-  ];
 
   system.keyboard.enableKeyMapping = true;
   system.keyboard.remapCapsLockToControl = true;

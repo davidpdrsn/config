@@ -7,8 +7,6 @@ return {
         "mason-org/mason-lspconfig.nvim",
         opts = {
             ensure_installed = {
-                -- can't be installed via nix on arm :(
-                "csharp_ls",
             },
         },
         dependencies = {
@@ -80,6 +78,7 @@ return {
                 "ts_ls",
                 "rust_analyzer",
                 "nil_ls",
+                "clangd",
             })
         end,
     },

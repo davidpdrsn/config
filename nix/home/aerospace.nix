@@ -5,25 +5,25 @@
     accordion-padding = 20;
     gaps = {
       inner = {
-        horizontal = [{monitor."DELL U3223QE" = 10;} 5];
-        vertical = [{monitor."DELL U3223QE" = 10;} 5];
+        horizontal = [{monitor."DELL U3223QE" = 10;} {monitor."LG HDR 4K" = 10;} 5];
+        vertical = [{monitor."DELL U3223QE" = 10;} {monitor."LG HDR 4K" = 10;} 5];
       };
       outer = {
-        top = [{monitor."DELL U3223QE" = 10;} 0];
-        bottom = [{monitor."DELL U3223QE" = 10;} 0];
-        left = [{monitor."DELL U3223QE" = 10;} 0];
-        right = [{monitor."DELL U3223QE" = 10;} 0];
+        top = [{monitor."DELL U3223QE" = 10;} {monitor."LG HDR 4K" = 10;} 0];
+        bottom = [{monitor."DELL U3223QE" = 10;} {monitor."LG HDR 4K" = 10;} 0];
+        left = [{monitor."DELL U3223QE" = 10;} {monitor."LG HDR 4K" = 10;} 0];
+        right = [{monitor."DELL U3223QE" = 10;} {monitor."LG HDR 4K" = 10;} 0];
       };
     };
-    on-window-detected = [
-      {
-        # make all windows floating
-        "if" = {
-          "app-name-regex-substring" = ".*";
-        };
-        run = ["layout floating"];
-      }
-    ];
+    # on-window-detected = [
+    #   {
+    #     # make all windows floating
+    #     "if" = {
+    #       "app-name-regex-substring" = ".*";
+    #     };
+    #     run = ["layout floating"];
+    #   }
+    # ];
     mode = {
       main = {
         binding = {
@@ -67,15 +67,15 @@
           "alt-tab" = "workspace-back-and-forth";
 
           # Move node to workspace
-          "alt-shift-1" = "move-node-to-workspace 1";
-          "alt-shift-2" = "move-node-to-workspace 2";
-          "alt-shift-3" = "move-node-to-workspace 3";
-          "alt-shift-4" = "move-node-to-workspace 4";
-          "alt-shift-5" = "move-node-to-workspace 5";
-          "alt-shift-6" = "move-node-to-workspace 6";
-          "alt-shift-7" = "move-node-to-workspace 7";
-          "alt-shift-8" = "move-node-to-workspace 8";
-          "alt-shift-9" = "move-node-to-workspace 9";
+          "alt-shift-1" = "move-node-to-workspace 1 --focus-follows-window";
+          "alt-shift-2" = "move-node-to-workspace 2 --focus-follows-window";
+          "alt-shift-3" = "move-node-to-workspace 3 --focus-follows-window";
+          "alt-shift-4" = "move-node-to-workspace 4 --focus-follows-window";
+          "alt-shift-5" = "move-node-to-workspace 5 --focus-follows-window";
+          "alt-shift-6" = "move-node-to-workspace 6 --focus-follows-window";
+          "alt-shift-7" = "move-node-to-workspace 7 --focus-follows-window";
+          "alt-shift-8" = "move-node-to-workspace 8 --focus-follows-window";
+          "alt-shift-9" = "move-node-to-workspace 9 --focus-follows-window";
 
           # Move workspace to monitor
           "alt-shift-tab" = "move-workspace-to-monitor --wrap-around next";

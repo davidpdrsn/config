@@ -1,4 +1,4 @@
-{...}: {
+{pkgs, ...}: {
   programs.alacritty = {
     enable = true;
     theme = "catppuccin_mocha";
@@ -8,7 +8,7 @@
       };
       terminal = {
         shell = {
-          program = "/bin/zsh";
+          program = "${pkgs.zsh}/bin/zsh";
           args = ["-l" "-c" "exec nu"];
         };
       };

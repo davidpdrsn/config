@@ -1,5 +1,10 @@
-{lib, config, ...}: let
+{
+  lib,
+  config,
+  ...
+}: let
   envVars = {
+    TERMINAL = "alacritty";
     EDITOR = "nvim";
 
     # required for go test containers to work with colima
@@ -36,12 +41,16 @@
     cat = "bat";
     dt = "cd ~/Desktop";
     diff = "diff --color";
-    j = "jj";
+
+    j = "jj log --limit 10";
+    jc = "jj commit";
     jd = "jj desc";
     jn = "jj new";
+    jb = "jj bookmark";
     jp = "jj git push";
-    jll = "jj log -r 'root()..'";
+    jf = "jj git fetch";
     jpll = "jj git pull";
+
     gaa = "git add --all";
     gap = "git add -p";
     gb = "git branch";

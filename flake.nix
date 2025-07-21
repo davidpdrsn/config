@@ -55,30 +55,36 @@
     homebrew-core,
     homebrew-cask,
     ...
-  }: {
+  }: let
+    # Common arguments for both systems
+    commonArgs = {
+      inherit inputs self;
+      username = "davidpdrsn";
+    };
+
+    homeManagerConfig = {
+      home-manager.useGlobalPkgs = true;
+      home-manager.useUserPackages = true;
+      home-manager.users.davidpdrsn = import ./nix/home/home.nix;
+    };
+  in {
     darwinConfigurations."Davids-MacBook-Pro" = nix-darwin.lib.darwinSystem {
-      specialArgs = {
-        inherit inputs self;
-      };
+      specialArgs = commonArgs;
 
       modules = [
         ./nix/machines/macbook-pro/configuration.nix
 
-        home-manager.darwinModules.home-manager
-        {
-          users.users.davidpdrsn.home = "/Users/davidpdrsn";
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
+        {users.users.${commonArgs.username}.home = "/Users/${commonArgs.username}";}
 
-          home-manager.users.davidpdrsn = import ./nix/home/home.nix;
-        }
+        home-manager.darwinModules.home-manager
+        homeManagerConfig
 
         nix-homebrew.darwinModules.nix-homebrew
         {
           nix-homebrew = {
             enable = true;
             enableRosetta = false;
-            user = "davidpdrsn";
+            user = commonArgs.username;
             taps = {
               "homebrew/homebrew-core" = homebrew-core;
               "homebrew/homebrew-cask" = homebrew-cask;
@@ -86,6 +92,18 @@
             mutableTaps = false;
           };
         }
+      ];
+    };
+
+    nixosConfigurations."nixos" = nixpkgs.lib.nixosSystem {
+      system = "aarch64-linux";
+      specialArgs = commonArgs;
+      modules = [
+        ./nix/machines/nixos-utm/configuration.nix
+        {users.users.${commonArgs.username}.home = "/home/${commonArgs.username}";}
+
+        home-manager.nixosModules.home-manager
+        homeManagerConfig
       ];
     };
   };

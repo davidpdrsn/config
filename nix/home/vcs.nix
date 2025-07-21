@@ -53,6 +53,8 @@
       "__debug_bin*"
       ".direnv"
       ".claude"
+      ".cache"
+      ".jj"
     ];
     delta = {
       enable = true;
