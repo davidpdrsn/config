@@ -1,11 +1,11 @@
 {pkgs, config, ...}: {
   imports = [
-    ./nix/sh.nix
-    ./nix/vcs.nix
-    ./nix/term.nix
-    ./nix/ripgrep.nix
-    ./nix/aerospace.nix
-    ./nix/zellij.nix
+    ./sh.nix
+    ./vcs.nix
+    ./term.nix
+    ./ripgrep.nix
+    ./aerospace.nix
+    ./zellij.nix
   ];
 
   # Don't change this value, even when updating home-manager.
@@ -45,9 +45,9 @@
   };
 
   home.file = {
-    ".bin".source = ./bin;
-    ".config/balance/config.toml".source = ./balance/balance.toml;
-    ".stylua.toml".source = ./stylua/stylua.toml;
+    ".bin".source = ./../../bin;
+    ".config/balance/config.toml".source = ./../../balance/balance.toml;
+    ".stylua.toml".source = ./../../stylua/stylua.toml;
     ".config/ghostty".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/code/config/ghostty";
     ".config/nvim".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/code/config/nvim";
   };
