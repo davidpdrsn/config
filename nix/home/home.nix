@@ -5,7 +5,6 @@
     ./term.nix
     ./ripgrep.nix
     ./aerospace.nix
-    ./zellij.nix
   ];
 
   # Don't change this value, even when updating home-manager.
@@ -44,12 +43,17 @@
     shell = "${pkgs.nushell}/bin/nu";
   };
 
+  programs.zellij = {
+    enable = true;
+  };
+
   home.file = {
     ".bin".source = ./../../bin;
     ".config/balance/config.toml".source = ./../../balance/balance.toml;
     ".stylua.toml".source = ./../../stylua/stylua.toml;
     ".config/ghostty".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/code/config/ghostty";
     ".config/nvim".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/code/config/nvim";
+    ".config/zellij".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/code/config/zellij";
   };
 
   home.activation.createFolders = ''
