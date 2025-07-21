@@ -156,6 +156,7 @@ in {
       format = lib.concatStrings [
         "$directory"
         "\${custom.git_prompt}"
+        "\${custom.jj_current_operation}"
         "$line_break"
         "$character"
       ];
@@ -168,6 +169,13 @@ in {
           command = "git-prompt";
           format = "$output";
           when = true;
+        };
+        jj_current_operation = {
+          command = "jj-current-operation";
+          format = "[$output]($style)";
+          when = true;
+          detect_files = [".jj"];
+          style = "yellow";
         };
       };
       directory = {
