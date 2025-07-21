@@ -48,8 +48,8 @@
     ".bin".source = ./bin;
     ".config/balance/config.toml".source = ./balance/balance.toml;
     ".stylua.toml".source = ./stylua/stylua.toml;
-    ".config/ghostty".source = config.lib.file.mkOutOfStoreSymlink ./ghostty;
-    ".config/nvim".source = config.lib.file.mkOutOfStoreSymlink ./nvim;
+    ".config/ghostty".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/config/ghostty";
+    ".config/nvim".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/config/nvim";
   };
 
   home.activation.createFolders = ''
