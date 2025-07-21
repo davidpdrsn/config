@@ -30,6 +30,7 @@
       "unnaturalscrollwheels"
       "vlc"
       "linear-linear"
+      "utm"
     ];
     masApps = {
       "Fantastical" = 975937182;
