@@ -26,6 +26,7 @@
     watchexec
     btop
     jjui
+    ollama
 
     # ai
     claude-code
