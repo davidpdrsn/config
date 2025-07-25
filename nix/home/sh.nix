@@ -47,7 +47,7 @@
     jd = "jj desc";
     jn = "jj new";
     jb = "jj bookmark";
-    jp = "jj git push";
+    jp = "jj git push --all";
     jf = "jj git fetch";
     jpll = "jj git pull";
 
