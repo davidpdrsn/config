@@ -51,6 +51,7 @@ keybinds clear-defaults=true {
         bind "]" { GoToNextTab; }
         bind "i" { ToggleTab; SwitchToMode "Locked"; }
         bind "Space" "Enter" "Esc" { SwitchToMode "Locked"; }
+        bind "w" { ToggleFloatingPanes; SwitchToMode "Locked"; }
         bind "1" { GoToTab 1; SwitchToMode "Locked"; }
         bind "2" { GoToTab 2; SwitchToMode "Locked"; }
         bind "3" { GoToTab 3; SwitchToMode "Locked"; }
