@@ -1,7 +1,6 @@
 local common = require("common")
 
 -- here is a new change!
--- another change!
 
 --------------------------------------------
 -- General setup
