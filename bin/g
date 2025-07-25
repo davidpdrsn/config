@@ -1,0 +1,8 @@
+#!/bin/sh
+set -e
+
+if [[ $# > 0 ]]; then
+    git $@
+else
+    git status -sb
+fi

@@ -52,15 +52,6 @@ $(smart-pwd-2) $(is_in_nix_shell)%{$reset_color%}$(git-prompt)$(jj-status)$(is-v
 ${start} '
 RPROMPT=$''
 
-function g {
-  if [[ $# > 0 ]]; then
-    git $@
-  else
-    git status -sb
-  fi
-}
-compdef g=git
-
 function v {
   if [[ $# > 0 ]]; then
     nvim $@
