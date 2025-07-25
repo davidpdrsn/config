@@ -27,6 +27,7 @@
     btop
     jjui
     ollama
+    graphviz
 
     # ai
     claude-code
