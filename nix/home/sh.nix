@@ -112,10 +112,10 @@ in {
         # nushell specific aliases
         v = "nvim";
         fg = "job unfreeze";
-        g = "git log --decorate --oneline -20";
         l = "ls";
         la = "ls -la";
         o = "^open";
+        vimconflicts = "zsh -c \"nvim $(t \\\"jj conflicting files\\\")\"";
       }
       // shellAliases;
     environmentVariables = envVars;
