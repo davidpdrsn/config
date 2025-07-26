@@ -1,6 +1,7 @@
 local common = require("common")
 
 -- test3
+-- test4
 
 --------------------------------------------
 -- General setup
