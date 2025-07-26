@@ -60,12 +60,14 @@
     commonArgs = {
       inherit inputs self;
       username = "davidpdrsn";
+      shell = "fish";
     };
 
     homeManagerConfig = {
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
       home-manager.users.davidpdrsn = import ./nix/home/home.nix;
+      home-manager.extraSpecialArgs = commonArgs;
     };
   in {
     darwinConfigurations."Davids-MacBook-Pro" = nix-darwin.lib.darwinSystem {

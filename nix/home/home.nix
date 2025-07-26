@@ -1,4 +1,8 @@
-{pkgs, config, ...}: {
+{
+  pkgs,
+  config,
+  ...
+}: {
   imports = [
     ./sh.nix
     ./vcs.nix
@@ -15,6 +19,7 @@
   programs.zoxide = {
     enable = true;
     enableNushellIntegration = true;
+    enableFishIntegration = true;
     enableZshIntegration = true;
   };
 
@@ -22,6 +27,7 @@
     enable = true;
     enableZshIntegration = true;
     enableNushellIntegration = true;
+    # enableFishIntegration = true;
     nix-direnv.enable = true;
   };
 
@@ -33,6 +39,7 @@
     enable = true;
     enableZshIntegration = true;
     enableNushellIntegration = true;
+    enableFishIntegration = true;
     settings = {
       enter_accept = false;
     };

@@ -4,7 +4,6 @@ pane_frames false
 default_mode "locked"
 mouse_mode true
 show_startup_tips false
-default_shell "nu"
 styled_underlines true
 theme "catppuccin-macchiato"
 

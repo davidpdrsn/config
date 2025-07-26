@@ -28,8 +28,6 @@
 
   nixpkgs.config.allowUnfree = true;
 
-  environment.shells = with pkgs; [nushell zsh];
-
   environment.systemPackages = with pkgs;
     [
       autoraise

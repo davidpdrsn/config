@@ -1,11 +1,13 @@
 {
   lib,
   config,
+  shell,
   ...
 }: let
   envVars = {
     TERMINAL = "alacritty";
     EDITOR = "nvim";
+    SHELL = shell;
 
     # required for go test containers to work with colima
     DOCKER_HOST = "unix:///Users/davidpdrsn/.colima/default/docker.sock";
@@ -102,6 +104,8 @@ in {
     "${config.home.homeDirectory}/.bin"
   ];
 
+  home.sessionVariables = envVars;
+
   programs.nushell = {
     enable = true;
     settings = {
@@ -111,15 +115,28 @@ in {
       {
         # nushell specific aliases
         v = "nvim";
-        fg = "job unfreeze";
         l = "ls";
         la = "ls -la";
+        fg = "job unfreeze";
         o = "^open";
         vimconflicts = "zsh -c \"nvim $(t \\\"jj conflicting files\\\")\"";
       }
       // shellAliases;
-    environmentVariables = envVars;
     extraConfig = builtins.readFile ./../../jj/jj-completions.nu;
+  };
+
+  programs.fish = {
+    enable = true;
+    generateCompletions = true;
+    shellAliases =
+      {
+        # fish specific aliases
+        v = "nvim";
+        l = "exa --long --header --git --all --sort name";
+        la = "exa -a --long --header --sort name";
+        o = "open .";
+      }
+      // shellAliases;
   };
 
   programs.zsh = {
@@ -131,7 +148,6 @@ in {
     syntaxHighlighting = {
       enable = true;
     };
-    sessionVariables = envVars;
     shellAliases =
       {
         # zsh specific aliases
@@ -151,6 +167,7 @@ in {
   programs.starship = {
     enable = true;
     enableNushellIntegration = true;
+    enableFishIntegration = true;
     settings = {
       add_newline = true;
       format = lib.concatStrings [
