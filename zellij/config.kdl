@@ -42,10 +42,13 @@ keybinds clear-defaults=true {
         }
     }
     normal {
-        bind "h" { MoveFocus "Left"; }
-        bind "l" { MoveFocus "Right"; }
-        bind "j" { MoveFocus "Down"; }
-        bind "k" { MoveFocus "Up"; }
+        bind "j" {
+            Run "jjui" {
+                floating true
+            };
+            SwitchToMode "Locked";
+        }
+        bind "x" { CloseFocus; SwitchToMode "Locked"; }
         bind "[" { GoToPreviousTab; }
         bind "]" { GoToNextTab; }
         bind "i" { ToggleTab; SwitchToMode "Locked"; }
@@ -89,16 +92,14 @@ keybinds clear-defaults=true {
     }
     pane {
         bind "p" { SwitchToMode "Normal"; }
-        bind "p" { SwitchFocus; SwitchToMode "Locked"; }
-        bind "n" { NewPane; SwitchToMode "Locked"; }
-        bind "d" { NewPane "Down"; SwitchToMode "Locked"; }
-        bind "r" { NewPane "Right"; SwitchToMode "Locked"; }
+        bind "h" { NewPane "Left"; SwitchToMode "Locked"; }
+        bind "j" { NewPane "Down"; SwitchToMode "Locked"; }
+        bind "k" { NewPane "Up"; SwitchToMode "Locked"; }
+        bind "l" { NewPane "Right"; SwitchToMode "Locked"; }
         bind "x" { CloseFocus; SwitchToMode "Locked"; }
         bind "f" { ToggleFocusFullscreen; SwitchToMode "Locked"; }
-        bind "z" { TogglePaneFrames; SwitchToMode "Locked"; }
         bind "w" { ToggleFloatingPanes; SwitchToMode "Locked"; }
         bind "e" { TogglePaneEmbedOrFloating; SwitchToMode "Locked"; }
-        bind "i" { TogglePanePinned; SwitchToMode "Locked"; }
     }
     tab {
         bind "t" { SwitchToMode "Normal"; }
