@@ -306,6 +306,13 @@ vim.cmd([[
 common.lsp_format_leader_command("rust")
 common.lsp_format_leader_command("go")
 
+vim.api.nvim_create_autocmd("BufWritePre", {
+    pattern = "*.go",
+    callback = function(ev)
+        vim.lsp.buf.format({ async = true })
+    end,
+})
+
 common.custom_format_leader_command("cs", function(path)
     return { "dotnet", "csharpier", path }
 end)
@@ -328,7 +335,7 @@ end, { desc = "Send current line to tmux" })
 
 vim.keymap.set("v", "<leader>v", function()
     -- leave visual mode so the marks update
-    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Esc>', true, false, true), 'n', false)
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", false)
 
     vim.schedule(function()
         local vstart = vim.fn.getpos("'<")
