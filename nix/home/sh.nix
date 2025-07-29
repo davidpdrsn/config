@@ -44,7 +44,7 @@
     dt = "cd ~/Desktop";
     diff = "diff --color";
 
-    j = "jj log --limit 10";
+    j = "jjui";
     jc = "jj commit";
     jd = "jj desc";
     jn = "jj new";
