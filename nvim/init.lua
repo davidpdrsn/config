@@ -309,7 +309,7 @@ common.lsp_format_leader_command("go")
 vim.api.nvim_create_autocmd("BufWritePre", {
     pattern = "*.go",
     callback = function(ev)
-        vim.lsp.buf.format({ async = true })
+        vim.lsp.buf.format({ async = false })
     end,
 })
 
