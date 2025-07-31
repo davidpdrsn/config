@@ -29,6 +29,7 @@
     ollama
     graphviz
     ripgrep-all
+    mergiraf
 
     # ai
     claude-code
