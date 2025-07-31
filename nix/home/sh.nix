@@ -44,7 +44,7 @@
     dt = "cd ~/Desktop";
     diff = "diff --color";
 
-    j = "jjui";
+    j = "jjui -revset \"present(@) | ancestors(immutable_heads().., 2) | present(trunk()) | ancestors(trunk(), 10)\"";
     jc = "jj commit";
     jd = "jj desc";
     jn = "jj new";
