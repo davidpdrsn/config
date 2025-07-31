@@ -96,6 +96,7 @@ keybinds clear-defaults=true {
         bind "j" { NewPane "Down"; SwitchToMode "Locked"; }
         bind "k" { NewPane "Up"; SwitchToMode "Locked"; }
         bind "l" { NewPane "Right"; SwitchToMode "Locked"; }
+        bind "n" { NewPane; SwitchToMode "Locked"; }
         bind "x" { CloseFocus; SwitchToMode "Locked"; }
         bind "f" { ToggleFocusFullscreen; SwitchToMode "Locked"; }
         bind "w" { ToggleFloatingPanes; SwitchToMode "Locked"; }
