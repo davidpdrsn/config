@@ -28,6 +28,7 @@
     jjui
     ollama
     graphviz
+    ripgrep-all
 
     # ai
     claude-code
