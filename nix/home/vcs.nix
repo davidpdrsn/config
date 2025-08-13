@@ -86,7 +86,6 @@
         "format_short_signature(signature)" = "";
         "format_short_commit_id(id)" = "id.shortest()";
         "format_short_change_id(id)" = "id.shortest()";
-        "format_timestamp(timestamp)" = "";
       };
       templates = {
         draft_commit_description = ''
