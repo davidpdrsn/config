@@ -17,7 +17,6 @@
     tokei
     tree
     wget
-    postgresql
     lldb_20
     yt-dlp
     xh
