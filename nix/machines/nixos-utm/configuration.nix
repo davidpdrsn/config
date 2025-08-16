@@ -35,14 +35,14 @@
       font pango:Iosevka_Nerd_Font 10
 
       # Automatically open a terminal on login
-      exec ${pkgs.alacritty}/bin/alacritty
+      exec ${pkgs.ghostty}/bin/ghostty
 
       # Autostart the clipboard manager
       exec --no-startup-id copyq
 
       # --- Keybindings ---
       # Start a terminal
-      bindsym $mod+Return exec ${pkgs.alacritty}/bin/alacritty
+      bindsym $mod+Return exec ${pkgs.ghostty}/bin/ghostty
 
       # Kill focused window
       bindsym $mod+Shift+q kill

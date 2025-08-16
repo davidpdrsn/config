@@ -1,9 +1,12 @@
 font-family = "Iosevka Nerd Font Mono"
+font-style = "Medium"
 font-style-bold = false
 font-style-italic = false
 font-style-bold-italic = false
-font-size = 14
+font-size = 13
 theme = "catppuccin-mocha"
+cursor-style = block
+shell-integration-features = no-cursor
 cursor-invert-fg-bg = true
 mouse-hide-while-typing = true
 window-padding-x = 3

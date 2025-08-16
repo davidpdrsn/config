@@ -1,6 +1,6 @@
 {pkgs, shell, ...}: {
   programs.alacritty = {
-    enable = true;
+    enable = false;
     theme = "catppuccin_mocha";
     settings = {
       general = {

@@ -5,7 +5,7 @@
   ...
 }: let
   envVars = {
-    TERMINAL = "alacritty";
+    TERMINAL = "ghostty";
     EDITOR = "nvim";
     SHELL = shell;
 
