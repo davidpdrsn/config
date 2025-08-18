@@ -84,8 +84,8 @@
     grbi = "git rebase -i";
     gs = "git show";
     xtask = "cargo xtask";
-    b = "/Users/davidpdrsn/code/dev-tools/cli/result/bin/t build";
-    r = "/Users/davidpdrsn/code/dev-tools/cli/result/bin/t run";
+    b = "t build";
+    r = "t run";
     at = "tmux attach";
     godot = "/Applications/Godot_mono.app/Contents/MacOS/Godot";
     x = "/Users/davidpdrsn/code/bits-n-wires/x";
