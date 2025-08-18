@@ -1,7 +1,6 @@
 {pkgs, ...}: {
   environment.systemPackages = with pkgs; [
     # general
-    alejandra
     bat
     cargo-limit
     cargo-outdated
@@ -17,18 +16,13 @@
     tokei
     tree
     wget
-    lldb_20
-    yt-dlp
-    xh
-    ruby
-    nil
-    watchexec
-    btop
+    ruby_3_4
     jjui
-    ollama
-    graphviz
     ripgrep-all
     mergiraf
+
+    alejandra # nix formatter
+    nil # nix language server
 
     # ai
     claude-code
