@@ -36,10 +36,8 @@
   };
   shellAliases = {
     # aliases that work in all shells
-    ".." = "z ..";
     c = "clear";
     ca = "cargo";
-    cd = "z";
     cat = "bat";
     dt = "cd ~/Desktop";
     diff = "diff --color";
@@ -88,7 +86,6 @@
     r = "t run";
     at = "tmux attach";
     godot = "/Applications/Godot_mono.app/Contents/MacOS/Godot";
-    x = "/Users/davidpdrsn/code/bits-n-wires/x";
     blender = "/Applications/Blender.app/Contents/MacOS/Blender";
     ds = "/Users/davidpdrsn/code/dev-tools/cli/result/bin/t \"darwin-rebuild switch\"";
     dbui = "nvim +DBUI";
@@ -135,6 +132,9 @@ in {
         l = "exa --long --header --git --all --sort name";
         la = "exa -a --long --header --sort name";
         o = "open .";
+        # to not confuse claude-code
+        ".." = "z ..";
+        cd = "z";
       }
       // shellAliases;
   };
