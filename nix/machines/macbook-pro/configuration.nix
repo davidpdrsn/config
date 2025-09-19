@@ -62,6 +62,7 @@
     casks = [
       "1password"
       "blender"
+      "bluesnooze"
       "discord"
       "ghostty"
       "godot-mono"
@@ -75,6 +76,7 @@
       "slack"
       "spotify"
       "steam"
+      "ungoogled-chromium"
       "unnaturalscrollwheels"
       "vlc"
     ];
@@ -82,6 +84,7 @@
       "Fantastical" = 975937182;
       "Front and Center" = 1493996622;
       "Photomator" = 1444636541;
+      "DaisyDisk" = 411643860;
     };
     onActivation.cleanup = "zap";
     onActivation.autoUpdate = true;
