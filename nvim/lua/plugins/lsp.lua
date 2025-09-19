@@ -6,8 +6,7 @@ return {
     {
         "mason-org/mason-lspconfig.nvim",
         opts = {
-            ensure_installed = {
-            },
+            ensure_installed = {},
         },
         dependencies = {
             { "mason-org/mason.nvim", opts = {} },
@@ -112,7 +111,9 @@ return {
         opts = {
             fuzzy = {
                 implementation = "prefer_rust_with_warning",
-                use_frecency = true,
+                frecency = {
+                    enabled = true,
+                },
                 use_proximity = true,
             },
             signature = {
