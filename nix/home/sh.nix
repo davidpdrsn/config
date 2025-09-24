@@ -2,8 +2,10 @@
   lib,
   config,
   shell,
+  pkgs,
   ...
 }: let
+  godot = pkgs.callPackage ../packages/godot.nix { };
   envVars = {
     TERMINAL = "ghostty";
     EDITOR = "nvim";
@@ -17,7 +19,7 @@
 
     BITS_N_WIRES_PLANE_API_KEY = "***REMOVED***";
     BLENDER_PATH = "/Applications/Blender.app/Contents/MacOS/Blender";
-    GODOT_PATH = "/Applications/Godot_mono.app/Contents/MacOS/Godot";
+    GODOT_PATH = "${godot}/Applications/Godot_mono.app/Contents/MacOS/Godot";
 
     LUN_DEV_DB_PASS = "***REMOVED***";
     LUN_PROD_DB_PASS = "***REMOVED***";
@@ -85,7 +87,7 @@
     b = "t build";
     r = "t run";
     at = "tmux attach";
-    godot = "/Applications/Godot_mono.app/Contents/MacOS/Godot";
+    godot = "${godot}/bin/godot";
     blender = "/Applications/Blender.app/Contents/MacOS/Blender";
     ds = "/Users/davidpdrsn/code/dev-tools/cli/result/bin/t \"darwin-rebuild switch\"";
     dbui = "nvim +DBUI";

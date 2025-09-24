@@ -3,7 +3,9 @@
   self,
   pkgs,
   ...
-}: {
+}: let
+  godot = pkgs.callPackage ../../packages/godot.nix { };
+in {
   imports = [
     ./../common.nix
   ];
@@ -36,6 +38,7 @@
     [
       autoraise
       mas
+      godot
     ]
     ++
     # personal dev tools
@@ -65,7 +68,6 @@
       "bluesnooze"
       "discord"
       "ghostty"
-      "godot-mono"
       "google-chrome"
       "keyboard-maestro"
       "keymapp"

@@ -63,7 +63,7 @@ return {
                 args = {
                     "--interpreter=vscode",
                     "--",
-                    "/Applications/Godot_mono.app/Contents/MacOS/Godot",
+                    "/Applications/Nix Apps/Godot_mono.app/Contents/MacOS/Godot",
                 },
             }
 
