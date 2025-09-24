@@ -60,10 +60,10 @@
     gcof = "git-branch-picker checkout";
     gmf = "git-branch-picker merge";
     git-cargo-lock-conflict = "git checkout main -- Cargo.lock";
-    gl = "git log --decorate --oneline -20";
-    gll = "git log --decorate --oneline";
-    ggl = "git log --decorate --oneline -20";
-    ggll = "git log --decorate --oneline";
+    gl = "git log --graph --decorate --oneline -20";
+    gll = "git log --graph --decorate --oneline";
+    ggl = "git log --graph --decorate --oneline -20";
+    ggll = "git log --graph --decorate --oneline";
     gp = "git push";
     gpf = "git push --force-with-lease";
     gd = "git diff";
