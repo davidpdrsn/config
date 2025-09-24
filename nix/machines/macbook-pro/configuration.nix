@@ -78,7 +78,6 @@ in {
       "slack"
       "spotify"
       "steam"
-      "ungoogled-chromium"
       "unnaturalscrollwheels"
       "vlc"
     ];
