@@ -314,7 +314,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 })
 
 common.custom_format_leader_command("cs", function(path)
-    return { "dotnet", "csharpier", path }
+    return { "csharpier", "format", path }
 end)
 
 common.custom_format_leader_command("typescriptreact,typescript", function(path)
