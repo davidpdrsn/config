@@ -3,9 +3,7 @@
   self,
   pkgs,
   ...
-}: let
-  godot = pkgs.callPackage ../../packages/godot.nix { };
-in {
+}: {
   imports = [
     ./../common.nix
   ];
@@ -38,7 +36,6 @@ in {
     [
       autoraise
       mas
-      godot
     ]
     ++
     # personal dev tools

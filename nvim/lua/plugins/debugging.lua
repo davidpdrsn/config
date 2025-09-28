@@ -63,7 +63,7 @@ return {
                 args = {
                     "--interpreter=vscode",
                     "--",
-                    "/Applications/Nix Apps/Godot_mono.app/Contents/MacOS/Godot",
+                    os.getenv("GODOT_PATH") or "/Applications/Nix Apps/Godot_mono.app/Contents/MacOS/Godot",
                 },
             }
 
