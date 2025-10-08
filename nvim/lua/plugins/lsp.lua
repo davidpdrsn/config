@@ -133,7 +133,7 @@ return {
             sources = {
                 default = { "avante", "snippets", "lsp", "path", "buffer" },
                 per_filetype = {
-                    sql = { "dadbod", "buffer" },
+                    -- sql = { "dadbod", "buffer" },
                 },
                 providers = {
                     dadbod = { name = "Dadbod", module = "vim_dadbod_completion.blink" },
