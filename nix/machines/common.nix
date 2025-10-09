@@ -26,6 +26,7 @@
 
     # ai
     claude-code
+    codex
 
     # docker
     colima
