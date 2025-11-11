@@ -83,6 +83,7 @@
       "Front and Center" = 1493996622;
       "Photomator" = 1444636541;
       "DaisyDisk" = 411643860;
+      "Numbers" = 409203825;
     };
     onActivation.cleanup = "zap";
     onActivation.autoUpdate = true;
