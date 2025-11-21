@@ -208,7 +208,7 @@ vim.keymap.set("n", "<leader>Q", ":qall!<cr>", { desc = "Force quit" })
 
 -- copy current file path to system clipboard
 vim.keymap.set("n", "<leader>cp", function()
-    local path = vim.fn.expand("%")
+    local path = vim.fn.expand("%:.")
     vim.fn.setreg("+", path)
     vim.notify(path, "info", { title = "Copied to clipboard" })
 end, { desc = "Copy path to current file" })
