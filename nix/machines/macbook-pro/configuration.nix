@@ -77,6 +77,7 @@
       "steam"
       "unnaturalscrollwheels"
       "vlc"
+      "superwhisper"
     ];
     masApps = {
       "Fantastical" = 975937182;
