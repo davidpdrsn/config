@@ -98,9 +98,9 @@
     };
 
     nixosConfigurations."nixos" = nixpkgs.lib.nixosSystem {
-      system = "aarch64-linux";
       specialArgs = commonArgs;
       modules = [
+        {nixpkgs.hostPlatform = "aarch64-linux";}
         ./nix/machines/nixos-utm/configuration.nix
         {users.users.${commonArgs.username}.home = "/home/${commonArgs.username}";}
 

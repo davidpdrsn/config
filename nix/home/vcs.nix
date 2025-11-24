@@ -1,27 +1,6 @@
 {...}: {
   programs.git = {
     enable = true;
-    aliases = {
-      wt = "worktree";
-    };
-    extraConfig = {
-      user = {
-        name = "David Pedersen";
-        email = "david.pdrsn@gmail.com";
-      };
-      init = {
-        defaultBranch = "main";
-      };
-      push = {
-        autoSetupRemote = "true";
-      };
-      "filter \"lfs\"" = {
-        smudge = "git-lfs smudge -- %f";
-        process = "git-lfs filter-process";
-        required = "true";
-        clean = "git-lfs clean -- %f";
-      };
-    };
     lfs = {
       enable = true;
     };
@@ -56,12 +35,35 @@
       ".cache"
       ".jj"
     ];
-    delta = {
-      enable = true;
-      options = {
-        line-numbers = true;
-        side-by-side = false;
+    settings = {
+      alias = {
+        wt = "worktree";
       };
+      user = {
+        name = "David Pedersen";
+        email = "david.pdrsn@gmail.com";
+      };
+      init = {
+        defaultBranch = "main";
+      };
+      push = {
+        autoSetupRemote = "true";
+      };
+      "filter \"lfs\"" = {
+        smudge = "git-lfs smudge -- %f";
+        process = "git-lfs filter-process";
+        required = "true";
+        clean = "git-lfs clean -- %f";
+      };
+    };
+  };
+
+  programs.delta = {
+    enable = true;
+    enableGitIntegration = true;
+    options = {
+      line-numbers = true;
+      side-by-side = false;
     };
   };
 
