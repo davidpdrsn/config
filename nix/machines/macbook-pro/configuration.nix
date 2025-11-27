@@ -61,7 +61,6 @@
     ];
     casks = [
       "1password"
-      "blender"
       "bluesnooze"
       "discord"
       "ghostty"

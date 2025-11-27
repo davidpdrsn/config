@@ -17,7 +17,6 @@
     GH_AUTH_TOKEN = "***REMOVED***";
 
     BITS_N_WIRES_PLANE_API_KEY = "***REMOVED***";
-    BLENDER_PATH = "/Applications/Blender.app/Contents/MacOS/Blender";
 
     LUN_DEV_DB_PASS = "***REMOVED***";
     LUN_PROD_DB_PASS = "***REMOVED***";
@@ -85,7 +84,6 @@
     b = "t build";
     r = "t run";
     at = "tmux attach";
-    blender = "/Applications/Blender.app/Contents/MacOS/Blender";
     ds = "/Users/davidpdrsn/code/dev-tools/cli/result/bin/t \"darwin-rebuild switch\"";
     dbui = "nvim +DBUI";
     claude-json = "claude --print --output-format json";
