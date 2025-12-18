@@ -60,6 +60,7 @@
     ".config/ghostty".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/code/config/ghostty";
     ".config/nvim".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/code/config/nvim";
     ".config/zellij".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/code/config/zellij";
+    ".config/jjui".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/code/config/jjui";
   };
 
   home.activation.createFolders = ''
