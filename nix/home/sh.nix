@@ -176,7 +176,6 @@ in {
       ];
       right_format = lib.concatStrings [
         "$cmd_duration"
-        "$nix_shell"
       ];
       custom = {
         git_prompt = {
