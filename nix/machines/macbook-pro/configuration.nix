@@ -77,6 +77,7 @@
       "unnaturalscrollwheels"
       "vlc"
       "superwhisper"
+      "sf-symbols"
     ];
     masApps = {
       "Fantastical" = 975937182;
