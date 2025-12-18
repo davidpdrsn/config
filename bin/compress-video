@@ -1,0 +1,52 @@
+#!/bin/bash
+
+set -e
+
+if [ $# -lt 1 ]; then
+    echo "Usage: compress-video <input-file> [target-size-mb]"
+    echo "  target-size-mb: Target file size in MB (default: 50)"
+    exit 1
+fi
+
+input="$1"
+target_mb="${2:-50}"
+
+if [ ! -f "$input" ]; then
+    echo "Error: File not found: $input"
+    exit 1
+fi
+
+# Get video duration in seconds
+duration=$(ffprobe -v quiet -show_entries format=duration -of csv=p=0 "$input")
+
+# Calculate target video bitrate (in kbps)
+# target_mb * 8 * 1024 = target in kbits, divide by duration, subtract audio bitrate
+target_kbits=$(echo "$target_mb * 8 * 1024" | bc)
+audio_kbps=128
+video_kbps=$(echo "($target_kbits / $duration) - $audio_kbps" | bc | cut -d. -f1)
+
+# Generate output filename
+dir=$(dirname "$input")
+filename=$(basename "$input")
+name="${filename%.*}"
+ext="${filename##*.}"
+output="${dir}/${name}_compressed.mp4"
+
+echo "Input:       $input"
+echo "Output:      $output"
+echo "Target size: ${target_mb} MB"
+echo "Duration:    ${duration}s"
+echo "Video rate:  ${video_kbps} kbps"
+echo ""
+
+ffmpeg -i "$input" \
+    -c:v libx264 \
+    -b:v "${video_kbps}k" \
+    -c:a aac \
+    -b:a "${audio_kbps}k" \
+    -movflags +faststart \
+    "$output"
+
+echo ""
+echo "Done! Output saved to: $output"
+ls -lh "$output"
