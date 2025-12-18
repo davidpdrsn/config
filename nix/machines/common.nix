@@ -20,6 +20,7 @@
     jjui
     ripgrep-all
     mergiraf
+    ffmpeg
 
     alejandra # nix formatter
     nil # nix language server
