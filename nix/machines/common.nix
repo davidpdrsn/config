@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{pkgs, inputs, ...}: {
   environment.systemPackages = with pkgs; [
     # general
     bat
@@ -31,6 +31,9 @@
     # docker
     colima
     docker
+
+    # personal dev tools
+    inputs.git-history-csv.packages.${pkgs.system}.default
   ];
 
   fonts.packages = with pkgs; [
