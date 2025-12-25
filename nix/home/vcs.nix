@@ -87,6 +87,9 @@
       "template-aliases" = {
         "format_short_signature(signature)" = "";
       };
+      aliases = {
+        "sync" = ["util" "exec" "--" "jj-sync"];
+      };
       templates = {
         draft_commit_description = ''
           concat(
