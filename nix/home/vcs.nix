@@ -78,6 +78,9 @@
         default-command = ["log" "-r" "::@" "--limit" "20"];
         pager = ":builtin";
       };
+      snapshot = {
+        auto-update-stale = true;
+      };
       colors = {
         "diff token" = {underline = false;};
         "diff removed token" = {bg = "#221111";};
