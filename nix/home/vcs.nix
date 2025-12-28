@@ -91,7 +91,13 @@
         "format_short_signature(signature)" = "";
       };
       aliases = {
-        "sync" = ["util" "exec" "--" "jj-sync"];
+        c = ["commit"];
+        n = ["new"];
+        rb = ["rebase"];
+        sync = ["util" "exec" "--" "jj-sync"];
+        blame = ["file" "annotate"];
+        integrate = ["squash" "-A" "main" "-B" "merge" "-f"];
+      };
       };
       templates = {
         git_push_bookmark = "\"david/jj-\" ++ change_id. short()";
