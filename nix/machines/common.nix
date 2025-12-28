@@ -21,6 +21,7 @@
     ripgrep-all
     mergiraf
     ffmpeg
+    watchexec
 
     alejandra # nix formatter
     nil # nix language server
