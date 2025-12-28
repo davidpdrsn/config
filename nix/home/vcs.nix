@@ -99,6 +99,9 @@
         blame = ["file" "annotate"];
         integrate = ["squash" "-A" "main" "-B" "merge" "-f"];
       };
+      revset-aliases = {
+        "siblings(x)" = "children(parents(x)) ~ x";
+        "merge" = "description(exact:\"merge\n\")";
       };
       templates = {
         git_push_bookmark = "\"david/jj-\" ++ change_id. short()";
