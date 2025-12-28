@@ -36,7 +36,7 @@
     docker
 
     # personal dev tools
-    inputs.git-history-csv.packages.${pkgs.system}.default
+    inputs.git-history-csv.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 
   fonts.packages = with pkgs; [

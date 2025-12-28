@@ -39,7 +39,7 @@
     ]
     ++
     # personal dev tools
-    map (pkg: inputs.${pkg}.packages.${pkgs.system}.default)
+    map (pkg: inputs.${pkg}.packages.${pkgs.stdenv.hostPlatform.system}.default)
     [
       "smart-pwd-2"
       "is-vim-running"
