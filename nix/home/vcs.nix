@@ -91,6 +91,7 @@
         "sync" = ["util" "exec" "--" "jj-sync"];
       };
       templates = {
+        git_push_bookmark = "\"david/jj-\" ++ change_id. short()";
         draft_commit_description = ''
           concat(
             coalesce(description, default_commit_description, "\n"),
