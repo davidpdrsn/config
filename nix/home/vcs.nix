@@ -103,6 +103,10 @@
         "siblings(x)" = "children(parents(x)) ~ x";
         "merge" = "description(exact:\"merge\n\")";
       };
+      git = {
+        # Prevent pushing work in progress, anything explicitly labeled "private", or the mega merge commit
+        private-commits = "description(glob:'wip:*') | description(glob:'private:*') | description(exact:\"merge\n\")";
+      };
       templates = {
         git_push_bookmark = "\"david/jj-\" ++ change_id. short()";
         draft_commit_description = ''
