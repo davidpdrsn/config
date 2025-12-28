@@ -87,8 +87,9 @@
         "diff added token" = {bg = "#002200";};
         "log commit change_id shortest" = "green";
       };
-      "template-aliases" = {
+      template-aliases = {
         "format_short_signature(signature)" = "";
+        "in_branch(commit)" = "commit.contained_in(\"immutable_heads()..bookmarks()\")";
       };
       aliases = {
         c = ["commit"];
@@ -110,6 +111,12 @@
             ),
             "\nJJ: ignore-rest\n",
             diff.git(),
+          )
+        '';
+        log_node = ''
+          if(self && !current_working_copy && !immutable && !conflict && in_branch(self),
+            "◇",
+            builtin_log_node
           )
         '';
       };
