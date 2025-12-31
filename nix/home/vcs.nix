@@ -96,6 +96,8 @@
         n = ["new"];
         rb = ["rebase"];
         sync = ["util" "exec" "--" "jj-sync"];
+        desc-ai = ["util" "exec" "--" "jj-desc-ai"];
+        dai = ["util" "exec" "--" "jj-desc-ai"];
         blame = ["file" "annotate"];
         integrate = ["squash" "-A" "main" "-B" "merge" "-f"];
       };
