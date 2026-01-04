@@ -75,7 +75,7 @@
         name = "David Pedersen";
       };
       ui = {
-        default-command = ["log" "-r" "::@" "--limit" "20"];
+        default-command = ["log"];
         pager = ":builtin";
       };
       snapshot = {
