@@ -108,7 +108,7 @@
       };
       git = {
         # Prevent pushing work in progress, anything explicitly labeled "private", or the mega merge commit
-        private-commits = "description(glob:'wip:*') | description(glob:'private:*') | description(exact:\"merge\n\")";
+        private-commits = "description(glob:'✨ai✨*') | description(glob:'wip:*') | description(glob:'private:*') | description(exact:\"merge\n\")";
       };
       templates = {
         git_push_bookmark = "\"david/jj-\" ++ change_id. short()";
