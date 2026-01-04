@@ -101,6 +101,13 @@
         dai = ["util" "exec" "--" "jj-desc-ai"];
         blame = ["file" "annotate"];
         integrate = ["squash" "-A" "main" "-B" "merge" "-f"];
+        squash-ai = [
+          "squash"
+          "--from"
+          "mutable() & description(glob:'✨ai✨*') & ::@"
+          "--into"
+          "roots(mutable() & description(glob:'✨ai✨*') & ::@)"
+        ];
       };
       revset-aliases = {
         "siblings(x)" = "children(parents(x)) ~ x";
