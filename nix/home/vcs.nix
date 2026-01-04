@@ -77,6 +77,7 @@
       ui = {
         default-command = ["log"];
         pager = ":builtin";
+        diff-editor = ":builtin";
       };
       snapshot = {
         auto-update-stale = true;
