@@ -97,10 +97,35 @@
         n = ["new"];
         rb = ["rebase"];
         sync = ["util" "exec" "--" "jj-sync"];
-        desc-ai = ["util" "exec" "--" "jj-desc-ai"];
-        dai = ["util" "exec" "--" "jj-desc-ai"];
         blame = ["file" "annotate"];
-        integrate = ["squash" "-A" "main" "-B" "merge" "-f"];
+        # decribe change using ai
+        desc-ai = ["util" "exec" "--" "jj-desc-ai"];
+        # integrate changes into a mega merge
+        integrate = [
+          "rebase"
+          "-A"
+          "trunk()"
+          "-B"
+          "merge"
+          "-r"
+        ];
+        # rebase all changes on top of trunk
+        restack = [
+          "rebase"
+          "-s"
+          "mine() & ~trunk() & children(parents(trunk()))"
+          "-o"
+          "trunk()"
+        ];
+        # fix the mega merge commit so its not a direct child of trunk()
+        fix-merge = [
+          "rebase"
+          "-s"
+          "merge"
+          "-o"
+          "parents(merge) & ~trunk()"
+        ];
+        # squash all ai commits
         squash-ai = [
           "squash"
           "--from"
