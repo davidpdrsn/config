@@ -22,6 +22,7 @@
     mergiraf
     ffmpeg
     watchexec
+    imagemagick
 
     alejandra # nix formatter
     nil # nix language server
