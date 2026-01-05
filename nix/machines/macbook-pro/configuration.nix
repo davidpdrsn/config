@@ -78,6 +78,7 @@
       "vlc"
       "superwhisper"
       "sf-symbols"
+      "deckset"
     ];
     masApps = {
       "Fantastical" = 975937182;
