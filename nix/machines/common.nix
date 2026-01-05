@@ -37,6 +37,7 @@
 
     # personal dev tools
     inputs.git-history-csv.packages.${pkgs.stdenv.hostPlatform.system}.default
+    inputs.nxv.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 
   fonts.packages = with pkgs; [
