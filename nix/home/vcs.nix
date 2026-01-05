@@ -113,7 +113,7 @@
         restack = [
           "rebase"
           "-s"
-          "mine() & ~trunk() & children(parents(trunk()))"
+          "children(latest(ancestors(trunk()) & ancestors(mutable()))) & mutable()"
           "-o"
           "trunk()"
         ];
