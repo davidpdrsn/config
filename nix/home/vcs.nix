@@ -58,6 +58,24 @@
       rebase = {
         updateRefs = true;
       };
+      rerere = {
+        enabled = true;
+      };
+      fetch = {
+        prune = true;
+      };
+      merge = {
+        conflictStyle = "zdiff3";
+      };
+      diff = {
+        algorithm = "histogram";
+      };
+      commit = {
+        verbose = true;
+      };
+      branch = {
+        sort = "-committerdate";
+      };
     };
   };
 
