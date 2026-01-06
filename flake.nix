@@ -101,17 +101,5 @@
         }
       ];
     };
-
-    nixosConfigurations."nixos" = nixpkgs.lib.nixosSystem {
-      specialArgs = commonArgs;
-      modules = [
-        {nixpkgs.hostPlatform = "aarch64-linux";}
-        ./nix/machines/nixos-utm/configuration.nix
-        {users.users.${commonArgs.username}.home = "/home/${commonArgs.username}";}
-
-        home-manager.nixosModules.home-manager
-        homeManagerConfig
-      ];
-    };
   };
 }

@@ -5,7 +5,7 @@
   ...
 }: {
   imports = [
-    ./../common.nix
+    ./packages.nix
   ];
 
   # Required because I installed Determinate nix, not vanilla
@@ -31,66 +31,6 @@
   nixpkgs.hostPlatform = "aarch64-darwin";
 
   nixpkgs.config.allowUnfree = true;
-
-  environment.systemPackages = with pkgs;
-    [
-      autoraise
-      mas
-    ]
-    ++
-    # personal dev tools
-    map (pkg: inputs.${pkg}.packages.${pkgs.stdenv.hostPlatform.system}.default)
-    [
-      "smart-pwd-2"
-      "is-vim-running"
-      # "git-prompt"
-      "git-remove-merged-branches"
-      "replace"
-      "remove-indentation"
-      "git-branch-picker"
-      "go-insert-error"
-    ];
-
-  homebrew = {
-    enable = true;
-    taps = [
-      "homebrew/cask"
-    ];
-    brews = [
-      # install things with nixpkgs if at all possible!
-    ];
-    casks = [
-      "1password"
-      "bluesnooze"
-      "discord"
-      "ghostty"
-      "google-chrome"
-      "keyboard-maestro"
-      "keymapp"
-      "obs"
-      "obsidian"
-      "raycast"
-      "signal"
-      "slack"
-      "spotify"
-      "steam"
-      "unnaturalscrollwheels"
-      "vlc"
-      "superwhisper"
-      "sf-symbols"
-      "deckset"
-    ];
-    masApps = {
-      "Fantastical" = 975937182;
-      "Front and Center" = 1493996622;
-      "Photomator" = 1444636541;
-      "DaisyDisk" = 411643860;
-      "Numbers" = 409203825;
-    };
-    onActivation.cleanup = "zap";
-    onActivation.autoUpdate = true;
-    onActivation.upgrade = true;
-  };
 
   system.keyboard.enableKeyMapping = true;
   system.keyboard.remapCapsLockToControl = true;
