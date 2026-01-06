@@ -20,7 +20,6 @@
       jjui
       jq
       mergiraf
-      ripgrep-all
       ruby_3_4
       stylua
       tokei
