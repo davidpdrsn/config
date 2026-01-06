@@ -31,7 +31,7 @@
       ".tmp"
       "__debug_bin*"
       ".direnv"
-      ".claude"
+      ".claude/settings.local.json"
       ".cache"
       ".jj"
     ];
