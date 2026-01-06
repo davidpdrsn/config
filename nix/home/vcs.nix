@@ -55,6 +55,9 @@
         required = "true";
         clean = "git-lfs clean -- %f";
       };
+      rebase = {
+        updateRefs = true;
+      };
     };
   };
 
