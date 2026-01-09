@@ -328,6 +328,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-latest": {
+      "locked": {
+        "lastModified": 1767948321,
+        "narHash": "sha256-PAiNxFOnHzlcksCQl8L17lFO4XHg3hNmoyfg74PseYs=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "eaf6255ac7a0b8c2cf8380be1a13fe6b5f4eae60",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "master",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs_10": {
       "locked": {
         "lastModified": 1751011381,
@@ -647,6 +663,7 @@
         "nix-darwin": "nix-darwin",
         "nix-homebrew": "nix-homebrew",
         "nixpkgs": "nixpkgs_8",
+        "nixpkgs-latest": "nixpkgs-latest",
         "nxv": "nxv",
         "remove-indentation": "remove-indentation",
         "replace": "replace",

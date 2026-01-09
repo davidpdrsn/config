@@ -1,4 +1,7 @@
-{...}: {
+{pkgs, inputs, ...}:
+let
+  pkgs-latest = import inputs.nixpkgs-latest {system = pkgs.system;};
+in {
   programs.git = {
     enable = true;
     lfs = {
@@ -90,6 +93,7 @@
 
   programs.jujutsu = {
     enable = true;
+    package = pkgs-latest.jujutsu;
     settings = {
       user = {
         email = "david.pdrsn@gmail.com";
