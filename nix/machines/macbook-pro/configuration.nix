@@ -44,7 +44,6 @@
     show-recents = false;
     showhidden = true;
     slow-motion-allowed = true;
-    autohide-delay = 0.0;
     persistent-apps = [
       # no apps in the dock plz
     ];
