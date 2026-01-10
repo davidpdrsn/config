@@ -17,7 +17,7 @@ in {
       "screen-256color.ti"
       "tags.lock"
       "tags.temp"
-      "target"
+      "target/"
       "result"
       "rusty-tags.vi"
       ".metals"
