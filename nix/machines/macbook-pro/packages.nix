@@ -26,6 +26,8 @@
       tree
       watchexec
       wget
+      openai-whisper
+      yt-dlp
 
       claude-code
       codex
