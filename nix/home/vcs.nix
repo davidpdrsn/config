@@ -1,5 +1,8 @@
-{pkgs, inputs, ...}:
-let
+{
+  pkgs,
+  inputs,
+  ...
+}: let
   pkgs-latest = import inputs.nixpkgs-latest {system = pkgs.system;};
 in {
   programs.git = {
@@ -101,8 +104,13 @@ in {
       };
       ui = {
         default-command = ["log"];
-        pager = ":builtin";
         diff-editor = ":builtin";
+        pager = "delta";
+        diff-formatter = [
+          "bash"
+          "-c"
+          "delta --width $width $left $right --features=split-view || true"
+        ];
       };
       snapshot = {
         auto-update-stale = true;
