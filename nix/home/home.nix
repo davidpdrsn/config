@@ -53,10 +53,15 @@
     enable = true;
   };
 
+  programs.aerc = {
+    enable = true;
+  };
+
   home.file = {
     ".bin".source = ./../../bin;
     ".config/balance/config.toml".source = ./../../balance/balance.toml;
     ".stylua.toml".source = ./../../stylua/stylua.toml;
+    "Library/Preferences/aerc".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/code/config/aerc";
     ".config/ghostty".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/code/config/ghostty";
     ".config/nvim".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/code/config/nvim";
     ".config/zellij".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/code/config/zellij";
