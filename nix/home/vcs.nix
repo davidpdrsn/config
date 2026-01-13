@@ -176,7 +176,7 @@ in {
         private-commits = "description(glob:'✨ai✨*') | description(glob:'wip:*') | description(glob:'private:*') | description(exact:\"merge\n\")";
       };
       templates = {
-        git_push_bookmark = "\"david/jj-\" ++ change_id. short()";
+        git_push_bookmark = "\"dp/jj-\" ++ change_id. short()";
         draft_commit_description = ''
           concat(
             coalesce(description, default_commit_description, "\n"),
