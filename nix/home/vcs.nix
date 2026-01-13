@@ -94,7 +94,9 @@ in {
     };
   };
 
-  programs.jujutsu = {
+  programs.jujutsu = let
+    private-revset = "description(glob:'✨ai✨*') | description(glob:'wip:*') | description(glob:'private:*') | description(glob:'megamerge*')";
+  in {
     enable = true;
     package = pkgs-latest.jujutsu;
     settings = {
@@ -169,11 +171,11 @@ in {
       };
       revset-aliases = {
         "siblings(x)" = "children(parents(x)) ~ x";
-        "merge" = "description(exact:\"merge\n\")";
+        "merge" = "description(glob:'megamerge*')";
       };
       git = {
         # Prevent pushing work in progress, anything explicitly labeled "private", or the mega merge commit
-        private-commits = "description(glob:'✨ai✨*') | description(glob:'wip:*') | description(glob:'private:*') | description(exact:\"merge\n\")";
+        private-commits = private-revset;
       };
       templates = {
         git_push_bookmark = "\"dp/jj-\" ++ change_id. short()";
@@ -191,7 +193,10 @@ in {
         log_node = ''
           if(self && !current_working_copy && !immutable && !conflict && in_branch(self),
             "◇",
-            builtin_log_node
+            if(self && self.contained_in("${private-revset}"),
+              "🥷",
+              builtin_log_node
+            )
           )
         '';
       };
