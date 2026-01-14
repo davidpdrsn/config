@@ -2,7 +2,6 @@
   lib,
   config,
   shell,
-  pkgs,
   ...
 }: let
   envVars = {
@@ -170,13 +169,10 @@ in {
       format = lib.concatStrings [
         "$directory"
         "\${custom.git_prompt}"
-        "\${custom.jj_current_operation}"
         "$line_break"
         "$character"
       ];
-      right_format = lib.concatStrings [
-        "$cmd_duration"
-      ];
+      right_format = lib.concatStrings [];
       custom = {
         git_prompt = {
           command = "git-prompt";
