@@ -192,8 +192,8 @@ in {
         log_node = ''
           if(self && !current_working_copy && !immutable && !conflict && in_branch(self),
             "◇",
-            if(self && self.contained_in("${private-revset}"),
-              "🥷",
+            if(self && !current_working_copy && !immutable && !conflict && self.contained_in("${private-revset}"),
+              "∴",
               builtin_log_node
             )
           )
