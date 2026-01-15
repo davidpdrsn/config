@@ -28,6 +28,7 @@
       wget
       openai-whisper
       yt-dlp
+      hyperfine
 
       claude-code
       codex
