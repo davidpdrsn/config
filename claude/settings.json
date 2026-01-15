@@ -1,0 +1,31 @@
+{
+    "env": {
+        "BASH_MAX_TIMEOUT_MS": "600000"
+    },
+    "model": "opus",
+    "alwaysThinkingEnabled": true,
+    "hooks": {
+        "PreToolUse": [
+            {
+                "matcher": "",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "jj-claude-hooks"
+                    }
+                ]
+            }
+        ],
+        "UserPromptSubmit": [
+            {
+                "matcher": "",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "jj-claude-hooks"
+                    }
+                ]
+            }
+        ]
+    }
+}
