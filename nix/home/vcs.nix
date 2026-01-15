@@ -131,7 +131,6 @@ in {
         c = ["commit"];
         n = ["new"];
         rb = ["rebase"];
-        sync = ["util" "exec" "--" "jj-sync"];
         blame = ["file" "annotate"];
         # decribe change using ai
         desc-ai = ["util" "exec" "--" "jj-desc-ai"];
