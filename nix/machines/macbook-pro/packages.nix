@@ -29,6 +29,7 @@
       openai-whisper
       yt-dlp
       hyperfine
+      nxv
 
       claude-code
       codex
