@@ -25,9 +25,6 @@
       flake = false;
     };
 
-    # nix version manager for finding specific versions of packages
-    nxv.url = "github:jamesbrink/nxv";
-
     # private repos requires /etc/nix/nix.custom.conf with gh personal access token (classic)
     # token is in Passwords.app under "GitHub nix-darwin access token"
 
@@ -61,7 +58,6 @@
     nix-homebrew,
     homebrew-core,
     homebrew-cask,
-    nxv,
     ...
   }: let
     # Common arguments for both systems

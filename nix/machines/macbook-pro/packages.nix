@@ -53,7 +53,6 @@
       "git-branch-picker"
       "go-insert-error"
       "git-history-csv"
-      "nxv"
     ];
 
   fonts.packages = with pkgs; [
