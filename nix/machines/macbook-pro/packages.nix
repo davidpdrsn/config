@@ -89,6 +89,7 @@
       "superwhisper"
       "unnaturalscrollwheels"
       "vlc"
+      "devutils"
     ];
 
     masApps = {
