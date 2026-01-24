@@ -30,6 +30,7 @@
       yt-dlp
       hyperfine
       nxv
+      resvg
 
       claude-code
       codex
