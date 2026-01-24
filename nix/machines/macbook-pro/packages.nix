@@ -91,6 +91,7 @@
       "unnaturalscrollwheels"
       "vlc"
       "devutils"
+      "arc"
     ];
 
     masApps = {
