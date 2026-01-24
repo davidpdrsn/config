@@ -30,7 +30,6 @@
       yt-dlp
       hyperfine
       nxv
-      yazi
 
       claude-code
       codex

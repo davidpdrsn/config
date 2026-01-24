@@ -1,6 +1,7 @@
 {
   pkgs,
   config,
+  inputs,
   ...
 }: {
   imports = [
@@ -55,6 +56,20 @@
 
   programs.aerc = {
     enable = true;
+  };
+
+  programs.yazi = {
+    enable = true;
+    enableFishIntegration = true;
+    flavors = {
+      catppuccin-mocha = "${inputs.yazi-flavors}/catppuccin-mocha.yazi";
+    };
+    theme = {
+      flavor = {
+        dark = "catppuccin-mocha";
+        light = "catppuccin-mocha";
+      };
+    };
   };
 
   home.file = {
