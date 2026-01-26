@@ -113,6 +113,7 @@
   # enable window dragging with gesture
   system.defaults.NSGlobalDomain.NSWindowShouldDragOnGesture = true;
 
-  # allow using touch id for sudo
+  # allow using touch id for sudo (reattach needed for tmux)
   security.pam.services.sudo_local.touchIdAuth = true;
+  security.pam.services.sudo_local.reattach = true;
 }

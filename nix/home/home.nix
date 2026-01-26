@@ -1,7 +1,7 @@
 {
-  pkgs,
   config,
   inputs,
+  shell,
   ...
 }: {
   imports = [
@@ -9,6 +9,7 @@
     ./vcs.nix
     ./term.nix
     ./ripgrep.nix
+    ./tmux.nix
   ];
 
   # Don't change this value, even when updating home-manager.
@@ -43,11 +44,6 @@
     settings = {
       enter_accept = false;
     };
-  };
-
-  programs.tmux = {
-    enable = true;
-    shell = "${pkgs.nushell}/bin/nu";
   };
 
   programs.zellij = {
