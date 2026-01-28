@@ -40,6 +40,7 @@ in {
       ".claude/settings.local.json"
       ".cache"
       ".jj"
+      ".go"
     ];
     settings = {
       alias = {
@@ -143,21 +144,29 @@ in {
           "merge"
           "-r"
         ];
-        # rebase all changes on top of trunk
         restack = [
+          "util"
+          "exec"
+          "--"
+          "bash"
+          "-c"
+          "jj fix-merge-inner && jj restack-inner"
+        ];
+        # rebase all changes on top of trunk
+        restack-inner = [
           "rebase"
           "-s"
-          "children(latest(ancestors(trunk()) & ancestors(mutable()))) & mutable()"
+          "roots(trunk()..) & mutable()"
           "-o"
           "trunk()"
         ];
         # fix the mega merge commit so its not a direct child of trunk()
-        fix-merge = [
+        fix-merge-inner = [
           "rebase"
           "-s"
           "merge"
           "-o"
-          "parents(merge) & ~trunk()"
+          "parents(merge) & ~immutable()"
         ];
         # squash all ai commits
         squash-ai = [
