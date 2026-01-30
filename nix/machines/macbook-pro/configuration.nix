@@ -18,6 +18,21 @@
   nix.settings.max-jobs = "auto";
   nix.settings.cores = 0;
 
+  launchd.daemons.nix-gc = {
+    serviceConfig = {
+      ProgramArguments = [
+        "/nix/var/nix/profiles/default/bin/nix-collect-garbage"
+        "--delete-older-than"
+        "30d"
+      ];
+      StartCalendarInterval = {
+        Weekday = 0;
+        Hour = 3;
+        Minute = 0;
+      };
+    };
+  };
+
   # Set Git commit hash for darwin-version.
   system.configurationRevision = self.rev or self.dirtyRev or null;
 
