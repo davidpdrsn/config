@@ -7,3 +7,7 @@ switch:
 .PHONY: check
 check:
 	@nix flake check
+
+.PHONY: compare-updates
+compare-updates:
+	@./scripts/nix-compare-updates

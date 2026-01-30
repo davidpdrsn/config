@@ -41,6 +41,7 @@ in {
       ".cache"
       ".jj"
       ".go"
+      ".worktrees"
     ];
     settings = {
       alias = {
