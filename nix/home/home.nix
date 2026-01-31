@@ -75,7 +75,7 @@
   };
 
   home.file = {
-    ".bin".source = ./../../bin;
+    ".bin".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/code/config/bin";
     ".config/balance/config.toml".source = ./../../balance/balance.toml;
     ".stylua.toml".source = ./../../stylua/stylua.toml;
     "Library/Preferences/aerc".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/code/config/aerc";
