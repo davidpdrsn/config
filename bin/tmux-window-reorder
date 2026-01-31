@@ -1,0 +1,38 @@
+#!/bin/sh
+
+if [ -z "$TMUX" ]; then
+  echo "Not inside tmux" >&2
+  exit 1
+fi
+
+session=$(tmux display-message -p '#S')
+current_window_id=$(tmux display-message -p '#{window_id}')
+base_index=$(tmux show-option -gqv base-index)
+if [ -z "$base_index" ]; then
+  base_index=0
+fi
+
+tmp=$(mktemp)
+trap 'rm -f "$tmp"' EXIT
+
+tmux list-windows -t "$session" -F '#{window_id} #{window_name}' > "$tmp"
+
+nvim "$tmp"
+status=$?
+if [ $status -ne 0 ]; then
+  exit $status
+fi
+
+target_index=$base_index
+while IFS=' ' read -r window_id window_name; do
+  if [ -z "$window_id" ]; then
+    continue
+  fi
+  current_index=$(tmux display-message -p -t "$window_id" '#{window_index}')
+  if [ "$current_index" != "$target_index" ]; then
+    tmux swap-window -s "$window_id" -t "$session:$target_index"
+  fi
+  target_index=$((target_index + 1))
+done < "$tmp"
+
+tmux select-window -t "$current_window_id" >/dev/null 2>&1

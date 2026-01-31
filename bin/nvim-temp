@@ -1,0 +1,10 @@
+#!/bin/bash
+
+tmp=$(mktemp)
+trap 'rm -f "$tmp"' EXIT
+
+nvim "$tmp"
+status=$?
+
+cat "$tmp"
+exit $status
