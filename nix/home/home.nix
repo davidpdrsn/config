@@ -6,6 +6,7 @@
 }: {
   imports = [
     ./sh.nix
+    ./ssh.nix
     ./vcs.nix
     ./term.nix
     ./ripgrep.nix
