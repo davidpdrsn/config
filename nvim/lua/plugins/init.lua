@@ -58,7 +58,10 @@ return {
             require("oil").setup({
                 keymaps = {
                     ["<C-h>"] = false,
+                    ["<C-j>"] = false,
+                    ["<C-k>"] = false,
                     ["<C-s>"] = false,
+                    ["<C-l>"] = false,
                 },
                 view_options = {
                     show_hidden = true,
@@ -67,6 +70,17 @@ return {
                 lsp_file_methods = {
                     enabled = false,
                 },
+            })
+
+            vim.api.nvim_create_autocmd("FileType", {
+                pattern = "oil",
+                callback = function()
+                    local smart_splits = require("smart-splits")
+                    vim.keymap.set("n", "<C-h>", smart_splits.move_cursor_left, { buffer = true, desc = "Move left" })
+                    vim.keymap.set("n", "<C-j>", smart_splits.move_cursor_down, { buffer = true, desc = "Move down" })
+                    vim.keymap.set("n", "<C-k>", smart_splits.move_cursor_up, { buffer = true, desc = "Move up" })
+                    vim.keymap.set("n", "<C-l>", smart_splits.move_cursor_right, { buffer = true, desc = "Move right" })
+                end,
             })
 
             vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "File browser" })

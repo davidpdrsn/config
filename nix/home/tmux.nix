@@ -59,6 +59,13 @@
       # Focus events for vim
       set -g focus-events on
 
+      # Copy mode with vim bindings
+      set -g mode-keys vi
+      bind -T copy-mode-vi v send -X begin-selection
+      bind -T copy-mode-vi V send -X select-line
+      bind -T copy-mode-vi y send -X copy-selection-and-cancel
+      bind -T copy-mode-vi Escape send -X cancel
+
       # Intuitive splits (open in current path)
       bind \\ split-window -h -c "#{pane_current_path}"
       bind - split-window -v -c "#{pane_current_path}"
@@ -67,6 +74,10 @@
       bind h previous-window
       bind l next-window
       bind f last-window
+
+      # Window reordering (no wrap)
+      bind Left swap-window -t -1 \; select-window -t -1
+      bind Right swap-window -t +1 \; select-window -t +1
 
       # Swap panes with Shift + hjkl (similar to winshift.nvim)
       bind H swap-pane -s '{left-of}'
@@ -85,6 +96,9 @@
 
       # Popup for shell
       bind p display-popup -E -w 80% -h 80% -d "#{pane_current_path}" "${pkgs.fish}/bin/fish"
+
+      # Popup for window reordering
+      bind W display-popup -E -w 80% -h 80% -d "#{pane_current_path}" "tmux-window-reorder"
 
       # Easy config reload
       bind r source-file ~/.config/tmux/tmux.conf \; display "Config reloaded!"
