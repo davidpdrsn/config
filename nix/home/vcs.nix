@@ -3,7 +3,7 @@
   inputs,
   ...
 }: let
-  pkgs-latest = import inputs.nixpkgs-latest {system = pkgs.system;};
+  pkgs-latest = import inputs.nixpkgs-latest {system = pkgs.stdenv.hostPlatform.system;};
 in {
   programs.git = {
     enable = true;
