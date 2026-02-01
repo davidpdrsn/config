@@ -71,9 +71,9 @@
       bind - split-window -v -c "#{pane_current_path}"
 
       # Window navigation
-      bind h previous-window
-      bind l next-window
       bind f last-window
+      bind -n M-h previous-window
+      bind -n M-l next-window
 
       # Window reordering (no wrap)
       bind Left swap-window -t -1 \; select-window -t -1
