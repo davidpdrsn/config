@@ -39,6 +39,7 @@
     cat = "bat";
     dt = "cd ~/Desktop";
     diff = "diff --color";
+    oc = "opencode";
 
     j = "jjui -revset \"present(@) | ancestors(immutable_heads().., 2) | present(trunk()) | ancestors(trunk(), 20)\"";
     jc = "jj commit";

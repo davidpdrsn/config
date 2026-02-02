@@ -97,7 +97,7 @@ in {
   };
 
   programs.jujutsu = let
-    private-revset = "description(glob:'✨ai✨*') | description(glob:'wip:*') | description(glob:'private:*') | description(glob:'megamerge*')";
+    private-revset = "description(glob:'ai*') | description(glob:'wip:*') | description(glob:'private:*') | description(glob:'megamerge*')";
   in {
     enable = true;
     package = pkgs-latest.jujutsu;
@@ -173,9 +173,9 @@ in {
         squash-ai = [
           "squash"
           "--from"
-          "mutable() & description(glob:'✨ai✨*') & ::@"
+          "mutable() & description(glob:'ai*') & ::@"
           "--into"
-          "roots(mutable() & description(glob:'✨ai✨*') & ::@)"
+          "roots(mutable() & description(glob:'ai*') & ::@)"
         ];
       };
       revset-aliases = {
