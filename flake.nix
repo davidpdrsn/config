@@ -31,6 +31,7 @@
     # personal dev tools
     smart-pwd-2.url = "github:davidpdrsn/smart-pwd-2";
     is-vim-running.url = "github:davidpdrsn/is-vim-running";
+    jjui.url = "github:davidpdrsn/jjui";
     git-prompt.url = "github:davidpdrsn/git-prompt";
     git-remove-merged-branches.url = "github:davidpdrsn/git-remove-merged-branches";
     replace.url = "github:davidpdrsn/replace";

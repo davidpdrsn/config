@@ -17,7 +17,6 @@
       gh
       htop
       imagemagick
-      jjui
       jq
       mergiraf
       ruby_3_4
@@ -55,6 +54,7 @@
       "git-branch-picker"
       "go-insert-error"
       "git-history-csv"
+      "jjui"
     ];
 
   fonts.packages = with pkgs; [
