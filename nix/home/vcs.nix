@@ -176,6 +176,7 @@ in {
           "mutable() & description(glob:'ai*') & ::@"
           "--into"
           "roots(mutable() & description(glob:'ai*') & ::@)"
+          "--use-destination-message"
         ];
       };
       revset-aliases = {
