@@ -30,6 +30,7 @@
       hyperfine
       nxv
       resvg
+      graphviz
 
       claude-code
       codex
