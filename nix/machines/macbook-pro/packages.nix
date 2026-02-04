@@ -31,6 +31,7 @@
       nxv
       resvg
       graphviz
+      python314
 
       claude-code
       codex

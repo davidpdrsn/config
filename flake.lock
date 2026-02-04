@@ -264,11 +264,11 @@
         "nixpkgs": "nixpkgs_8"
       },
       "locked": {
-        "lastModified": 1770231135,
-        "narHash": "sha256-QYNLsyzas7HUk+vzek0aJOjV06jnS6wGUWy2afw7j1E=",
+        "lastModified": 1770235795,
+        "narHash": "sha256-vGzw4Wtuguh2XJHe3At2GFaBmvNeoao5u/M34IygTZk=",
         "owner": "davidpdrsn",
         "repo": "jjui",
-        "rev": "9efdb99a5bae0d8ff8b5347ed704e95d6ff499f2",
+        "rev": "1119f7eb235404600759d7e9ffb86e6601fc351c",
         "type": "github"
       },
       "original": {
