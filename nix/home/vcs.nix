@@ -1,10 +1,4 @@
-{
-  pkgs,
-  inputs,
-  ...
-}: let
-  pkgs-latest = import inputs.nixpkgs-latest {system = pkgs.stdenv.hostPlatform.system;};
-in {
+{...}: {
   programs.git = {
     enable = true;
     lfs = {
@@ -100,7 +94,6 @@ in {
     private-revset = "description(glob:'ai*') | description(glob:'wip:*') | description(glob:'private:*') | description(glob:'megamerge*')";
   in {
     enable = true;
-    package = pkgs-latest.jujutsu;
     settings = {
       user = {
         email = "david.pdrsn@gmail.com";

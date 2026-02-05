@@ -4,9 +4,6 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
-    # Latest nixpkgs for packages with pending updates (e.g., jujutsu)
-    nixpkgs-latest.url = "github:NixOS/nixpkgs/master";
-
     nix-darwin.url = "github:nix-darwin/nix-darwin/master";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
