@@ -20,6 +20,7 @@
     CARGO_INCREMENTAL = 1;
     CARGO_UNSTABLE_SPARSE_REGISTRY = "true";
     CARGO_TERM_COLOR = "always";
+
   };
   shellAliases = {
     # aliases that work in all shells
@@ -83,6 +84,7 @@
   };
 in {
   home.sessionPath = [
+    "/run/current-system/sw/bin"
     "${config.home.homeDirectory}/.cargo/bin"
     "${config.home.homeDirectory}/.bin"
   ];
@@ -111,6 +113,8 @@ in {
   programs.fish = {
     enable = true;
     generateCompletions = true;
+    functions = {
+    };
     shellAliases =
       {
         # fish specific aliases

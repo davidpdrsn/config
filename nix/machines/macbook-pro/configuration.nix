@@ -131,4 +131,8 @@
   # allow using touch id for sudo (reattach needed for tmux)
   security.pam.services.sudo_local.touchIdAuth = true;
   security.pam.services.sudo_local.reattach = true;
+
+  # Install 1Password CLI and copy it to /usr/local/bin/op so the
+  # desktop app integration (biometric unlock) works
+  programs._1password.enable = true;
 }

@@ -103,6 +103,9 @@
       # Easy config reload
       bind r source-file ~/.config/tmux/tmux.conf \; display "Config reloaded!"
 
+      # Update PATH from client on attach
+      set -g update-environment "PATH"
+
       # Renumber windows when one is closed
       set -g renumber-windows on
 

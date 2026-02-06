@@ -4,7 +4,16 @@
   ...
 }: {
   environment.systemPackages = with pkgs;
-    [
+    let
+      opWrapped = import ../../lib/op-wrapper.nix {inherit pkgs;};
+      test-cli = opWrapped {
+        name = "test-cli";
+        env = {
+          TEST_SECRET = "op://Personal/Test Secret/credential";
+        };
+        command = /Users/davidpdrsn/.bin/test-cli;
+      };
+    in [
       bat
       cargo-limit
       cargo-outdated
@@ -34,6 +43,7 @@
       python314
       git-filter-repo
       gitleaks
+      test-cli
 
       claude-code
       codex
