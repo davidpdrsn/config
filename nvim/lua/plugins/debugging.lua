@@ -23,7 +23,7 @@ return {
             }
 
             function path_to_rust_binary()
-                local handle = io.popen("/Users/davidpdrsn/.cargo/bin/t \"Path to Rust binary\"")
+                local handle = io.popen(os.getenv("HOME") .. "/.cargo/bin/t \"Path to Rust binary\"")
                 local result = handle:read("*a")
                 handle:close()
                 return result
@@ -72,7 +72,7 @@ return {
                     type = "coreclr_godot",
                     name = "Build and run",
                     request = "launch",
-                    program = "/Users/davidpdrsn/code/traffic-signal-sim/.godot/mono/temp/bin/Debug/Traffic Signal Sim.dll",
+                    program = os.getenv("HOME") .. "/code/traffic-signal-sim/.godot/mono/temp/bin/Debug/Traffic Signal Sim.dll",
                     preLaunchTask = "cs_compile",
                 },
             }

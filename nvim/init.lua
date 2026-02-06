@@ -324,7 +324,7 @@ common.custom_format_leader_command("nix", function(path)
 end)
 
 common.custom_format_leader_command("lua", function(path)
-    return { "stylua", "--config-path", "/Users/davidpdrsn/.stylua.toml", path }
+    return { "stylua", "--config-path", os.getenv("HOME") .. "/.stylua.toml", path }
 end)
 
 vim.keymap.set("n", "<leader>v", function()
@@ -353,7 +353,7 @@ vim.keymap.set("n", "<leader><leader>", function()
     local original_win_id = vim.api.nvim_get_current_win()
     vim.cmd("botright 20new")
     local term_buf = vim.api.nvim_get_current_buf()
-    vim.fn.jobstart("/Users/davidpdrsn/.cargo/bin/t", {
+    vim.fn.jobstart(vim.fn.expand("~/.cargo/bin/t"), {
         term = true,
         on_exit = function(_, status)
             if status == 0 then

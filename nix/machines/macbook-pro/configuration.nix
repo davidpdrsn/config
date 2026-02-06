@@ -1,47 +1,13 @@
-{
-  inputs,
-  self,
-  pkgs,
-  ...
-}: {
+{username, ...}: {
   imports = [
+    ../../shared/common.nix
     ./packages.nix
   ];
 
   # Required because I installed Determinate nix, not vanilla
   nix.enable = false;
 
-  # Necessary for using flakes on this system.
-  nix.settings.experimental-features = "nix-command flakes";
-
-  # Set Nix build options for performance
-  nix.settings.max-jobs = "auto";
-  nix.settings.cores = 0;
-
-  launchd.daemons.nix-gc = {
-    serviceConfig = {
-      ProgramArguments = [
-        "/nix/var/nix/profiles/default/bin/nix-collect-garbage"
-        "--delete-older-than"
-        "30d"
-      ];
-      StartCalendarInterval = {
-        Weekday = 0;
-        Hour = 3;
-        Minute = 0;
-      };
-    };
-  };
-
-  # Set Git commit hash for darwin-version.
-  system.configurationRevision =
-    if (self ? rev)
-    then self.rev
-    else if (self ? dirtyRev)
-    then self.dirtyRev
-    else null;
-
-  system.primaryUser = "davidpdrsn";
+  system.primaryUser = username;
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
@@ -49,8 +15,6 @@
 
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = "aarch64-darwin";
-
-  nixpkgs.config.allowUnfree = true;
 
   system.keyboard.enableKeyMapping = true;
   system.keyboard.remapCapsLockToControl = true;

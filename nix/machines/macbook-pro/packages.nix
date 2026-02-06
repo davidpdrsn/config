@@ -3,6 +3,13 @@
   inputs,
   ...
 }: {
+  imports = [
+    ../../shared/packages.nix
+  ];
+
+  # Mac-only system packages.
+  # Shared packages come from ../../shared/packages.nix.
+  # To make a shared package mac-only, move it here from shared/packages.nix.
   environment.systemPackages = with pkgs;
     let
       opWrapped = import ../../lib/op-wrapper.nix {inherit pkgs;};
@@ -14,59 +21,19 @@
         command = /Users/davidpdrsn/.bin/test-cli;
       };
     in [
-      bat
-      cargo-limit
-      cargo-outdated
-      cargo-watch
-      curl
-      eza
-      fd
-      ffmpeg
-      fzf
-      gh
-      htop
-      imagemagick
-      jq
-      mergiraf
-      ruby_3_4
-      stylua
-      tokei
-      tree
-      watchexec
-      wget
-      openai-whisper
-      yt-dlp
-      hyperfine
-      nxv
-      resvg
-      graphviz
-      python314
-      git-filter-repo
-      gitleaks
-      test-cli
-
-      claude-code
-      codex
-      opencode
-
-      colima
-      docker
-
-      alejandra # nix formatter
-      nil # nix language server
-
+      # macOS-only packages
       autoraise
       mas
-    ]
-    ++ map (pkg: inputs.${pkg}.packages.${pkgs.stdenv.hostPlatform.system}.default)
-    [
-      "smart-pwd-2"
-      "is-vim-running"
-      "git-remove-merged-branches"
-      "replace"
-      "remove-indentation"
-      "git-branch-picker"
-      "jjui"
+      colima # macOS Docker runtime (docker CLI is in shared)
+      nxv
+      resvg
+      test-cli
+
+      # heavy packages not needed on headless servers
+      ffmpeg
+      imagemagick
+      yt-dlp
+      graphviz
     ];
 
   fonts.packages = with pkgs; [

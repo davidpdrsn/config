@@ -37,5 +37,5 @@ fi
 if [[ "$selection" == "all" ]]; then
   nix flake update --no-warn-dirty --flake "$root_dir"
 else
-  nix flake lock --update-input "$selection" --no-warn-dirty --flake "$root_dir"
+  nix flake update "$selection" --no-warn-dirty --flake "$root_dir"
 fi

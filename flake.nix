@@ -1,5 +1,5 @@
 {
-  description = "Example nix-darwin system flake";
+  description = "Personal multi-machine nix configuration";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -11,7 +11,7 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
-    # homebrew
+    # homebrew (macOS only)
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
     homebrew-core = {
       url = "github:homebrew/homebrew-core";
@@ -22,33 +22,11 @@
       flake = false;
     };
 
-    # private repos requires /etc/nix/nix.custom.conf with gh personal access token (classic)
-    # token is in Passwords.app under "GitHub nix-darwin access token"
-
-    # personal dev tools
-    smart-pwd-2.url = "github:davidpdrsn/smart-pwd-2";
-    is-vim-running.url = "github:davidpdrsn/is-vim-running";
+    # personal dev tools (all public repos)
     jjui.url = "github:davidpdrsn/jjui";
-    git-prompt.url = "github:davidpdrsn/git-prompt";
-    git-remove-merged-branches.url = "github:davidpdrsn/git-remove-merged-branches";
-    replace.url = "github:davidpdrsn/replace";
-    git-branch-picker.url = "github:davidpdrsn/git-branch-picker";
-    remove-indentation.url = "github:davidpdrsn/remove-indentation";
+    jjui.inputs.nixpkgs.follows = "nixpkgs";
 
-    yazi-flavors = {
-      url = "github:yazi-rs/flavors";
-      flake = false;
-    };
-
-    # other dev tools not in nix:
-    # - test-command
-    # - parse-dotenv
-    # - git-diff-ai-summarize
-    # - format-prettier
-    # - build-proxy
-    # - cli
-    # - balance
-    # - jj-sync-prs
+    # other dev tools managed via `make clone-dev-tools` + cargo install
   };
 
   outputs = inputs @ {
@@ -61,20 +39,25 @@
     homebrew-cask,
     ...
   }: let
-    # Common arguments for both systems
+    # Common arguments passed to all system and home-manager modules
     commonArgs = {
       inherit inputs self;
       username = "davidpdrsn";
       shell = "fish";
     };
 
-    homeManagerConfig = {
+    # Build a home-manager config block with shared base + machine-specific overrides.
+    # Usage: mkHomeManagerConfig [ ./nix/machines/<machine>/home.nix ]
+    mkHomeManagerConfig = extraModules: {
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
-      home-manager.users.davidpdrsn = import ./nix/home/home.nix;
+      home-manager.users.${commonArgs.username} = {
+        imports = [./nix/home/home.nix] ++ extraModules;
+      };
       home-manager.extraSpecialArgs = commonArgs;
     };
   in {
+    # ── macOS (MacBook Pro) ──────────────────────────────────────────
     darwinConfigurations."Davids-MacBook-Pro" = nix-darwin.lib.darwinSystem {
       specialArgs = commonArgs;
 
@@ -84,7 +67,7 @@
         {users.users.${commonArgs.username}.home = "/Users/${commonArgs.username}";}
 
         home-manager.darwinModules.home-manager
-        homeManagerConfig
+        (mkHomeManagerConfig [./nix/machines/macbook-pro/home.nix])
 
         nix-homebrew.darwinModules.nix-homebrew
         {
@@ -99,6 +82,18 @@
             mutableTaps = false;
           };
         }
+      ];
+    };
+
+    # ── NixOS (Hetzner VPS) ─────────────────────────────────────────
+    nixosConfigurations."nix-4gb-nbg1-1" = nixpkgs.lib.nixosSystem {
+      specialArgs = commonArgs;
+
+      modules = [
+        ./nix/machines/hetzner/configuration.nix
+
+        home-manager.nixosModules.home-manager
+        (mkHomeManagerConfig [./nix/machines/hetzner/home.nix])
       ];
     };
   };

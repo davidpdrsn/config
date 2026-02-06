@@ -1,5 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
-file=`mktemp`
-tmux capture-pane -pS -32768 > $file
-tmux new-window -n:mywindow "nvim '+ normal G $' $file"
+file="$(mktemp)"
+trap 'rm -f "$file"' EXIT
+tmux capture-pane -pS -32768 > "$file"
+tmux new-window -n:mywindow "nvim '+ normal G $' \"$file\""

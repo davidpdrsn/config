@@ -51,12 +51,6 @@
       push = {
         autoSetupRemote = "true";
       };
-      "filter \"lfs\"" = {
-        smudge = "git-lfs smudge -- %f";
-        process = "git-lfs filter-process";
-        required = "true";
-        clean = "git-lfs clean -- %f";
-      };
       rebase = {
         updateRefs = true;
       };

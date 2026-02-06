@@ -1,13 +1,8 @@
-{
-  config,
-  inputs,
-  ...
-}: {
+{config, ...}: {
   imports = [
     ./sh.nix
     ./ssh.nix
     ./vcs.nix
-    ./term.nix
     ./ripgrep.nix
     ./tmux.nix
   ];
@@ -25,16 +20,11 @@
 
   programs.zoxide = {
     enable = true;
-    enableNushellIntegration = true;
     enableFishIntegration = true;
-    enableZshIntegration = true;
   };
 
   programs.direnv = {
     enable = true;
-    enableZshIntegration = true;
-    enableNushellIntegration = true;
-    # enableFishIntegration = true;
     nix-direnv.enable = true;
   };
 
@@ -44,39 +34,17 @@
 
   programs.atuin = {
     enable = true;
-    enableZshIntegration = true;
-    enableNushellIntegration = true;
     enableFishIntegration = true;
     settings = {
       enter_accept = false;
     };
   };
 
-  programs.zellij = {
-    enable = true;
-  };
-
-  programs.yazi = {
-    enable = true;
-    enableFishIntegration = true;
-    flavors = {
-      catppuccin-mocha = "${inputs.yazi-flavors}/catppuccin-mocha.yazi";
-    };
-    theme = {
-      flavor = {
-        dark = "catppuccin-mocha";
-        light = "catppuccin-mocha";
-      };
-    };
-  };
-
   home.file = {
     ".bin".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/code/config/bin";
-    ".config/balance/config.toml".source = ./../../balance/balance.toml;
     ".stylua.toml".source = ./../../stylua/stylua.toml;
     ".config/ghostty".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/code/config/ghostty";
     ".config/nvim".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/code/config/nvim";
-    ".config/zellij".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/code/config/zellij";
     ".config/jjui".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/code/config/jjui";
     ".claude/settings.json".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/code/config/claude/settings.json";
   };
@@ -86,8 +54,5 @@
 
     mkdir -p .config/cli
     touch .config/cli/history
-
-    mkdir -p ~/Desktop/screenshots
-    mkdir -p ~/code/dev-tools
   '';
 }

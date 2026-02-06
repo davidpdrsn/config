@@ -2,7 +2,11 @@
 
 .PHONY: switch
 switch:
-	@sudo darwin-rebuild switch --flake .
+	@if [ "$$(uname)" = "Darwin" ]; then \
+		sudo darwin-rebuild switch --flake ".#$$(scutil --get LocalHostName)"; \
+	else \
+		sudo nixos-rebuild switch --flake ".#$$(hostname)"; \
+	fi
 
 .PHONY: check
 check:
@@ -10,7 +14,11 @@ check:
 
 .PHONY: build
 build:
-	@darwin-rebuild build --flake .
+	@if [ "$$(uname)" = "Darwin" ]; then \
+		darwin-rebuild build --flake ".#$$(scutil --get LocalHostName)"; \
+	else \
+		nixos-rebuild build --flake ".#$$(hostname)"; \
+	fi
 
 .PHONY: update
 update:
@@ -19,3 +27,11 @@ update:
 .PHONY: compare-updates
 compare-updates:
 	@./scripts/nix-compare-updates
+
+.PHONY: clone-dev-tools
+clone-dev-tools:
+	@./scripts/clone-dev-tools
+
+.PHONY: switch-vps
+switch-vps:
+	ssh -t hetzner-nixos "cd /home/davidpdrsn/config && jj git fetch && jj new main && make switch"

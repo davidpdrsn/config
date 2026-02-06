@@ -15,3 +15,4 @@ resize-overlay = never
 clipboard-trim-trailing-spaces = true
 macos-non-native-fullscreen = true
 confirm-close-surface = false
+command = /bin/sh -l -c '/etc/profiles/per-user/davidpdrsn/bin/fish'

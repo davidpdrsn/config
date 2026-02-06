@@ -75,7 +75,7 @@ function M.tmux_wrap(cmd)
             local words = vim.split(line, " ")
             local n = words[1]
             local pane_cmd = words[2]
-            if pane_cmd == "zsh" or pane_cmd == "nu" then
+            if pane_cmd == "fish" then
                 return {
                     in_tmux = true,
                     cmd = "tmux send-keys -t "

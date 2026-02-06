@@ -387,12 +387,15 @@ def main():
             for _index, window_name, _window_id in windows_by_session.get(session_name, []):
                 handle.write(f"    {window_name}\n")
 
-    status = subprocess.call(["nvim", tmp_path])
-    if status != 0:
-        return status
+    try:
+        status = subprocess.call(["nvim", tmp_path])
+        if status != 0:
+            return status
 
-    with open(tmp_path, "r", encoding="utf-8") as handle:
-        buffer_contents = handle.read()
+        with open(tmp_path, "r", encoding="utf-8") as handle:
+            buffer_contents = handle.read()
+    finally:
+        os.unlink(tmp_path)
 
     (
         order,

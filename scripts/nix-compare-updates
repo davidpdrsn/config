@@ -2,8 +2,14 @@
 set -euo pipefail
 
 root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-packages_file="$root_dir/nix/machines/macbook-pro/packages.nix"
-darwin_attr='darwinConfigurations."Davids-MacBook-Pro"'
+
+if [ "$(uname)" = "Darwin" ]; then
+  packages_file="$root_dir/nix/machines/macbook-pro/packages.nix"
+  system_attr='darwinConfigurations."Davids-MacBook-Pro"'
+else
+  packages_file="$root_dir/nix/machines/hetzner/configuration.nix"
+  system_attr='nixosConfigurations."nix-4gb-nbg1-1"'
+fi
 
 if [[ ! -f "$packages_file" ]]; then
   printf 'Packages file not found: %s\n' "$packages_file" >&2
@@ -67,7 +73,7 @@ if [[ ${#package_entries[@]} -eq 0 ]]; then
 fi
 
 system="$(
-  nix eval --impure --raw --expr "(builtins.getFlake \"$root_dir\").$darwin_attr.pkgs.stdenv.hostPlatform.system"
+  nix eval --impure --raw --expr "(builtins.getFlake \"$root_dir\").$system_attr.pkgs.stdenv.hostPlatform.system"
 )"
 
 tmp_dir="$(mktemp -d)"
@@ -84,7 +90,7 @@ eval_version() {
   local expr
 
   if [[ "$kind" == "pkgs" ]]; then
-    expr="(builtins.getFlake \"$flake_dir\").$darwin_attr.pkgs.\"$name\".version"
+    expr="(builtins.getFlake \"$flake_dir\").$system_attr.pkgs.\"$name\".version"
   else
     expr="(builtins.getFlake \"$flake_dir\").inputs.\"$name\".packages.\"$system\".default.version"
   fi

@@ -1,6 +1,6 @@
 # Config
 
-Personal nix-darwin configuration using flakes.
+Personal nix configuration using flakes.
 
 ## Commands
 
