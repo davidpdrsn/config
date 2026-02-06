@@ -34,8 +34,6 @@
     replace.url = "github:davidpdrsn/replace";
     git-branch-picker.url = "github:davidpdrsn/git-branch-picker";
     remove-indentation.url = "github:davidpdrsn/remove-indentation";
-    go-insert-error.url = "github:davidpdrsn/go-insert-error/b4aff99d348f1ba1a1d24c0c9c1447e4a5939a65";
-    git-history-csv.url = "git+file:///Users/davidpdrsn/code/git-history-csv?rev=8f7a6add93577bf3f0fce1ddc35e4cb0fc4122fe";
 
     yazi-flavors = {
       url = "github:yazi-rs/flavors";

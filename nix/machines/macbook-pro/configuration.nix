@@ -34,7 +34,12 @@
   };
 
   # Set Git commit hash for darwin-version.
-  system.configurationRevision = self.rev or self.dirtyRev or null;
+  system.configurationRevision =
+    if (self ? rev)
+    then self.rev
+    else if (self ? dirtyRev)
+    then self.dirtyRev
+    else null;
 
   system.primaryUser = "davidpdrsn";
 

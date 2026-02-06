@@ -8,6 +8,10 @@ switch:
 check:
 	@nix flake check
 
+.PHONY: build
+build:
+	@darwin-rebuild build --flake .
+
 .PHONY: update
 update:
 	@./scripts/nix-update-input

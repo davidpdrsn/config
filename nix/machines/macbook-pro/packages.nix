@@ -66,8 +66,6 @@
       "replace"
       "remove-indentation"
       "git-branch-picker"
-      "go-insert-error"
-      "git-history-csv"
       "jjui"
     ];
 
