@@ -93,6 +93,7 @@
     settings = {
       add_newline = true;
       format = lib.concatStrings [
+        "$hostname"
         "$directory"
         "\${custom.git_prompt}"
         "$line_break"
@@ -111,6 +112,11 @@
           detect_files = [".jj"];
           style = "yellow";
         };
+      };
+      hostname = {
+        ssh_only = true;
+        format = "[$hostname]($style) ";
+        style = "bold yellow";
       };
       directory = {
         fish_style_pwd_dir_length = 1;

@@ -32,6 +32,10 @@ compare-updates:
 clone-dev-tools:
 	@./scripts/clone-dev-tools
 
+.PHONY: ssh
+ssh:
+	ssh hetzner-nixos
+
 .PHONY: switch-vps
 switch-vps:
 	ssh -t hetzner-nixos "cd /home/davidpdrsn/config && jj git fetch && jj new main && make switch"
