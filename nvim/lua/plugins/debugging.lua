@@ -118,7 +118,7 @@ return {
                     },
                 },
                 windows = {
-                    height = 12,
+                    size = 12,
                     position = "below",
                     terminal = {
                         hide = { "go", "lldb", "coreclr_godot" },
