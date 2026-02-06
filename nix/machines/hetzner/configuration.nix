@@ -30,6 +30,11 @@
     shell = pkgs.fish;
   };
 
+  # Ensure setuid wrappers (like sudo) are found before nix store binaries
+  environment.extraInit = ''
+    export PATH="/run/wrappers/bin:$PATH"
+  '';
+
   services.openssh.enable = true;
   services.openssh.settings = {
     PasswordAuthentication = false;

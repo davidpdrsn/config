@@ -27,6 +27,7 @@
       python314
       git-filter-repo
       gitleaks
+      just
 
       claude-code
       codex
