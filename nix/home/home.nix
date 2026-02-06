@@ -41,12 +41,12 @@
   };
 
   home.file = {
-    ".bin".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/code/config/bin";
+    ".bin".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/config/bin";
     ".stylua.toml".source = ./../../stylua/stylua.toml;
-    ".config/ghostty".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/code/config/ghostty";
-    ".config/nvim".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/code/config/nvim";
-    ".config/jjui".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/code/config/jjui";
-    ".claude/settings.json".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/code/config/claude/settings.json";
+    ".config/ghostty".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/config/ghostty";
+    ".config/nvim".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/config/nvim";
+    ".config/jjui".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/config/jjui";
+    ".claude/settings.json".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/config/claude/settings.json";
   };
 
   home.activation.createFolders = ''
