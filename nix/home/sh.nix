@@ -13,17 +13,6 @@
     DOCKER_HOST = "unix:///Users/davidpdrsn/.colima/default/docker.sock";
     TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE = "/var/run/docker.sock";
 
-    GH_AUTH_TOKEN = "***REMOVED***";
-
-    BITS_N_WIRES_PLANE_API_KEY = "***REMOVED***";
-
-    LUN_DEV_DB_PASS = "***REMOVED***";
-    LUN_PROD_DB_PASS = "***REMOVED***";
-
-    # lun org keys
-    ANTHROPIC_API_KEY = "***REMOVED***";
-    GEMINI_API_KEY = "***REMOVED***";
-
     TERM = "tmux-256color";
 
     CARGO_PROFILE_DEV_SPLIT_DEBUGINFO = "unpacked";

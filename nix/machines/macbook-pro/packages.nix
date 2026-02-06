@@ -32,6 +32,7 @@
       resvg
       graphviz
       python314
+      git-filter-repo
 
       claude-code
       codex
