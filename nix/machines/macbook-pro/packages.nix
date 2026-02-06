@@ -33,6 +33,7 @@
       graphviz
       python314
       git-filter-repo
+      gitleaks
 
       claude-code
       codex
