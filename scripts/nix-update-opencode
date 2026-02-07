@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+flake_file="$root_dir/flake.nix"
+
+if ! command -v curl >/dev/null 2>&1; then
+  printf 'curl not found. Install it first.\n' >&2
+  exit 1
+fi
+
+if ! command -v jq >/dev/null 2>&1; then
+  printf 'jq not found. Install it first.\n' >&2
+  exit 1
+fi
+
+latest_tag="$(curl -s "https://api.github.com/repos/anomalyco/opencode/releases/latest" | jq -r .tag_name)"
+if [[ -z "$latest_tag" || "$latest_tag" == "null" ]]; then
+  printf 'Failed to fetch latest opencode release tag.\n' >&2
+  exit 1
+fi
+
+FLAKE_FILE="$flake_file" OPENCODE_TAG="$latest_tag" python3 - <<'PY'
+import os
+import re
+from pathlib import Path
+
+flake_file = Path(os.environ["FLAKE_FILE"])
+latest_tag = os.environ["OPENCODE_TAG"]
+
+contents = flake_file.read_text()
+pattern = r'opencode\.url\s*=\s*"github:anomalyco/opencode\?ref=refs/tags/[^"]+";'
+replacement = f'opencode.url = "github:anomalyco/opencode?ref=refs/tags/{latest_tag}";'
+
+if not re.search(pattern, contents):
+    raise SystemExit("opencode.url not found in flake.nix")
+
+updated = re.sub(pattern, replacement, contents)
+flake_file.write_text(updated)
+PY
+
+nix flake update opencode --no-warn-dirty --flake "$root_dir"

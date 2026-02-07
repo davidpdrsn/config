@@ -31,7 +31,6 @@
 
       claude-code
       codex
-      opencode
 
       docker
 
@@ -46,5 +45,6 @@
     ++ map (pkg: inputs.${pkg}.packages.${pkgs.stdenv.hostPlatform.system}.default)
     [
       "jjui"
+      "opencode"
     ];
 }

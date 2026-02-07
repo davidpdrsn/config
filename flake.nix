@@ -26,6 +26,9 @@
     jjui.url = "github:davidpdrsn/jjui";
     jjui.inputs.nixpkgs.follows = "nixpkgs";
 
+    opencode.url = "github:anomalyco/opencode?ref=refs/tags/v1.1.53";
+    opencode.inputs.nixpkgs.follows = "nixpkgs";
+
     # other dev tools managed via `make clone-dev-tools` + cargo install
   };
 

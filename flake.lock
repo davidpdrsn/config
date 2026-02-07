@@ -178,6 +178,27 @@
         "type": "github"
       }
     },
+    "opencode": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1770332936,
+        "narHash": "sha256-VddWpvtoDJlbbesJL6VlP99/NJqkHbN8Rdv1XccNRZM=",
+        "owner": "anomalyco",
+        "repo": "opencode",
+        "rev": "579902ace6e9fb925f50b7d9fdf11a6b47895307",
+        "type": "github"
+      },
+      "original": {
+        "owner": "anomalyco",
+        "ref": "refs/tags/v1.1.53",
+        "repo": "opencode",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "home-manager": "home-manager",
@@ -186,7 +207,8 @@
         "jjui": "jjui",
         "nix-darwin": "nix-darwin",
         "nix-homebrew": "nix-homebrew",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "opencode": "opencode"
       }
     }
   },

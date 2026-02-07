@@ -28,6 +28,10 @@ check:
 update:
     ./scripts/nix-update-input
 
+# Update opencode to latest GitHub release tag
+update-opencode:
+    ./scripts/nix-update-opencode
+
 # Compare available updates
 compare-updates:
     ./scripts/nix-compare-updates
