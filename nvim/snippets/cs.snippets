@@ -1,0 +1,383 @@
+snippet callback_entertree
+	public override void _EnterTree()
+	{
+		$0
+	}
+
+snippet callback_exittree
+	public override void _ExitTree()
+	{
+		$0
+	}
+
+snippet callback_ready
+	public override void _Ready()
+	{
+		$0
+	}
+
+snippet callback_input
+	public override void _Input(InputEvent ev)
+	{
+		$0
+	}
+
+snippet callback_unhandled_input
+	public override void _UnhandledInput(InputEvent ev)
+	{
+		$0
+	}
+
+snippet callback_physics_process
+	public override void _PhysicsProcess(double delta)
+	{
+		$0
+	}
+
+snippet callback_process
+	public override void _Process(double delta)
+	{
+		$0
+	}
+
+snippet connect
+	$1.Connect($2.SignalName.$3, Callable.From($4));
+
+snippet print
+	Logger.Info($0);
+
+snippet export
+	[Export]
+	private $0;
+
+snippet export-public
+	[Export]
+	public $0 { get; set; };
+
+snippet component
+	using Godot;
+
+	[GlobalClass]
+	public partial class $1 : Node
+	{
+		$0
+	}
+
+snippet fe
+	foreach (var $1 in $2)
+	{
+		$3
+	}
+
+snippet unity_OnMouseEnter
+	// Called when the mouse enters the object's collider.
+	void OnMouseEnter()
+	{
+		$0
+	}
+
+snippet unity_OnMouseOver
+	// Called every frame while the mouse is over the object.
+	void OnMouseOver()
+	{
+		$0
+	}
+
+snippet unity_OnMouseExit
+	// Called when the mouse exits the object's collider.
+	void OnMouseExit()
+	{
+		$0
+	}
+
+snippet unity_OnMouseDown
+	// Called when the mouse button is pressed over the object.
+	void OnMouseDown()
+	{
+		$0
+	}
+
+snippet unity_OnMouseUp
+	// Called when the mouse button is released over the object.
+	void OnMouseUp()
+	{
+		$0
+	}
+
+snippet unity_OnMouseUpAsButton
+	// Called when a mouse click is completed on the object.
+	void OnMouseUpAsButton()
+	{
+		$0
+	}
+
+snippet unity_OnMouseDrag
+	// Called while the mouse is dragged over the object.
+	void OnMouseDrag()
+	{
+		$0
+	}
+
+snippet unity_OnTriggerEnter
+	// Called when another collider enters this object's trigger.
+	void OnTriggerEnter(Collider other)
+	{
+		$0
+	}
+
+snippet unity_OnTriggerStay
+	// Called while another collider is inside this object's trigger.
+	void OnTriggerStay(Collider other)
+	{
+		$0
+	}
+
+snippet unity_OnTriggerExit
+	// Called when another collider exits this object's trigger.
+	void OnTriggerExit(Collider other)
+	{
+		$0
+	}
+
+snippet unity_OnCollisionEnter
+	// Called when this collider starts colliding with another.
+	void OnCollisionEnter(Collision collision)
+	{
+		$0
+	}
+
+snippet unity_OnCollisionStay
+	// Called while this collider is continuously colliding with another.
+	void OnCollisionStay(Collision collision)
+	{
+		$0
+	}
+
+snippet unity_OnCollisionExit
+	// Called when this collider stops colliding with another.
+	void OnCollisionExit(Collision collision)
+	{
+		$0
+	}
+
+snippet unity_OnAnimatorIK
+	// Called for Inverse Kinematics (IK) calculations.
+	void OnAnimatorIK(int layerIndex)
+	{
+		$0
+	}
+
+snippet unity_OnAnimatorMove
+	// Called when an Animator applies root motion.
+	void OnAnimatorMove()
+	{
+		$0
+	}
+
+snippet unity_OnGUI
+	// Called for rendering and handling GUI events.
+	void OnGUI()
+	{
+		$0
+	}
+
+snippet unity_OnApplicationFocus
+	// Called when the application gains or loses focus.
+	void OnApplicationFocus(bool hasFocus)
+	{
+		$0
+	}
+
+snippet unity_OnApplicationPause
+	// Called when the application is paused or resumed.
+	void OnApplicationPause(bool pauseStatus)
+	{
+		$0
+	}
+
+snippet unity_OnApplicationQuit
+	// Called before the application quits.
+	void OnApplicationQuit()
+	{
+		$0
+	}
+
+snippet unity_OnPlayerConnected
+	// Called when a player connects to the server.
+	void OnPlayerConnected(NetworkPlayer player)
+	{
+		$0
+	}
+
+snippet unity_OnPlayerDisconnected
+	// Called when a player disconnects from the server.
+	void OnPlayerDisconnected(NetworkPlayer player)
+	{
+		$0
+	}
+
+snippet unity_OnAudioFilterRead
+	// Called to modify audio data before playback.
+	void OnAudioFilterRead(float[] data, int channels)
+	{
+		$0
+	}
+
+snippet unity_OnServerInitialized
+	// Called when the server is initialized and ready.
+	void OnServerInitialized()
+	{
+		$0
+	}
+
+snippet unity_OnConnectedToServer
+	// Called when the client successfully connects to a server.
+	void OnConnectedToServer()
+	{
+		$0
+	}
+
+snippet unity_OnDisconnectedFromServer
+	// Called when disconnected from a server.
+	void OnDisconnectedFromServer(NetworkDisconnection info)
+	{
+		$0
+	}
+
+snippet unity_OnFailedToConnect
+	// Called when a client fails to connect to a server.
+	void OnFailedToConnect(NetworkConnectionError error)
+	{
+		$0
+	}
+
+snippet unity_OnPreCull
+	// Called before the camera culls the scene.
+	void OnPreCull()
+	{
+		$0
+	}
+
+snippet unity_OnBecameVisible
+	// Called when the object becomes visible to a camera.
+	void OnBecameVisible()
+	{
+		$0
+	}
+
+snippet unity_OnBecameInvisible
+	// Called when the object is no longer visible to any camera.
+	void OnBecameInvisible()
+	{
+		$0
+	}
+
+snippet unity_OnWillRenderObject
+	// Called before the object is rendered by any camera.
+	void OnWillRenderObject()
+	{
+		$0
+	}
+
+snippet unity_OnPreRender
+	// Called before the camera starts rendering the scene.
+	void OnPreRender()
+	{
+		$0
+	}
+
+snippet unity_OnRenderObject
+	// Called after all objects are drawn, used for custom rendering.
+	void OnRenderObject()
+	{
+		$0
+	}
+
+snippet unity_OnPostRender
+	// Called after a camera has finished rendering.
+	void OnPostRender()
+	{
+		$0
+	}
+
+snippet unity_OnRenderImage
+	// Called when rendering a camera’s image to apply effects.
+	void OnRenderImage(RenderTexture src, RenderTexture dest)
+	{
+		$0
+	}
+
+snippet unity_OnDrawGizmos
+	// Called to draw gizmos in the Scene view.
+	void OnDrawGizmos()
+	{
+		$0
+	}
+
+snippet unity_OnDrawGizmosSelected
+	// Called to draw gizmos only when the object is selected.
+	void OnDrawGizmosSelected()
+	{
+		$0
+	}
+
+snippet unity_Awake
+	// Called when the script instance is being loaded.
+	void Awake()
+	{
+		$0
+	}
+
+snippet unity_OnEnable
+	// Called when the object becomes enabled and active.
+	void OnEnable()
+	{
+		$0
+	}
+
+snippet unity_Start
+	// Called before the first frame update.
+	void Start()
+	{
+		$0
+	}
+
+snippet unity_Update
+	// Called once per frame.
+	void Update()
+	{
+		$0
+	}
+
+snippet unity_LateUpdate
+	// Called after all Update() calls each frame.
+	void LateUpdate()
+	{
+		$0
+	}
+
+snippet unity_FixedUpdate
+	// Called on a fixed time step for physics updates.
+	void FixedUpdate()
+	{
+		$0
+	}
+
+snippet unity_OnDisable
+	// Called when the object becomes disabled or inactive.
+	void OnDisable()
+	{
+		$0
+	}
+
+snippet unity_OnDestroy
+	// Called before the object is destroyed.
+	void OnDestroy()
+	{
+		$0
+	}
+
+snippet signal
+	public event Action $0;
+
+	public void Emit$0() => $0?.Invoke();

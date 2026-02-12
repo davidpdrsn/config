@@ -1,0 +1,530 @@
+#!/usr/bin/env python3
+# Self-test: run `tmux-window-reorder --self-test`
+
+import os
+import subprocess
+import sys
+import tempfile
+
+
+def tmux_output(*args):
+    return subprocess.check_output(["tmux", *args], text=True).strip()
+
+
+def tmux_lines(*args):
+    output = tmux_output(*args)
+    if not output:
+        return []
+    return output.splitlines()
+
+
+def parse_edit_buffer(content, windows_by_name):
+    order = []
+    used_window_ids = set()
+    current_session = ""
+    session_names_in_file = []
+    sessions_with_windows = set()
+    new_windows = []
+    windows_by_name = {name: list(ids) for name, ids in windows_by_name.items()}
+
+    for raw_line in content.splitlines():
+        line = raw_line.rstrip("\n")
+        if not line:
+            continue
+
+        if line[0].isspace():
+            if not current_session:
+                continue
+            trimmed = line.lstrip()
+            window_name = trimmed
+            window_ids = windows_by_name.get(window_name, [])
+            window_id = ""
+            while window_ids:
+                candidate = window_ids.pop(0)
+                if candidate not in used_window_ids:
+                    window_id = candidate
+                    break
+            if window_id:
+                used_window_ids.add(window_id)
+                order.append(
+                    {
+                        "session": current_session,
+                        "window_id": window_id,
+                        "window_name": window_name,
+                    }
+                )
+            else:
+                new_windows.append((current_session, window_name))
+                order.append(
+                    {
+                        "session": current_session,
+                        "window_id": None,
+                        "window_name": window_name,
+                    }
+                )
+            sessions_with_windows.add(current_session)
+            continue
+
+        current_session = line.strip()
+        if current_session:
+            session_names_in_file.append(current_session)
+
+    return order, session_names_in_file, sessions_with_windows, used_window_ids, new_windows
+
+
+def filter_order_by_sessions(order, session_names_in_file_set):
+    return [entry for entry in order if entry["session"] in session_names_in_file_set]
+
+
+def run_self_test():
+    windows_by_name = {
+        "config": ["@1"],
+        "dnd": ["@2"],
+        "jj-ai-implement": ["@3"],
+        "jjui-fork": ["@4"],
+        "email": ["@5"],
+        "calor": ["@6"],
+        "web-main": ["@7"],
+        "ios": ["@8"],
+        "servers": ["@9"],
+        "dup": ["@10", "@11"],
+    }
+
+    def simulate_move_behavior(content, session_names):
+        (
+            order,
+            session_names_in_file,
+            sessions_with_windows,
+            _used_ids,
+            _new_windows,
+        ) = parse_edit_buffer(content, windows_by_name)
+        session_set = set(session_names)
+        session_names_in_file_set = {name for name in session_names_in_file if name}
+        sessions = {name: [f"default-{name}"] for name in session_set}
+        defaults_to_kill = []
+
+        for session_name in session_names_in_file_set:
+            if session_name not in session_set:
+                sessions[session_name] = [f"default-{session_name}"]
+                session_set.add(session_name)
+                if session_name in sessions_with_windows:
+                    defaults_to_kill.append(f"default-{session_name}")
+
+        for session_name in list(session_set - session_names_in_file_set):
+            sessions.pop(session_name, None)
+
+        for entry in order:
+            target_session = entry["session"]
+            if target_session not in sessions:
+                raise RuntimeError(f"can't find session: {target_session}")
+
+        for default_window in defaults_to_kill:
+            for session_name, windows in list(sessions.items()):
+                if default_window in windows:
+                    windows.remove(default_window)
+                if not windows:
+                    sessions[session_name] = ["moved"]
+
+    def simulate_no_missing_window_after_move(content, session_names):
+        (
+            order,
+            session_names_in_file,
+            _sessions_with_windows,
+            _used_ids,
+            _new_windows,
+        ) = parse_edit_buffer(content, windows_by_name)
+        session_set = set(session_names)
+        session_names_in_file_set = {name for name in session_names_in_file if name}
+        windows = {window_id: next(iter(session_set)) for ids in windows_by_name.values() for window_id in ids}
+
+        for entry in order:
+            target_session = entry["session"]
+            window_id = entry["window_id"]
+            if target_session not in session_names_in_file_set:
+                raise RuntimeError(f"missing target session: {target_session}")
+            if window_id is None:
+                continue
+            if window_id not in windows:
+                raise RuntimeError(f"can't find window: {window_id}")
+
+    def test_background_session_with_window():
+        content = """personal-1
+    config
+    dnd
+    jj-ai-implement
+    jjui-fork
+work-0
+    email
+    calor
+    web-main
+    ios
+background
+    servers
+"""
+        order, session_names, sessions_with_windows, used_ids, new_windows = parse_edit_buffer(
+            content, windows_by_name
+        )
+        assert "background" in session_names, "background session missing"
+        assert "background" in sessions_with_windows, "background should have windows"
+        assert order[-1]["session"] == "background", "background should be last session"
+        assert "@9" in used_ids, "servers window id missing"
+        assert not new_windows, "unexpected new windows"
+
+    def test_background_session_empty():
+        content = """personal-1
+    config
+background
+"""
+        order, session_names, sessions_with_windows, _used_ids, new_windows = parse_edit_buffer(
+            content, windows_by_name
+        )
+        assert "background" in session_names, "background session missing"
+        assert "background" not in sessions_with_windows, "background should be empty"
+        assert order[0]["session"] == "personal-1", "personal-1 should be first"
+        assert not new_windows, "unexpected new windows"
+
+    def test_indented_session_header_creates_window():
+        content = """personal-1
+    config
+    background
+        servers
+"""
+        _order, session_names, sessions_with_windows, _used_ids, new_windows = parse_edit_buffer(
+            content, windows_by_name
+        )
+        assert "background" not in session_names, "indented session header should not be session"
+        assert sessions_with_windows == {"personal-1"}, "indented session should be window"
+        assert new_windows == [("personal-1", "background")], "indented session should create window"
+
+    def test_blank_lines():
+        content = """personal-1
+
+    config
+
+work-0
+    email
+"""
+        order, session_names, _sessions_with_windows, _used_ids, new_windows = parse_edit_buffer(
+            content, windows_by_name
+        )
+        assert session_names == ["personal-1", "work-0"], "blank lines should be ignored"
+        assert [item["window_id"] for item in order] == ["@1", "@5"], "window ordering incorrect"
+        assert not new_windows, "unexpected new windows"
+
+    def test_unknown_window_creates_new_window():
+        content = """personal-1
+    not-a-window
+    config
+"""
+        order, session_names, _sessions_with_windows, _used_ids, new_windows = parse_edit_buffer(
+            content, windows_by_name
+        )
+        assert session_names == ["personal-1"], "unknown window should not create session"
+        assert order[0]["session"] == "personal-1", "window should attach to current session"
+        assert new_windows == [("personal-1", "not-a-window")], "unknown window should be new window"
+
+    def test_duplicate_window_names():
+        content = """personal-1
+    dup
+    dup
+"""
+        order, _session_names, _sessions_with_windows, used_ids, new_windows = parse_edit_buffer(
+            content, windows_by_name
+        )
+        assert used_ids == {"@10", "@11"}, "duplicate window ids not consumed"
+        assert len(order) == 2, "duplicate windows should map twice"
+        assert not new_windows, "unexpected new windows"
+
+    def test_new_window_detection():
+        content = """personal-1
+    config
+work-0
+    email
+    server
+"""
+        (
+            _order,
+            _session_names,
+            _sessions_with_windows,
+            _used_ids,
+            new_windows,
+        ) = parse_edit_buffer(content, windows_by_name)
+        assert new_windows == [("work-0", "server")], "new window not detected"
+
+    def test_move_behavior_creates_sessions():
+        content = """personal-1
+    config
+    dnd
+    jj-ai-implement
+    jjui-fork
+work-0
+    email
+    calor
+    web-main
+    ios
+background
+    servers
+"""
+        simulate_move_behavior(content, ["personal-1", "work-0"])
+
+    def test_move_from_removed_session():
+        content = """background
+    servers
+personal-1
+    config
+    dnd
+    jj-ai-implement
+    jjui-fork
+work-0
+    servers
+    email
+    calor
+    web-main
+    ios
+"""
+        simulate_move_behavior(content, ["background", "personal-1", "work-0"])
+        simulate_no_missing_window_after_move(content, ["background", "personal-1", "work-0"])
+
+    def test_removed_session_filtered_from_order():
+        content_before = """background
+    servers
+personal-1
+    config
+    dnd
+    jj-ai-implement
+    jjui-fork
+work-0
+    servers
+    email
+    calor
+    web-main
+    ios
+"""
+        content_after = """personal-1
+    config
+    dnd
+    jj-ai-implement
+    jjui-fork
+work-0
+    email
+    calor
+    web-main
+    ios
+"""
+        order_before, _sessions_before, _sessions_with_windows, _used_ids, _new_windows = parse_edit_buffer(
+            content_before, windows_by_name
+        )
+        (
+            _order_after,
+            sessions_after,
+            _sessions_with_windows,
+            _used_ids,
+            _new_windows,
+        ) = parse_edit_buffer(content_after, windows_by_name)
+        filtered = filter_order_by_sessions(order_before, set(sessions_after))
+        if any(entry["session"] == "background" for entry in filtered):
+            raise RuntimeError("still referencing removed background session")
+
+    tests = [
+        test_background_session_with_window,
+        test_background_session_empty,
+        test_indented_session_header_creates_window,
+        test_blank_lines,
+        test_unknown_window_creates_new_window,
+        test_duplicate_window_names,
+        test_new_window_detection,
+        test_move_behavior_creates_sessions,
+        test_move_from_removed_session,
+        test_removed_session_filtered_from_order,
+    ]
+
+    for test in tests:
+        print(f"self-test: {test.__name__}")
+        test()
+
+    print("self-test ok")
+    return 0
+
+
+def main():
+    if "--self-test" in sys.argv:
+        return run_self_test()
+
+    if "TMUX" not in os.environ:
+        print("Not inside tmux", file=sys.stderr)
+        return 1
+
+    current_window_id = tmux_output("display-message", "-p", "#{window_id}")
+    base_index = tmux_output("show-option", "-gqv", "base-index") or "0"
+    base_index_int = int(base_index)
+
+    session_names = [name for name in tmux_lines("list-sessions", "-F", "#{session_name}") if name]
+
+    windows_by_session = {}
+    windows_by_name = {}
+    all_window_ids = []
+    for line in tmux_lines(
+        "list-windows",
+        "-a",
+        "-F",
+        "#{window_id}\t#{session_name}\t#{window_name}\t#{window_index}",
+    ):
+        window_id, session_name, window_name, window_index = line.split("\t", 3)
+        windows_by_session.setdefault(session_name, []).append(
+            (int(window_index), window_name, window_id)
+        )
+        all_window_ids.append(window_id)
+
+    for session_name, windows in windows_by_session.items():
+        windows.sort(key=lambda item: item[0])
+        for _index, window_name, window_id in windows:
+            windows_by_name.setdefault(window_name, []).append(window_id)
+
+    with tempfile.NamedTemporaryFile(mode="w+", delete=False) as handle:
+        tmp_path = handle.name
+        for session_name in session_names:
+            handle.write(f"{session_name}\n")
+            for _index, window_name, _window_id in windows_by_session.get(session_name, []):
+                handle.write(f"    {window_name}\n")
+
+    try:
+        status = subprocess.call(["nvim", tmp_path])
+        if status != 0:
+            return status
+
+        with open(tmp_path, "r", encoding="utf-8") as handle:
+            buffer_contents = handle.read()
+    finally:
+        os.unlink(tmp_path)
+
+    (
+        order,
+        session_names_in_file,
+        sessions_with_windows,
+        used_window_ids,
+        _new_windows,
+    ) = parse_edit_buffer(buffer_contents, windows_by_name)
+
+    session_names_in_file_set = {name for name in session_names_in_file if name}
+    order = filter_order_by_sessions(order, session_names_in_file_set)
+
+    initial_session_set = set(session_names)
+    session_set = set(session_names)
+
+    sessions_to_kill = sorted(initial_session_set - session_names_in_file_set)
+
+    default_windows_to_kill = []
+    for session_name in session_names_in_file_set:
+        if session_name not in session_set:
+            subprocess.check_call(["tmux", "new-session", "-d", "-s", session_name])
+            session_set.add(session_name)
+            if session_name in sessions_with_windows:
+                default_window_id = tmux_output(
+                    "display-message", "-p", "-t", session_name, "#{window_id}"
+                )
+                if default_window_id:
+                    default_windows_to_kill.append(default_window_id)
+
+    windows_to_kill = [window_id for window_id in all_window_ids if window_id not in used_window_ids]
+
+    if not order:
+        return 0
+
+    for entry in order:
+        if entry["window_id"] is None:
+            window_id = tmux_output(
+                "new-window",
+                "-d",
+                "-n",
+                entry["window_name"],
+                "-t",
+                entry["session"],
+                "-P",
+                "-F",
+                "#{window_id}",
+            )
+            if window_id:
+                entry["window_id"] = window_id
+                used_window_ids.add(window_id)
+
+    for entry in order:
+        window_id = entry["window_id"]
+        if not window_id:
+            continue
+        target_session = entry["session"]
+        current_session_name = tmux_output(
+            "display-message", "-p", "-t", window_id, "#{session_name}"
+        )
+        if current_session_name != target_session:
+            subprocess.check_call([
+                "tmux",
+                "move-window",
+                "-s",
+                window_id,
+                "-t",
+                f"{target_session}:",
+            ])
+
+    for window_id in default_windows_to_kill:
+        subprocess.call(["tmux", "kill-window", "-t", window_id])
+
+    for window_id in windows_to_kill:
+        exists = subprocess.call(
+            ["tmux", "display-message", "-p", "-t", window_id, "#{window_id}"],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+        if exists == 0:
+            subprocess.call(["tmux", "kill-window", "-t", window_id])
+
+    for session_name in sessions_to_kill:
+        exists = subprocess.call(
+            ["tmux", "has-session", "-t", session_name],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+        if exists == 0:
+            subprocess.call(["tmux", "kill-session", "-t", session_name])
+
+    current_session = ""
+    target_index = base_index_int
+    for entry in order:
+        window_id = entry["window_id"]
+        if not window_id:
+            continue
+        target_session = entry["session"]
+        if target_session != current_session:
+            current_session = target_session
+            target_index = base_index_int
+        current_index = tmux_output(
+            "display-message", "-p", "-t", window_id, "#{window_index}"
+        )
+        if str(target_index) != current_index:
+            subprocess.check_call([
+                "tmux",
+                "swap-window",
+                "-s",
+                window_id,
+                "-t",
+                f"{current_session}:{target_index}",
+            ])
+        target_index += 1
+
+    current_window_info = tmux_output(
+        "display-message",
+        "-p",
+        "-t",
+        current_window_id,
+        "#{session_name}\t#{window_index}",
+    )
+    if current_window_info:
+        current_window_session, current_window_index = current_window_info.split("\t", 1)
+        subprocess.call(["tmux", "switch-client", "-t", current_window_session])
+        subprocess.call(
+            ["tmux", "select-window", "-t", f"{current_window_session}:{current_window_index}"]
+        )
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+git ls-files -z | while IFS= read -r -d '' file; do
+  case "$file" in
+    *-lock.json | *-lock.yaml | *-lock.yml | *-lock.toml | *-lock.lock)
+      continue
+      ;;
+    pnpm-lock.yaml | package-lock.json | yarn.lock)
+      continue
+      ;;
+  esac
+  count=$(wc -l < "$file")
+  printf "%d\t%s\n" "$count" "$file"
+done | sort -n -k1,1 | awk -F "\t" '
+  {
+    files[NR] = $2
+    counts[NR] = $1
+    if (length($2) > maxlen) maxlen = length($2)
+  }
+  END {
+    fmt = "%-" maxlen "s %d\n"
+    for (i = 1; i <= NR; i++) {
+      printf fmt, files[i], counts[i]
+    }
+  }
+'

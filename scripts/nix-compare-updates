@@ -1,0 +1,118 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+if [ "$(uname)" = "Darwin" ]; then
+  packages_file="$root_dir/nix/machines/macbook-pro/packages.nix"
+  system_attr='darwinConfigurations."Davids-MacBook-Pro"'
+else
+  packages_file="$root_dir/nix/machines/hetzner/configuration.nix"
+  system_attr='nixosConfigurations."nix-4gb-nbg1-1"'
+fi
+
+if [[ ! -f "$packages_file" ]]; then
+  printf 'Packages file not found: %s\n' "$packages_file" >&2
+  exit 1
+fi
+
+mapfile -t package_entries < <(
+  python3 - "$packages_file" <<'PY'
+import sys
+
+path = sys.argv[1]
+lines = open(path, "r", encoding="utf-8").read().splitlines()
+
+state = "before"
+pkgs = []
+inputs = []
+
+def add_pkg(dest, value):
+  value = value.split("#", 1)[0].strip()
+  if not value:
+    return
+  dest.append(value)
+
+for line in lines:
+  stripped = line.strip()
+  if state == "before":
+    if stripped.startswith("environment.systemPackages"):
+      state = "seek_first"
+    continue
+  if state == "seek_first":
+    if stripped.startswith("["):
+      state = "in_first"
+    continue
+  if state == "in_first":
+    if stripped.startswith("]"):
+      state = "seek_second"
+      continue
+    add_pkg(pkgs, stripped)
+    continue
+  if state == "seek_second":
+    if stripped.startswith("["):
+      state = "in_second"
+    continue
+  if state == "in_second":
+    if stripped.startswith("]"):
+      break
+    value = stripped.split("#", 1)[0].strip().strip('"')
+    if value:
+      inputs.append(value)
+
+for item in pkgs:
+  print(f"pkgs:{item}")
+for item in inputs:
+  print(f"inputs:{item}")
+PY
+)
+
+if [[ ${#package_entries[@]} -eq 0 ]]; then
+  printf 'No packages found in %s\n' "$packages_file" >&2
+  exit 1
+fi
+
+system="$(
+  nix eval --impure --raw --expr "(builtins.getFlake \"$root_dir\").$system_attr.pkgs.stdenv.hostPlatform.system"
+)"
+
+tmp_dir="$(mktemp -d)"
+tmp_dir="$(cd "$tmp_dir" && pwd -P)"
+trap 'rm -rf "$tmp_dir"' EXIT
+
+rsync -a --exclude .git --exclude .DS_Store "$root_dir/" "$tmp_dir/" >/dev/null
+nix flake update --flake "$tmp_dir" >/dev/null
+
+eval_version() {
+  local flake_dir="$1"
+  local kind="$2"
+  local name="$3"
+  local expr
+
+  if [[ "$kind" == "pkgs" ]]; then
+    expr="(builtins.getFlake \"$flake_dir\").$system_attr.pkgs.\"$name\".version"
+  else
+    expr="(builtins.getFlake \"$flake_dir\").inputs.\"$name\".packages.\"$system\".default.version"
+  fi
+
+  if ! nix eval --impure --raw --expr "$expr" 2>/dev/null; then
+    printf 'unknown'
+  fi
+}
+
+changes=0
+for entry in "${package_entries[@]}"; do
+  kind="${entry%%:*}"
+  name="${entry#*:}"
+  current_version="$(eval_version "$root_dir" "$kind" "$name")"
+  new_version="$(eval_version "$tmp_dir" "$kind" "$name")"
+
+  if [[ "$current_version" != "$new_version" ]]; then
+    printf '%s: %s -> %s\n' "$name" "$current_version" "$new_version"
+    changes=1
+  fi
+done
+
+if [[ $changes -eq 0 ]]; then
+  printf 'No version changes detected.\n'
+fi

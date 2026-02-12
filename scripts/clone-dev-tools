@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+dev_tools_dir="$HOME/code/dev-tools"
+mkdir -p "$dev_tools_dir"
+
+repos=(
+  "aidle"
+  "build-proxy"
+  "cli"
+  "email-client"
+  "jj-ai-implement"
+  "jj-desc-ai"
+  "jj-split-todo-tool"
+  "jj-sync-prs"
+  "test-command"
+  "gh-notifications"
+)
+
+for repo in "${repos[@]}"; do
+  dir="$dev_tools_dir/$repo"
+  if [ -d "$dir" ]; then
+    printf 'already cloned: %s\n' "$repo"
+  else
+    printf 'cloning: %s\n' "$repo"
+    git clone "https://github.com/davidpdrsn/$repo.git" "$dir"
+  fi
+done

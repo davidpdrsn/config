@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+if ! command -v fzf >/dev/null 2>&1; then
+  printf 'fzf not found. Install it first.\n' >&2
+  exit 1
+fi
+
+if ! command -v jq >/dev/null 2>&1; then
+  printf 'jq not found. Install it first.\n' >&2
+  exit 1
+fi
+
+mapfile -t inputs < <(
+  nix flake metadata --json --no-write-lock-file --no-warn-dirty "$root_dir" \
+    | jq -r '.locks.nodes.root.inputs | keys[]'
+)
+
+if [[ ${#inputs[@]} -eq 0 ]]; then
+  printf 'No inputs found in flake.nix.\n' >&2
+  exit 1
+fi
+
+selection="$(
+  {
+    printf 'all\n'
+    printf '%s\n' "${inputs[@]}"
+  } | fzf --height=12 --layout=reverse --prompt='Update input> '
+)"
+
+if [[ -z "$selection" ]]; then
+  exit 0
+fi
+
+if [[ "$selection" == "all" ]]; then
+  nix flake update --no-warn-dirty --flake "$root_dir"
+else
+  nix flake update "$selection" --no-warn-dirty --flake "$root_dir"
+fi
