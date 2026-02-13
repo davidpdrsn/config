@@ -2,7 +2,9 @@
   pkgs,
   inputs,
   ...
-}: {
+}: let
+  openaiCodex = pkgs.callPackage ./packages/codex.nix {};
+in {
   environment.systemPackages = with pkgs;
     [
       bat
@@ -30,7 +32,7 @@
       just
 
       claude-code
-      codex
+      openaiCodex
 
       docker
 

@@ -1,0 +1,57 @@
+model = "gpt-5.3-codex-spark"
+personality = "pragmatic"
+model_reasoning_effort = "high"
+responses_websockets_v2 = true
+
+[features]
+collaboration_modes = true
+apply_patch_freeform = true
+unified_exec = true
+
+[projects."/Users/davidpdrsn/code/notify-mission-control"]
+trust_level = "trusted"
+
+[projects."/Users/davidpdrsn/code/lun/mini-heatloss-building-api"]
+trust_level = "trusted"
+
+[projects."/Users/davidpdrsn/code/bits-n-wires"]
+trust_level = "untrusted"
+
+[projects."/Users/davidpdrsn/code/config"]
+trust_level = "trusted"
+
+[projects."/Users/davidpdrsn/code/dnd-character-sheet"]
+trust_level = "trusted"
+
+[projects."/Users/davidpdrsn/code/email-client"]
+trust_level = "trusted"
+
+[projects."/Users/davidpdrsn/code/jj-ai-implement"]
+trust_level = "trusted"
+
+[projects."/Users/davidpdrsn/code/lun/calor"]
+trust_level = "trusted"
+
+[projects."/Users/davidpdrsn/code/jj-workspaces/calor"]
+trust_level = "trusted"
+
+[projects."/Users/davidpdrsn/code/jjui-fork"]
+trust_level = "trusted"
+
+[projects."/Users/davidpdrsn/Desktop"]
+trust_level = "trusted"
+
+[projects."/Users/davidpdrsn/config"]
+trust_level = "trusted"
+
+[projects."/Users/davidpdrsn/code/dev-tools/jjui-fork"]
+trust_level = "trusted"
+
+[notice]
+hide_gpt5_1_migration_prompt = true
+
+[notice.model_migrations]
+"gpt-5.1-codex" = "gpt-5.2-codex"
+
+[tui]
+notifications = true

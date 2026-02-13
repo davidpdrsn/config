@@ -47,6 +47,7 @@
     ".config/nvim".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/config/nvim";
     ".config/jjui".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/config/jjui";
     ".claude/settings.json".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/config/claude/settings.json";
+    ".codex/config.toml".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/config/codex/config.toml";
   };
 
   home.activation.createFolders = ''
