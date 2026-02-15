@@ -65,6 +65,7 @@
       "arc"
       "poedit"
       "codex-app"
+      "chatgpt"
     ];
 
     masApps = {
