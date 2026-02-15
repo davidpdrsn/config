@@ -22,7 +22,7 @@
       flake = false;
     };
 
-    # personal dev tools (all public repos)
+    # personal dev tools
     jjui.url = "github:davidpdrsn/jjui";
     jjui.inputs.nixpkgs.follows = "nixpkgs";
 
