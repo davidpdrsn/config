@@ -47,6 +47,7 @@ in {
     ++ map (pkg: inputs.${pkg}.packages.${pkgs.stdenv.hostPlatform.system}.default)
     [
       "jjui"
+      "gh-notifications"
       "opencode"
     ];
 }

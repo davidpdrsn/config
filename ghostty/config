@@ -13,6 +13,7 @@ window-padding-x = 3
 window-padding-y = 0
 resize-overlay = never
 clipboard-trim-trailing-spaces = true
+clipboard-paste-protection = false
 macos-non-native-fullscreen = true
 confirm-close-surface = false
 command = /bin/sh -l -c '/etc/profiles/per-user/davidpdrsn/bin/fish'

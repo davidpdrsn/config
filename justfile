@@ -27,6 +27,7 @@ check:
 # Update a flake input (interactive picker)
 update:
     ./scripts/nix-update-input
+    just switch
 
 # Update opencode to latest GitHub release tag
 update-opencode:

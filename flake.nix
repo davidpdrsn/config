@@ -26,6 +26,9 @@
     jjui.url = "github:davidpdrsn/jjui";
     jjui.inputs.nixpkgs.follows = "nixpkgs";
 
+    gh-notifications.url = "git+ssh://git@github.com/davidpdrsn/gh-notifications.git?ref=main";
+    gh-notifications.inputs.nixpkgs.follows = "nixpkgs";
+
     opencode.url = "github:anomalyco/opencode?ref=refs/tags/v1.1.63";
     opencode.inputs.nixpkgs.follows = "nixpkgs";
 
