@@ -138,7 +138,7 @@
           "--"
           "bash"
           "-c"
-          "jj fix-merge-inner && jj restack-inner"
+          "jj simplify-parents && jj restack-inner"
         ];
         # rebase all changes on top of trunk
         restack-inner = [
@@ -147,14 +147,6 @@
           "roots(trunk()..) & mutable()"
           "-o"
           "trunk()"
-        ];
-        # fix the mega merge commit so its not a direct child of trunk()
-        fix-merge-inner = [
-          "rebase"
-          "-s"
-          "merge"
-          "-o"
-          "parents(merge) & ~immutable()"
         ];
         # squash all ai commits
         squash-ai = [
