@@ -61,11 +61,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1771233675,
-        "narHash": "sha256-CCJgOfiQ8mb5k+/Hwe7iWOsfk7XQ/GlSCdAZa1y7Jg0=",
+        "lastModified": 1771250350,
+        "narHash": "sha256-7SKpXtpxNpsu8m9tZU7NeQ/3nPQk1bdVL67CFY0Fn7o=",
         "ref": "main",
-        "rev": "154645bb6bd5a8d8b539637666aedb97b3c7589c",
-        "revCount": 39,
+        "rev": "0527117aa69174b372329a27b18f74cc46255bc6",
+        "revCount": 41,
         "type": "git",
         "url": "ssh://git@github.com/davidpdrsn/gh-notifications.git"
       },
@@ -135,11 +135,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1771159841,
-        "narHash": "sha256-gAnoJgiGNhPKXpSJyvTu2E/TseEKvun+fdGbBVOyxWo=",
+        "lastModified": 1771333837,
+        "narHash": "sha256-lThB4Hf94L7OAyC3IY+tW4b2Evm7luHuoti0dhizNJM=",
         "owner": "davidpdrsn",
         "repo": "jjui",
-        "rev": "88aef3ebfa8cf6bbe388b1af80cedb626d2614df",
+        "rev": "e6ed7ca47f464182a4ee6edf5936e4236a30e9c2",
         "type": "github"
       },
       "original": {

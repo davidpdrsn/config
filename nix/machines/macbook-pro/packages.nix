@@ -8,6 +8,7 @@
   # To make a shared package mac-only, move it here from shared/packages.nix.
   environment.systemPackages = with pkgs; let
     opWrapped = import ../../lib/op-wrapper.nix {inherit pkgs;};
+    linearCli = pkgs.callPackage ../../shared/packages/linear-cli.nix {};
     test-cli = opWrapped {
       name = "test-cli";
       env = {
@@ -21,6 +22,7 @@
     colima
     nxv
     resvg
+    linearCli
     test-cli
     gettext
     ffmpeg
