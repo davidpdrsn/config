@@ -68,6 +68,8 @@
       "poedit"
       "codex-app"
       "chatgpt"
+      "audio-hijack"
+      "blackhole-2ch"
     ];
 
     masApps = {
