@@ -1,2 +1,5 @@
 .DS_Store
 result
+opencode/node_modules/
+opencode/pipes/
+opencode/plugins/events.log

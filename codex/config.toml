@@ -1,6 +1,6 @@
 model = "gpt-5.3-codex"
 personality = "pragmatic"
-model_reasoning_effort = "high"
+model_reasoning_effort = "medium"
 responses_websockets_v2 = true
 
 [features]

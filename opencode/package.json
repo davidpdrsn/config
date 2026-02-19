@@ -1,0 +1,10 @@
+{
+  "devDependencies": {
+    "@types/node": "^24.4.0",
+    "bun-types": "latest",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "@opencode-ai/plugin": "*"
+  }
+}

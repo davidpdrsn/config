@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
 
     nix-darwin.url = "github:nix-darwin/nix-darwin/master";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
@@ -39,6 +40,7 @@
     self,
     nix-darwin,
     nixpkgs,
+    flake-utils,
     home-manager,
     nix-homebrew,
     homebrew-core,
@@ -62,45 +64,57 @@
       };
       home-manager.extraSpecialArgs = commonArgs;
     };
-  in {
-    # ── macOS (MacBook Pro) ──────────────────────────────────────────
-    darwinConfigurations."Davids-MacBook-Pro" = nix-darwin.lib.darwinSystem {
-      specialArgs = commonArgs;
+  in
+    flake-utils.lib.eachDefaultSystem (system: let
+      pkgs = nixpkgs.legacyPackages.${system};
+    in {
+      devShells.default = pkgs.mkShell {
+        packages = with pkgs; [
+          bun
+          oxlint
+          typescript-language-server
+        ];
+      };
+    })
+    // {
+      # ── macOS (MacBook Pro) ──────────────────────────────────────────
+      darwinConfigurations."Davids-MacBook-Pro" = nix-darwin.lib.darwinSystem {
+        specialArgs = commonArgs;
 
-      modules = [
-        ./nix/machines/macbook-pro/configuration.nix
+        modules = [
+          ./nix/machines/macbook-pro/configuration.nix
 
-        {users.users.${commonArgs.username}.home = "/Users/${commonArgs.username}";}
+          {users.users.${commonArgs.username}.home = "/Users/${commonArgs.username}";}
 
-        home-manager.darwinModules.home-manager
-        (mkHomeManagerConfig [./nix/machines/macbook-pro/home.nix])
+          home-manager.darwinModules.home-manager
+          (mkHomeManagerConfig [./nix/machines/macbook-pro/home.nix])
 
-        nix-homebrew.darwinModules.nix-homebrew
-        {
-          nix-homebrew = {
-            enable = true;
-            enableRosetta = false;
-            user = commonArgs.username;
-            taps = {
-              "homebrew/homebrew-core" = homebrew-core;
-              "homebrew/homebrew-cask" = homebrew-cask;
+          nix-homebrew.darwinModules.nix-homebrew
+          {
+            nix-homebrew = {
+              enable = true;
+              enableRosetta = false;
+              user = commonArgs.username;
+              taps = {
+                "homebrew/homebrew-core" = homebrew-core;
+                "homebrew/homebrew-cask" = homebrew-cask;
+              };
+              mutableTaps = false;
             };
-            mutableTaps = false;
-          };
-        }
-      ];
+          }
+        ];
+      };
+
+      # ── NixOS (Hetzner VPS) ─────────────────────────────────────────
+      nixosConfigurations."nix-4gb-nbg1-1" = nixpkgs.lib.nixosSystem {
+        specialArgs = commonArgs;
+
+        modules = [
+          ./nix/machines/hetzner/configuration.nix
+
+          home-manager.nixosModules.home-manager
+          (mkHomeManagerConfig [./nix/machines/hetzner/home.nix])
+        ];
+      };
     };
-
-    # ── NixOS (Hetzner VPS) ─────────────────────────────────────────
-    nixosConfigurations."nix-4gb-nbg1-1" = nixpkgs.lib.nixosSystem {
-      specialArgs = commonArgs;
-
-      modules = [
-        ./nix/machines/hetzner/configuration.nix
-
-        home-manager.nixosModules.home-manager
-        (mkHomeManagerConfig [./nix/machines/hetzner/home.nix])
-      ];
-    };
-  };
 }

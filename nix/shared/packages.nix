@@ -38,6 +38,7 @@ in {
 
       alejandra # nix formatter
       nil # nix language server
+      oxlint
 
       # To move a package to a specific machine, remove it from here
       # and add it to nix/machines/<machine>/packages.nix instead.

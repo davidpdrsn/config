@@ -24,6 +24,12 @@ build:
 check:
     nix flake check
 
+# Run plugin tests
+test:
+    oxlint --deny-warnings opencode/plugins
+    bun test --cwd opencode
+    bunx tsc --noEmit --project opencode/tsconfig.json
+
 # Update a flake input (interactive picker)
 update:
     ./scripts/nix-update-input
