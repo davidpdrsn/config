@@ -1,4 +1,5 @@
 local common = require("common")
+local run_tests = require("run_tests")
 
 return {
     -- colorscheme
@@ -95,7 +96,7 @@ return {
                 lualine_b = { "branch" },
                 lualine_c = { "diagnostics", common.path_to_file },
                 lualine_x = {},
-                lualine_y = {},
+                lualine_y = { run_tests.test_for_status },
                 lualine_z = { common.filetype },
             },
             inactive_sections = {

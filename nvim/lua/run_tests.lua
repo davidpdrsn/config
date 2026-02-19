@@ -15,9 +15,10 @@ local function run_test_command(cmd)
     vim.cmd("write")
 
     local wrapped_cmd =
-        common.tmux_wrap(cmd.command .. " " .. table.concat(cmd.args, " "))
+        common.vmux_wrap(cmd.command .. " " .. table.concat(cmd.args, " "))
 
-    if wrapped_cmd.in_tmux then
+    if wrapped_cmd.in_vmux then
+        -- print(wrapped_cmd.cmd)
         vim.fn.jobstart(wrapped_cmd.cmd)
     else
         local original_win_id = vim.api.nvim_get_current_win()
@@ -65,6 +66,13 @@ local function set_test_command()
     local line = vim.api.nvim_win_get_cursor(0)[1]
     local cmd = "test-command --file " .. path .. " --line " .. line
     test_command = json_shell(cmd)
+end
+
+function M.test_for_status()
+    if not test_command then
+        return ""
+    end
+    return test_command.human
 end
 
 local function test_file()

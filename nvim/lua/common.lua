@@ -57,6 +57,18 @@ function M.custom_format_leader_command(pattern, command)
     })
 end
 
+function is_not_in_vmux()
+    return os.getenv("VMUX") ~= "true"
+end
+
+function M.vmux_wrap(cmd)
+    if is_not_in_vmux() then
+        return { in_vmux = false, cmd = cmd }
+    end
+
+    return { in_vmux = true, cmd = "vmux terminal add test --ephemeral --current-project -- direnv exec . " .. cmd }
+end
+
 function is_not_in_tmux()
     return os.getenv("TERM_PROGRAM") ~= "tmux"
 end
