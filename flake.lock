@@ -81,16 +81,15 @@
       "locked": {
         "lastModified": 1771416626,
         "narHash": "sha256-K3CN6mOTmxrUl1EeMKS0pydWCRV8oAXgrJVAgikU7EM=",
-        "ref": "main",
+        "owner": "davidpdrsn",
+        "repo": "gh-notifications",
         "rev": "ad046d5f58babd1e1a717937776082351b8d352f",
-        "revCount": 43,
-        "type": "git",
-        "url": "ssh://git@github.com/davidpdrsn/gh-notifications.git"
+        "type": "github"
       },
       "original": {
-        "ref": "main",
-        "type": "git",
-        "url": "ssh://git@github.com/davidpdrsn/gh-notifications.git"
+        "owner": "davidpdrsn",
+        "repo": "gh-notifications",
+        "type": "github"
       }
     },
     "home-manager": {
