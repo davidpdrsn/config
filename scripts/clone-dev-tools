@@ -5,24 +5,41 @@ dev_tools_dir="$HOME/code/dev-tools"
 mkdir -p "$dev_tools_dir"
 
 repos=(
-  "aidle"
-  "build-proxy"
-  "cli"
-  "email-client"
-  "jj-ai-implement"
-  "jj-desc-ai"
-  "jj-split-todo-tool"
-  "jj-sync-prs"
-  "test-command"
-  "gh-notifications"
+  "aidle|https://github.com/davidpdrsn/aidle.git"
+  "balance|https://github.com/davidpdrsn/balance"
+  "build-proxy|https://github.com/davidpdrsn/build-proxy"
+  "cli|https://github.com/davidpdrsn/cli.git"
+  "email-client|https://github.com/davidpdrsn/email-client.git"
+  "format-prettier|https://github.com/davidpdrsn/format-prettier"
+  "gh-notifications|https://github.com/davidpdrsn/gh-notifications.git"
+  "git-branch-picker|https://github.com/davidpdrsn/git-branch-picker"
+  "git-diff-ai-summarize|https://github.com/davidpdrsn/git-diff-ai-summarize.git"
+  "git-remove-merged-branches|https://github.com/davidpdrsn/git-remove-merged-branches"
+  "go-insert-error|https://github.com/davidpdrsn/go-insert-error.git"
+  "image-viewer|https://github.com/davidpdrsn/image-viewer.git"
+  "jj-ai-implement|https://github.com/davidpdrsn/jj-ai-implement.git"
+  "jj-claude-hooks|https://github.com/davidpdrsn/jj-claude-hooks.git"
+  "jj-current-operation|https://github.com/davidpdrsn/jj-current-operation.git"
+  "jj-desc-ai|https://github.com/davidpdrsn/jj-desc-ai.git"
+  "jj-gpc|https://github.com/chriskrycho/jj-gpc"
+  "jj-split-todo-tool|https://github.com/davidpdrsn/jj-split-todo-tool.git"
+  "jj-sync-prs|https://github.com/davidpdrsn/jj-sync-prs"
+  "jjui-fork|https://github.com/davidpdrsn/jjui"
+  "parse-dotenv|https://github.com/davidpdrsn/parse-dotenv"
+  "remove-indentation|https://github.com/davidpdrsn/remove-indentation.git"
+  "terminal-apps|git@github.com:davidpdrsn/terminal-apps.git"
+  "test-command|https://github.com/davidpdrsn/test-command"
+  "vibe-mux|git@github.com:davidpdrsn/vibe-mux.git"
 )
 
-for repo in "${repos[@]}"; do
+for entry in "${repos[@]}"; do
+  IFS='|' read -r repo origin_url <<< "$entry"
   dir="$dev_tools_dir/$repo"
+
   if [ -d "$dir" ]; then
     printf 'already cloned: %s\n' "$repo"
   else
     printf 'cloning: %s\n' "$repo"
-    git clone "https://github.com/davidpdrsn/$repo.git" "$dir"
+    jj git clone --colocate "$origin_url" "$dir"
   fi
 done

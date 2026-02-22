@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+script="./scripts/clone-dev-tools"
+dev_tools_dir="$HOME/code/dev-tools"
+
+if [ ! -d "$dev_tools_dir" ]; then
+  echo "error: missing directory: $dev_tools_dir" >&2
+  exit 1
+fi
+
+tmp="$(mktemp)"
+trap 'rm -f "$tmp"' EXIT
+
+{
+  cat <<'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+
+dev_tools_dir="$HOME/code/dev-tools"
+mkdir -p "$dev_tools_dir"
+
+repos=(
+EOF
+
+  ls -1 "$dev_tools_dir" | sort | while IFS= read -r repo; do
+    repo_dir="$dev_tools_dir/$repo"
+
+    if [ ! -d "$repo_dir" ]; then
+      continue
+    fi
+
+    git_config="$repo_dir/.git/config"
+    if [ ! -f "$git_config" ]; then
+      continue
+    fi
+
+    origin_url="$(
+      awk '
+        /^\[remote "origin"\]$/ { in_origin = 1; next }
+        /^\[/ { in_origin = 0 }
+        in_origin && /^[[:space:]]*url[[:space:]]*=/ {
+          sub(/^[[:space:]]*url[[:space:]]*=[[:space:]]*/, "")
+          print
+          exit
+        }
+      ' "$git_config"
+    )"
+
+    if [ -z "$origin_url" ]; then
+      continue
+    fi
+
+    printf '  "%s|%s"\n' "$repo" "$origin_url"
+  done
+
+  cat <<'EOF'
+)
+
+for entry in "${repos[@]}"; do
+  IFS='|' read -r repo origin_url <<< "$entry"
+  dir="$dev_tools_dir/$repo"
+
+  if [ -d "$dir" ]; then
+    printf 'already cloned: %s\n' "$repo"
+  else
+    printf 'cloning: %s\n' "$repo"
+    git clone "$origin_url" "$dir"
+  fi
+done
+EOF
+} > "$tmp"
+
+mv "$tmp" "$script"
+chmod +x "$script"
+echo "updated $script"

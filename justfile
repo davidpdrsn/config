@@ -47,6 +47,10 @@ compare-updates:
 clone-dev-tools:
     ./scripts/clone-dev-tools
 
+# Regenerate clone script from local dev-tools repos
+update-clone-dev-tools:
+    ./scripts/update-clone-dev-tools
+
 # SSH into the Hetzner VPS
 ssh:
     ssh hetzner-nixos
