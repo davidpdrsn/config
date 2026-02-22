@@ -1,4 +1,4 @@
-{...}: {
+{pkgs, ...}: {
   programs.git = {
     enable = true;
     lfs = {
@@ -38,6 +38,7 @@
       ".worktrees"
     ];
     settings = {
+      credential.helper = "!${pkgs.gh}/bin/gh auth git-credential";
       alias = {
         wt = "worktree";
       };

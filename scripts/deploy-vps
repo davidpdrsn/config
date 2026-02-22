@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ "$#" -ne 1 ]; then
+  echo "usage: $0 <1|2>" >&2
+  exit 1
+fi
+
+case "$1" in
+  1) host="hetzner-1" ;;
+  2) host="hetzner-2" ;;
+  *)
+    echo "error: invalid VPS '$1' (expected 1 or 2)" >&2
+    exit 1
+    ;;
+esac
+
+# Check that @ is empty (no uncommitted changes)
+if [ -n "$(jj diff --summary)" ]; then
+  echo "error: working copy (@) is not empty" >&2
+  exit 1
+fi
+
+# Check that @- is main
+main_id=$(jj log -r "main" --no-graph -T 'commit_id')
+parent_id=$(jj log -r "@-" --no-graph -T 'commit_id')
+if [ "$main_id" != "$parent_id" ]; then
+  echo "error: @- is not main" >&2
+  exit 1
+fi
+
+# Check that main is pushed to origin
+origin_id=$(jj log -r "main@origin" --no-graph -T 'commit_id')
+if [ "$main_id" != "$origin_id" ]; then
+  echo "error: main is not pushed to origin" >&2
+  exit 1
+fi
+
+ssh -t "$host" 'cd /home/davidpdrsn/config && jj git fetch && jj new main && /run/wrappers/bin/sudo nixos-rebuild switch --flake ".#$(hostname)"'

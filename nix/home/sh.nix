@@ -4,11 +4,15 @@
   config,
   ...
 }: {
-  home.sessionPath = [
-    "/run/current-system/sw/bin"
-    "${config.home.homeDirectory}/.cargo/bin"
-    "${config.home.homeDirectory}/.bin"
-  ];
+  home.sessionPath =
+    (lib.optionals pkgs.stdenv.isLinux [
+      "/run/wrappers/bin"
+    ])
+    ++ [
+      "/run/current-system/sw/bin"
+      "${config.home.homeDirectory}/.cargo/bin"
+      "${config.home.homeDirectory}/.bin"
+    ];
 
   home.sessionVariables = {
     EDITOR = "nvim";

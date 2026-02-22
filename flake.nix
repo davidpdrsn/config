@@ -26,9 +26,6 @@
     jjui.url = "github:davidpdrsn/jjui";
     jjui.inputs.nixpkgs.follows = "nixpkgs";
 
-    gh-notifications.url = "github:davidpdrsn/gh-notifications";
-    gh-notifications.inputs.nixpkgs.follows = "nixpkgs";
-
     llm-agents.url = "github:numtide/llm-agents.nix";
 
     # other dev tools managed via `make clone-dev-tools` + cargo install
@@ -108,7 +105,18 @@
         specialArgs = commonArgs;
 
         modules = [
-          ./nix/machines/hetzner/configuration.nix
+          ./nix/machines/hetzner-1/configuration.nix
+
+          home-manager.nixosModules.home-manager
+          (mkHomeManagerConfig [./nix/machines/hetzner/home.nix])
+        ];
+      };
+
+      nixosConfigurations."nix-4gb-nbg1-2" = nixpkgs.lib.nixosSystem {
+        specialArgs = commonArgs;
+
+        modules = [
+          ./nix/machines/hetzner-2/configuration.nix
 
           home-manager.nixosModules.home-manager
           (mkHomeManagerConfig [./nix/machines/hetzner/home.nix])

@@ -1,5 +1,4 @@
 {...}: {
-  # Server-specific SSH
   programs.ssh.matchBlocks."github.com" = {
     user = "git";
     identityFile = "~/.ssh/github";
@@ -7,6 +6,5 @@
     extraOptions.AddKeysToAgent = "yes";
   };
 
-  # ssh-agent as a systemd user service (Linux-only)
   services.ssh-agent.enable = true;
 }

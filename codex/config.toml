@@ -52,6 +52,12 @@ trust_level = "trusted"
 [projects."/Users/davidpdrsn/code/dev-tools/terminal-apps"]
 trust_level = "trusted"
 
+[projects."/Users/davidpdrsn/code/dev-tools/vibe-mux"]
+trust_level = "trusted"
+
+[projects."/Users/davidpdrsn/code/claw/hello-world"]
+trust_level = "trusted"
+
 [notice]
 hide_gpt5_1_migration_prompt = true
 

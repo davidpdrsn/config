@@ -34,6 +34,7 @@
       imagemagick
       yt-dlp
       graphviz
+      google-cloud-sdk
     ]
     ++ (with inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
       opencode

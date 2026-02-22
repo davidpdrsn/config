@@ -14,8 +14,17 @@
         user = "davidpdrsn";
         identityFile = "~/.ssh/hetzner";
       };
-      "hetzner-nixos" = {
+      "46.225.17.37" = {
+        user = "davidpdrsn";
+        identityFile = "~/.ssh/hetzner";
+      };
+      "hetzner-1" = {
         hostname = "46.225.16.43";
+        user = "davidpdrsn";
+        identityFile = "~/.ssh/hetzner";
+      };
+      "hetzner-2" = {
+        hostname = "46.225.17.37";
         user = "davidpdrsn";
         identityFile = "~/.ssh/hetzner";
       };

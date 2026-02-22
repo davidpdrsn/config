@@ -52,34 +52,22 @@ clone-dev-tools:
 update-clone-dev-tools:
     ./scripts/update-clone-dev-tools
 
-# SSH into the Hetzner VPS
+# SSH into Hetzner VPS 2
 ssh:
-    ssh hetzner-nixos
+    ssh hetzner-2
 
-# Deploy latest config to VPS
-switch-vps:
-    #!/usr/bin/env bash
-    set -euo pipefail
+# SSH into Hetzner VPS 1
+ssh-1:
+    ssh hetzner-1
 
-    # Check that @ is empty (no uncommitted changes)
-    if [ -n "$(jj diff --summary)" ]; then
-        echo "error: working copy (@) is not empty" >&2
-        exit 1
-    fi
+# SSH into Hetzner VPS 2
+ssh-2:
+    ssh hetzner-2
 
-    # Check that @- is main
-    main_id=$(jj log -r "main" --no-graph -T 'commit_id')
-    parent_id=$(jj log -r "@-" --no-graph -T 'commit_id')
-    if [ "$main_id" != "$parent_id" ]; then
-        echo "error: @- is not main" >&2
-        exit 1
-    fi
+# Deploy latest config to VPS 1
+switch-vps-1:
+    ./scripts/deploy-vps 1
 
-    # Check that main is pushed to origin
-    origin_id=$(jj log -r "main@origin" --no-graph -T 'commit_id')
-    if [ "$main_id" != "$origin_id" ]; then
-        echo "error: main is not pushed to origin" >&2
-        exit 1
-    fi
-
-    ssh -t hetzner-nixos 'cd /home/davidpdrsn/config && jj git fetch && jj new main && /run/wrappers/bin/sudo nixos-rebuild switch --flake ".#$(hostname)"'
+# Deploy latest config to VPS 2
+switch-vps-2:
+    ./scripts/deploy-vps 2

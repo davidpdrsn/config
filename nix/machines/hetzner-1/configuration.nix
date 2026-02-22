@@ -1,16 +1,10 @@
 {
-  pkgs,
   username,
   ...
 }: {
   imports = [
-    ../../shared/common.nix
-    ../../shared/packages.nix
+    ../hetzner/common.nix
     ./hardware.nix
-  ];
-
-  environment.systemPackages = with pkgs; [
-    jjui
   ];
 
   boot.loader.grub.enable = true;
@@ -18,33 +12,7 @@
 
   networking.hostName = "nix-4gb-nbg1-1";
 
-  users.users.root.openssh.authorizedKeys.keys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIlDnL40PQbOKkpZXL77p+ub12HFEDMB6BwFToQ2UHMw david.pdrsn@gmail.com"
-  ];
-
-  programs.fish.enable = true;
-
-  users.users.${username} = {
-    isNormalUser = true;
-    extraGroups = ["wheel" "docker"];
-    homeMode = "700";
-    openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIlDnL40PQbOKkpZXL77p+ub12HFEDMB6BwFToQ2UHMw david.pdrsn@gmail.com"
-    ];
-    shell = pkgs.fish;
-  };
-
-  # Ensure setuid wrappers (like sudo) are found before nix store binaries
-  environment.extraInit = ''
-    export PATH="/run/wrappers/bin:$PATH"
-  '';
-
-  services.openssh.enable = true;
-  services.openssh.settings = {
-    PasswordAuthentication = false;
-    KbdInteractiveAuthentication = false;
-    PermitRootLogin = "no";
-  };
+  users.users.${username}.extraGroups = ["wheel" "docker"];
 
   services.nginx = {
     enable = true;
@@ -93,27 +61,6 @@
   #   sudo chown root:nginx /var/lib/nginx-secrets/htpasswd
   #   sudo chmod 0440 /var/lib/nginx-secrets/htpasswd
 
-  services.fail2ban.enable = true;
-
   virtualisation.docker.enable = true;
-
-  security.sudo.extraRules = [
-    {
-      users = [username];
-      commands = [
-        {
-          command = "/run/current-system/sw/bin/nixos-rebuild";
-          options = ["NOPASSWD"];
-        }
-      ];
-    }
-  ];
-
-  networking.firewall = {
-    enable = true;
-    allowedTCPPorts = [22 80 443];
-  };
-
-  # NEVER change this
-  system.stateVersion = "25.05";
+  networking.firewall.allowedTCPPorts = [22 80 443];
 }
