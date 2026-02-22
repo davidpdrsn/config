@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  inputs,
+  ...
+}: {
   imports = [
     ../../shared/packages.nix
   ];
@@ -9,6 +13,7 @@
   environment.systemPackages = with pkgs; let
     opWrapped = import ../../lib/op-wrapper.nix {inherit pkgs;};
     linearCli = pkgs.callPackage ../../shared/packages/linear-cli.nix {};
+    openaiCodex = pkgs.callPackage ../../shared/packages/codex.nix {};
     test-cli = opWrapped {
       name = "test-cli";
       env = {
@@ -29,6 +34,11 @@
     imagemagick
     yt-dlp
     graphviz
+    openaiCodex
+  ]
+  ++ map (pkg: inputs.${pkg}.packages.${pkgs.stdenv.hostPlatform.system}.default) [
+    "jjui"
+    "opencode"
   ];
 
   fonts.packages = with pkgs; [

@@ -1,10 +1,7 @@
 {
   pkgs,
-  inputs,
   ...
-}: let
-  openaiCodex = pkgs.callPackage ./packages/codex.nix {};
-in {
+}: {
   environment.systemPackages = with pkgs;
     [
       bat
@@ -30,25 +27,8 @@ in {
       git-filter-repo
       gitleaks
       just
-
-      claude-code
-      openaiCodex
-
-      docker
-
       alejandra # nix formatter
       nil # nix language server
       oxlint
-
-      # To move a package to a specific machine, remove it from here
-      # and add it to nix/machines/<machine>/packages.nix instead.
-      # Machine-specific packages.nix files use the same
-      # `environment.systemPackages` option — nix merges lists automatically.
-    ]
-    ++ map (pkg: inputs.${pkg}.packages.${pkgs.stdenv.hostPlatform.system}.default)
-    [
-      "jjui"
-      "gh-notifications"
-      "opencode"
     ];
 }
