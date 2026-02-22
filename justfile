@@ -38,6 +38,7 @@ update:
 # Update opencode to latest GitHub release tag
 update-opencode:
     ./scripts/nix-update-opencode
+    just switch
 
 # Compare available updates
 compare-updates:
