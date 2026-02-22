@@ -31,7 +31,6 @@
     gh-notifications.inputs.nixpkgs.follows = "nixpkgs";
 
     opencode.url = "github:anomalyco/opencode?ref=refs/tags/v1.2.10";
-    opencode.inputs.nixpkgs.follows = "nixpkgs";
 
     # other dev tools managed via `make clone-dev-tools` + cargo install
   };
