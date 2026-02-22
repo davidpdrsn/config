@@ -61,6 +61,21 @@
           };
         };
       };
+      "davidpdrsn.com" = {
+        enableACME = true;
+        forceSSL = true;
+        locations = {
+          "/" = {
+            proxyPass = "http://127.0.0.1:3001";
+            extraConfig = ''
+              proxy_set_header Host $host;
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+            '';
+          };
+        };
+      };
     };
   };
 
@@ -85,6 +100,11 @@
       autoStart = true;
       ports = ["127.0.0.1:3000:3000"];
       volumes = ["/home/${username}/dnd/data:/data/characters"];
+    };
+    containers.website = {
+      image = "website:latest";
+      autoStart = true;
+      ports = ["127.0.0.1:3001:3000"];
     };
   };
 
