@@ -93,21 +93,6 @@
 
   virtualisation.docker.enable = true;
 
-  virtualisation.oci-containers = {
-    backend = "docker";
-    containers.dnd-character-sheet = {
-      image = "dnd-character-sheet:latest";
-      autoStart = true;
-      ports = ["127.0.0.1:3000:3000"];
-      volumes = ["/home/${username}/dnd/data:/data/characters"];
-    };
-    containers.website = {
-      image = "website:latest";
-      autoStart = true;
-      ports = ["127.0.0.1:3001:3000"];
-    };
-  };
-
   security.sudo.extraRules = [
     {
       users = [username];
