@@ -23,14 +23,13 @@
       flake = false;
     };
 
-    # personal dev tools
     jjui.url = "github:davidpdrsn/jjui";
     jjui.inputs.nixpkgs.follows = "nixpkgs";
 
     gh-notifications.url = "github:davidpdrsn/gh-notifications";
     gh-notifications.inputs.nixpkgs.follows = "nixpkgs";
 
-    opencode.url = "github:anomalyco/opencode?ref=refs/tags/v1.2.10";
+    llm-agents.url = "github:numtide/llm-agents.nix";
 
     # other dev tools managed via `make clone-dev-tools` + cargo install
   };

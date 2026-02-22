@@ -13,7 +13,6 @@
   environment.systemPackages = with pkgs; let
     opWrapped = import ../../lib/op-wrapper.nix {inherit pkgs;};
     linearCli = pkgs.callPackage ../../shared/packages/linear-cli.nix {};
-    openaiCodex = pkgs.callPackage ../../shared/packages/codex.nix {};
     test-cli = opWrapped {
       name = "test-cli";
       env = {
@@ -21,25 +20,28 @@
       };
       command = /Users/davidpdrsn/.bin/test-cli;
     };
-  in [
-    autoraise
-    mas
-    colima
-    nxv
-    resvg
-    linearCli
-    test-cli
-    gettext
-    ffmpeg
-    imagemagick
-    yt-dlp
-    graphviz
-    openaiCodex
-  ]
-  ++ map (pkg: inputs.${pkg}.packages.${pkgs.stdenv.hostPlatform.system}.default) [
-    "jjui"
-    "opencode"
-  ];
+  in
+    [
+      autoraise
+      mas
+      colima
+      nxv
+      resvg
+      linearCli
+      test-cli
+      gettext
+      ffmpeg
+      imagemagick
+      yt-dlp
+      graphviz
+    ]
+    ++ (with inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
+      opencode
+      codex
+    ])
+    ++ map (pkg: inputs.${pkg}.packages.${pkgs.stdenv.hostPlatform.system}.default) [
+      "jjui"
+    ];
 
   fonts.packages = with pkgs; [
     nerd-fonts.iosevka
