@@ -136,6 +136,14 @@ in {
 
   networking.hostName = "nix-4gb-nbg1-2";
 
+  programs.nix-ld = {
+    enable = true;
+    libraries = with pkgs; [
+      stdenv.cc.cc.lib
+      stdenv.cc.libc
+    ];
+  };
+
   environment.sessionVariables = {
     PNPM_HOME = "/home/${username}/.bin";
   };

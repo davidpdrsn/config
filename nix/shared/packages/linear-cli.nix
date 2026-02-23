@@ -27,11 +27,6 @@ let
     then "sha256-QhBfvG5T67x3zpVVkcTPx+WL2+5niMYXbmoq/Hx2fko="
     else "sha256-UZUYUkcHmh/cCM2xAxAeJrG1sdBj1fTB2n7HknjTdVg=";
 
-  dynamicLinker = stdenv.cc.bintools.dynamicLinker;
-  linuxLibraryPath = lib.makeLibraryPath [
-    stdenv.cc.cc.lib
-    stdenv.cc.libc
-  ];
 in
   stdenvNoCC.mkDerivation {
     pname = "linear-cli";
@@ -51,15 +46,6 @@ in
     installPhase = ''
       runHook preInstall
       install -Dm755 linear "$out/bin/linear"
-
-      if [ "${if stdenv.hostPlatform.isLinux then "1" else "0"}" = "1" ]; then
-        mv "$out/bin/linear" "$out/bin/.linear-unwrapped"
-        cat > "$out/bin/linear" <<EOF
-#!${stdenv.shell}
-exec ${dynamicLinker} --library-path ${linuxLibraryPath} "$out/bin/.linear-unwrapped" "\$@"
-EOF
-        chmod +x "$out/bin/linear"
-      fi
 
       runHook postInstall
     '';
