@@ -101,6 +101,8 @@
     pkgs.himalaya
     linearCli
     pkgs.nix
+    pkgs.nodejs_24
+    pkgs.playwright-test
     pkgs.pnpm
     pkgs.uv
     pkgs.wget
