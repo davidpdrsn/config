@@ -101,6 +101,9 @@
     pkgs.himalaya
     linearCli
     pkgs.nix
+    pkgs.nodejs_24
+    pkgs.playwright-test
+    pkgs.playwright-driver.browsers
     pkgs.pnpm
     pkgs.uv
     pkgs.wget
@@ -129,39 +132,6 @@ in {
     ${pkgs.systemd}/bin/systemd-tmpfiles --create --prefix=/home/${username}/config/bin
   '';
 
-  systemd.services.openclaw-browser-watchdog = {
-    description = "Keep OpenClaw browser automation healthy";
-    after = ["network-online.target"];
-    wants = ["network-online.target"];
-
-    serviceConfig = {
-      Type = "oneshot";
-      User = username;
-      Group = "users";
-      WorkingDirectory = "/home/${username}";
-      Environment = ["HOME=/home/${username}"];
-    };
-
-    script = ''
-      set -euo pipefail
-
-      if ! ${openclawCli}/bin/openclaw browser status --json | ${pkgs.jq}/bin/jq -e '.running and .cdpReady and .cdpHttp' >/dev/null 2>&1; then
-        ${openclawCli}/bin/openclaw gateway restart >/dev/null 2>&1 || ${openclawCli}/bin/openclaw gateway start >/dev/null 2>&1 || true
-        sleep 2
-        ${openclawCli}/bin/openclaw browser start >/dev/null 2>&1 || true
-      fi
-    '';
-  };
-
-  systemd.timers.openclaw-browser-watchdog = {
-    wantedBy = ["timers.target"];
-    timerConfig = {
-      OnBootSec = "2m";
-      OnUnitActiveSec = "5m";
-      Unit = "openclaw-browser-watchdog.service";
-    };
-  };
-
   boot.loader.grub = {
     enable = true;
     efiSupport = true;
@@ -181,5 +151,8 @@ in {
 
   environment.sessionVariables = {
     PNPM_HOME = "/home/${username}/.bin";
+    PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright-driver.browsers}";
+    PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
+    PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "1";
   };
 }
