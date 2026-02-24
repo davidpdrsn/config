@@ -5,7 +5,7 @@ root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 if [ "$(uname)" = "Darwin" ]; then
   packages_file="$root_dir/nix/machines/macbook-pro/packages.nix"
-  system_attr='darwinConfigurations."Davids-MacBook-Pro"'
+  system_attr='darwinConfigurations."macos"'
 else
   packages_file="$root_dir/nix/machines/hetzner/configuration.nix"
   system_attr='nixosConfigurations."nix-4gb-nbg1-1"'

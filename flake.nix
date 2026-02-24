@@ -62,20 +62,27 @@
   in
     flake-utils.lib.eachDefaultSystem (system: let
       pkgs = nixpkgs.legacyPackages.${system};
-    in {
-      devShells.default = pkgs.mkShell {
-        packages = with pkgs; [
-          bun
-          oxlint
-          typescript-language-server
-          just
-          fzf
-        ];
-      };
-    })
+    in
+      {
+        devShells.default = pkgs.mkShell {
+          packages = with pkgs; [
+            bun
+            oxlint
+            typescript-language-server
+            just
+            fzf
+          ];
+        };
+      }
+      // nixpkgs.lib.optionalAttrs pkgs.stdenv.isDarwin {
+        apps.darwin-rebuild = {
+          type = "app";
+          program = "${nix-darwin.packages.${system}.darwin-rebuild}/bin/darwin-rebuild";
+        };
+      })
     // {
       # ── macOS (MacBook Pro) ──────────────────────────────────────────
-      darwinConfigurations."Davids-MacBook-Pro" = nix-darwin.lib.darwinSystem {
+      darwinConfigurations."macos" = nix-darwin.lib.darwinSystem {
         specialArgs = commonArgs;
 
         modules = [
