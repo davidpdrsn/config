@@ -25,6 +25,8 @@
       autoraise
       mas
       colima
+      khal
+      vdirsyncer
       nxv
       resvg
       linearCli
