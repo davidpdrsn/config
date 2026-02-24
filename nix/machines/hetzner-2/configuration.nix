@@ -99,7 +99,9 @@
     pkgs.gopls
     pkgs.gotools
     pkgs.himalaya
+    pkgs.khal
     linearCli
+    pkgs.vdirsyncer
     pkgs.nix
     pkgs.nodejs_24
     pkgs.playwright-test
