@@ -30,7 +30,7 @@ jobs:
           use-flakehub: false
 
       - name: Run checks
-        run: nix develop -c just check
+        run: nix develop .#ci -c just check
 
   test:
     name: Test
@@ -47,8 +47,11 @@ jobs:
         with:
           use-flakehub: false
 
+      - name: Install JS dependencies
+        run: nix develop .#ci -c bun install --cwd opencode --frozen-lockfile
+
       - name: Run tests
-        run: nix develop -c just test
+        run: nix develop .#ci -c just test
 
   build:
     name: Build
@@ -69,4 +72,4 @@ jobs:
           use-flakehub: false
 
       - name: Build
-        run: nix develop -c just ci-build
+        run: nix develop .#ci -c just ci-build

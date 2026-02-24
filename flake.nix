@@ -76,6 +76,14 @@
             ripgrep
           ];
         };
+
+        devShells.ci = pkgs.mkShell {
+          packages = with pkgs; [
+            bun
+            oxlint
+            just
+          ];
+        };
       }
       // nixpkgs.lib.optionalAttrs pkgs.stdenv.isDarwin {
         apps.darwin-rebuild = {
