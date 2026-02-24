@@ -52,14 +52,6 @@ clone-dev-tools:
 update-clone-dev-tools:
     ./scripts/update-clone-dev-tools
 
-# Sync iCloud CalDAV calendars into local vdirs
-calendar-sync:
-    ./scripts/icloud-calendar-sync
-
-# Sync iCloud CalDAV calendars and write normalized cache JSON
-calendar-sync-cache:
-    ./scripts/icloud-calendar-sync --cache
-
 # SSH into Hetzner VPS 2
 ssh:
     ssh hetzner-2
