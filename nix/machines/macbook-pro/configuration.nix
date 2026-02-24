@@ -44,7 +44,9 @@
   };
 
   # fast key repeat
+  # macOS reliable minimums (faster/shorter than defaults)
   system.defaults.NSGlobalDomain.KeyRepeat = 2;
+  system.defaults.NSGlobalDomain.InitialKeyRepeat = 15;
 
   system.defaults.finder = {
     # use column view by default
