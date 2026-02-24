@@ -9,8 +9,43 @@ export const MyPlugin: Plugin = async ({ directory }) => {
 
     // Match `git` only when it looks like an executable command, not a flag
     // like `--git` or a JSON key like `"git": true`.
-    const gitCommand = /(^|[\s;|&()])git(\.exe)?(?=\s|$)/i
-    const containsGit = (value: unknown) => gitCommand.test(typeof value === "string" ? value : JSON.stringify(value))
+    const gitCommand = /\bgit(\.exe)?\b/gi
+    const separator = /[\s;|&()]/
+    const commandToken = /[A-Za-z0-9_.-]/
+    const containsGit = (value: unknown) => {
+        const text = typeof value === "string" ? value : JSON.stringify(value)
+
+        for (const match of text.matchAll(gitCommand)) {
+            const index = match.index ?? -1
+            if (index < 0) {
+                continue
+            }
+
+            const prevChar = index === 0 ? "" : text[index - 1]
+            if (index > 0 && !separator.test(prevChar)) {
+                continue
+            }
+
+            let cursor = index - 1
+            while (cursor >= 0 && /\s/.test(text[cursor])) {
+                cursor -= 1
+            }
+
+            const tokenEnd = cursor
+            while (cursor >= 0 && commandToken.test(text[cursor])) {
+                cursor -= 1
+            }
+
+            const previousToken = text.slice(cursor + 1, tokenEnd + 1).toLowerCase()
+            if (previousToken === "jj") {
+                continue
+            }
+
+            return true
+        }
+
+        return false
+    }
 
     const msg = "Policy violation: `git` commands are disabled in this environment, use `jj` instead.";
 

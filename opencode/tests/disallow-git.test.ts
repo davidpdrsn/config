@@ -88,6 +88,15 @@ describe("disallow-git plugin", () => {
         const before = hooks["tool.execute.before"]
         expect(before).toBeDefined()
 
+        await before!(
+            {
+                tool: "bash",
+                sessionID: "s",
+                callID: "c"
+            },
+            { args: "jj git push --bookmark dp/jj-lpmqtxmyskuz" }
+        )
+
         let denied = false
         try {
             await before!(
