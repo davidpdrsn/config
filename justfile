@@ -20,6 +20,11 @@ build:
         nixos-rebuild build --flake ".#$(hostname)"
     fi
 
+# Build CI NixOS targets explicitly
+ci-build:
+    nix build .#nixosConfigurations.nix-4gb-nbg1-1.config.system.build.toplevel
+    nix build .#nixosConfigurations.nix-4gb-nbg1-2.config.system.build.toplevel
+
 # Validate the flake structure
 check:
     nix flake check
