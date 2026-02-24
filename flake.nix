@@ -68,6 +68,7 @@
           bun
           oxlint
           typescript-language-server
+          just
         ];
       };
     })
