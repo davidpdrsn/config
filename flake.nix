@@ -69,6 +69,7 @@
           oxlint
           typescript-language-server
           just
+          fzf
         ];
       };
     })
