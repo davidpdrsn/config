@@ -6,7 +6,7 @@ default:
 switch:
     #!/usr/bin/env bash
     if [ "$(uname)" = "Darwin" ]; then
-        sudo darwin-rebuild switch --flake ".#$(scutil --get LocalHostName)"
+        sudo darwin-rebuild switch --flake ".#Davids-MacBook-Pro"
     else
         sudo nixos-rebuild switch --flake ".#$(hostname)"
     fi
@@ -15,7 +15,7 @@ switch:
 build:
     #!/usr/bin/env bash
     if [ "$(uname)" = "Darwin" ]; then
-        darwin-rebuild build --flake ".#$(scutil --get LocalHostName)"
+        darwin-rebuild build --flake ".#Davids-MacBook-Pro"
     else
         nixos-rebuild build --flake ".#$(hostname)"
     fi
