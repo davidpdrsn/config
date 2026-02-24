@@ -73,6 +73,7 @@
             fzf
             git
             inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.codex
+            ripgrep
           ];
         };
       }
