@@ -29,6 +29,7 @@
 
       new_status="ok"
       message=""
+      max_attempts=3
 
       notify() {
         local text="$1"
@@ -61,18 +62,53 @@
         fail "detached_head" "Obsidian pull failed: repository is in detached HEAD"
       fi
 
-      if [ "$new_status" = "ok" ] && [ -n "$(git -C "$repo" status --porcelain)" ]; then
-        fail "dirty_worktree" "Obsidian pull skipped: local changes detected in $repo"
-      fi
-
       upstream=""
       if [ "$new_status" = "ok" ] && ! upstream="$(git -C "$repo" rev-parse --abbrev-ref --symbolic-full-name "@{u}" 2>/dev/null)"; then
         fail "missing_upstream" "Obsidian pull failed: branch '$branch' has no upstream"
       fi
 
-      pull_output=""
-      if [ "$new_status" = "ok" ] && ! pull_output="$(git -C "$repo" pull --ff-only 2>&1)"; then
-        fail "pull_failed" "Obsidian pull failed on $branch ($upstream): $pull_output"
+      result=""
+      if [ "$new_status" = "ok" ]; then
+        attempt=1
+        while [ "$attempt" -le "$max_attempts" ]; do
+          git -C "$repo" add -A
+
+          if ! git -C "$repo" diff --cached --quiet; then
+            timestamp="$(date '+%Y-%m-%d %H:%M')"
+            commit_message="chore(obsidian): auto-sync server $timestamp"
+            if ! commit_output="$(git -C "$repo" commit -m "$commit_message" 2>&1)"; then
+              fail "commit_failed" "Obsidian sync failed on $branch ($upstream): commit failed: $commit_output"
+              break
+            fi
+          fi
+
+          if ! pull_output="$(git -C "$repo" pull --rebase origin "$branch" 2>&1)"; then
+            git -C "$repo" rebase --abort >/dev/null 2>&1 || true
+            fail "rebase_failed" "Obsidian sync failed on $branch ($upstream): rebase failed: $pull_output"
+            break
+          fi
+
+          if push_output="$(git -C "$repo" push origin "$branch" 2>&1)"; then
+            result="pull: $pull_output | push: $push_output"
+            break
+          fi
+
+          case "$push_output" in
+            *"non-fast-forward"*|*"fetch first"*|*"[rejected]"*)
+              attempt=$((attempt + 1))
+              if [ "$attempt" -gt "$max_attempts" ]; then
+                fail "push_rejected" "Obsidian sync failed on $branch ($upstream): push rejected after $max_attempts attempts: $push_output"
+              fi
+              ;;
+            *)
+              fail "push_failed" "Obsidian sync failed on $branch ($upstream): push failed: $push_output"
+              ;;
+          esac
+
+          if [ "$new_status" != "ok" ]; then
+            break
+          fi
+        done
       fi
 
       if [ "$new_status" = "ok" ] && [ "$old_status" != "ok" ] && [ -n "$old_status" ]; then
@@ -92,7 +128,7 @@
         exit 1
       fi
 
-      echo "Obsidian pull succeeded: $pull_output"
+      echo "Obsidian sync succeeded on $branch ($upstream): $result"
     '';
   };
 in {

@@ -2,6 +2,7 @@
 set -euo pipefail
 
 repo="/Users/davidpdrsn/Library/Mobile Documents/iCloud~md~obsidian/Documents"
+max_attempts=3
 
 log() {
   printf '[%s] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*"
@@ -56,18 +57,49 @@ fi
 
 export GIT_TERMINAL_PROMPT=0
 
-git -C "$repo" add -A
+attempt=1
+while (( attempt <= max_attempts )); do
+  log "Sync attempt $attempt/$max_attempts on branch '$branch'"
 
-if git -C "$repo" diff --cached --quiet; then
-  log "No changes to commit"
-  exit 0
-fi
+  git -C "$repo" add -A
 
-timestamp="$(date '+%Y-%m-%d %H:%M')"
-message="chore(obsidian): auto-sync $timestamp"
+  if ! git -C "$repo" diff --cached --quiet; then
+    timestamp="$(date '+%Y-%m-%d %H:%M')"
+    message="chore(obsidian): auto-sync macbook $timestamp"
+    git -C "$repo" commit -m "$message"
+    log "Committed changes on branch '$branch'"
+  else
+    log "No local changes to commit"
+  fi
 
-git -C "$repo" commit -m "$message"
-log "Committed changes on branch '$branch'"
+  if ! pull_output="$(git -C "$repo" pull --rebase origin "$branch" 2>&1)"; then
+    git -C "$repo" rebase --abort >/dev/null 2>&1 || true
+    log "Rebase failed while pulling origin/$branch"
+    log "git pull output: $pull_output"
+    exit 1
+  fi
+  log "Pull/rebase result: $pull_output"
 
-git -C "$repo" push origin "$branch"
-log "Pushed to origin/$branch"
+  if push_output="$(git -C "$repo" push origin "$branch" 2>&1)"; then
+    log "Pushed to origin/$branch"
+    log "git push output: $push_output"
+    exit 0
+  fi
+
+  log "Push failed: $push_output"
+
+  case "$push_output" in
+    *"non-fast-forward"*|*"fetch first"*|*"[rejected]"*)
+      attempt=$((attempt + 1))
+      if (( attempt > max_attempts )); then
+        log "Push rejected after $max_attempts attempts"
+        exit 1
+      fi
+      log "Remote moved; retrying"
+      ;;
+    *)
+      log "Push failed with non-retryable error"
+      exit 1
+      ;;
+  esac
+done
