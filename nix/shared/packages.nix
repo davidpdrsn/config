@@ -1,7 +1,9 @@
 {
   pkgs,
   ...
-}: {
+}: let
+  countTokens = pkgs.callPackage ./packages/count-tokens.nix {};
+in {
   environment.systemPackages = with pkgs;
     [
       bat
@@ -31,5 +33,6 @@
       alejandra # nix formatter
       nil # nix language server
       oxlint
+      countTokens
     ];
 }
