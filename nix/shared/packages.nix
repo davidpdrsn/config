@@ -17,6 +17,7 @@
       jq
       mergiraf
       ruby_3_4
+      speedtest-cli
       stylua
       tokei
       tree
