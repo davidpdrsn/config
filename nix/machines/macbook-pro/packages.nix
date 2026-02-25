@@ -75,7 +75,6 @@
       "slack"
       "spotify"
       "steam"
-      "superwhisper"
       "voiceink"
       "unnaturalscrollwheels"
       "vlc"
