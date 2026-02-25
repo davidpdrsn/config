@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo="/Users/davidpdrsn/Library/Mobile Documents/iCloud~md~obsidian/Documents"
+
+log() {
+  printf '[%s] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*"
+}
+
+log "Starting run (uid=$(id -u), user=$(id -un), pwd=$PWD)"
+log "Environment HOME=${HOME:-<unset>} PATH=${PATH:-<unset>}"
+
+if [[ ! -d "$repo" ]]; then
+  log "Repository path does not exist: $repo"
+  if [[ -d "$(dirname "$repo")" ]]; then
+    log "Parent directory exists: $(dirname "$repo")"
+    ls -ld "$(dirname "$repo")" 2>&1 | while IFS= read -r line; do
+      log "parent ls: $line"
+    done
+  fi
+  exit 1
+fi
+
+if ! git_status_output="$(git -C "$repo" rev-parse --is-inside-work-tree 2>&1)"; then
+  log "Not a git repository: $repo"
+  log "git rev-parse output: $git_status_output"
+  ls -ld "$repo" 2>&1 | while IFS= read -r line; do
+    log "repo ls: $line"
+  done || true
+  ls -la "$repo" 2>&1 | while IFS= read -r line; do
+    log "repo contents: $line"
+  done || true
+  exit 1
+fi
+
+if ! git -C "$repo" remote get-url origin >/dev/null 2>&1; then
+  log "Missing git remote 'origin' in $repo"
+  exit 1
+fi
+
+git_dir="$(git -C "$repo" rev-parse --git-dir)"
+if [[ "$git_dir" != /* ]]; then
+  git_dir="$repo/$git_dir"
+fi
+
+if [[ -f "$git_dir/MERGE_HEAD" || -d "$git_dir/rebase-merge" || -d "$git_dir/rebase-apply" || -f "$git_dir/CHERRY_PICK_HEAD" || -f "$git_dir/REVERT_HEAD" ]]; then
+  log "Git operation in progress; skipping auto-commit"
+  exit 0
+fi
+
+branch="$(git -C "$repo" symbolic-ref --quiet --short HEAD || true)"
+if [[ -z "$branch" ]]; then
+  log "Detached HEAD; skipping auto-commit"
+  exit 0
+fi
+
+export GIT_TERMINAL_PROMPT=0
+
+git -C "$repo" add -A
+
+if git -C "$repo" diff --cached --quiet; then
+  log "No changes to commit"
+  exit 0
+fi
+
+timestamp="$(date '+%Y-%m-%d %H:%M')"
+message="chore(obsidian): auto-sync $timestamp"
+
+git -C "$repo" commit -m "$message"
+log "Committed changes on branch '$branch'"
+
+git -C "$repo" push origin "$branch"
+log "Pushed to origin/$branch"

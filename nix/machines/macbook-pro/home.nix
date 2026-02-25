@@ -20,6 +20,7 @@
   home.activation.createMacFolders = ''
     mkdir -p ~/Desktop/screenshots
     mkdir -p ~/code/dev-tools
+    mkdir -p ~/Library/Logs
   '';
 
   # might have to run this once
@@ -33,4 +34,22 @@
       /usr/bin/ssh-add --apple-use-keychain "$key" >/dev/null 2>&1 || true
     fi
   '';
+
+  launchd.agents.obsidian-auto-commit-push = {
+    enable = true;
+    config = {
+      Label = "com.davidpdrsn.obsidian-auto-commit-push";
+      ProgramArguments = [
+        "/run/current-system/sw/bin/bash"
+        "${config.home.homeDirectory}/config/scripts/obsidian-auto-commit-push"
+      ];
+      StartCalendarInterval = [
+        {Minute = 0;}
+        {Minute = 30;}
+      ];
+      RunAtLoad = true;
+      StandardOutPath = "${config.home.homeDirectory}/Library/Logs/obsidian-auto-commit-push.log";
+      StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/obsidian-auto-commit-push.err.log";
+    };
+  };
 }
