@@ -39,6 +39,7 @@
     ++ (with inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
       opencode
       codex
+      pi
     ])
     ++ map (pkg: inputs.${pkg}.packages.${pkgs.stdenv.hostPlatform.system}.default) [
       "jjui"
