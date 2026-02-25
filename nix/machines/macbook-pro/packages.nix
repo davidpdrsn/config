@@ -76,6 +76,7 @@
       "spotify"
       "steam"
       "superwhisper"
+      "voiceink"
       "unnaturalscrollwheels"
       "vlc"
       "arc"
