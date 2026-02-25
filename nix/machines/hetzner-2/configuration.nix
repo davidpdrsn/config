@@ -86,8 +86,15 @@
   openclawCli = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.openclaw;
 
   openclawPackages = [
+    gog
+    goplaces
+    inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.codex
+    inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.opencode
+    linearCli
+    openclawCli
     pkgs.chromium
     pkgs.curl
+    pkgs.fd
     pkgs.ffmpeg
     pkgs.gcc
     pkgs.gh
@@ -98,22 +105,24 @@
     pkgs.golines
     pkgs.gopls
     pkgs.gotools
+    pkgs.graphviz
     pkgs.himalaya
+    pkgs.hyperfine
+    pkgs.imagemagick
+    pkgs.jq
+    pkgs.just
     pkgs.khal
-    linearCli
-    pkgs.vdirsyncer
     pkgs.nix
     pkgs.nodejs_24
-    pkgs.playwright-test
     pkgs.playwright-driver.browsers
+    pkgs.playwright-test
     pkgs.pnpm
+    pkgs.python314
     pkgs.uv
+    pkgs.vdirsyncer
+    pkgs.watchexec
     pkgs.wget
-    gog
-    goplaces
-    inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.codex
-    inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.opencode
-    openclawCli
+    pkgs.wget
   ];
 in {
   imports = [
