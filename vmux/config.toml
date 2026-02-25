@@ -1,0 +1,3 @@
+[ephemeral.jjui]
+command = ["/run/current-system/sw/bin/jjui"]
+shortcut = "alt-j"
