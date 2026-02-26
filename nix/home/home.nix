@@ -5,6 +5,7 @@
     ./vcs.nix
     ./ripgrep.nix
     ./tmux.nix
+    ./pi-agent.nix
     ../lib/pi-agent.nix
   ];
 

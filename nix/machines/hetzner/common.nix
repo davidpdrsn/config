@@ -14,7 +14,6 @@
     jjui
     inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.codex
     inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.opencode
-    inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.pi
   ];
 
   users.users.root.openssh.authorizedKeys.keys = [

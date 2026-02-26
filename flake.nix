@@ -63,10 +63,7 @@
     flake-utils.lib.eachDefaultSystem (system: let
       pkgs = nixpkgs.legacyPackages.${system};
       llmAgentPackages = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
-      piWrapped = pkgs.writeShellScriptBin "pi" ''
-        export PATH="${pkgs.nodejs_24}/bin:$PATH"
-        exec ${pkgs.lib.getExe llmAgentPackages.pi} "$@"
-      '';
+      piWrapped = import ./nix/lib/pi-wrapped.nix {inherit pkgs inputs;};
     in
       {
         devShells.default = pkgs.mkShell {
