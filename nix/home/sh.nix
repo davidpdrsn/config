@@ -41,6 +41,7 @@
       dt = "cd ~/Desktop";
       diff = "diff --color";
       oc = "opencode";
+      p = "pi";
 
       j = "jjui";
       jc = "jj commit";

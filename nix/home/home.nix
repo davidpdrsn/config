@@ -5,6 +5,7 @@
     ./vcs.nix
     ./ripgrep.nix
     ./tmux.nix
+    ../lib/pi-agent.nix
   ];
 
   # Don't change this value, even when updating home-manager.

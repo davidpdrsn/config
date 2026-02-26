@@ -1,0 +1,23 @@
+{
+  "name": "pi-local-plugins",
+  "private": true,
+  "type": "module",
+  "keywords": [
+    "pi-package"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit --project tsconfig.json"
+  },
+  "pi": {
+    "extensions": [
+      "./plugins"
+    ]
+  },
+  "devDependencies": {
+    "@mariozechner/pi-coding-agent": "*",
+    "@mariozechner/pi-tui": "*",
+    "@sinclair/typebox": "^0.34.41",
+    "@types/node": "^24.5.0",
+    "typescript": "^5.9.2"
+  }
+}

@@ -36,6 +36,10 @@ test:
     bun test --cwd opencode
     bunx tsc --noEmit --project opencode/tsconfig.json
 
+# Install local Pi plugin dependencies
+install:
+    bun install --cwd pi
+
 # Update a flake input (interactive picker)
 update:
     ./scripts/nix-update-input

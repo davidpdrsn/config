@@ -62,6 +62,11 @@
   in
     flake-utils.lib.eachDefaultSystem (system: let
       pkgs = nixpkgs.legacyPackages.${system};
+      llmAgentPackages = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
+      piWrapped = pkgs.writeShellScriptBin "pi" ''
+        export PATH="${pkgs.nodejs_24}/bin:$PATH"
+        exec ${pkgs.lib.getExe llmAgentPackages.pi} "$@"
+      '';
     in
       {
         devShells.default = pkgs.mkShell {
@@ -72,7 +77,8 @@
             just
             fzf
             git
-            inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.codex
+            llmAgentPackages.codex
+            piWrapped
             ripgrep
           ];
         };

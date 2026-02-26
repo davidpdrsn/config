@@ -1,6 +1,6 @@
 .DS_Store
 result
-opencode/node_modules/
+node_modules/
 opencode/pipes/
 opencode/plugins/events.log
 /bin/*

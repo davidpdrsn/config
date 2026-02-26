@@ -1,4 +1,8 @@
 {config, ...}: {
+  imports = [
+    ./pi-agent.nix
+  ];
+
   # Mac-specific SSH: UseKeychain + colima
   programs.ssh.includes = ["${config.home.homeDirectory}/.colima/ssh_config"];
   programs.ssh.matchBlocks."*".extraOptions.UseKeychain = "yes";
