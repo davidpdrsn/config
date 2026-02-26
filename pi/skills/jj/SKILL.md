@@ -60,10 +60,12 @@ Use these mappings as defaults, adjusting to context:
   - `jj status`
   - `jj log -r '::@' -n 10` (or another concise local-history view)
 - Prefer explicit revsets/revisions over ambiguous shorthand when possible.
-- After commit/history mutations, prefer ending on a fresh empty working change:
+- After commit/history mutations, prefer ending on a fresh empty working change with no message:
   - `jj new`
-  - Verify with `jj status` that `@` is empty.
+  - `jj describe -r @ -m ""`
+  - Verify with `jj status` that `@` is empty and has `(no description set)`.
 - Run `jj undo` if you mess up.
+- Never set working-copy descriptions like `wip`; leave the working copy with no description.
 - In mixed repos (both `.git` and `.jj` metadata), default to jj-first behavior unless user explicitly asks to use git.
 
 ## Commit noise cleanup (required)
@@ -91,8 +93,9 @@ jj describe -r @- -m "..."
 # 6) Final verification (must print nothing)
 jj log -r "ancestors(@) & description('ai:*')"
 
-# 7) End on a fresh empty working change
+# 7) End on a fresh empty working change with no message
 jj new
+jj describe -r @ -m ""
 jj status
 ```
 
