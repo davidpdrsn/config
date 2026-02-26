@@ -13,10 +13,9 @@
         blockImages = false;
       };
       transport = "websocket";
-      theme = "catppuccin-mocha";
+      theme = "catppuccin-mocha-contrast";
       packages = [
         "${config.home.homeDirectory}/config/pi"
-        "https://github.com/ujj/pi-catppuccin"
       ];
     };
   };
