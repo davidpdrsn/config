@@ -131,7 +131,7 @@
           ./nix/machines/hetzner-1/configuration.nix
 
           home-manager.nixosModules.home-manager
-          (mkHomeManagerConfig [./nix/machines/hetzner/home.nix])
+          (mkHomeManagerConfig [./nix/machines/hetzner-1/home.nix])
         ];
       };
 
@@ -142,7 +142,7 @@
           ./nix/machines/hetzner-2/configuration.nix
 
           home-manager.nixosModules.home-manager
-          (mkHomeManagerConfig [./nix/machines/hetzner/home.nix])
+          (mkHomeManagerConfig [./nix/machines/hetzner-2/home.nix])
         ];
       };
     };
