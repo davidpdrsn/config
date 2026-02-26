@@ -7,6 +7,9 @@ import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
  * - If current change (@) has no description: `jj describe -m "ai: <PROMPT>"`
  * - Otherwise: `jj new -m "ai: <PROMPT>"`
  *
+ * Workspace guard:
+ * - Skip checkpoint commits when current workspace is not `default`
+ *
  * Heuristics:
  * - Skip slash commands
  * - Skip single-word prompts
@@ -34,6 +37,22 @@ export default function (pi: ExtensionAPI): void {
 			// Only run in a jj repo.
 			const root = await pi.exec("jj", ["root"], { timeout: 1_000 });
 			if (root.code !== 0) return { action: "continue" };
+
+			// Skip non-default workspaces.
+			const workspaceName = await pi.exec(
+				"jj",
+				[
+					"workspace",
+					"list",
+					"-T",
+					"if(self.target().current_working_copy(), self.name() ++ \"\\n\", \"\")",
+				],
+				{ timeout: 1_000 },
+			);
+			if (workspaceName.code !== 0) return { action: "continue" };
+			if ((workspaceName.stdout ?? "").trim() !== "default") {
+				return { action: "continue" };
+			}
 
 			const message = `ai: ${rawPrompt}`;
 
