@@ -32,6 +32,7 @@ check:
 
 # Run plugin tests
 test:
+    bun install --cwd opencode --frozen-lockfile
     oxlint --deny-warnings opencode/plugins
     bun test --pass-with-no-tests --cwd opencode
     bunx tsc --noEmit --project opencode/tsconfig.json
