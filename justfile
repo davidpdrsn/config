@@ -5,6 +5,7 @@ default:
 # Build and apply changes (requires sudo)
 switch:
     #!/usr/bin/env bash
+    jj debug snapshot
     if [ "$(uname)" = "Darwin" ]; then
         sudo nix run '.#darwin-rebuild' -- switch --flake '.#macos'
     else
