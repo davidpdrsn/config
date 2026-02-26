@@ -5,6 +5,7 @@
 }: let
   countTokens = pkgs.callPackage ./packages/count-tokens.nix {};
   openclawMsg = pkgs.callPackage ./packages/openclaw-msg.nix {};
+  cloudTmuxStatus = pkgs.callPackage ./packages/cloud-tmux-status.nix {};
   piWrapped = import ../lib/pi-wrapped.nix {inherit pkgs inputs;};
 in {
   environment.systemPackages = with pkgs;
@@ -38,6 +39,7 @@ in {
       oxlint
       countTokens
       openclawMsg
+      cloudTmuxStatus
       piWrapped
     ];
 }

@@ -185,6 +185,20 @@ async function runSsh(pi: ExtensionAPI, script: string, step: string, timeoutMs 
 	return execOrThrow(pi, "ssh", [HOST, `bash -lc ${sh(script)}`], step, timeoutMs);
 }
 
+async function copyToClipboardIfSupported(pi: ExtensionAPI, value: string): Promise<boolean> {
+	if (process.platform !== "darwin") return false;
+
+	const hasPbcopy = (await pi.exec("bash", ["-lc", "command -v pbcopy >/dev/null 2>&1"], {
+		timeout: 3_000,
+	})) as ExecResult;
+	if (hasPbcopy.code !== 0) return false;
+
+	const copy = (await pi.exec("bash", ["-lc", `printf %s ${sh(value)} | pbcopy`], {
+		timeout: 3_000,
+	})) as ExecResult;
+	return copy.code === 0;
+}
+
 async function readSessionHeader(sessionFile: string): Promise<SessionHeader> {
 	const content = await readFile(sessionFile, "utf8");
 	const firstLine = content.split("\n")[0]?.trim();
@@ -749,6 +763,7 @@ export default function (pi: ExtensionAPI): void {
 				const remotePiCommand = `cd ${sh(remoteCwd)} && exec pi --session ${sh(remoteSessionPath)} --append-system-prompt ${sh(remoteAgentInstructions)} ${sh("continue")}`;
 				const tmuxSessionName = `pi-cloud-${repoName}-${changeId}-${sessionShort}`;
 				const attachCommand = `ssh -t ${HOST} tmux attach -t ${tmuxSessionName}`;
+				const copiedAttachCommand = await copyToClipboardIfSupported(pi, attachCommand);
 
 				await runSsh(
 					pi,
@@ -762,7 +777,7 @@ export default function (pi: ExtensionAPI): void {
 				);
 
 				ctx.ui.notify(
-					`Cloud started in tmux '${tmuxSessionName}'. Attach: ${attachCommand} | Remote workspace: ${remoteWorkspace} | Bookmark: ${bookmarkName} | Pull back later: jj git fetch --remote ${REMOTE_NAME}`,
+					`Cloud started in tmux '${tmuxSessionName}'. Attach: ${attachCommand}${copiedAttachCommand ? " (copied to clipboard)" : ""} | Remote workspace: ${remoteWorkspace} | Bookmark: ${bookmarkName} | Pull back later: jj git fetch --remote ${REMOTE_NAME}`,
 					"info",
 				);
 			} catch (error) {

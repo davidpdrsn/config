@@ -83,6 +83,7 @@
   # inputs.gotools-nixpkgs.legacyPackages.${system}.gotools
 
   linearCli = pkgs.callPackage ../../shared/packages/linear-cli.nix {};
+  cloudTmuxStatus = pkgs.callPackage ../../shared/packages/cloud-tmux-status.nix {};
   openclawCli = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.openclaw;
   obsidianVaultsPull = import ../../lib/obsidian-vaults-pull.nix {
     inherit pkgs openclawCli username;
@@ -92,6 +93,7 @@
     gog
     goplaces
     linearCli
+    cloudTmuxStatus
     openclawCli
     pkgs.chromium
     pkgs.curl
