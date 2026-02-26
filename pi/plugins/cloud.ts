@@ -476,12 +476,12 @@ export default function (pi: ExtensionAPI): void {
 				);
 				const repoRoot = jjRootResult.stdout.trim();
 
-				await runWithProgress("Creating empty cloud working change", async () =>
+				await runWithProgress("Creating dedicated cloud build change", async () =>
 					execOrThrow(
 						pi,
 						"jj",
-						["-R", repoRoot, "new"],
-						"Creating empty cloud working change",
+						["-R", repoRoot, "new", "-r", "@"],
+						"Creating dedicated cloud build change",
 						10_000,
 					),
 				);
@@ -574,7 +574,17 @@ export default function (pi: ExtensionAPI): void {
 							`${bookmarkName}=@`,
 						],
 						"Pushing cloud bookmark to remote",
-						60_000,
+						180_000,
+					),
+				);
+
+				await runWithProgress("Creating local sibling working change", async () =>
+					execOrThrow(
+						pi,
+						"jj",
+						["-R", repoRoot, "new", "-r", "parents(@)"],
+						"Creating local sibling working change",
+						10_000,
 					),
 				);
 
@@ -590,29 +600,74 @@ export default function (pi: ExtensionAPI): void {
 							`jj bookmark track ${sh(bookmarkName)} --remote origin`,
 						].join("\n"),
 						"Creating cloud workspace",
-						120_000,
+						180_000,
 					),
 				);
 
-				const localEnvPath = path.join(repoRoot, ".env");
-				let hasLocalEnv = true;
-				try {
-					await access(localEnvPath);
-				} catch {
-					hasLocalEnv = false;
+				const envSyncCandidatesByRepo: Record<string, string[]> = {
+					"web-main": [
+						"apps/kelvin/.env",
+						"libraries/api/.env",
+						"libraries/energy10-integration/.env",
+					],
+					calor: [".env.docker", "env.dboverride"],
+				};
+				const envSyncCandidates = [
+					...(envSyncCandidatesByRepo[repoName] ?? []),
+					".env",
+				];
+				const seenEnvCandidates = new Set<string>();
+				const envFilesToSync: Array<{ localPath: string; relativePath: string; remotePath: string }> = [];
+				const missingEnvFiles: string[] = [];
+
+				for (const candidate of envSyncCandidates) {
+					if (seenEnvCandidates.has(candidate)) continue;
+					seenEnvCandidates.add(candidate);
+					if (candidate.toLowerCase().includes("example")) continue;
+
+					const localPath = path.resolve(repoRoot, candidate);
+					if (!isPathInsideRepo(localPath, repoRoot)) continue;
+
+					try {
+						await access(localPath);
+						envFilesToSync.push({
+							localPath,
+							relativePath: candidate,
+							remotePath: `${remoteWorkspace}/${normalizeRemotePath(candidate)}`,
+						});
+					} catch {
+						missingEnvFiles.push(candidate);
+					}
 				}
-				if (hasLocalEnv) {
-					await runWithProgress("Syncing .env", async () =>
-						execOrThrow(
-							pi,
-							"rsync",
-							["-az", "--info=progress2", localEnvPath, `${HOST}:${remoteWorkspace}/.env`],
-							"Syncing .env to cloud workspace",
-							30_000,
-						),
+
+				if (envFilesToSync.length > 0) {
+					await runWithProgress(`Syncing env files (${envFilesToSync.length})`, async () => {
+						for (const envFile of envFilesToSync) {
+							await runSsh(
+								pi,
+								`mkdir -p ${sh(path.posix.dirname(envFile.remotePath))}`,
+								`Preparing remote directory for ${envFile.relativePath}`,
+								30_000,
+							);
+							await execOrThrow(
+								pi,
+								"rsync",
+								["-az", envFile.localPath, `${HOST}:${envFile.remotePath}`],
+								`Syncing ${envFile.relativePath} to cloud workspace`,
+								180_000,
+							);
+						}
+					});
+					ctx.ui.notify(
+						`Synced env files: ${envFilesToSync.map((file) => file.relativePath).join(", ")}`,
+						"info",
 					);
 				} else {
-					ctx.ui.notify("No .env found in repo root; skipping .env sync.", "info");
+					ctx.ui.notify("No env files found for sync; skipping env sync.", "info");
+				}
+
+				if (missingEnvFiles.length > 0) {
+					ctx.ui.notify(`Env files not found (skipped): ${missingEnvFiles.join(", ")}`, "info");
 				}
 
 				const sessionFiles = await collectSessionFiles(sessionFile);
@@ -646,7 +701,7 @@ export default function (pi: ExtensionAPI): void {
 								"scp",
 								[rewrittenSessionFile, `${HOST}:${remoteSessionPath}`],
 								`Copying session file ${path.basename(localSessionFile)}`,
-								30_000,
+								180_000,
 							),
 					);
 				}
@@ -666,6 +721,7 @@ export default function (pi: ExtensionAPI): void {
 					`Remote working directory is now: ${remoteCwd}`,
 					"Do not use old absolute local paths. Use remote paths from this workspace.",
 					"This repo may rely on a nix dev environment; if commands/tools are missing, run them via `nix develop -c <command>`.",
+					"Cloud workers may lack untracked/generated files. If missing files break commands, infer what is needed and regenerate using repo build scripts/docs (Justfile/Makefile/package scripts).",
 					"When finishing work, before your final response, you must run these commands:",
 					`1) jj commit -m \"<good, specific commit message>\"`,
 					`2) jj bookmark set \"${bookmarkName}\" -r @-`,
