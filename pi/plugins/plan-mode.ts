@@ -18,7 +18,8 @@ You can control planning behavior using tools:
 Mode switching policy:
 - Decide mode based on the user's latest message and intent.
 - If the user asks for planning, exploration, tradeoffs, architecture, sequencing, or "how should we do this", call enter_plan_mode first.
-- If the user asks to execute, build, implement, code, apply changes, or proceed, call exit_plan_mode first.
+- If plan mode is active, never call exit_plan_mode unless the latest user message is exactly \`go\` (and nothing else).
+- Do not leave plan mode just because the user asks to execute/build/implement; wait for explicit \`go\` or manual /plan.
 - Avoid flip-flopping. Switch only when intent clearly changes.
 
 Current mode: ${mode}
@@ -27,7 +28,7 @@ Behavior in plan mode:
 - Prioritize analysis and planning.
 - Provide assumptions, risks, alternatives, and a concrete step-by-step plan.
 - Ask clarifying questions.
-- Do not start implementing unless the user explicitly asks to execute.
+- Do not start implementing until plan mode is exited (via /plan or exact \`go\`).
 
 Behavior in normal mode:
 - Execute requested work normally.
@@ -37,6 +38,7 @@ Behavior in normal mode:
 
 export default function (pi: ExtensionAPI): void {
 	let mode: Mode = "normal";
+	let allowToolExitForCurrentPrompt = false;
 
 	function persistState() {
 		pi.appendEntry("plan-mode", { mode } satisfies PlanModeState);
@@ -90,9 +92,22 @@ export default function (pi: ExtensionAPI): void {
 		name: "exit_plan_mode",
 		label: "Exit Plan Mode",
 		description:
-			"Switch back to normal execution mode. Use this when user intent is implementation/execution rather than planning.",
+			"Switch back to normal execution mode. Only allowed when user explicitly sends `go` (exactly) for this prompt.",
 		parameters: Type.Object({}),
 		async execute(_toolCallId, _params, _signal, _onUpdate, ctx) {
+			if (mode === "plan" && !allowToolExitForCurrentPrompt) {
+				ctx.ui.notify("Plan mode can only be exited via /plan or when user prompt is exactly `go`.", "info");
+				return {
+					content: [
+						{
+							type: "text",
+							text: "Refusing to exit plan mode. Ask the user to run /plan or send exactly `go`.",
+						},
+					],
+					details: { mode, allowToolExitForCurrentPrompt },
+				};
+			}
+
 			setMode("normal", ctx, "tool");
 			return {
 				content: [{ type: "text", text: "Plan mode is now inactive." }],
@@ -114,11 +129,12 @@ export default function (pi: ExtensionAPI): void {
 
 		return {
 			block: true,
-			reason: "Plan mode is active. Call exit_plan_mode before using edit/write.",
+			reason: "Plan mode is active. Exit via /plan or ask user to send exactly `go` before editing/writing.",
 		};
 	});
 
 	pi.on("before_agent_start", async (event, _ctx) => {
+		allowToolExitForCurrentPrompt = event.prompt.trim() === "go";
 		return {
 			systemPrompt: event.systemPrompt + makeSystemPromptAddition(mode),
 		};
