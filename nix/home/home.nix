@@ -52,6 +52,12 @@
     ".claude/settings.json".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/config/claude/settings.json";
     ".codex/config.toml".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/config/codex/config.toml";
     ".config/vmux".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/config/vmux";
+    ".ssh/known_hosts_hetzner".text = ''
+      hetzner-1 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDTrvqqopEOL+XGqbsQugUqaKOBx7foziysoB7oIMUnr
+      46.225.16.43 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDTrvqqopEOL+XGqbsQugUqaKOBx7foziysoB7oIMUnr
+      hetzner-2 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINnytj8FmLxKn36zdZjWFbcaJyLrqTBm/C1zEqtbWah6
+      46.225.17.37 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINnytj8FmLxKn36zdZjWFbcaJyLrqTBm/C1zEqtbWah6
+    '';
   };
 
   home.activation.createFolders = ''

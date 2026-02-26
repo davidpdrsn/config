@@ -12,6 +12,12 @@ switch:
         sudo nixos-rebuild switch --flake ".#$(hostname)"
     fi
 
+# Activate config locally and on both Hetzner servers
+switch-all:
+    just switch
+    just switch-vps-1
+    just switch-vps-2
+
 # Build the system configuration without activating (no sudo required)
 build:
     #!/usr/bin/env bash

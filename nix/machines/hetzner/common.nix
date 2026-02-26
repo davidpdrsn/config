@@ -34,6 +34,8 @@
     linger = true;
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIlDnL40PQbOKkpZXL77p+ub12HFEDMB6BwFToQ2UHMw david.pdrsn@gmail.com"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBIvdYAU5pJGqdHhXQZ6SWVmQnhHiAVDoJH328Ad3opZ hetzner-1-to-hetzner-2"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKtbQr3RmJBhl2hLONHS1T5ds3TPMqxxMfs9sPDQGcze hetzner-2-to-hetzner-1"
     ];
     shell = pkgs.fish;
   };
