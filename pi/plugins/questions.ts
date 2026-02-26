@@ -52,16 +52,6 @@ async function askMultiLineAnswer(
 	return ctx.ui.editor(title, "");
 }
 
-function formatAnswerValue(answer: string | string[]): string {
-	return Array.isArray(answer) ? answer.join(", ") : answer;
-}
-
-function formatAnswersForUserPrompt(answers: QuestionAnswer[]): string {
-	if (answers.length === 0) return "";
-	const lines = answers.map((answer) => `- ${answer.id}: ${formatAnswerValue(answer.answer)}`);
-	return ["Questionnaire answers:", ...lines].join("\n");
-}
-
 function formatAnswersForModel(details: QuestionnaireDetails): string {
 	if (details.skipped) {
 		return "Questionnaire skipped because UI is unavailable.";
@@ -375,11 +365,6 @@ export default function (pi: ExtensionAPI): void {
 				cancelled: false,
 				answers,
 			};
-
-			if (answers.length > 0) {
-				ctx.ui.setEditorText(formatAnswersForUserPrompt(answers));
-				ctx.ui.notify("Questionnaire answers inserted as a draft. Press Enter to submit.", "info");
-			}
 
 			return {
 				content: [
