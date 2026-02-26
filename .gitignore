@@ -5,3 +5,4 @@ opencode/pipes/
 opencode/plugins/events.log
 /bin/*
 /vmux/session.toml
+.env
