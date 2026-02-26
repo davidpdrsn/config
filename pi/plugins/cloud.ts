@@ -87,6 +87,15 @@ function shouldSanitizeReadPath(readPath: string, repoRoot: string): boolean {
 	return !isPathInsideRepo(readPath, repoRoot);
 }
 
+async function fileExists(filePath: string): Promise<boolean> {
+	try {
+		await access(filePath);
+		return true;
+	} catch {
+		return false;
+	}
+}
+
 async function collectSessionFiles(sessionFile: string): Promise<string[]> {
 	const files: string[] = [];
 	const seen = new Set<string>();
@@ -445,8 +454,9 @@ async function confirmCloudCleanup(ctx: any, title: string, summaryLines: string
 export default function (pi: ExtensionAPI): void {
 	pi.registerCommand("cloud", {
 		description: "Move this session to hetzner-1 and run it in remote tmux",
-		handler: async (_args, ctx) => {
+		handler: async (args, ctx) => {
 			let tempDir: string | undefined;
+			const cloudPrompt = args.trim() || "continue";
 			const setCloudProgress = (line: string) => {
 				ctx.ui.setWidget("cloud-progress", [line], { placement: "belowEditor" });
 			};
@@ -511,8 +521,15 @@ export default function (pi: ExtensionAPI): void {
 				const changeId = changeIdResult.stdout.trim();
 				if (!changeId) throw new Error("Could not determine current jj change id");
 
-				const sessionHeader = await readSessionHeader(sessionFile);
-				const sessionShort = shortId(sessionHeader.id ?? path.basename(sessionFile, ".jsonl"));
+				const hasLocalSessionFile = await fileExists(sessionFile);
+				if (!hasLocalSessionFile) {
+					ctx.ui.notify(
+						"No local session transcript yet; /cloud will start a fresh session on the remote machine.",
+						"info",
+					);
+				}
+				const sessionHeader = hasLocalSessionFile ? await readSessionHeader(sessionFile) : undefined;
+				const sessionShort = shortId(sessionHeader?.id ?? path.basename(sessionFile, ".jsonl"));
 				const bookmarkName = `cloud/${changeId}`;
 
 				const remoteHome = "/home/davidpdrsn";
@@ -684,44 +701,52 @@ export default function (pi: ExtensionAPI): void {
 					ctx.ui.notify(`Env files not found (skipped): ${missingEnvFiles.join(", ")}`, "info");
 				}
 
-				const sessionFiles = await collectSessionFiles(sessionFile);
-				tempDir = await mkdtemp(path.join(tmpdir(), "pi-cloud-sessions-"));
-				const rewrittenSessionFiles = new Map<string, string>();
-				for (const localSessionFile of sessionFiles) {
-					const rewritten = await rewriteSessionForCloud(
-						localSessionFile,
-						tempDir,
-						repoRoot,
-						remotePlaceholderPath,
-					);
-					rewrittenSessionFiles.set(localSessionFile, rewritten);
-				}
-
-				for (const [index, localSessionFile] of sessionFiles.entries()) {
-					const rewrittenSessionFile = rewrittenSessionFiles.get(localSessionFile) ?? localSessionFile;
-					const sessionRelPath = relativeSessionPath(localSessionFile);
-					const remoteSessionPath = `${remoteHome}/.pi/agent/sessions/${sessionRelPath}`;
-					await runSsh(
-						pi,
-						`mkdir -p ${sh(path.posix.dirname(remoteSessionPath))}`,
-						`Creating remote session directory for ${path.basename(localSessionFile)}`,
-						30_000,
-					);
-					await runWithProgress(
-						`Copying session file ${index + 1}/${sessionFiles.length}: ${path.basename(localSessionFile)}`,
-						async () =>
-							execOrThrow(
-								pi,
-								"scp",
-								[rewrittenSessionFile, `${HOST}:${remoteSessionPath}`],
-								`Copying session file ${path.basename(localSessionFile)}`,
-								180_000,
-							),
-					);
-				}
-
 				const sessionRelPath = relativeSessionPath(sessionFile);
 				const remoteSessionPath = `${remoteHome}/.pi/agent/sessions/${sessionRelPath}`;
+				await runSsh(
+					pi,
+					`mkdir -p ${sh(path.posix.dirname(remoteSessionPath))}`,
+					"Creating remote session directory",
+					30_000,
+				);
+
+				if (hasLocalSessionFile) {
+					const sessionFiles = await collectSessionFiles(sessionFile);
+					tempDir = await mkdtemp(path.join(tmpdir(), "pi-cloud-sessions-"));
+					const rewrittenSessionFiles = new Map<string, string>();
+					for (const localSessionFile of sessionFiles) {
+						const rewritten = await rewriteSessionForCloud(
+							localSessionFile,
+							tempDir,
+							repoRoot,
+							remotePlaceholderPath,
+						);
+						rewrittenSessionFiles.set(localSessionFile, rewritten);
+					}
+
+					for (const [index, localSessionFile] of sessionFiles.entries()) {
+						const rewrittenSessionFile = rewrittenSessionFiles.get(localSessionFile) ?? localSessionFile;
+						const localSessionRelPath = relativeSessionPath(localSessionFile);
+						const remoteLocalSessionPath = `${remoteHome}/.pi/agent/sessions/${localSessionRelPath}`;
+						await runSsh(
+							pi,
+							`mkdir -p ${sh(path.posix.dirname(remoteLocalSessionPath))}`,
+							`Creating remote session directory for ${path.basename(localSessionFile)}`,
+							30_000,
+						);
+						await runWithProgress(
+							`Copying session file ${index + 1}/${sessionFiles.length}: ${path.basename(localSessionFile)}`,
+							async () =>
+								execOrThrow(
+									pi,
+									"scp",
+									[rewrittenSessionFile, `${HOST}:${remoteLocalSessionPath}`],
+									`Copying session file ${path.basename(localSessionFile)}`,
+									180_000,
+								),
+						);
+					}
+				}
 				const cwdRel = path.relative(repoRoot, ctx.cwd);
 				const remoteCwd =
 					cwdRel && cwdRel !== "."
@@ -760,7 +785,7 @@ export default function (pi: ExtensionAPI): void {
 					"Do not close tmux before openclaw-msg succeeds.",
 					"Then explicitly confirm in your final response that commit, bookmark move, push, openclaw notification, and tmux session shutdown succeeded.",
 				].join("\n");
-				const remotePiCommand = `cd ${sh(remoteCwd)} && exec pi --session ${sh(remoteSessionPath)} --append-system-prompt ${sh(remoteAgentInstructions)} ${sh("continue")}`;
+				const remotePiCommand = `cd ${sh(remoteCwd)} && exec pi --session ${sh(remoteSessionPath)} --append-system-prompt ${sh(remoteAgentInstructions)} ${sh(cloudPrompt)}`;
 				const tmuxSessionName = `pi-cloud-${repoName}-${changeId}-${sessionShort}`;
 				const attachCommand = `ssh -t ${HOST} tmux attach -t ${tmuxSessionName}`;
 				const copiedAttachCommand = await copyToClipboardIfSupported(pi, attachCommand);
