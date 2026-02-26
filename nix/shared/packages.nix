@@ -4,6 +4,7 @@
   ...
 }: let
   countTokens = pkgs.callPackage ./packages/count-tokens.nix {};
+  openclawMsg = pkgs.callPackage ./packages/openclaw-msg.nix {};
   piWrapped = import ../lib/pi-wrapped.nix {inherit pkgs inputs;};
 in {
   environment.systemPackages = with pkgs;
@@ -36,6 +37,7 @@ in {
       nil # nix language server
       oxlint
       countTokens
+      openclawMsg
       piWrapped
     ];
 }
