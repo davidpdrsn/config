@@ -158,6 +158,10 @@ in {
 
   networking.hostName = "nix-4gb-nbg1-2";
 
+  users.users.${username}.extraGroups = ["wheel" "docker"];
+
+  virtualisation.docker.enable = true;
+
   programs.nix-ld = {
     enable = true;
     libraries = with pkgs; [
