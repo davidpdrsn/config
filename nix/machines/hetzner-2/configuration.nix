@@ -91,8 +91,6 @@
   openclawPackages = [
     gog
     goplaces
-    inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.codex
-    inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.opencode
     linearCli
     openclawCli
     pkgs.chromium
