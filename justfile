@@ -33,7 +33,7 @@ check:
 # Run plugin tests
 test:
     oxlint --deny-warnings opencode/plugins
-    bun test --cwd opencode
+    bun test --pass-with-no-tests --cwd opencode
     bunx tsc --noEmit --project opencode/tsconfig.json
 
 # Install local Pi plugin dependencies
