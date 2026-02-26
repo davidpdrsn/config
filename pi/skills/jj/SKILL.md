@@ -73,18 +73,23 @@ Minimal recipe:
 # 1) Inspect
 jj log -n 10
 
-# 2) Move current prompt changes into target commit (usually @-)
+# 2) List ai commits in current ancestry
+jj log -r "ancestors(@) & description('ai:*')"
+
+# 3) Move current prompt changes into target commit (usually @-)
 jj squash --into @- --use-destination-message
 
-# 3) Drop empty leftover ai commits when needed
+# 4) Drop empty leftover ai commits when needed
 jj abandon <rev>
 
-# 4) Set final message on kept commit
+# 5) Set final message on kept commit
 jj describe -r @- -m "..."
 
-# 5) Verify no ai commits remain in target ancestry (must print nothing)
-jj log -r "ancestors(@-) & description('ai:*')"
+# 6) Final verification (must print nothing)
+jj log -r "ancestors(@) & description('ai:*')"
 ```
+
+Why `ancestors(@)` and not `ancestors(@-)`: checking `@-` can miss `ai:` commits above the target (including the working-copy commit).
 
 If revset syntax is unclear, use: `jj help -k revsets`.
 
