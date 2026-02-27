@@ -397,7 +397,7 @@ async function pickOne(ctx: any, title: string, options: string[]): Promise<numb
 // Summary lines are rendered as plain text for clarity.
 async function confirmCloudCleanup(ctx: any, title: string, summaryLines: string[]): Promise<boolean | undefined> {
 	return ctx.ui.custom<boolean | undefined>((tui: any, theme: any, _kb: any, done: (value: boolean | undefined) => void) => {
-		const actions = ["Cancel", "Proceed with deletion"];
+		const actions = ["Proceed with deletion", "Cancel"];
 		let selectedIndex = 0;
 		let cachedLines: string[] | undefined;
 
@@ -419,7 +419,7 @@ async function confirmCloudCleanup(ctx: any, title: string, summaryLines: string
 					return;
 				}
 				if (matchesKey(data, Key.enter)) {
-					done(selectedIndex === 1);
+					done(selectedIndex === 0);
 					return;
 				}
 				if (matchesKey(data, Key.escape)) {
@@ -801,13 +801,24 @@ export default function (pi: ExtensionAPI): void {
 					30_000,
 				);
 
-				ctx.ui.notify(
-					`Cloud started in tmux '${tmuxSessionName}'. Attach: ${attachCommand}${copiedAttachCommand ? " (copied to clipboard)" : ""} | Remote workspace: ${remoteWorkspace} | Bookmark: ${bookmarkName} | Pull back later: jj git fetch --remote ${REMOTE_NAME}`,
-					"info",
-				);
+				if (!ctx.hasUI) {
+					process.stdout.write(`${attachCommand}\n`);
+					if (copiedAttachCommand) {
+						process.stderr.write("Copied attach command to clipboard\n");
+					}
+				} else {
+					ctx.ui.notify(
+						`Cloud started in tmux '${tmuxSessionName}'. Attach: ${attachCommand}${copiedAttachCommand ? " (copied to clipboard)" : ""} | Remote workspace: ${remoteWorkspace} | Bookmark: ${bookmarkName} | Pull back later: jj git fetch --remote ${REMOTE_NAME}`,
+						"info",
+					);
+				}
 			} catch (error) {
 				const message = error instanceof Error ? error.message : String(error);
-				ctx.ui.notify(`/cloud failed: ${message}`, "error");
+				if (!ctx.hasUI) {
+					process.stderr.write(`/cloud failed: ${message}\n`);
+				} else {
+					ctx.ui.notify(`/cloud failed: ${message}`, "error");
+				}
 			} finally {
 				clearCloudProgress();
 				if (tempDir) {
