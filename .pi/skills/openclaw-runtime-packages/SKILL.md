@@ -30,7 +30,7 @@ Do not rely only on shared/global package lists.
 
 1. Add package derivation/binding if needed.
 2. Add package to `openclawPackages` in `nix/machines/hetzner-2/configuration.nix`.
-3. Keep skill/script command invocation by name (for example `cloud-tmux-status`).
+3. Keep skill/script command invocation by name (for example `cloud-agent`).
 
 ## Required verification
 

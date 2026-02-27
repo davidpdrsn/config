@@ -1,25 +1,22 @@
 {pkgs}:
 pkgs.writeShellApplication {
   name = "cloud-agent";
+  runtimeInputs = [
+    pkgs.bun
+    pkgs.coreutils
+  ];
   text = ''
     set -euo pipefail
 
-    if [ "''${1:-}" = "-h" ] || [ "''${1:-}" = "--help" ]; then
-      cat <<'EOF'
-Usage:
-  cloud-agent <prompt>
+    repo_root="''${CLOUD_AGENT_REPO:-$HOME/config}"
+    pi_dir="$repo_root/pi"
 
-Starts a cloud Pi agent by invoking Pi's /cloud command in print mode.
-On success, prints only the tmux attach command to stdout.
-EOF
-      exit 0
+    if [ ! -f "$pi_dir/scripts/cloud-agent.ts" ]; then
+      echo "cloud-agent: script not found at $pi_dir/scripts/cloud-agent.ts" >&2
+      echo "Set CLOUD_AGENT_REPO to your config repo root if needed." >&2
+      exit 1
     fi
 
-    prompt="$*"
-    if [ -z "$prompt" ]; then
-      prompt="continue"
-    fi
-
-    exec pi -p "/cloud $prompt"
+    exec bun --cwd "$pi_dir" "$pi_dir/scripts/cloud-agent.ts" "$@"
   '';
 }

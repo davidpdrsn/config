@@ -1,6 +1,6 @@
 ---
 name: cloud-agent-status
-description: "MANDATORY for cloud agent status checks: inspect active /cloud agents via cloud-tmux-status."
+description: "MANDATORY for cloud agent status checks: inspect active /cloud agents via cloud-agent status."
 always: true
 ---
 
@@ -19,10 +19,10 @@ Trigger examples:
 Run:
 
 ```bash
-cloud-tmux-status
+cloud-agent status
 ```
 
-This command is mandatory for cloud-status questions. Do not infer status from memory or other tools; always execute `cloud-tmux-status` first.
+This command is mandatory for cloud-status questions. Do not infer status from memory or other tools; always execute `cloud-agent status` first.
 
 If this command is not run, you must explicitly say status is unknown and run it before answering.
 
@@ -44,7 +44,7 @@ This returns structured JSON with active cloud tmux sessions, inferred state, an
 If the state looks wrong or unclear, rerun with pane output included:
 
 ```bash
-cloud-tmux-status --include-pane
+cloud-agent status --include-pane
 ```
 
 Use this only when needed (it is verbose).
