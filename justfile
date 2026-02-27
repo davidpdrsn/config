@@ -14,9 +14,7 @@ switch:
 
 # Activate config locally and on both Hetzner servers
 switch-all:
-    just switch
-    just switch-vps-1
-    just switch-vps-2
+    ./scripts/switch-all
 
 # Build the system configuration without activating (no sudo required)
 build:

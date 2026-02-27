@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+
+labels=()
+pids=()
+exit_codes=()
+
+start_task() {
+  local label="$1"
+  shift
+
+  echo "==> started ${label}"
+
+  (
+    set -o pipefail
+    "$@" 2>&1 | while IFS= read -r line; do
+      printf '[%s] %s\n' "$label" "$line"
+    done
+  ) &
+
+  labels+=("$label")
+  pids+=("$!")
+}
+
+start_task "local" just switch
+start_task "vps-1" just switch-vps-1
+start_task "vps-2" just switch-vps-2
+
+failed=0
+
+for i in "${!pids[@]}"; do
+  pid="${pids[$i]}"
+  label="${labels[$i]}"
+
+  if wait "$pid"; then
+    code=0
+  else
+    code=$?
+    failed=1
+  fi
+
+  exit_codes+=("$code")
+  echo "==> done ${label} (exit ${code})"
+done
+
+echo "==> summary"
+for i in "${!labels[@]}"; do
+  echo "  ${labels[$i]}: exit ${exit_codes[$i]}"
+done
+
+if [ "$failed" -ne 0 ]; then
+  exit 1
+fi

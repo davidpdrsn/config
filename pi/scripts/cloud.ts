@@ -607,6 +607,7 @@ async function runCloud(io: IOBridge, context: CloudRunContext): Promise<void> {
 			"Do not use old absolute local paths. Use remote paths from this workspace.",
 			"This repo may rely on a nix dev environment; if commands/tools are missing, run them via `nix develop -c <command>`.",
 			"Cloud workers may lack untracked/generated files. If missing files break commands, infer what is needed and regenerate using repo build scripts/docs (Justfile/Makefile/package scripts).",
+			"If you get stuck, send a help request immediately with: openclaw-msg \"<prompt>\".",
 			"When finishing work, before your final response, you must run these commands:",
 			`1) jj commit -m \"<good, specific commit message>\"`,
 			`2) jj bookmark set \"${bookmarkName}\" -r @-`,
