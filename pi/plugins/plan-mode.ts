@@ -212,21 +212,22 @@ function validatePlanModeBashCommand(command: string): { ok: true } | { ok: fals
 }
 
 function makeSystemPromptAddition(mode: Mode): string {
-	return `
+	if (mode === "plan") {
+		return `
 
 [Plan mode controller]
 You can control planning behavior using tools:
 - enter_plan_mode: switch to planning behavior.
 - exit_plan_mode: switch to normal execution behavior.
 
+Current mode: plan
+Authoritative state: mode=plan.
+
 Mode switching policy:
 - Decide mode based on the user's latest message and intent.
-- If the user asks for planning, exploration, tradeoffs, architecture, sequencing, or "how should we do this", call enter_plan_mode first.
-- If plan mode is active, never call exit_plan_mode unless the latest user message is exactly \`go\` (and nothing else).
-- Do not leave plan mode just because the user asks to execute/build/implement; wait for explicit \`go\` or manual /plan.
-- Avoid flip-flopping. Switch only when intent clearly changes.
-
-Current mode: ${mode}
+- If the user asks for planning, exploration, design, tradeoff analysis, architecture, or sequencing, remain in plan mode.
+- While in plan mode, never call exit_plan_mode unless the latest user message is exactly \`go\` (and nothing else).
+- Manual /plan also exits plan mode.
 
 Behavior in plan mode:
 - Prioritize analysis and planning.
@@ -236,10 +237,23 @@ Behavior in plan mode:
 - Do not use shell tricks (chaining, substitution, redirection, heredocs) to mutate files or bypass restrictions.
 - Never use interpreters or non-allowlisted commands to edit files.
 - Do not start implementing until plan mode is exited (via /plan or exact \`go\`).
+`;
+	}
+
+	return `
+
+[Plan mode controller]
+You can control planning behavior using tools:
+- enter_plan_mode: switch to planning behavior.
+- exit_plan_mode: switch to normal execution behavior.
+
+Current mode: normal
+Authoritative state: mode=normal. Ignore prior turns that implied plan mode might still be active.
 
 Behavior in normal mode:
 - Execute requested work normally.
-- If planning is requested again, switch back to plan mode first.
+- Do not wait for \`go\`.
+- Use enter_plan_mode only when the user explicitly asks for planning, exploration, design, tradeoff analysis, architecture, or sequencing.
 `;
 }
 
@@ -323,6 +337,19 @@ export default function (pi: ExtensionAPI): void {
 		},
 	});
 
+	pi.registerTool({
+		name: "get_plan_mode",
+		label: "Get Plan Mode",
+		description: "Returns whether plan mode is currently active or not.",
+		parameters: Type.Object({}),
+		async execute() {
+			return {
+				content: [{ type: "text", text: `Current plan mode: ${mode}` }],
+				details: { mode },
+			};
+		},
+	});
+
 	pi.registerCommand("plan", {
 		description: "Toggle plan mode manually",
 		handler: async (_args, ctx) => {
@@ -336,7 +363,8 @@ export default function (pi: ExtensionAPI): void {
 		if (event.toolName === "edit" || event.toolName === "write") {
 			return {
 				block: true,
-				reason: "Plan mode is active. Exit via /plan or ask user to send exactly `go` before editing/writing.",
+				reason:
+					"Plan mode is currently active for this turn. Exit via /plan or ask user to send exactly `go` before editing/writing.",
 			};
 		}
 
