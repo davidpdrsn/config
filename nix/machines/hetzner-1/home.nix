@@ -2,6 +2,10 @@
   lib,
   ...
 }: {
+  home.sessionVariables = {
+    CARGO_TARGET_DIR = "/home/davidpdrsn/.rust-shared-target";
+  };
+
   programs.ssh.matchBlocks = {
     "github.com" = {
       user = "git";
