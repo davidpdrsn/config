@@ -2,7 +2,6 @@ import { access } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawn } from "node:child_process";
-import { cac } from "cac";
 
 interface ExecResult {
 	code: number | null;
@@ -338,58 +337,99 @@ async function cloudStatus(options: {
 	return 0;
 }
 
-const cli = cac("cloud-agent");
-cli.help();
-cli.version("0.1.0");
+type ParsedArgs = {
+	command: string | null;
+	positionals: string[];
+	flags: Record<string, string | boolean>;
+};
 
-cli
-	.command("run [...prompt]", "Start a cloud agent run")
-	.option("--cwd <path>", "Working directory to treat as local cwd")
-	.option("--session-file <path>", "Optional local Pi session file to sync")
-	.option("--json", "Emit worker NDJSON events instead of human output")
-	.action(async (prompt: string[], options: { cwd?: string; sessionFile?: string; json?: boolean }) => {
+function printHelp(): void {
+	process.stdout.write(`cloud-agent/0.1.0\n\nUsage:\n  $ cloud-agent <command> [options]\n\nCommands:\n  run [...prompt]  Start a cloud agent run\n  clean            Clean cloud workspaces (interactive mode currently requires Pi UI adapter)\n  status           Inspect remote cloud tmux sessions and summarize status\n\nOptions:\n  -h, --help       Display this message\n  -v, --version    Display version number\n`);
+}
+
+function parseArgv(argv: string[]): ParsedArgs {
+	const out: ParsedArgs = { command: null, positionals: [], flags: {} };
+	const rest = [...argv];
+	if (rest.length > 0 && !rest[0].startsWith("-")) out.command = rest.shift() ?? null;
+
+	for (let i = 0; i < rest.length; i++) {
+		const token = rest[i];
+		if (token === "--") {
+			out.positionals.push(...rest.slice(i + 1));
+			break;
+		}
+		if (!token.startsWith("--")) {
+			out.positionals.push(token);
+			continue;
+		}
+		const key = token.slice(2);
+		const next = rest[i + 1];
+		if (next && !next.startsWith("-")) {
+			out.flags[key] = next;
+			i++;
+		} else {
+			out.flags[key] = true;
+		}
+	}
+	return out;
+}
+
+(async () => {
+	const raw = process.argv.slice(2);
+	if (raw.length === 0 || raw.includes("--help") || raw.includes("-h")) {
+		printHelp();
+		return;
+	}
+	if (raw.includes("--version") || raw.includes("-v")) {
+		process.stdout.write("0.1.0\n");
+		return;
+	}
+
+	const parsed = parseArgv(raw);
+	const command = parsed.command;
+
+	if (command === "run") {
 		const code = await runWorker(
 			"run",
 			{
-				cwd: options.cwd ?? process.cwd(),
-				sessionFile: options.sessionFile ?? null,
-				cloudPrompt: prompt.join(" ").trim() || "continue",
+				cwd: (parsed.flags.cwd as string | undefined) ?? process.cwd(),
+				sessionFile: (parsed.flags["session-file"] as string | undefined) ?? null,
+				cloudPrompt: parsed.positionals.join(" ").trim() || "continue",
 				hasUI: false,
 			},
-			Boolean(options.json),
+			Boolean(parsed.flags.json),
 		);
 		process.exitCode = code;
-	});
+		return;
+	}
 
-cli
-	.command("clean", "Clean cloud workspaces (interactive mode currently requires Pi UI adapter)")
-	.option("--json", "Emit worker NDJSON events")
-	.action(async (options: { json?: boolean }) => {
+	if (command === "clean") {
 		const code = await runWorker(
 			"clean",
-			{
-				cwd: process.cwd(),
-				hasUI: false,
-			},
-			Boolean(options.json),
+			{ cwd: process.cwd(), hasUI: false },
+			Boolean(parsed.flags.json),
 		);
 		process.exitCode = code;
-	});
+		return;
+	}
 
-cli
-	.command("status", "Inspect remote cloud tmux sessions and summarize status")
-	.option("--host <host>", "SSH host/IP to inspect")
-	.option("--user <user>", "SSH user")
-	.option("--identity <path>", "SSH private key path")
-	.option("--known-hosts <path>", "known_hosts file path")
-	.option("--lines <n>", "Lines to capture from each pane")
-	.option("--pattern <regex>", "Session name regex filter")
-	.option("--include-pane", "Include captured pane text in JSON")
-	.option("--json", "Output JSON (default)")
-	.option("--table", "Output a compact table")
-	.action(async (options) => {
-		const code = await cloudStatus(options as any);
+	if (command === "status") {
+		const code = await cloudStatus({
+			host: parsed.flags.host as string | undefined,
+			user: parsed.flags.user as string | undefined,
+			knownHosts: parsed.flags["known-hosts"] as string | undefined,
+			identity: parsed.flags.identity as string | undefined,
+			lines: parsed.flags.lines as string | undefined,
+			pattern: parsed.flags.pattern as string | undefined,
+			includePane: Boolean(parsed.flags["include-pane"]),
+			table: Boolean(parsed.flags.table),
+			json: Boolean(parsed.flags.json),
+		});
 		process.exitCode = code;
-	});
+		return;
+	}
 
-cli.parse();
+	process.stderr.write(`Unknown command: ${command ?? "(none)"}\n\n`);
+	printHelp();
+	process.exitCode = 1;
+})();
