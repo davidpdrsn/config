@@ -25,10 +25,16 @@ build:
         nixos-rebuild build --flake ".#$(hostname)"
     fi
 
-# Build CI NixOS targets explicitly
+# Build CI targets (fast path for PRs, full build on main/push)
 ci-build:
-    nix build .#nixosConfigurations.nix-4gb-nbg1-1.config.system.build.toplevel
-    nix build .#nixosConfigurations.nix-4gb-nbg1-2.config.system.build.toplevel
+    #!/usr/bin/env bash
+    if [ "${GITHUB_EVENT_NAME:-}" = "pull_request" ]; then
+        echo "PR fast path: skipping full NixOS toplevel builds"
+        nix flake check --no-build
+    else
+        nix build .#nixosConfigurations.nix-4gb-nbg1-1.config.system.build.toplevel
+        nix build .#nixosConfigurations.nix-4gb-nbg1-2.config.system.build.toplevel
+    fi
 
 # Validate the flake structure
 check:
