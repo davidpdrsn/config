@@ -33,6 +33,8 @@ ci-build:
 # Validate the flake structure
 check:
     nix flake check
+    # smoke-test cloud-agent CLI entrypoint without extra JS installs
+    bun ./pi/scripts/cloud-agent.ts status --help
 
 # Run plugin tests
 test:
