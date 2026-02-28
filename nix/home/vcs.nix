@@ -36,6 +36,8 @@
       ".jj"
       ".go"
       ".worktrees"
+      ".pi/tmp/"
+      "vmux-debug.log"
     ];
     settings = {
       credential.helper = "!${pkgs.gh}/bin/gh auth git-credential";
