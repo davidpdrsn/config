@@ -45,24 +45,6 @@ interface QuestionnaireDetails {
 	answers: QuestionAnswer[];
 }
 
-function getCurrentPlanMode(ctx: { sessionManager?: { getEntries?: () => unknown[] } }): "normal" | "plan" {
-	const entries = ctx.sessionManager?.getEntries?.() ?? [];
-
-	for (let i = entries.length - 1; i >= 0; i--) {
-		const entry = entries[i] as {
-			type?: unknown;
-			customType?: unknown;
-			data?: { mode?: unknown };
-		};
-
-		if (entry.type === "custom" && entry.customType === "plan-mode") {
-			return entry.data?.mode === "plan" ? "plan" : "normal";
-		}
-	}
-
-	return "normal";
-}
-
 async function askMultiLineAnswer(
 	ctx: { ui: { editor: (title: string, text: string) => Promise<string | undefined> } },
 	title: string,
@@ -91,7 +73,7 @@ export default function (pi: ExtensionAPI): void {
 		return {
 			systemPrompt:
 				event.systemPrompt +
-				"\n\n[Question-asking policy]\n- Do not ask the user direct questions in normal assistant text.\n- If you need clarification, requirements, or a decision from the user, call the questionnaire tool instead.\n- Keep questionnaire questions concrete and minimal, and include options whenever possible.\n- Exception: when plan mode is active, do not use questionnaire; ask questions directly in assistant text (including requests for exact `go` or /plan to exit plan mode).",
+				"\n\n[Question-asking policy]\n- Do not ask the user direct questions in normal assistant text.\n- If you need clarification, requirements, or a decision from the user, call the questionnaire tool instead.\n- Keep questionnaire questions concrete and minimal, and include options whenever possible.\n- In plan mode, questionnaire is allowed and encouraged for plan clarifications.\n- Exception: do not use questionnaire to ask the user to exit plan mode (for exact `go` or /plan). Ask that directly in assistant text.",
 		};
 	});
 
@@ -103,24 +85,6 @@ export default function (pi: ExtensionAPI): void {
 		parameters: QuestionnaireSchema,
 		async execute(_toolCallId, params, _signal, _onUpdate, ctx) {
 			const questions = params.questions as QuestionInput[];
-			const planMode = getCurrentPlanMode(ctx);
-
-			if (planMode === "plan") {
-				const details: QuestionnaireDetails = {
-					skipped: true,
-					cancelled: false,
-					answers: [],
-				};
-				return {
-					content: [
-						{
-							type: "text",
-							text: "Questionnaire is disabled while plan mode is active. Ask the user directly in assistant text.",
-						},
-					],
-					details: { ...details, planMode },
-				};
-			}
 
 			if (!ctx.hasUI) {
 				const details: QuestionnaireDetails = {

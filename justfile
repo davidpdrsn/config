@@ -37,9 +37,11 @@ check:
 # Run plugin tests
 test:
     bun install --cwd opencode --frozen-lockfile
+    bun install --cwd pi --frozen-lockfile
     oxlint --deny-warnings opencode/plugins
     bun test --pass-with-no-tests --cwd opencode
     bunx tsc --noEmit --project opencode/tsconfig.json
+    bun run --cwd pi typecheck
 
 # Install local Pi plugin dependencies
 install:

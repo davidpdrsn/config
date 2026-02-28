@@ -232,7 +232,8 @@ Mode switching policy:
 Behavior in plan mode:
 - Prioritize analysis and planning.
 - Provide assumptions, risks, alternatives, and a concrete step-by-step plan.
-- Ask clarifying questions.
+- Ask clarifying questions. Use the questionnaire tool for plan-related clarifications when helpful.
+- If you need the user to exit plan mode (exact \`go\` or /plan), ask directly in assistant text instead of using questionnaire.
 - Bash is allowed, but only for read-only analysis commands from the allowlist (including read-only git/jj inspection commands).
 - Do not use shell tricks (chaining, substitution, redirection, heredocs) to mutate files or bypass restrictions.
 - Never use interpreters or non-allowlisted commands to edit files.
