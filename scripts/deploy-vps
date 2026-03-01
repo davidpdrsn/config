@@ -36,4 +36,4 @@ if [ "$main_id" != "$origin_id" ]; then
   exit 1
 fi
 
-ssh -t "$host" 'cd /home/davidpdrsn/config && jj git fetch && jj new main && /run/wrappers/bin/sudo nixos-rebuild switch --flake ".#$(hostname)"'
+ssh -t "$host" 'cd /home/davidpdrsn/config && jj git fetch && jj new main && ./scripts/bootstrap-pi-deps && /run/wrappers/bin/sudo nixos-rebuild switch --flake ".#$(hostname)"'

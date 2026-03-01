@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+host="$(hostname -s 2>/dev/null || hostname)"
+
+# OpenClaw runtime on hetzner-2 executes cloud-agent from ~/config/pi.
+# Keep deps bootstrapped there so commands like `cloud-agent status` don't fail
+# with missing JS packages (e.g. cac).
+if [ "$host" != "nix-4gb-nbg1-2" ] && [ "$host" != "hetzner-2" ]; then
+  echo "bootstrap-pi-deps: skipping on host '$host'"
+  exit 0
+fi
+
+repo_root="${CONFIG_REPO_ROOT:-$HOME/config}"
+pi_dir="$repo_root/pi"
+
+if [ ! -d "$pi_dir" ]; then
+  echo "bootstrap-pi-deps: pi directory not found: $pi_dir" >&2
+  exit 1
+fi
+
+if [ ! -f "$pi_dir/bun.lock" ] && [ ! -f "$pi_dir/bun.lockb" ]; then
+  echo "bootstrap-pi-deps: lockfile not found in $pi_dir" >&2
+  exit 1
+fi
+
+if command -v bun >/dev/null 2>&1; then
+  bun_cmd=(bun)
+elif command -v nix >/dev/null 2>&1; then
+  bun_cmd=(nix shell nixpkgs#bun --command bun)
+else
+  echo "bootstrap-pi-deps: bun not found and nix is unavailable to provision it" >&2
+  exit 1
+fi
+
+echo "bootstrap-pi-deps: installing pi dependencies in $pi_dir"
+"${bun_cmd[@]}" install --cwd "$pi_dir" --frozen-lockfile

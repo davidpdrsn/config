@@ -4,6 +4,7 @@ pkgs.writeShellApplication {
   runtimeInputs = [
     pkgs.bun
     pkgs.coreutils
+    pkgs.openssh
   ];
   text = ''
     set -euo pipefail
