@@ -41,6 +41,7 @@ test:
     oxlint --deny-warnings opencode/plugins
     bun test --pass-with-no-tests --cwd opencode
     bunx tsc --noEmit --project opencode/tsconfig.json
+    bun test --pass-with-no-tests --cwd pi
     bun run --cwd pi typecheck
 
 # Install local Pi plugin dependencies

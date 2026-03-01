@@ -14,6 +14,7 @@
     opWrapped = import ../../lib/op-wrapper.nix {inherit pkgs;};
     llmAgentPackages = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
     linearCli = pkgs.callPackage ../../shared/packages/linear-cli.nix {};
+    agentStatus = pkgs.callPackage ../../shared/packages/agent-status.nix {};
     test-cli = opWrapped {
       name = "test-cli";
       env = {
@@ -29,6 +30,7 @@
       nxv
       resvg
       linearCli
+      agentStatus
       test-cli
       gettext
       ffmpeg
