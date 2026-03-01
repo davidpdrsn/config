@@ -432,8 +432,8 @@ export default function (pi: ExtensionAPI): void {
 		if (!isExecutionStartPrompt(event.prompt)) return;
 
 		const todoReminder = hasOpenTodos()
-			? "[Todo checklist reminder]\n- You are entering implementation after planning (`go`). Keep the todo list current with `todowrite` as you complete steps.\n- Keep exactly one item `in_progress` whenever practical."
-			: "[Todo checklist reminder]\n- You are entering implementation after planning (`go`). FIRST, call `todowrite` to create/update the plan execution checklist before making edits.\n- Then keep it updated as you progress, with at most one item `in_progress` whenever practical.";
+			? "[Todo checklist reminder]\n- You are entering implementation after planning (`go`). Keep the todo list current with `todowrite` as you complete steps.\n- Keep exactly one item `in_progress` whenever practical.\n- CRITICAL: Do not declare completion or imply the task is done while any todo is still `pending` or `in_progress`. You are only done when all todos are `completed` (or explicitly `cancelled` with rationale)."
+			: "[Todo checklist reminder]\n- You are entering implementation after planning (`go`). FIRST, call `todowrite` to create/update the plan execution checklist before making edits.\n- Then keep it updated as you progress, with at most one item `in_progress` whenever practical.\n- CRITICAL: Do not declare completion or imply the task is done while any todo is still `pending` or `in_progress`. You are only done when all todos are `completed` (or explicitly `cancelled` with rationale).";
 
 		return {
 			systemPrompt: `${event.systemPrompt}\n\n${todoReminder}`,
