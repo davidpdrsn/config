@@ -254,11 +254,10 @@ export default function (pi: ExtensionAPI): void {
 
 		const completed = todos.filter((todo) => todo.status === "completed").length;
 		const inProgress = todos.filter((todo) => todo.status === "in_progress").length;
-		ctx.ui.setWidget(
-			"todo-progress",
-			[`${completed}/${todos.length} completed • ${inProgress} in progress`],
-			{ placement: "belowEditor" },
-		);
+		const summary = `${completed}/${todos.length} completed • ${inProgress} in progress`;
+		ctx.ui.setWidget("todo-progress", (_tui, _theme) => new Text(summary, 0, 0), {
+			placement: "belowEditor",
+		});
 	};
 
 	const reconstructState = (ctx: ExtensionContext) => {
