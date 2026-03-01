@@ -1,11 +1,10 @@
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import type { ExtensionAPI, ExtensionContext } from "@mariozechner/pi-coding-agent";
-import { Text } from "@mariozechner/pi-tui";
 import { Type } from "@sinclair/typebox";
+import { clearStatusLine, setStatusLine } from "./status-hub-state";
 
 const TOOL_NAME = "set_session_topic";
-const STATUS_KEY = "session-topic";
 const MAX_TOPIC_CHARS = 100;
 const STATE_VERSION = 1;
 
@@ -62,17 +61,13 @@ async function readStateFile(filePath: string): Promise<string | null> {
 	}
 }
 
-function renderTopicStatus(ctx: ExtensionContext, topic: string | null): void {
-	if (!ctx.hasUI) return;
-
-	ctx.ui.setStatus(STATUS_KEY, undefined);
-	ctx.ui.setWidget(STATUS_KEY, undefined);
-
-	if (!topic) return;
-
-	ctx.ui.setWidget(STATUS_KEY, (_tui, theme) => new Text(theme.fg("dim", topic), 0, 0), {
-		placement: "belowEditor",
-	});
+function publishTopicStatus(ctx: ExtensionContext, topic: string | null): void {
+	const sessionId = ctx.sessionManager.getSessionId();
+	if (!topic) {
+		clearStatusLine(ctx.cwd, sessionId, "topic");
+		return;
+	}
+	setStatusLine(ctx.cwd, sessionId, "topic", topic, { tone: "dim" });
 }
 
 export default function (pi: ExtensionAPI): void {
@@ -82,20 +77,12 @@ export default function (pi: ExtensionAPI): void {
 	async function loadTopicForSession(ctx: ExtensionContext): Promise<void> {
 		stateFilePath = getStateFilePath(ctx);
 		currentTopic = await readStateFile(stateFilePath);
-		renderTopicStatus(ctx, currentTopic);
-	}
-
-	function reapplyTopicAfterOtherWidgets(ctx: ExtensionContext): void {
-		if (!currentTopic) return;
-		setTimeout(() => {
-			if (!currentTopic) return;
-			renderTopicStatus(ctx, currentTopic);
-		}, 0);
+		publishTopicStatus(ctx, currentTopic);
 	}
 
 	function clearRuntimeTopic(ctx: ExtensionContext): void {
 		currentTopic = null;
-		renderTopicStatus(ctx, currentTopic);
+		publishTopicStatus(ctx, currentTopic);
 	}
 
 	pi.registerTool({
@@ -127,7 +114,7 @@ export default function (pi: ExtensionAPI): void {
 
 			currentTopic = nextTopic;
 			await writeStateFile(stateFilePath, currentTopic);
-			renderTopicStatus(ctx, currentTopic);
+			publishTopicStatus(ctx, currentTopic);
 
 			if (!currentTopic) {
 				return {
@@ -145,26 +132,15 @@ export default function (pi: ExtensionAPI): void {
 
 	pi.on("session_start", async (_event, ctx) => {
 		await loadTopicForSession(ctx);
-		reapplyTopicAfterOtherWidgets(ctx);
 	});
 
 	pi.on("session_switch", async (_event, ctx) => {
 		await loadTopicForSession(ctx);
-		reapplyTopicAfterOtherWidgets(ctx);
 	});
 
 	pi.on("session_shutdown", async (_event, ctx) => {
 		stateFilePath = "";
 		clearRuntimeTopic(ctx);
-	});
-
-	pi.on("tool_result", async (event, ctx) => {
-		if (!currentTopic) return;
-		if (event.toolName !== "todowrite" && event.toolName !== "todoread" && event.toolName !== "enter_plan_mode") {
-			return;
-		}
-		// Re-apply topic widget after other below-editor widgets update so topic stays last.
-		reapplyTopicAfterOtherWidgets(ctx);
 	});
 
 	pi.on("before_agent_start", async (event) => {

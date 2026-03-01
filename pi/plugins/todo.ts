@@ -1,6 +1,7 @@
 import type { ExtensionAPI, ExtensionContext, Theme } from "@mariozechner/pi-coding-agent";
 import { Text, matchesKey, truncateToWidth } from "@mariozechner/pi-tui";
 import { Type } from "@sinclair/typebox";
+import { clearStatusLine, setStatusLine } from "./status-hub-state";
 
 const TODO_STATUSES = ["pending", "in_progress", "completed", "cancelled"] as const;
 type TodoStatus = (typeof TODO_STATUSES)[number];
@@ -246,18 +247,16 @@ export default function (pi: ExtensionAPI): void {
 	const hasOpenTodos = () => todos.some((todo) => todo.status === "pending" || todo.status === "in_progress");
 
 	const updateWidget = (ctx: ExtensionContext) => {
-		if (!ctx.hasUI) return;
+		const sessionId = ctx.sessionManager.getSessionId();
 		if (todos.length === 0 || !hasOpenTodos()) {
-			ctx.ui.setWidget("todo-progress", undefined);
+			clearStatusLine(ctx.cwd, sessionId, "todo");
 			return;
 		}
 
 		const completed = todos.filter((todo) => todo.status === "completed").length;
 		const inProgress = todos.filter((todo) => todo.status === "in_progress").length;
 		const summary = `${completed}/${todos.length} completed • ${inProgress} in progress`;
-		ctx.ui.setWidget("todo-progress", (_tui, _theme) => new Text(summary, 0, 0), {
-			placement: "belowEditor",
-		});
+		setStatusLine(ctx.cwd, sessionId, "todo", summary, { tone: "muted" });
 	};
 
 	const reconstructState = (ctx: ExtensionContext) => {

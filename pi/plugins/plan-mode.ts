@@ -4,6 +4,7 @@ import * as Diff from "diff";
 import { renderDiff, type ExtensionAPI, type ExtensionContext } from "@mariozechner/pi-coding-agent";
 import { Text } from "@mariozechner/pi-tui";
 import { Type } from "@sinclair/typebox";
+import { clearStatusLine, setStatusLine } from "./status-hub-state";
 
 const PLAN_MODE_TOOLS = [
 	"read",
@@ -94,16 +95,13 @@ export default function (pi: ExtensionAPI): void {
 	}
 
 	function updateUi(ctx: ExtensionContext) {
+		const sessionId = ctx.sessionManager.getSessionId();
 		if (!enabled) {
-			ctx.ui.setStatus("plan-mode", undefined);
-			ctx.ui.setWidget("plan-mode", undefined);
+			clearStatusLine(ctx.cwd, sessionId, "plan");
 			return;
 		}
 
-		ctx.ui.setStatus("plan-mode", undefined);
-		ctx.ui.setWidget("plan-mode", (_tui, theme) => new Text(theme.fg("warning", "⏸ plan"), 0, 0), {
-			placement: "belowEditor",
-		});
+		setStatusLine(ctx.cwd, sessionId, "plan", "⏸ plan", { tone: "warning" });
 	}
 
 	async function setPlanMode(next: boolean, ctx: ExtensionContext): Promise<void> {

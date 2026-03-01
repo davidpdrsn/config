@@ -4,6 +4,7 @@ import { spawn } from "node:child_process";
 import readline from "node:readline";
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { Key, matchesKey, truncateToWidth } from "@mariozechner/pi-tui";
+import { clearStatusLine, setStatusLine } from "./status-hub-state";
 
 type NotifyLevel = "info" | "warning" | "error";
 type RequestKind = "pickMany" | "pickOne" | "confirm";
@@ -215,10 +216,18 @@ async function runWorker(
 		stdio: ["pipe", "pipe", "pipe"],
 	});
 
-	const setWidget = (key: "cloud" | "cloud-clean", text: string | undefined) => {
-		const widgetKey = key === "cloud" ? "cloud-progress" : "cloud-clean-progress";
-		ctx.ui.setWidget(widgetKey, text ? [text] : undefined, { placement: "belowEditor" });
+	const sessionId = ctx.sessionManager.getSessionId();
+	const setProgressStatus = (key: "cloud" | "cloud-clean", text: string | undefined) => {
+		const slot = key === "cloud" ? "cloud" : "cloud-clean";
+		if (!text) {
+			clearStatusLine(ctx.cwd, sessionId, slot);
+			return;
+		}
+		setStatusLine(ctx.cwd, sessionId, slot, text, { tone: "muted" });
 	};
+
+	setProgressStatus("cloud", undefined);
+	setProgressStatus("cloud-clean", undefined);
 
 	const sendResponse = (id: string, value: unknown) => {
 		child.stdin.write(`${JSON.stringify({ type: "response", id, value })}\n`);
@@ -250,7 +259,7 @@ async function runWorker(
 			}
 
 			if (event.type === "progress" && event.key) {
-				setWidget(event.key, event.text || undefined);
+				setProgressStatus(event.key, event.text || undefined);
 			}
 
 			if (event.type === "result" && event.attachCommand) {
@@ -289,6 +298,8 @@ async function runWorker(
 			}
 
 			if (event.type === "done") {
+				setProgressStatus("cloud", undefined);
+				setProgressStatus("cloud-clean", undefined);
 				resolve();
 			}
 		});
@@ -298,8 +309,8 @@ async function runWorker(
 		});
 
 		child.on("close", (code) => {
-			setWidget("cloud", undefined);
-			setWidget("cloud-clean", undefined);
+			setProgressStatus("cloud", undefined);
+			setProgressStatus("cloud-clean", undefined);
 			if (finalError) {
 				reject(new Error(finalError));
 				return;
