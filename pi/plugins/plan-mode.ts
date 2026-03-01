@@ -43,7 +43,7 @@ function getPaths(ctx: ExtensionContext): { planFile: string; historyDir: string
 	const sessionId = ctx.sessionManager.getSessionId();
 	return {
 		planFile: join(ctx.cwd, ".pi", "tmp", "plans", `${sessionId}.md`),
-		historyDir: join(ctx.cwd, ".pi", "plans", "history"),
+		historyDir: join(ctx.cwd, ".pi", "tmp", "plans", "history"),
 	};
 }
 
