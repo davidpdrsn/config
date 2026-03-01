@@ -73,7 +73,7 @@ export default function (pi: ExtensionAPI): void {
 		return {
 			systemPrompt:
 				event.systemPrompt +
-				"\n\n[Question-asking policy]\n- Do not ask the user direct questions in normal assistant text.\n- If you need clarification, requirements, or a decision from the user, call the questionnaire tool instead.\n- Keep questionnaire questions concrete and minimal, and include options whenever possible.\n- In plan mode, questionnaire is allowed and encouraged for plan clarifications.\n- Exception: do not use questionnaire to ask the user to exit plan mode (for exact `go` or /plan). Ask that directly in assistant text.",
+				"\n\n[Question-asking policy]\n- Do not ask the user direct questions in normal assistant text.\n- If you need clarification, requirements, or a decision from the user, call the questionnaire tool instead.\n- Keep questionnaire questions concrete and minimal, and include options whenever possible.\n- In plan mode, questionnaire is allowed and encouraged for plan clarifications.\n- Exception: do not use questionnaire to ask the user to exit plan mode (for exact `go` or /plan). Ask that directly in assistant text.\n\n[Commit policy]\n- Never create commits (in git or jj) unless the user explicitly asks you to commit.\n- If a request is ambiguous, do not commit.",
 		};
 	});
 
