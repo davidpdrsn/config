@@ -12,7 +12,7 @@ This plugin adds an OpenCode-style todo workflow to pi.
 - Command: `/todos`
   - Opens a read-only TUI view of the current branch's todos
 - Widget:
-  - Shows completion summary below the editor when todos exist
+  - Shows completion summary below the editor only when there are open todos (`pending` or `in_progress`)
 - Plan-execution nudge:
   - When plan mode exits via exact `go` prompt transform, the plugin injects a strong reminder to create/update todos first.
 

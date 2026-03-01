@@ -247,7 +247,7 @@ export default function (pi: ExtensionAPI): void {
 
 	const updateWidget = (ctx: ExtensionContext) => {
 		if (!ctx.hasUI) return;
-		if (todos.length === 0) {
+		if (todos.length === 0 || !hasOpenTodos()) {
 			ctx.ui.setWidget("todo-progress", undefined);
 			return;
 		}
