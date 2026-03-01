@@ -29,7 +29,7 @@ interface PlanModeState {
 interface PlanToolDetails {
 	planFile: string;
 	snapshot?: string;
-	diff: string;
+	diff?: string;
 	mustEchoVerbatim: true;
 }
 
@@ -289,12 +289,14 @@ export default function (pi: ExtensionAPI): void {
 	pi.registerTool({
 		name: "plan_show",
 		label: "Show Plan",
-		description: "Show current plan file contents.",
-		parameters: Type.Object({}),
+		description: "Show current plan metadata. Pass includeContent=true to return the full plan markdown.",
+		parameters: Type.Object({
+			includeContent: Type.Optional(Type.Boolean({ description: "Return full plan markdown in tool content" })),
+		}),
 		renderResult(result, _options, theme) {
 			return renderPlanShowResult(result, theme);
 		},
-		async execute(_toolCallId, _params, _signal, _onUpdate, ctx) {
+		async execute(_toolCallId, params, _signal, _onUpdate, ctx) {
 			syncPathsFromContext(ctx);
 			if (!enabled) {
 				return { content: [{ type: "text", text: toolNotInPlanModeText(ctx) }], details: {} };
@@ -306,9 +308,25 @@ export default function (pi: ExtensionAPI): void {
 				};
 			}
 
+			const includeContent = params?.includeContent === true;
 			const content = await readFile(planFile, "utf8");
 			const relPlanFile = toRelative(ctx.cwd, planFile);
 			const lineCount = content.split("\n").length;
+			if (!includeContent) {
+				return {
+					content: [
+						{
+							type: "text",
+							text: `Plan loaded: ${relPlanFile}. ${lineCount} lines, ${content.length} chars. Call plan_show with includeContent=true to view full plan text.`,
+						},
+					],
+					details: {
+						planFile: relPlanFile,
+						lineCount,
+						charCount: content.length,
+					} satisfies PlanShowToolDetails,
+				};
+			}
 			return {
 				content: [
 					{
@@ -346,7 +364,6 @@ export default function (pi: ExtensionAPI): void {
 			const normalizedContent = normalizePlanContent(params.content);
 			const snapshot = await makeSnapshotIfExists(ctx);
 			await writeFile(planFile, normalizedContent, "utf8");
-			const diff = await unifiedDiff(snapshot ?? "/dev/null", planFile);
 			const relPlanFile = toRelative(ctx.cwd, planFile);
 			const relSnapshot = snapshot ? toRelative(ctx.cwd, snapshot) : undefined;
 
@@ -356,7 +373,6 @@ export default function (pi: ExtensionAPI): void {
 				details: {
 					planFile: relPlanFile,
 					snapshot: relSnapshot,
-					diff,
 					mustEchoVerbatim: true,
 				} satisfies PlanToolDetails,
 			};
@@ -511,7 +527,7 @@ export default function (pi: ExtensionAPI): void {
 		return {
 			systemPrompt:
 				event.systemPrompt +
-				`\n\n[Plan mode]\n- Plan mode is active.\n- The plan file is the source of truth: ${relPlanFile}\n- Always read ${relPlanFile} before discussing, answering questions about, or revising the plan.\n- Fold user feedback into the existing plan file; do not ignore previous content.\n- Generic edit/write tools are blocked in plan mode.\n- Use plan_show to inspect, plan_init to start a new plan (discarding previous content), and plan_revise to update the current plan.\n- plan_init/plan_revise automatically maintain timestamped snapshots in ${relHistoryDir} and return unified diff only.\n- After any successful plan_init/plan_revise call, your next assistant message MUST print the revised plan verbatim from ${relPlanFile}.\n- Do not summarize/paraphrase the plan after writing it. If needed, call plan_show and copy the plan text exactly.\n- bash is available, but DO NOT make code or config edits with bash.\n- Strongly avoid bash file-mutation patterns for repository files: sed -i, perl -pi, awk in-place rewrites, redirections (> or >>), tee, mv/cp overwrites, here-doc writes.\n\n[Exit plan mode]\n- Stay in plan mode until the user sends exact text: go`,
+				`\n\n[Plan mode]\n- Plan mode is active.\n- The plan file is the source of truth: ${relPlanFile}\n- Read ${relPlanFile} when needed to discuss plan details or answer plan questions.\n- Fold user feedback into the existing plan file; do not ignore previous content.\n- Generic edit/write tools are blocked in plan mode.\n- Use plan_show to inspect plan metadata by default; call it with includeContent=true to fetch full plan text. Use plan_init to start a new plan (discarding previous content), and plan_revise to update the current plan.\n- plan_init/plan_revise automatically maintain timestamped snapshots in ${relHistoryDir}.\n- plan_revise returns a unified diff; plan_init keeps tool output compact and relies on verbatim plan echo in the next assistant message.\n- After any successful plan_init/plan_revise call, your next assistant message MUST print the revised plan verbatim from ${relPlanFile}.\n- Do not summarize/paraphrase the plan after writing it. If needed, call plan_show with includeContent=true and copy the plan text exactly.\n- bash is available, but DO NOT make code or config edits with bash.\n- Strongly avoid bash file-mutation patterns for repository files: sed -i, perl -pi, awk in-place rewrites, redirections (> or >>), tee, mv/cp overwrites, here-doc writes.\n\n[Exit plan mode]\n- Stay in plan mode until the user sends exact text: go`,
 		};
 	});
 }
