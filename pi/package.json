@@ -1,5 +1,5 @@
 {
-  "name": "pi-local-plugins",
+  "name": "pi-local-extensions",
   "private": true,
   "type": "module",
   "keywords": [
@@ -13,7 +13,7 @@
   },
   "pi": {
     "extensions": [
-      "./plugins"
+      "./extensions"
     ],
     "skills": [
       "./skills"

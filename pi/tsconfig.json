@@ -11,7 +11,7 @@
     "noEmit": true
   },
   "include": [
-    "plugins/**/*.ts",
+    "extensions/**/*.ts",
     "scripts/**/*.ts"
   ]
 }

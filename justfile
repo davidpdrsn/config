@@ -34,7 +34,7 @@ ci-build:
 check:
     nix flake check
 
-# Run plugin tests
+# Run extension tests
 test:
     bun install --cwd opencode --frozen-lockfile
     bun install --cwd pi --frozen-lockfile
@@ -44,7 +44,7 @@ test:
     bun test --pass-with-no-tests --cwd pi
     bun run --cwd pi typecheck
 
-# Install local Pi plugin dependencies
+# Install local Pi extension dependencies
 install:
     bun install --cwd pi
 

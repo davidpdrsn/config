@@ -7,7 +7,7 @@ Personal nix configuration using flakes.
 - `just check` - Validate the flake structure
 - `just build` - Build the system configuration without activating (no sudo required)
 - `just switch` - Build and apply changes (requires sudo)
-- `just test` - Install opencode JS deps and run plugin tests
+- `just test` - Install opencode JS deps and run extension tests
 
 ## Important
 

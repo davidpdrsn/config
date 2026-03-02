@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "pi-local-plugins",
+      "name": "pi-local-extensions",
       "devDependencies": {
         "@mariozechner/pi-coding-agent": "*",
         "@mariozechner/pi-tui": "*",
