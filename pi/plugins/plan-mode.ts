@@ -459,10 +459,8 @@ export default function (pi: ExtensionAPI): void {
 		if (enabled && text === "go") {
 			await setPlanMode(false, ctx);
 			const relPlanFile = toRelative(ctx.cwd, planFile);
-			return {
-				action: "transform",
-				text: `Execution mode begins now. Read ${relPlanFile} and execute that approved plan step by step.`,
-			};
+			pi.sendUserMessage(`Execution mode begins now. Read ${relPlanFile} and execute that approved plan step by step.`);
+			return { action: "handled" };
 		}
 
 		return { action: "continue" };
