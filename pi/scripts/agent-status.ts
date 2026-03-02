@@ -1,11 +1,9 @@
-import path from "node:path";
-import { tmpdir } from "node:os";
 import { cac } from "cac";
-import { collectAgentStatuses } from "./agent-status-lib";
+import { collectAgentStatuses, discoverStatusDirs } from "./agent-status-lib";
 
 interface StatusOutput {
 	generatedAt: string;
-	statusDir: string;
+	statusDirs: string[];
 	staleAfterMs: number;
 	filters: {
 		cwd?: string;
@@ -17,10 +15,6 @@ interface StatusOutput {
 	errors: string[];
 }
 
-function defaultStatusDir(): string {
-	return process.env.PI_AGENT_STATUS_DIR || path.join(tmpdir(), "pi-agent-status");
-}
-
 function toSummary(output: StatusOutput): string {
 	const c = output.counts;
 	return `busy=${c.busy} idle=${c.idle} waiting_input=${c.waiting_input} offline=${c.offline} unknown=${c.unknown} total=${c.total}`;
@@ -28,7 +22,7 @@ function toSummary(output: StatusOutput): string {
 
 function toTable(output: StatusOutput): string {
 	const lines: string[] = [];
-	lines.push(`statusDir: ${output.statusDir}`);
+	lines.push(`statusDirs: ${output.statusDirs.join(", ") || "(none)"}`);
 	lines.push(`counts: ${toSummary(output)}`);
 	if (output.errors.length > 0) lines.push(`errors: ${output.errors.length}`);
 	lines.push("");
@@ -55,27 +49,27 @@ async function runStatus(options: {
 	cwd?: string;
 	session?: string;
 	all?: boolean;
-	statusDir?: string;
 	staleMs?: string;
 }): Promise<number> {
-	const statusDir = options.statusDir || defaultStatusDir();
 	const staleAfterMs = Number(options.staleMs ?? process.env.PI_AGENT_STATUS_STALE_MS ?? "30000");
 	if (!Number.isInteger(staleAfterMs) || staleAfterMs < 1) {
 		process.stderr.write("agent-status: --stale-ms must be a positive integer\n");
 		return 1;
 	}
 
-	const data = await collectAgentStatuses({
-		statusDir,
-		staleAfterMs,
-		cwd: options.cwd,
-		sessionId: options.session,
-		allUsers: Boolean(options.all),
-	});
+	const [statusDirs, data] = await Promise.all([
+		discoverStatusDirs(),
+		collectAgentStatuses({
+			staleAfterMs,
+			cwd: options.cwd,
+			sessionId: options.session,
+			allUsers: Boolean(options.all),
+		}),
+	]);
 
 	const output: StatusOutput = {
 		generatedAt: new Date().toISOString(),
-		statusDir,
+		statusDirs,
 		staleAfterMs,
 		filters: {
 			cwd: options.cwd,
@@ -106,7 +100,6 @@ cli
 	.option("--cwd <path>", "Filter by cwd prefix")
 	.option("--session <id>", "Filter by session ID")
 	.option("--all", "Include all users")
-	.option("--status-dir <path>", "Status directory")
 	.option("--stale-ms <n>", "Mark alive records older than this as unknown")
 	.action(async (options) => {
 		const code = await runStatus(options as any);

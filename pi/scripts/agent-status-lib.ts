@@ -1,4 +1,5 @@
-import { readdir, readFile } from "node:fs/promises";
+import { readdir, readFile, stat } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import path from "node:path";
 
 export type AgentActivityState = "busy" | "idle" | "waiting_input" | "unknown";
@@ -36,7 +37,6 @@ export interface AgentStatusCounts {
 }
 
 export interface CollectOptions {
-	statusDir: string;
 	staleAfterMs: number;
 	cwd?: string;
 	sessionId?: string;
@@ -89,6 +89,55 @@ function dateAgeMs(isoDate: string, now: Date): number {
 	return Math.max(0, now.getTime() - parsed);
 }
 
+function compareUpdatedAt(a: string, b: string): number {
+	const aMs = Date.parse(a);
+	const bMs = Date.parse(b);
+	const aValid = !Number.isNaN(aMs);
+	const bValid = !Number.isNaN(bMs);
+
+	if (aValid && bValid) return aMs - bMs;
+	if (aValid) return 1;
+	if (bValid) return -1;
+	return 0;
+}
+
+async function isDirectory(dirPath: string): Promise<boolean> {
+	try {
+		const info = await stat(dirPath);
+		return info.isDirectory();
+	} catch {
+		return false;
+	}
+}
+
+function dedupeDirectories(directories: string[]): string[] {
+	const seen = new Set<string>();
+	const deduped: string[] = [];
+	for (const dir of directories) {
+		if (!dir || seen.has(dir)) continue;
+		seen.add(dir);
+		deduped.push(dir);
+	}
+	return deduped;
+}
+
+export async function discoverStatusDirs(): Promise<string[]> {
+	const dirs: string[] = [];
+
+	if (process.env.PI_AGENT_STATUS_DIR) dirs.push(process.env.PI_AGENT_STATUS_DIR);
+	dirs.push(path.join(tmpdir(), "pi-agent-status"));
+
+	const tmpEntries = await readdir("/tmp", { withFileTypes: true }).catch(() => []);
+	for (const entry of tmpEntries) {
+		if (!entry.isDirectory()) continue;
+		if (!entry.name.startsWith("nix-shell.")) continue;
+		const nixStatusDir = path.join("/tmp", entry.name, "pi-agent-status");
+		if (await isDirectory(nixStatusDir)) dirs.push(nixStatusDir);
+	}
+
+	return dedupeDirectories(dirs);
+}
+
 export function isPidAlive(pid: number): boolean {
 	if (!Number.isInteger(pid) || pid < 1) return false;
 	try {
@@ -124,41 +173,49 @@ export async function collectAgentStatuses(options: CollectOptions): Promise<{
 }> {
 	const now = options.now ?? new Date();
 	const errors: string[] = [];
-	const entries = await readdir(options.statusDir, { withFileTypes: true }).catch(() => []);
+	const statusDirs = await discoverStatusDirs();
+	const latestByPid = new Map<number, AgentStatusRecord>();
 
+	for (const statusDir of statusDirs) {
+		const entries = await readdir(statusDir, { withFileTypes: true }).catch(() => []);
+		for (const entry of entries) {
+			if (!entry.isFile()) continue;
+			if (!entry.name.endsWith(".json")) continue;
+			const filePath = path.join(statusDir, entry.name);
+
+			let raw = "";
+			try {
+				raw = await readFile(filePath, "utf8");
+			} catch (error) {
+				errors.push(`${filePath}: failed to read (${String(error)})`);
+				continue;
+			}
+
+			let parsed: unknown;
+			try {
+				parsed = JSON.parse(raw);
+			} catch {
+				errors.push(`${filePath}: invalid JSON`);
+				continue;
+			}
+
+			const record = parseRecord(parsed);
+			if (!record) {
+				errors.push(`${filePath}: invalid status schema`);
+				continue;
+			}
+
+			const existing = latestByPid.get(record.pid);
+			if (!existing || compareUpdatedAt(record.updatedAt, existing.updatedAt) > 0) {
+				latestByPid.set(record.pid, record);
+			}
+		}
+	}
+
+	const currentUser = process.env.USER || process.env.LOGNAME;
 	const agents: AgentObservedRecord[] = [];
-	for (const entry of entries) {
-		if (!entry.isFile()) continue;
-		if (!entry.name.endsWith(".json")) continue;
-		const filePath = path.join(options.statusDir, entry.name);
-
-		let raw = "";
-		try {
-			raw = await readFile(filePath, "utf8");
-		} catch (error) {
-			errors.push(`${entry.name}: failed to read (${String(error)})`);
-			continue;
-		}
-
-		let parsed: unknown;
-		try {
-			parsed = JSON.parse(raw);
-		} catch {
-			errors.push(`${entry.name}: invalid JSON`);
-			continue;
-		}
-
-		const record = parseRecord(parsed);
-		if (!record) {
-			errors.push(`${entry.name}: invalid status schema`);
-			continue;
-		}
-
-		if (!options.allUsers) {
-			const currentUser = process.env.USER || process.env.LOGNAME;
-			if (currentUser && record.user !== currentUser) continue;
-		}
-
+	for (const record of latestByPid.values()) {
+		if (!options.allUsers && currentUser && record.user !== currentUser) continue;
 		if (options.cwd && !record.cwd.startsWith(options.cwd)) continue;
 		if (options.sessionId && record.sessionId !== options.sessionId) continue;
 

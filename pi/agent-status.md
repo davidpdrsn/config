@@ -35,14 +35,12 @@ set -g status-right '#(agent-status --summary 2>/dev/null) | %H:%M'
 agent-status --summary 2>/dev/null
 ```
 
-## Runtime directory
+## Runtime directory discovery
 
-By default status files are written to:
+`agent-status` auto-discovers status files from:
 
-- `${TMPDIR:-/tmp}/pi-agent-status`
+1. `PI_AGENT_STATUS_DIR` (if set)
+2. `${TMPDIR:-/tmp}/pi-agent-status`
+3. `/tmp/nix-shell.*/pi-agent-status`
 
-Override with:
-
-```bash
-export PI_AGENT_STATUS_DIR=/custom/path
-```
+When duplicate PIDs exist across directories, the newest `updatedAt` record wins.
