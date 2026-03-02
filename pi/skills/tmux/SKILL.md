@@ -8,6 +8,13 @@ license: Stolen from https://github.com/mitsuhiko/agent-stuff
 
 Use tmux as a programmable terminal multiplexer for interactive work. Works on Linux and macOS with stock tmux; avoid custom config by using a private socket.
 
+## Agent execution policy (MUST)
+
+- The agent MUST execute the full end-to-end test flow itself inside tmux.
+- Monitor/attach commands shown to the user are for observation and inspection, not for delegating execution.
+- The agent MUST NOT stop at "here are commands for you to run" unless the user explicitly asked to take over.
+- After printing monitor commands, continue running the test loop autonomously (send keys, wait/poll, capture output, and summarize results).
+
 ## Quickstart (isolated socket)
 
 ```bash
@@ -22,7 +29,7 @@ tmux -S "$SOCKET" capture-pane -p -J -t "$TARGET" -S -200  # watch output
 tmux -S "$SOCKET" kill-session -t "$SESSION"                # clean up
 ```
 
-After starting a session ALWAYS tell the user how to monitor the session by giving them a command to copy paste.
+After starting a session, ALWAYS tell the user how to monitor the session by giving them a copy/paste command, then continue the testing yourself.
 
 Use fish-safe commands (or absolute paths), never bash-only `${VAR:-default}` expansions in user-facing commands.
 
@@ -41,7 +48,24 @@ tmux -S "$TMPDIR/claude-tmux-sockets/claude.sock" attach -t claude-lldb
 set -l TARGET (tmux -S "$TMPDIR/claude-tmux-sockets/claude.sock" list-panes -t claude-lldb -F '#{session_name}:#{window_index}.#{pane_index}' | head -n1); and tmux -S "$TMPDIR/claude-tmux-sockets/claude.sock" capture-pane -p -J -t "$TARGET" -S -200
 ```
 
-This must ALWAYS be printed right after a session was started and once again at the end of the tool loop. But the earlier you send it, the happier the user will be.
+This monitor command MUST be printed immediately after session start and again at the end of the tool loop. Do not wait for the user to run it before continuing.
+
+## Expected workflow (required)
+
+1. Start or attach to the tmux session.
+2. Immediately print a copy/paste monitor command for the user.
+3. Run the end-to-end test sequence yourself (send keys, wait/poll for prompts/output, capture pane output, and continue until completion).
+4. Summarize what happened and the observed results.
+5. Print final monitor/capture command(s) again and report cleanup status.
+
+## Anti-patterns
+
+Do not hand execution back to the user by default. Avoid responses like:
+- "Here are commands for you to run."
+- "Please run these and tell me what happened."
+
+Prefer wording like:
+- "I started the tmux test session; you can watch with: <monitor command>. I will run the full test sequence now and report results."
 
 ## Socket convention
 
