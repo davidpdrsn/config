@@ -74,6 +74,7 @@ export default function (pi: ExtensionAPI): void {
 	let toolsBeforePlanMode: string[] = [];
 	let planSessionInitialized = false;
 	let mustEchoPlanVerbatim = false;
+	let pendingApprovedExecution = false;
 
 	function syncPathsFromContext(ctx: ExtensionContext): void {
 		const paths = getPaths(ctx);
@@ -469,6 +470,7 @@ export default function (pi: ExtensionAPI): void {
 		if (!enabled) {
 			planSessionInitialized = false;
 			mustEchoPlanVerbatim = false;
+			pendingApprovedExecution = false;
 		}
 
 		if (enabled) {
@@ -488,7 +490,10 @@ export default function (pi: ExtensionAPI): void {
 		if (enabled && text === "go") {
 			await setPlanMode(false, ctx);
 			const relPlanFile = toRelative(ctx.cwd, planFile);
-			pi.sendUserMessage(`Execution mode begins now. Read ${relPlanFile} and execute that approved plan step by step.`);
+			pendingApprovedExecution = true;
+			pi.sendUserMessage(
+				`Execute the approved plan now. Read ${relPlanFile} and execute it step by step. The user already sent exact 'go'; do not ask for confirmation again.`,
+			);
 			return { action: "handled" };
 		}
 
@@ -530,9 +535,13 @@ export default function (pi: ExtensionAPI): void {
 	});
 
 	pi.on("message_end", async (event) => {
-		if (!mustEchoPlanVerbatim) return;
 		if (isFinalAssistantTextMessage(event.message)) {
-			mustEchoPlanVerbatim = false;
+			if (mustEchoPlanVerbatim) {
+				mustEchoPlanVerbatim = false;
+			}
+			if (pendingApprovedExecution) {
+				pendingApprovedExecution = false;
+			}
 		}
 	});
 
@@ -542,10 +551,14 @@ export default function (pi: ExtensionAPI): void {
 		const relHistoryDir = toRelative(ctx.cwd, historyDir || paths.historyDir);
 
 		if (!enabled) {
+			const postPlanModeTransition = pendingApprovedExecution
+				? `\n\n[Post-plan-mode transition]\n- The user already sent exact text 'go' and plan mode is disabled.\n- Do not ask for 'go' again.\n- Immediately continue in execution mode and follow the approved plan in ${relPlanFile} step by step.`
+				: "";
 			return {
 				systemPrompt:
 					event.systemPrompt +
-					`\n\n[Plan mode availability]\n- If the user asks to plan first, asks for plan revisions, or wants planning before execution, call tool enter_plan_mode first.\n- Do not rely on strict trigger phrases; infer intent from user request.`,
+					`\n\n[Plan mode availability]\n- If the user asks to plan first, asks for plan revisions, or wants planning before execution, call tool enter_plan_mode first.\n- Do not rely on strict trigger phrases; infer intent from user request.` +
+					postPlanModeTransition,
 			};
 		}
 
