@@ -25,6 +25,7 @@ interface PlanModeState {
 	planFile: string;
 	historyDir: string;
 	toolsBeforePlanMode: string[];
+	planSessionInitialized: boolean;
 }
 
 interface PlanToolDetails {
@@ -71,6 +72,7 @@ export default function (pi: ExtensionAPI): void {
 	let planFile = "";
 	let historyDir = "";
 	let toolsBeforePlanMode: string[] = [];
+	let planSessionInitialized = false;
 	let mustEchoPlanVerbatim = false;
 
 	function syncPathsFromContext(ctx: ExtensionContext): void {
@@ -91,6 +93,7 @@ export default function (pi: ExtensionAPI): void {
 			planFile,
 			historyDir,
 			toolsBeforePlanMode,
+			planSessionInitialized,
 		} satisfies PlanModeState);
 	}
 
@@ -116,11 +119,13 @@ export default function (pi: ExtensionAPI): void {
 
 		enabled = next;
 		if (enabled) {
+			planSessionInitialized = false;
 			toolsBeforePlanMode = pi.getActiveTools();
 			pi.setActiveTools([...PLAN_MODE_TOOLS]);
 			await ensurePlanDirs(ctx);
 			ctx.ui.notify(`Plan mode enabled. Plan file: ${toRelative(ctx.cwd, planFile)}`, "info");
 		} else {
+			planSessionInitialized = false;
 			mustEchoPlanVerbatim = false;
 			const restoredTools = toolsBeforePlanMode.length > 0 ? toolsBeforePlanMode : pi.getActiveTools();
 			pi.setActiveTools(restoredTools);
@@ -276,7 +281,7 @@ export default function (pi: ExtensionAPI): void {
 				content: [
 					{
 						type: "text",
-						text: `Plan mode enabled. Source-of-truth plan file: ${relPlanFile}. Use plan_init/plan_revise/plan_show and wait for exact 'go' to exit.`,
+						text: `Plan mode enabled. Source-of-truth plan file: ${relPlanFile}. First write in this planning session must use plan_init; use plan_revise only after plan_init. Wait for exact 'go' to exit.`,
 					},
 				],
 				details: { enabled: true, planFile: relPlanFile },
@@ -365,7 +370,9 @@ export default function (pi: ExtensionAPI): void {
 			const relPlanFile = toRelative(ctx.cwd, planFile);
 			const relSnapshot = snapshot ? toRelative(ctx.cwd, snapshot) : undefined;
 
+			planSessionInitialized = true;
 			mustEchoPlanVerbatim = true;
+			persistState();
 			return {
 				content: [{ type: "text", text: `Plan written to ${relPlanFile}.` }],
 				details: {
@@ -393,6 +400,19 @@ export default function (pi: ExtensionAPI): void {
 			if (!enabled) {
 				return { content: [{ type: "text", text: toolNotInPlanModeText(ctx) }], details: {} };
 			}
+			if (!planSessionInitialized) {
+				const relPlanFile = toRelative(ctx.cwd, planFile);
+				return {
+					content: [
+						{
+							type: "text",
+							text:
+								`This planning session has not been initialized yet. Start a new plan with plan_init first, then use plan_revise for follow-up edits. Target plan file: ${relPlanFile}`,
+						},
+					],
+					details: {},
+				};
+			}
 
 			await ensurePlanDirs(ctx);
 			const normalizedContent = normalizePlanContent(params.content);
@@ -402,7 +422,9 @@ export default function (pi: ExtensionAPI): void {
 			const relPlanFile = toRelative(ctx.cwd, planFile);
 			const relSnapshot = snapshot ? toRelative(ctx.cwd, snapshot) : undefined;
 
+			planSessionInitialized = true;
 			mustEchoPlanVerbatim = true;
+			persistState();
 			return {
 				content: [{ type: "text", text: `Plan revised at ${relPlanFile}.` }],
 				details: {
@@ -439,8 +461,15 @@ export default function (pi: ExtensionAPI): void {
 			planFile = latest.data.planFile || planFile;
 			historyDir = latest.data.historyDir || historyDir;
 			toolsBeforePlanMode = latest.data.toolsBeforePlanMode || [];
+			planSessionInitialized = latest.data.planSessionInitialized ?? false;
 		}
-		if (!enabled) mustEchoPlanVerbatim = false;
+		if (enabled && latest?.data?.planSessionInitialized === undefined) {
+			planSessionInitialized = await fileExists(planFile);
+		}
+		if (!enabled) {
+			planSessionInitialized = false;
+			mustEchoPlanVerbatim = false;
+		}
 
 		if (enabled) {
 			await ensurePlanDirs(ctx);
@@ -520,10 +549,14 @@ export default function (pi: ExtensionAPI): void {
 			};
 		}
 
+		const sessionWriteRule = planSessionInitialized
+			? "- This planning session is already initialized. Use plan_revise for follow-up edits to the current plan."
+			: "- This is a fresh planning session. The first plan write MUST use plan_init; do not call plan_revise before plan_init.";
+
 		return {
 			systemPrompt:
 				event.systemPrompt +
-				`\n\n[Plan mode]\n- Plan mode is active.\n- The plan file is the source of truth: ${relPlanFile}\n- Read ${relPlanFile} when needed to discuss plan details or answer plan questions.\n- Fold user feedback into the existing plan file; do not ignore previous content.\n- Generic edit/write tools are blocked in plan mode.\n- Use plan_show to inspect plan metadata by default; call it with includeContent=true to fetch full plan text. Use plan_init to start a new plan (discarding previous content), and plan_revise to update the current plan.\n- plan_init/plan_revise automatically maintain timestamped snapshots in ${relHistoryDir}.\n- plan_revise returns a unified diff; plan_init keeps tool output compact and relies on verbatim plan echo in the next assistant message.\n- After any successful plan_init/plan_revise call, your next assistant message MUST print the revised plan verbatim from ${relPlanFile}.\n- Do not summarize/paraphrase the plan after writing it. If needed, call plan_show with includeContent=true and copy the plan text exactly.\n- bash is available, but DO NOT make code or config edits with bash.\n- Strongly avoid bash file-mutation patterns for repository files: sed -i, perl -pi, awk in-place rewrites, redirections (> or >>), tee, mv/cp overwrites, here-doc writes.\n\n[Exit plan mode]\n- Stay in plan mode until the user sends exact text: go`,
+				`\n\n[Plan mode]\n- Plan mode is active.\n- The plan file is the source of truth: ${relPlanFile}\n- Read ${relPlanFile} when needed to discuss plan details or answer plan questions.\n- Starting plan mode again after 'go' begins a new planning session.\n${sessionWriteRule}\n- Generic edit/write tools are blocked in plan mode.\n- Use plan_show to inspect plan metadata by default; call it with includeContent=true to fetch full plan text. Use plan_init to start a new plan (discarding previous content), and plan_revise only for updates to a plan initialized in this same planning session.\n- plan_init/plan_revise automatically maintain timestamped snapshots in ${relHistoryDir}.\n- plan_revise returns a unified diff; plan_init keeps tool output compact and relies on verbatim plan echo in the next assistant message.\n- After any successful plan_init/plan_revise call, your next assistant message MUST print the revised plan verbatim from ${relPlanFile}.\n- Do not summarize/paraphrase the plan after writing it. If needed, call plan_show with includeContent=true and copy the plan text exactly.\n- bash is available, but DO NOT make code or config edits with bash.\n- Strongly avoid bash file-mutation patterns for repository files: sed -i, perl -pi, awk in-place rewrites, redirections (> or >>), tee, mv/cp overwrites, here-doc writes.\n\n[Exit plan mode]\n- Stay in plan mode until the user sends exact text: go`,
 		};
 	});
 }
