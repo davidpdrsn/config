@@ -49,6 +49,34 @@ if [[ -f "$git_dir/MERGE_HEAD" || -d "$git_dir/rebase-merge" || -d "$git_dir/reb
   exit 0
 fi
 
+recover_stale_index_lock() {
+  local lock_file="$git_dir/index.lock"
+  local index_file="$git_dir/index"
+
+  if [[ ! -e "$lock_file" ]]; then
+    return 0
+  fi
+
+  if lsof "$lock_file" >/dev/null 2>&1; then
+    log "index.lock is currently held by another process; skipping run"
+    return 1
+  fi
+
+  if [[ ! -e "$index_file" ]]; then
+    if mv "$lock_file" "$index_file"; then
+      log "Recovered repository index by promoting stale index.lock to index"
+      return 0
+    fi
+
+    log "Failed to recover missing index from index.lock"
+    return 1
+  fi
+
+  rm -f "$lock_file"
+  log "Removed stale index.lock"
+  return 0
+}
+
 branch="$(git -C "$repo" symbolic-ref --quiet --short HEAD || true)"
 if [[ -z "$branch" ]]; then
   log "Detached HEAD; skipping auto-commit"
@@ -61,7 +89,15 @@ attempt=1
 while (( attempt <= max_attempts )); do
   log "Sync attempt $attempt/$max_attempts on branch '$branch'"
 
-  git -C "$repo" add -A
+  if ! recover_stale_index_lock; then
+    exit 1
+  fi
+
+  if ! add_output="$(git -C "$repo" add -A 2>&1)"; then
+    log "git add failed"
+    log "git add output: $add_output"
+    exit 1
+  fi
 
   if ! git -C "$repo" diff --cached --quiet; then
     timestamp="$(date '+%Y-%m-%d %H:%M')"

@@ -36,7 +36,7 @@
       ".jj"
       ".go"
       ".worktrees"
-      ".pi/tmp/"
+      "**/.pi/tmp/"
       "vmux-debug.log"
     ];
     settings = {
