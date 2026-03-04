@@ -1,4 +1,5 @@
 import path from "node:path";
+import { access } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { spawn } from "node:child_process";
 import readline from "node:readline";
@@ -27,9 +28,37 @@ interface WorkerEvent {
 	message?: string;
 }
 
-function scriptPath(): string {
+async function scriptPath(ctx: any): Promise<string> {
 	const here = path.dirname(fileURLToPath(import.meta.url));
-	return path.resolve(here, "../scripts/cloud.ts");
+	const cwd = typeof ctx?.cwd === "string" ? ctx.cwd : "";
+	const repoFromEnv = process.env.CLOUD_AGENT_REPO ?? "";
+	const home = process.env.HOME ?? "";
+
+	const candidates = [
+		path.resolve(here, "../scripts/cloud.ts"),
+		...(cwd ? [path.resolve(cwd, "pi/scripts/cloud.ts"), path.resolve(cwd, "scripts/cloud.ts")] : []),
+		...(repoFromEnv ? [path.resolve(repoFromEnv, "pi/scripts/cloud.ts"), path.resolve(repoFromEnv, "scripts/cloud.ts")] : []),
+		...(home ? [path.resolve(home, "config/pi/scripts/cloud.ts")] : []),
+	];
+
+	const uniqueCandidates = [...new Set(candidates)];
+	for (const candidate of uniqueCandidates) {
+		try {
+			await access(candidate);
+			return candidate;
+		} catch {
+			// Try next candidate.
+		}
+	}
+
+	throw new Error(`cloud worker script not found. Checked:\n- ${uniqueCandidates.join("\n- ")}`);
+}
+
+function withStderrDetails(message: string, stderrLines: string[]): string {
+	const details = stderrLines.join("\n").trim();
+	if (!details) return message;
+	if (message.includes(details)) return message;
+	return `${message}\n\nWorker stderr:\n${details}`;
 }
 
 async function pickMany(ctx: any, title: string, options: string[]): Promise<number[] | undefined> {
@@ -210,7 +239,7 @@ async function runWorker(
 	command: "run" | "clean",
 	context: Record<string, unknown>,
 ): Promise<void> {
-	const cloudScript = scriptPath();
+	const cloudScript = await scriptPath(ctx);
 	const contextBase64 = Buffer.from(JSON.stringify(context), "utf8").toString("base64");
 	const child = spawn("bun", [cloudScript, command, "--mode", "ndjson", "--context-base64", contextBase64], {
 		stdio: ["pipe", "pipe", "pipe"],
@@ -235,10 +264,13 @@ async function runWorker(
 
 	const rl = readline.createInterface({ input: child.stdout });
 	const stderrRl = readline.createInterface({ input: child.stderr });
+	const stderrLines: string[] = [];
 	let finalError: string | undefined;
 
 	stderrRl.on("line", (line) => {
 		if (!line.trim()) return;
+		stderrLines.push(line);
+		if (stderrLines.length > 200) stderrLines.shift();
 		if (!ctx.hasUI) process.stderr.write(`${line}\n`);
 	});
 
@@ -305,18 +337,19 @@ async function runWorker(
 		});
 
 		child.on("error", (error) => {
-			reject(error);
+			const message = error instanceof Error ? error.message : String(error);
+			reject(new Error(withStderrDetails(message, stderrLines)));
 		});
 
 		child.on("close", (code) => {
 			setProgressStatus("cloud", undefined);
 			setProgressStatus("cloud-clean", undefined);
 			if (finalError) {
-				reject(new Error(finalError));
+				reject(new Error(withStderrDetails(finalError, stderrLines)));
 				return;
 			}
 			if (code !== 0) {
-				reject(new Error(`cloud worker exited with status ${code}`));
+				reject(new Error(withStderrDetails(`cloud worker exited with status ${code}`, stderrLines)));
 				return;
 			}
 			resolve();

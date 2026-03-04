@@ -836,10 +836,31 @@ function parseArgs(argv: string[]): { command: "run" | "clean"; mode: "ndjson" |
 	return { command, mode, context };
 }
 
+function modeFromArgv(argv: string[]): "ndjson" | "plain" {
+	for (let i = 0; i < argv.length; i++) {
+		if (argv[i] === "--mode") {
+			return argv[i + 1] === "plain" ? "plain" : "ndjson";
+		}
+	}
+	return "ndjson";
+}
+
+function formatErrorDetails(error: unknown): string {
+	if (error instanceof Error) {
+		const details = error.stack?.trim() || error.message || error.name;
+		const cause = (error as Error & { cause?: unknown }).cause;
+		if (!cause) return details;
+		const causeDetails = cause instanceof Error ? cause.stack?.trim() || cause.message || cause.name : String(cause);
+		return `${details}\nCaused by: ${causeDetails}`;
+	}
+	return String(error);
+}
+
 async function main(): Promise<void> {
-	const { command, mode, context } = parseArgs(process.argv.slice(2));
-	const io = new IOBridge(mode);
+	const argv = process.argv.slice(2);
+	const io = new IOBridge(modeFromArgv(argv));
 	try {
+		const { command, context } = parseArgs(argv);
 		if (command === "run") {
 			await runCloud(io, context as CloudRunContext);
 		} else {
@@ -847,8 +868,7 @@ async function main(): Promise<void> {
 		}
 		io.emit({ type: "done" });
 	} catch (error) {
-		const message = error instanceof Error ? error.message : String(error);
-		io.emit({ type: "error", message });
+		io.emit({ type: "error", message: formatErrorDetails(error) });
 		process.exitCode = 1;
 	}
 }
