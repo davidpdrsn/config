@@ -66,7 +66,6 @@
       "deckset"
       "discord"
       "ghostty"
-      "google-chrome"
       "keyboard-maestro"
       "keymapp"
       "obs"

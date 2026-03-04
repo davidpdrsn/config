@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+os="$(uname -s)"
+if [ "$os" != "Darwin" ]; then
+  echo "bootstrap: error: this script only supports macOS (Darwin); detected '$os'" >&2
+  exit 1
+fi
+
+if ! command -v nix >/dev/null 2>&1; then
+  echo "bootstrap: error: nix is not installed or not in PATH" >&2
+  exit 1
+fi
+
+repo_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$repo_root"
+
+echo "bootstrap: applying nix-darwin configuration '.#macos'"
+sudo nix run '.#darwin-rebuild' -- switch --flake '.#macos'
