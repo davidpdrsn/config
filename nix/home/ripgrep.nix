@@ -11,6 +11,7 @@
       "--glob=!.jj/*"
       "--glob=!node_modules"
       "--glob=!.godot/*"
+      "--glob=!.pi/tmp/*"
       "--glob=!build"
       "--glob=!builds"
       "--glob=!.cache"
