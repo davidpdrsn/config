@@ -1,0 +1,18 @@
+[global_except.terminal]
+exclude_apps = ["Ghostty"]
+
+[[global_except.terminal.shortcuts]]
+from = "ctrl+w"
+to = "opt+delete"
+
+[apps.slack]
+match = "Slack"
+
+[[apps.slack.shortcuts]]
+from = "ctrl+n"
+to = "down"
+
+[[apps.slack.shortcuts]]
+from = "ctrl+p"
+to = "up"
+

@@ -52,6 +52,7 @@
     ".claude/settings.json".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/config/claude/settings.json";
     ".codex/config.toml".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/config/codex/config.toml";
     ".config/vmux".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/config/vmux";
+    ".config/key-weaver".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/config/key-weaver";
     ".ssh/known_hosts_hetzner".text = ''
       hetzner-1 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDTrvqqopEOL+XGqbsQugUqaKOBx7foziysoB7oIMUnr
       46.225.16.43 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDTrvqqopEOL+XGqbsQugUqaKOBx7foziysoB7oIMUnr
