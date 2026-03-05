@@ -43,9 +43,7 @@
       llmAgentPackages.opencode
       llmAgentPackages.codex
     ]
-    ++ map (pkg: inputs.${pkg}.packages.${pkgs.stdenv.hostPlatform.system}.default) [
-      "jjui"
-    ];
+    ++ map (pkg: inputs.${pkg}.packages.${pkgs.stdenv.hostPlatform.system}.default) [];
 
   fonts.packages = with pkgs; [
     nerd-fonts.iosevka
