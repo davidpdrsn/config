@@ -176,6 +176,11 @@
         # Prevent pushing work in progress, anything explicitly labeled "private", or the mega merge commit
         private-commits = private-revset;
       };
+      remotes = {
+        origin = {
+          auto-track-created-bookmarks = "*";
+        };
+      };
       templates = {
         git_push_bookmark = "\"dp/jj-\" ++ change_id. short()";
         draft_commit_description = ''
