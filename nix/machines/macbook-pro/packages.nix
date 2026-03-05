@@ -82,6 +82,7 @@
       "chatgpt"
       "audio-hijack"
       "blackhole-2ch"
+      "telegram"
     ];
 
     masApps = {
