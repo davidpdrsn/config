@@ -141,7 +141,7 @@
           "--"
           "bash"
           "-c"
-          "jj simplify-parents && jj restack-inner"
+          "jj simplify-parents && jj restack-inner && jj abandon-empty-inner"
         ];
         # rebase all changes on top of trunk
         restack-inner = [
@@ -150,6 +150,13 @@
           "roots(trunk()..) & mutable()"
           "-o"
           "trunk()"
+        ];
+        # sometimes after restacking the changes that were merged remain in the tree
+        # but are empty. This abandons those changes.
+        abandon-empty-inner = [
+          "abandon"
+          "-r"
+          "children(trunk()) & empty()"
         ];
         # squash all ai commits
         squash-ai = [
