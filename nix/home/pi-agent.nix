@@ -15,15 +15,7 @@
       transport = "websocket";
       theme = "catppuccin-mocha-contrast";
       packages = [
-        {
-          source = "${config.home.homeDirectory}/config/pi";
-          extensions = [
-            "extensions/extensions-manager.ts"
-          ];
-        }
-      ];
-      extensions = [
-        "${config.home.homeDirectory}/.pi/agent/extensions-runtime"
+        "${config.home.homeDirectory}/config/pi"
       ];
     };
   };
