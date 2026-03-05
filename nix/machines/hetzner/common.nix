@@ -70,5 +70,12 @@
     allowedTCPPorts = lib.mkDefault [22];
   };
 
+  zramSwap.enable = true;
+
+  nix.settings = {
+    max-jobs = lib.mkForce 1;
+    cores = lib.mkForce 1;
+  };
+
   system.stateVersion = "25.05";
 }
