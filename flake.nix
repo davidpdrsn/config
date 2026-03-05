@@ -26,6 +26,9 @@
     jjui.url = "github:davidpdrsn/jjui";
     jjui.inputs.nixpkgs.follows = "nixpkgs";
 
+    jj.url = "github:jj-vcs/jj/v0.39.0";
+    jj.inputs.nixpkgs.follows = "nixpkgs";
+
     llm-agents.url = "github:numtide/llm-agents.nix";
 
     # other dev tools managed via `make clone-dev-tools` + cargo install

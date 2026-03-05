@@ -1,4 +1,4 @@
-{self, lib, pkgs, ...}: {
+{self, lib, pkgs, inputs, ...}: {
   # Necessary for using flakes on this system.
   nix.settings.experimental-features = "nix-command flakes";
 
@@ -34,6 +34,11 @@
   nix.settings.cores = 0;
 
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.overlays = [
+    (final: prev: {
+      jujutsu = inputs.jj.packages.${prev.system}.default;
+    })
+  ];
 
   # Set Git commit hash for system version.
   system.configurationRevision =
