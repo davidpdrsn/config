@@ -8,6 +8,7 @@
       enabledModels = [
         "openai-codex/gpt-5.3-codex"
         "openai-codex/gpt-5.3-codex-spark"
+        "openai-codex/gpt-5.4"
       ];
       images = {
         blockImages = false;
