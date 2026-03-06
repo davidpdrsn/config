@@ -40,6 +40,7 @@
       google-cloud-sdk
       gh-dash
       diffnav
+      wrangler
     ]
     ++ [
       llmAgentPackages.opencode
