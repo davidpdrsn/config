@@ -38,6 +38,8 @@
       yt-dlp
       graphviz
       google-cloud-sdk
+      gh-dash
+      diffnav
     ]
     ++ [
       llmAgentPackages.opencode
