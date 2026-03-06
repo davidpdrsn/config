@@ -88,13 +88,15 @@
   obsidianVaultsPull = import ../../lib/obsidian-vaults-pull.nix {
     inherit pkgs openclawCli username;
   };
+  piWrapped = import ../../lib/pi-wrapped.nix {inherit pkgs inputs;};
 
   openclawPackages = [
+    cloudAgent
     gog
     goplaces
     linearCli
-    cloudAgent
     openclawCli
+    piWrapped
     pkgs.chromium
     pkgs.curl
     pkgs.fd
