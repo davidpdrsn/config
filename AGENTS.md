@@ -16,3 +16,5 @@ Always run `just test` after making changes.
 `just test` bootstraps `opencode` dependencies via `bun install --cwd opencode --frozen-lockfile`.
 
 Always run `just check && just build` after making changes to nix files.
+
+_Never_ run `just switch` or similar commands. The human will do that.
