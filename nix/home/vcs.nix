@@ -116,7 +116,7 @@
         "log commit change_id shortest" = "green";
       };
       template-aliases = {
-        "format_short_signature(signature)" = "";
+        "format_short_signature(signature)" = "signature.name().trim().split(\" \", 2).first().lower()";
         "in_branch(commit)" = "commit.contained_in(\"immutable_heads()..bookmarks()\")";
       };
       aliases = {
