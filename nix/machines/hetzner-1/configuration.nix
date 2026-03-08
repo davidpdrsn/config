@@ -1,16 +1,27 @@
 {
   username,
+  inputs,
   ...
 }: {
   imports = [
     ../hetzner/common.nix
     ./hardware.nix
+    inputs.fyc-site.nixosModules.default
   ];
 
   boot.loader.grub.enable = true;
   boot.loader.grub.device = "/dev/sda";
 
   networking.hostName = "nix-4gb-nbg1-1";
+
+  services.fyc-site = {
+    enable = true;
+    listenAddress = "127.0.0.1";
+    port = 3002;
+    # Must contain at least: FYC_SITE_COOKIE_SECRET=...
+    environmentFile = "/run/secrets/fyc-site.env";
+    secureCookies = true;
+  };
 
   users.users.${username}.extraGroups = ["wheel" "docker"];
 

@@ -30,6 +30,10 @@
     jj.inputs.nixpkgs.follows = "nixpkgs";
 
     llm-agents.url = "github:numtide/llm-agents.nix";
+    fyc-site = {
+      url = "git+ssh://git@github.com/davidpdrsn/fyc-site.git";
+      inputs.fyc.url = "git+ssh://git@github.com/davidpdrsn/fyc.git";
+    };
 
     # other dev tools managed via `make clone-dev-tools` + cargo install
   };
