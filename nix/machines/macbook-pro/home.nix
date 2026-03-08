@@ -1,5 +1,4 @@
 {config, ...}: {
-
   # Mac-specific SSH: UseKeychain + colima
   programs.ssh.includes = ["${config.home.homeDirectory}/.colima/ssh_config"];
   programs.ssh.matchBlocks."*".extraOptions.UseKeychain = "yes";
@@ -10,6 +9,7 @@
     # required for go test containers to work with colima
     DOCKER_HOST = "unix://${config.home.homeDirectory}/.colima/default/docker.sock";
     TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE = "/var/run/docker.sock";
+    CARGO_TARGET_DIR = "${config.home.homeDirectory}/.rust-shared-target";
   };
 
   # Mac-specific shell aliases
