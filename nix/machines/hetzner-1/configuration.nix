@@ -7,6 +7,7 @@
     ../hetzner/common.nix
     ./hardware.nix
     inputs.fyc-site.nixosModules.default
+    inputs.website.nixosModules.default
   ];
 
   boot.loader.grub.enable = true;
@@ -21,6 +22,11 @@
     # Must contain at least: FYC_SITE_COOKIE_SECRET=...
     environmentFile = "/run/secrets/fyc-site.env";
     secureCookies = true;
+  };
+
+  services.website = {
+    enable = true;
+    port = 3001;
   };
 
   users.users.${username}.extraGroups = ["wheel" "docker"];

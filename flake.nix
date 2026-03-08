@@ -34,6 +34,7 @@
       url = "git+ssh://git@github.com/davidpdrsn/fyc-site.git";
       inputs.fyc.url = "git+ssh://git@github.com/davidpdrsn/fyc.git";
     };
+    website.url = "git+ssh://git@github.com/davidpdrsn/website.git";
 
     # other dev tools managed via `make clone-dev-tools` + cargo install
   };
