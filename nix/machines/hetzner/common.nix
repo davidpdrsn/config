@@ -79,6 +79,11 @@
 
   services.fail2ban.enable = true;
 
+  # Keep only one week of persistent systemd journal logs.
+  services.journald.extraConfig = ''
+    MaxRetentionSec=7day
+  '';
+
   security.sudo.extraRules = [
     {
       users = [username];

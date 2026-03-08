@@ -35,6 +35,7 @@
       inputs.fyc.url = "git+ssh://git@github.com/davidpdrsn/fyc.git";
     };
     website.url = "git+ssh://git@github.com/davidpdrsn/website.git";
+    "dnd-character-sheet".url = "git+ssh://git@github.com/davidpdrsn/dnd-character-sheet.git";
 
     # other dev tools managed via `make clone-dev-tools` + cargo install
   };

@@ -8,6 +8,7 @@
     ./hardware.nix
     inputs.fyc-site.nixosModules.default
     inputs.website.nixosModules.default
+    inputs."dnd-character-sheet".nixosModules.default
   ];
 
   boot.loader.grub.enable = true;
@@ -29,7 +30,26 @@
     port = 3001;
   };
 
-  users.users.${username}.extraGroups = ["wheel" "docker"];
+  services."dnd-character-sheet" = {
+    enable = true;
+    listenAddress = "127.0.0.1";
+    port = 3000;
+    charactersDir = "/var/lib/dnd-character-sheet";
+    dynamicUser = false;
+    # Share access with davidpdrsn via the users group.
+    group = "users";
+  };
+
+  users.users.${username} = {
+    extraGroups = ["wheel" "docker"];
+  };
+
+  systemd.services.dnd-character-sheet.serviceConfig = {
+    StateDirectory = "dnd-character-sheet";
+    StateDirectoryMode = "0770";
+    User = "dnd-character-sheet";
+    Group = "users";
+  };
 
   services.nginx = {
     enable = true;

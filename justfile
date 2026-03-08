@@ -51,7 +51,6 @@ install:
 # Update a flake input (interactive picker)
 update:
     ./scripts/nix-update-input
-    just switch
 
 # Update opencode to latest GitHub release tag
 update-opencode:
@@ -89,3 +88,23 @@ switch-vps-1:
 # Deploy latest config to VPS 2
 switch-vps-2:
     ./scripts/deploy-vps 2
+
+# Run Nix garbage collection on both VPSes in parallel
+gc-vps:
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    run_gc() {
+        local host="$1"
+        echo "[$host] running nix GC"
+        ssh "$host" "bash -lc 'set -euo pipefail; if sudo -n true >/dev/null 2>&1; then sudo nix-collect-garbage -d; else nix-collect-garbage -d; fi; nix store gc || true; df -h /nix /'"
+        echo "[$host] done"
+    }
+
+    run_gc hetzner-1 &
+    pid1=$!
+    run_gc hetzner-2 &
+    pid2=$!
+
+    wait "$pid1"
+    wait "$pid2"
