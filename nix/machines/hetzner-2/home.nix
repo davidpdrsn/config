@@ -2,6 +2,8 @@
   lib,
   ...
 }: {
+  nix.gc.options = lib.mkForce "--delete-older-than 3d";
+
   programs.ssh.matchBlocks = {
     "github.com" = {
       user = "git";

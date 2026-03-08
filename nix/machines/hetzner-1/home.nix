@@ -2,6 +2,8 @@
   lib,
   ...
 }: {
+  nix.gc.options = lib.mkForce "--delete-older-than 3d";
+
   home.sessionVariables = {
     CARGO_TARGET_DIR = "/home/davidpdrsn/.rust-shared-target";
   };

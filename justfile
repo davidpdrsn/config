@@ -89,22 +89,60 @@ switch-vps-1:
 switch-vps-2:
     ./scripts/deploy-vps 2
 
-# Run Nix garbage collection on both VPSes in parallel
-gc-vps:
+# Run Nix garbage collection locally and on both VPSes in parallel
+gc:
     #!/usr/bin/env bash
     set -euo pipefail
 
-    run_gc() {
-        local host="$1"
-        echo "[$host] running nix GC"
-        ssh "$host" "bash -lc 'set -euo pipefail; if sudo -n true >/dev/null 2>&1; then sudo nix-collect-garbage -d; else nix-collect-garbage -d; fi; nix store gc || true; df -h /nix /'"
-        echo "[$host] done"
+    gc_cmd="set -euo pipefail; if sudo -n true >/dev/null 2>&1; then sudo nix-collect-garbage -d; else nix-collect-garbage -d; fi; nix store gc || true; df -h /nix /"
+
+    labels=()
+    pids=()
+    exit_codes=()
+
+    start_task() {
+        local label="$1"
+        shift
+
+        echo "==> started ${label}"
+
+        (
+            set -o pipefail
+            "$@" 2>&1 | while IFS= read -r line; do
+                printf '[%s] %s\n' "$label" "$line"
+            done
+        ) &
+
+        labels+=("$label")
+        pids+=("$!")
     }
 
-    run_gc hetzner-1 &
-    pid1=$!
-    run_gc hetzner-2 &
-    pid2=$!
+    start_task "local" bash -lc "$gc_cmd"
+    start_task "vps-1" ssh hetzner-1 "bash -lc '$gc_cmd'"
+    start_task "vps-2" ssh hetzner-2 "bash -lc '$gc_cmd'"
 
-    wait "$pid1"
-    wait "$pid2"
+    failed=0
+
+    for i in "${!pids[@]}"; do
+        pid="${pids[$i]}"
+        label="${labels[$i]}"
+
+        if wait "$pid"; then
+            code=0
+        else
+            code=$?
+            failed=1
+        fi
+
+        exit_codes+=("$code")
+        echo "==> done ${label} (exit ${code})"
+    done
+
+    echo "==> summary"
+    for i in "${!labels[@]}"; do
+        echo "  ${labels[$i]}: exit ${exit_codes[$i]}"
+    done
+
+    if [ "$failed" -ne 0 ]; then
+        exit 1
+    fi
