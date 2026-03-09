@@ -61,6 +61,12 @@ trust_level = "trusted"
 [projects."/home/davidpdrsn/config"]
 trust_level = "trusted"
 
+[projects."/Users/davidpdrsn/code/test-crate"]
+trust_level = "trusted"
+
+[projects."/Users/davidpdrsn/code/gitbutler/gitbutler-git"]
+trust_level = "trusted"
+
 [notice]
 hide_gpt5_1_migration_prompt = true
 
