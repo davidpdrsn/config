@@ -45,6 +45,7 @@
     ++ [
       llmAgentPackages.opencode
       llmAgentPackages.codex
+      llmAgentPackages.claude-code
     ]
     ++ map (pkg: inputs.${pkg}.packages.${pkgs.stdenv.hostPlatform.system}.default) [];
 
