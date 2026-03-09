@@ -87,6 +87,7 @@
       dbui = "nvim +DBUI";
       claude-json = "claude --print --output-format json";
       claude-yolo = "claude --dangerously-skip-permissions";
+      cc = "claude --dangerously-skip-permissions";
       vi = "nvim";
       vim = "nvim";
     };
