@@ -1,4 +1,4 @@
-{config, ...}: {
+{config, lib, pkgs, ...}: {
   imports = [
     ./sh.nix
     ./ssh.nix
@@ -58,6 +58,10 @@
       46.225.16.43 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDTrvqqopEOL+XGqbsQugUqaKOBx7foziysoB7oIMUnr
       hetzner-2 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINnytj8FmLxKn36zdZjWFbcaJyLrqTBm/C1zEqtbWah6
       46.225.17.37 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINnytj8FmLxKn36zdZjWFbcaJyLrqTBm/C1zEqtbWah6
+    '';
+  } // lib.optionalAttrs pkgs.stdenv.isDarwin {
+    ".config/git/allowed_signers".text = ''
+      david.pdrsn@gmail.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFvO65GGpQLI6lCjDPo0Owyp222vjG1RAkc0eKmWAWbE
     '';
   };
 

@@ -1,4 +1,9 @@
-{pkgs, ...}: {
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}: {
   programs.git = {
     enable = true;
     lfs = {
@@ -39,43 +44,63 @@
       "**/.pi/tmp/"
       "vmux-debug.log"
     ];
-    settings = {
-      credential.helper = "!${pkgs.gh}/bin/gh auth git-credential";
-      alias = {
-        wt = "worktree";
+    settings =
+      {
+        credential.helper = "!${pkgs.gh}/bin/gh auth git-credential";
+        alias = {
+          wt = "worktree";
+        };
+        user =
+          {
+            name = "David Pedersen";
+            email = "david.pdrsn@gmail.com";
+          }
+          // lib.optionalAttrs pkgs.stdenv.isDarwin {
+            signingkey = "${config.home.homeDirectory}/.ssh/id_ed25519_signing.pub";
+          };
+        init = {
+          defaultBranch = "main";
+        };
+        push = {
+          autoSetupRemote = "true";
+        };
+        rebase = {
+          updateRefs = true;
+        };
+        rerere = {
+          enabled = true;
+        };
+        fetch = {
+          prune = true;
+        };
+        merge = {
+          conflictStyle = "zdiff3";
+        };
+        diff = {
+          algorithm = "histogram";
+        };
+        commit =
+          {
+            verbose = true;
+          }
+          // lib.optionalAttrs pkgs.stdenv.isDarwin {
+            gpgsign = true;
+          };
+        branch = {
+          sort = "-committerdate";
+        };
+      }
+      // lib.optionalAttrs pkgs.stdenv.isDarwin {
+        gpg = {
+          format = "ssh";
+          ssh = {
+            allowedSignersFile = "${config.home.homeDirectory}/.config/git/allowed_signers";
+          };
+        };
+        gitbutler = {
+          signCommits = true;
+        };
       };
-      user = {
-        name = "David Pedersen";
-        email = "david.pdrsn@gmail.com";
-      };
-      init = {
-        defaultBranch = "main";
-      };
-      push = {
-        autoSetupRemote = "true";
-      };
-      rebase = {
-        updateRefs = true;
-      };
-      rerere = {
-        enabled = true;
-      };
-      fetch = {
-        prune = true;
-      };
-      merge = {
-        conflictStyle = "zdiff3";
-      };
-      diff = {
-        algorithm = "histogram";
-      };
-      commit = {
-        verbose = true;
-      };
-      branch = {
-        sort = "-committerdate";
-      };
-    };
   };
 
   programs.delta = {
