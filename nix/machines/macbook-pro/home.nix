@@ -12,6 +12,11 @@
     CARGO_TARGET_DIR = "${config.home.homeDirectory}/.rust-shared-target";
   };
 
+  # Make user-local executables available in interactive shells and launchd jobs
+  home.sessionPath = [
+    "${config.home.homeDirectory}/.local/bin"
+  ];
+
   # Mac-specific shell aliases
   programs.fish.shellAliases = {
     o = "open .";

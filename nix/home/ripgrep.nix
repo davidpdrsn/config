@@ -28,7 +28,6 @@
       "--glob=!*\.DS_Store"
       "--glob=!*\.js"
       "--glob=!*\.d\.ts"
-      "--glob=!release"
       "--glob=!generated-archives"
       "--glob=!generated-do-not-edit"
       "--glob=!cli-docs"
