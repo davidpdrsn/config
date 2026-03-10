@@ -81,7 +81,8 @@
       grbi = "git rebase -i";
       gs = "git show";
       xtask = "cargo xtask";
-      b = "t build";
+      b = "but";
+      bb = "/Users/davidpdrsn/.rust-shared-target/release/but";
       r = "t run";
       at = "tmux attach";
       dbui = "nvim +DBUI";
