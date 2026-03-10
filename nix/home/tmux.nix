@@ -41,6 +41,7 @@
 
       # Extended keys support (for Shift+Enter, etc.)
       set -g extended-keys on
+      set -g extended-keys-format csi-u
       set -as terminal-features ',*:extkeys'
 
       # Status bar (2 lines, content on second row)
