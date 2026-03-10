@@ -2,10 +2,12 @@ model = "gpt-5.4"
 personality = "pragmatic"
 model_reasoning_effort = "medium"
 responses_websockets_v2 = true
+service_tier = "fast"
 
 [features]
 collaboration_modes = true
 unified_exec = true
+fast_mode = true
 
 [projects."/Users/davidpdrsn/code/notify-mission-control"]
 trust_level = "trusted"
