@@ -116,11 +116,12 @@
     private-revset = "description(glob:'ai*') | description(glob:'wip:*') | description(glob:'private:*') | description(glob:'megamerge*')";
   in {
     enable = true;
-    settings = {
-      user = {
-        email = "david.pdrsn@gmail.com";
-        name = "David Pedersen";
-      };
+    settings =
+      {
+        user = {
+          email = "david.pdrsn@gmail.com";
+          name = "David Pedersen";
+        };
       ui = {
         default-command = ["log"];
         diff-editor = ":builtin";
@@ -207,29 +208,36 @@
           auto-track-created-bookmarks = "*";
         };
       };
-      templates = {
-        git_push_bookmark = "\"dp/jj-\" ++ change_id. short()";
-        draft_commit_description = ''
-          concat(
-            coalesce(description, default_commit_description, "\n"),
-            surround(
-              "\nJJ: This commit contains the following changes:\n", "",
-              indent("JJ:     ", diff.stat(72)),
-            ),
-            "\nJJ: ignore-rest\n",
-            diff.git(),
-          )
-        '';
-        log_node = ''
-          if(self && !current_working_copy && !immutable && !conflict && in_branch(self),
-            "◇",
-            if(self && !current_working_copy && !immutable && !conflict && self.contained_in("${private-revset}"),
-              "∴",
-              builtin_log_node
+        templates = {
+          git_push_bookmark = "\"dp/jj-\" ++ change_id. short()";
+          draft_commit_description = ''
+            concat(
+              coalesce(description, default_commit_description, "\n"),
+              surround(
+                "\nJJ: This commit contains the following changes:\n", "",
+                indent("JJ:     ", diff.stat(72)),
+              ),
+              "\nJJ: ignore-rest\n",
+              diff.git(),
             )
-          )
-        '';
+          '';
+          log_node = ''
+            if(self && !current_working_copy && !immutable && !conflict && in_branch(self),
+              "◇",
+              if(self && !current_working_copy && !immutable && !conflict && self.contained_in("${private-revset}"),
+                "∴",
+                builtin_log_node
+              )
+            )
+          '';
+        };
+      }
+      // lib.optionalAttrs pkgs.stdenv.isDarwin {
+        signing = {
+          backend = "ssh";
+          behavior = "own";
+          key = "${config.home.homeDirectory}/.ssh/id_ed25519_signing.pub";
+        };
       };
-    };
   };
 }
