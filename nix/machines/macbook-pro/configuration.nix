@@ -85,6 +85,17 @@
 
   # enable tap to click
   system.defaults.trackpad.Clicking = true;
+  system.defaults.CustomUserPreferences = {
+    "com.apple.AppleMultitouchTrackpad" = {
+      Clicking = true;
+    };
+    "com.apple.driver.AppleBluetoothMultitouch.trackpad" = {
+      Clicking = true;
+    };
+    NSGlobalDomain = {
+      "com.apple.mouse.tapBehavior" = 1;
+    };
+  };
 
   # use scroll gesture with the Ctrl (^) modifier key to zoom
   # system.defaults.universalaccess.closeViewScrollWheelToggle = true;
