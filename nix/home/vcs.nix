@@ -209,7 +209,7 @@
         };
       };
         templates = {
-          git_push_bookmark = "\"dp/jj-\" ++ change_id. short()";
+          git_push_bookmark = "\"dp/\" ++ change_id. short()";
           draft_commit_description = ''
             concat(
               coalesce(description, default_commit_description, "\n"),
