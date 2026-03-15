@@ -5,7 +5,7 @@ import { clearSessionStatusLines, getSessionStatusLines, type StatusLine } from 
 const WIDGET_KEY = "status-hub";
 const REFRESH_MS = 150;
 
-const SLOT_ORDER = ["cloud", "cloud-clean", "plan", "todo", "topic"] as const;
+const SLOT_ORDER = ["cloud", "cloud-clean", "jj-autosnapshot", "plan", "todo", "topic"] as const;
 
 function slotOrder(slot: string): number {
 	const index = SLOT_ORDER.indexOf(slot as (typeof SLOT_ORDER)[number]);
