@@ -1,3 +1,7 @@
 [ephemeral.jjui]
 command = ["/Users/davidpdrsn/.bin/jjui"]
 shortcut = "alt-j"
+
+[ephemeral.gitbutler]
+command = ["/Users/davidpdrsn/code/gitbutler/gitbutler-git/target/release/but", "-ttttt", "--log-file", "/tmp/but.log", "tui"]
+shortcut = "alt-b"

@@ -52,6 +52,9 @@
       jf = "jj git fetch";
       jpll = "jj git pull";
 
+      b = "/Users/davidpdrsn/code/gitbutler/gitbutler-git/target/release/but";
+      bt = "/Users/davidpdrsn/code/gitbutler/gitbutler-git/target/release/but tui";
+
       gaa = "git add --all";
       gap = "git add -p";
       gb = "git branch";
