@@ -27,9 +27,9 @@ repos=(
   "jjui-fork|https://github.com/davidpdrsn/jjui"
   "parse-dotenv|https://github.com/davidpdrsn/parse-dotenv"
   "remove-indentation|https://github.com/davidpdrsn/remove-indentation.git"
-  "terminal-apps|git@github.com:davidpdrsn/terminal-apps.git"
+  "terminal-apps|https://github.com/davidpdrsn/terminal-apps"
   "test-command|https://github.com/davidpdrsn/test-command"
-  "vibe-mux|git@github.com:davidpdrsn/vibe-mux.git"
+  "vibe-mux|https://github.com/davidpdrsn/vibe-mux"
 )
 
 for entry in "${repos[@]}"; do
