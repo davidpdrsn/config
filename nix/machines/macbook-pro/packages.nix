@@ -15,6 +15,7 @@
     llmAgentPackages = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
     linearCli = pkgs.callPackage ../../shared/packages/linear-cli.nix {};
     agentStatus = pkgs.callPackage ../../shared/packages/agent-status.nix {};
+    alacritty = pkgs.callPackage ./packages/alacritty.nix {};
     test-cli = opWrapped {
       name = "test-cli";
       env = {
@@ -31,6 +32,7 @@
       resvg
       linearCli
       agentStatus
+      alacritty
       test-cli
       gettext
       ffmpeg
@@ -87,6 +89,11 @@
       "audio-hijack"
       "blackhole-2ch"
       "telegram"
+
+      "wezterm"
+      "iterm2"
+      "kitty"
+      "warp"
     ];
 
     masApps = {
