@@ -40,7 +40,8 @@
       google-cloud-sdk
       gh-dash
       diffnav
-      wrangler
+      lazygit
+      strip-ansi
     ]
     ++ [
       llmAgentPackages.opencode
@@ -75,7 +76,6 @@
       "raycast"
       "sf-symbols"
       "signal"
-      "slack"
       "spotify"
       "steam"
       "voiceink"
