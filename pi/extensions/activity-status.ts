@@ -114,6 +114,10 @@ export default function (pi: ExtensionAPI): void {
 	});
 
 	pi.on("tool_execution_start", async (event) => {
+		if (event.toolName === "questionnaire") {
+			await setState("idle", "tool_execution_start:questionnaire", { currentTool: event.toolName });
+			return;
+		}
 		await setState("busy", "tool_execution_start", { currentTool: event.toolName });
 	});
 
@@ -123,7 +127,7 @@ export default function (pi: ExtensionAPI): void {
 
 	pi.on("tool_call", async (event) => {
 		if (event.toolName === "questionnaire") {
-			await setState("waiting_input", "tool_call:questionnaire", { currentTool: event.toolName });
+			await setState("idle", "tool_call:questionnaire", { currentTool: event.toolName });
 		}
 	});
 
