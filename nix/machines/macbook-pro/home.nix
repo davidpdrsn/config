@@ -57,4 +57,22 @@
       StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/obsidian-auto-commit-push.err.log";
     };
   };
+
+  programs.lazygit = {
+    enable = true;
+    settings = {
+      # https://github.com/catppuccin/lazygit
+      gui.theme = {
+        activeBorderColor = ["#89b4fa" "bold"];
+        inactiveBorderColor = ["#a6adc8"];
+        optionsTextColor = ["#89b4fa"];
+        selectedLineBgColor = ["#313244"];
+        cherryPickedCommitBgColor = ["#45475a"];
+        cherryPickedCommitFgColor = ["#89b4fa"];
+        unstagedChangesColor = ["#f38ba8"];
+        defaultFgColor = ["#cdd6f4"];
+        searchingActiveBorderColor = ["#f9e2af"];
+      };
+    };
+  };
 }

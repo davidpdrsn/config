@@ -42,7 +42,6 @@
       google-cloud-sdk
       gh-dash
       diffnav
-      lazygit
       strip-ansi
     ]
     ++ [
