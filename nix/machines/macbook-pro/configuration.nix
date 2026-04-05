@@ -123,7 +123,7 @@
   programs.ssh.extraConfig = ''
     Host github.com
       User git
-      IdentityFile /Users/${username}/.ssh/github_plans_macbook_pro
+      IdentityFile /Users/${username}/.ssh/id_ed25519
       IdentitiesOnly yes
   '';
 

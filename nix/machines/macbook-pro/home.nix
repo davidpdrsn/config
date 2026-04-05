@@ -29,9 +29,9 @@
   '';
 
   # might have to run this once
-  #   ssh-add --apple-use-keychain ~/.ssh/github_plans_macbook_pro
+  #   ssh-add --apple-use-keychain ~/.ssh/id_ed25519
   home.activation.addGithubKeyToKeychain = ''
-    key="${config.home.homeDirectory}/.ssh/github_plans_macbook_pro"
+    key="${config.home.homeDirectory}/.ssh/id_ed25519"
     if [ -f "$key" ]; then
       if [ -z "''${SSH_AUTH_SOCK:-}" ]; then
         export SSH_AUTH_SOCK="$(/bin/launchctl getenv SSH_AUTH_SOCK || true)"
