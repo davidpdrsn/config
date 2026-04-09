@@ -1,13 +1,7 @@
-{username, inputs, ...}: {
+{username, ...}: {
   imports = [
     ../../shared/common.nix
     ./packages.nix
-  ];
-
-  nixpkgs.overlays = [
-    (final: prev: {
-      jujutsu = inputs.jj.packages.${prev.system}.default;
-    })
   ];
 
   # Required because I installed Determinate nix, not vanilla
