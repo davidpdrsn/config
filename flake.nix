@@ -27,6 +27,10 @@
     jjui.inputs.nixpkgs.follows = "nixpkgs";
 
     llm-agents.url = "github:numtide/llm-agents.nix";
+    pi-prompt-suggester = {
+      url = "github:guwidoe/pi-prompt-suggester";
+      flake = false;
+    };
     fyc-site = {
       url = "git+ssh://git@github.com/davidpdrsn/fyc-site.git";
       inputs.fyc.url = "git+ssh://git@github.com/davidpdrsn/fyc.git";

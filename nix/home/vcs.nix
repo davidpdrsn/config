@@ -42,6 +42,7 @@
       ".go"
       ".worktrees"
       "**/.pi/tmp/"
+      "**/.pi/suggester"
       "vmux-debug.log"
     ];
     settings =
