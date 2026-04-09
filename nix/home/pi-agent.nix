@@ -19,6 +19,11 @@
       runHook postInstall
     '';
   };
+
+  piRalphWiggum = pkgs.runCommand "pi-ralph-wiggum" {} ''
+    mkdir -p "$out"
+    cp -R ${inputs.pi-extensions}/ralph-wiggum/. "$out"/
+  '';
 in {
   programs."pi-agent" = {
     enable = true;
@@ -39,6 +44,7 @@ in {
       packages = [
         "${config.home.homeDirectory}/config/pi"
         "${piPromptSuggester}"
+        # "${piRalphWiggum}"
       ];
     };
   };

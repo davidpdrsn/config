@@ -598,6 +598,22 @@
         "type": "github"
       }
     },
+    "pi-extensions": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1775752085,
+        "narHash": "sha256-mgCleDtXsSF0ilX1eRNGgOXat/KumxXkKM9RgUmYyO4=",
+        "owner": "tmustier",
+        "repo": "pi-extensions",
+        "rev": "a749fb9bd74524f123f17b78cdd3deaf5a4ebe54",
+        "type": "github"
+      },
+      "original": {
+        "owner": "tmustier",
+        "repo": "pi-extensions",
+        "type": "github"
+      }
+    },
     "pi-prompt-suggester": {
       "flake": false,
       "locked": {
@@ -627,6 +643,7 @@
         "nix-darwin": "nix-darwin",
         "nix-homebrew": "nix-homebrew",
         "nixpkgs": "nixpkgs_5",
+        "pi-extensions": "pi-extensions",
         "pi-prompt-suggester": "pi-prompt-suggester",
         "website": "website"
       }
