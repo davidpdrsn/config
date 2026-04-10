@@ -27,6 +27,34 @@ function nowIso(): string {
 	return new Date().toISOString();
 }
 
+function sanitizeTitle(value: string): string {
+	return value.replace(/[\u0000-\u001f\u007f]/g, " ").replace(/\s+/g, " ").trim();
+}
+
+function writeTerminalTitle(rawTitle: string): void {
+	if (!process.stdout.isTTY) return;
+	const title = sanitizeTitle(rawTitle);
+	if (!title) return;
+
+	const osc1 = `\u001b]1;${title}\u0007`;
+	const osc2 = `\u001b]2;${title}\u0007`;
+	process.stdout.write(osc1);
+	process.stdout.write(osc2);
+
+	if (process.env.TMUX) {
+		const tmuxOsc1 = `\u001bPtmux;\u001b${osc1}\u001b\\`;
+		const tmuxOsc2 = `\u001bPtmux;\u001b${osc2}\u001b\\`;
+		process.stdout.write(tmuxOsc1);
+		process.stdout.write(tmuxOsc2);
+	}
+}
+
+function toTerminalTitle(record: AgentStatusRecord): string {
+	const state = record.state === "waiting_input" ? "waiting" : record.state;
+	if (record.state === "busy" && record.currentTool) return `pi · ${state} · ${record.currentTool}`;
+	return `pi · ${state}`;
+}
+
 function getStatusDir(): string {
 	return process.env.PI_AGENT_STATUS_DIR || path.join(tmpdir(), "pi-agent-status");
 }
@@ -47,6 +75,7 @@ export default function (pi: ExtensionAPI): void {
 	const startedAt = nowIso();
 	const statusFile = getStatusFile();
 	let heartbeat: NodeJS.Timeout | undefined;
+	let lastPublishedTitle: string | null = null;
 
 	let record: AgentStatusRecord = {
 		version: 1,
@@ -64,9 +93,17 @@ export default function (pi: ExtensionAPI): void {
 		currentTool: null,
 	};
 
+	function publishTitle(): void {
+		const next = toTerminalTitle(record);
+		if (next === lastPublishedTitle) return;
+		lastPublishedTitle = next;
+		writeTerminalTitle(next);
+	}
+
 	async function flush(): Promise<void> {
 		record.updatedAt = nowIso();
 		await writeAtomicJson(statusFile, record);
+		publishTitle();
 	}
 
 	async function setState(state: AgentActivityState, eventName: string, updates?: Partial<Pick<AgentStatusRecord, "currentTool" | "cwd" | "sessionFile" | "sessionId">>): Promise<void> {
@@ -147,5 +184,7 @@ export default function (pi: ExtensionAPI): void {
 			heartbeat = undefined;
 		}
 		await rm(statusFile, { force: true });
+		lastPublishedTitle = null;
+		writeTerminalTitle("pi");
 	});
 }
