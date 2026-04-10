@@ -42,6 +42,7 @@
       "--glob=!.rust-analyzer"
       "--glob=!.agents/*"
       "--glob=!.claude/*"
+      "--glob=!.pi/suggester/*"
       # Because who cares about case!?
       "--smart-case"
     ];
