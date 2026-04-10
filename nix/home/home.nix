@@ -1,4 +1,4 @@
-{config, lib, pkgs, ...}: {
+{config, lib, pkgs, inputs, ...}: {
   imports = [
     ./sh.nix
     ./ssh.nix
@@ -30,9 +30,9 @@
     nix-direnv.enable = true;
   };
 
-  programs.neovim = {
-    enable = true;
-  };
+  home.packages = [
+    (pkgs.wrapNeovim inputs.nixpkgs-neovim-011.legacyPackages.${pkgs.system}.neovim-unwrapped {})
+  ];
 
   programs.atuin = {
     enable = true;
