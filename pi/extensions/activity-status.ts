@@ -1,3 +1,4 @@
+import { spawn, type ChildProcess } from "node:child_process";
 import { mkdir, rename, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -76,6 +77,7 @@ export default function (pi: ExtensionAPI): void {
 	const statusFile = getStatusFile();
 	let heartbeat: NodeJS.Timeout | undefined;
 	let lastPublishedTitle: string | null = null;
+	let caffeinateProcess: ChildProcess | null = null;
 
 	let record: AgentStatusRecord = {
 		version: 1,
@@ -100,10 +102,42 @@ export default function (pi: ExtensionAPI): void {
 		writeTerminalTitle(next);
 	}
 
+	function startCaffeinate(): void {
+		if (process.platform !== "darwin") return;
+		if (caffeinateProcess && caffeinateProcess.exitCode === null && !caffeinateProcess.killed) return;
+
+		const child = spawn("caffeinate", ["-i"], {
+			stdio: "ignore",
+		});
+		child.unref();
+		child.on("exit", () => {
+			if (caffeinateProcess === child) caffeinateProcess = null;
+		});
+		caffeinateProcess = child;
+	}
+
+	function stopCaffeinate(): void {
+		if (!caffeinateProcess) return;
+		const child = caffeinateProcess;
+		caffeinateProcess = null;
+		if (child.exitCode === null && !child.killed) {
+			child.kill("SIGTERM");
+		}
+	}
+
+	function syncSleepPrevention(): void {
+		if (record.state === "busy") {
+			startCaffeinate();
+			return;
+		}
+		stopCaffeinate();
+	}
+
 	async function flush(): Promise<void> {
 		record.updatedAt = nowIso();
 		await writeAtomicJson(statusFile, record);
 		publishTitle();
+		syncSleepPrevention();
 	}
 
 	async function setState(state: AgentActivityState, eventName: string, updates?: Partial<Pick<AgentStatusRecord, "currentTool" | "cwd" | "sessionFile" | "sessionId">>): Promise<void> {
@@ -183,6 +217,7 @@ export default function (pi: ExtensionAPI): void {
 			clearInterval(heartbeat);
 			heartbeat = undefined;
 		}
+		stopCaffeinate();
 		await rm(statusFile, { force: true });
 		lastPublishedTitle = null;
 		writeTerminalTitle("pi");
