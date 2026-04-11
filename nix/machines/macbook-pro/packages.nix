@@ -83,7 +83,6 @@
       "unnaturalscrollwheels"
       "vlc"
       "arc"
-      "ungoogled-chromium"
       "keycastr"
       "poedit"
       "chatgpt"
