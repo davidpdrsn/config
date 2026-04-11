@@ -90,6 +90,7 @@
       "audio-hijack"
       "blackhole-2ch"
       "telegram"
+      "linearmouse"
 
       "wezterm"
       "iterm2"
