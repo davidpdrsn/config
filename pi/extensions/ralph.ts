@@ -791,11 +791,38 @@ Examples:
 				return { content: [{ type: "text", text: `Error: Could not read task file: ${state.taskFile}` }], details: {} };
 			}
 
-			// Queue next iteration - use followUp so user can still interrupt
-			pi.sendUserMessage(buildPrompt(state, content, needsReflection), { deliverAs: "followUp" });
+			if (compactionInFlight) {
+				return {
+					content: [{ type: "text", text: "Ralph compaction already in progress. Waiting to queue next iteration." }],
+					details: {},
+				};
+			}
+
+			compactionInFlight = true;
+			resumeLoopAfterCompaction = state.name;
+			state.lastCompactedAtIteration = state.iteration;
+			saveState(ctx, state);
+
+			if (ctx.hasUI) {
+				ctx.ui.notify(`Iteration ${state.iteration - 1} complete. Compacting context before next iteration...`, "info");
+			}
+
+			ctx.compact({
+				customInstructions:
+					"Focus on the active Ralph loop. Preserve goals, decisions, completed work, blockers, touched files, and the next concrete iteration steps. The Ralph task file is the canonical plan.",
+				onComplete: () => {
+					compactionInFlight = false;
+				},
+				onError: (error) => {
+					compactionInFlight = false;
+					resumeLoopAfterCompaction = null;
+					if (ctx.hasUI) ctx.ui.notify(`Ralph compaction failed: ${error.message}`, "error");
+					pi.sendUserMessage(buildPrompt(state, content, needsReflection), { deliverAs: "followUp" });
+				},
+			});
 
 			return {
-				content: [{ type: "text", text: `Iteration ${state.iteration - 1} complete. Next iteration queued.` }],
+				content: [{ type: "text", text: `Iteration ${state.iteration - 1} complete. Compacting context; next iteration will resume after compaction.` }],
 				details: {},
 			};
 		},
