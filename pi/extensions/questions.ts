@@ -52,6 +52,81 @@ async function askMultiLineAnswer(
 	return ctx.ui.editor(title, "");
 }
 
+function wrapWithPrefix(text: string, width: number, firstPrefix: string, continuationPrefix: string): string[] {
+	const safeWidth = Math.max(1, width);
+	const normalized = text.replace(/\s+/g, " ").trim();
+	const words = normalized.length === 0 ? [""] : normalized.split(" ");
+	const lines: string[] = [];
+
+	let currentPrefix = firstPrefix;
+	let currentLine = currentPrefix;
+	let currentContentLength = 0;
+	let currentLimit = Math.max(1, safeWidth - currentPrefix.length);
+
+	const pushLine = () => {
+		lines.push(truncateToWidth(currentLine, safeWidth));
+		currentPrefix = continuationPrefix;
+		currentLine = currentPrefix;
+		currentContentLength = 0;
+		currentLimit = Math.max(1, safeWidth - currentPrefix.length);
+	};
+
+	for (const word of words) {
+		let remaining = word;
+
+		while (remaining.length > 0) {
+			const separatorLength = currentContentLength === 0 ? 0 : 1;
+			const available = currentLimit - currentContentLength - separatorLength;
+
+			if (available <= 0) {
+				pushLine();
+				continue;
+			}
+
+			if (remaining.length <= available) {
+				currentLine += (separatorLength === 0 ? "" : " ") + remaining;
+				currentContentLength += separatorLength + remaining.length;
+				remaining = "";
+				continue;
+			}
+
+			if (currentContentLength > 0) {
+				pushLine();
+				continue;
+			}
+
+			currentLine += remaining.slice(0, available);
+			currentContentLength += available;
+			remaining = remaining.slice(available);
+			if (remaining.length > 0) {
+				pushLine();
+			}
+		}
+	}
+
+	if (currentContentLength > 0 || lines.length === 0) {
+		lines.push(truncateToWidth(currentLine, safeWidth));
+	}
+
+	return lines;
+}
+
+function wrapText(text: string, width: number): string[] {
+	const parts = text.split("\n");
+	const lines: string[] = [];
+
+	for (let i = 0; i < parts.length; i++) {
+		const part = parts[i];
+		if (part.trim().length === 0) {
+			lines.push("");
+		} else {
+			lines.push(...wrapWithPrefix(part, width, "", ""));
+		}
+	}
+
+	return lines;
+}
+
 function formatAnswersForModel(details: QuestionnaireDetails): string {
 	if (details.skipped) {
 		return "Questionnaire skipped because UI is unavailable.";
@@ -157,29 +232,40 @@ export default function (pi: ExtensionAPI): void {
 									if (cachedLines) return cachedLines;
 
 									const lines: string[] = [];
-									const add = (line: string) => lines.push(truncateToWidth(line, width));
+									const addWrapped = (text: string) => lines.push(...wrapText(text, width));
+									const addLine = (line: string) => lines.push(truncateToWidth(line, width));
 
-									add(theme.fg("accent", `Question ${i + 1}/${questions.length}`));
-									add(q.question);
+									addLine(theme.fg("accent", `Question ${i + 1}/${questions.length}`));
+									addWrapped(q.question);
 									lines.push("");
 
 									for (let optionIndex = 0; optionIndex < allOptions.length; optionIndex++) {
 										const focused = optionIndex === selectedIndex;
 										const marked = selected.has(optionIndex) ? "[x]" : "[ ]";
-										const prefix = focused ? theme.fg("accent", "> ") : "  ";
-										const text = `${optionIndex + 1}. ${marked} ${allOptions[optionIndex]}`;
-										add(prefix + (focused ? theme.fg("accent", text) : text));
+										const selectorPrefix = focused ? "> " : "  ";
+										const optionPrefix = `${optionIndex + 1}. ${marked} `;
+										const continuationPrefix = " ".repeat(selectorPrefix.length + optionPrefix.length);
+										const wrappedOption = wrapWithPrefix(
+											allOptions[optionIndex],
+											width,
+											selectorPrefix + optionPrefix,
+											continuationPrefix,
+										);
+
+										for (const line of wrappedOption) {
+											addLine(focused ? theme.fg("accent", line) : line);
+										}
 									}
 
 									lines.push("");
-									add(
+									addLine(
 										theme.fg(
 											"dim",
 											"↑/↓, j/k, or Ctrl+P/Ctrl+N navigate • Space toggle • Enter confirm • Esc cancel",
 										),
 									);
 									if (selected.size === 0) {
-										add(theme.fg("warning", "Select at least one option before pressing Enter."));
+										addLine(theme.fg("warning", "Select at least one option before pressing Enter."));
 									}
 
 									cachedLines = lines;
@@ -265,21 +351,32 @@ export default function (pi: ExtensionAPI): void {
 									if (cachedLines) return cachedLines;
 
 									const lines: string[] = [];
-									const add = (line: string) => lines.push(truncateToWidth(line, width));
+									const addWrapped = (text: string) => lines.push(...wrapText(text, width));
+									const addLine = (line: string) => lines.push(truncateToWidth(line, width));
 
-									add(theme.fg("accent", `Question ${i + 1}/${questions.length}`));
-									add(q.question);
+									addLine(theme.fg("accent", `Question ${i + 1}/${questions.length}`));
+									addWrapped(q.question);
 									lines.push("");
 
 									for (let optionIndex = 0; optionIndex < allOptions.length; optionIndex++) {
 										const selected = optionIndex === selectedIndex;
-										const prefix = selected ? theme.fg("accent", "> ") : "  ";
-										const text = `${optionIndex + 1}. ${allOptions[optionIndex]}`;
-										add(prefix + (selected ? theme.fg("accent", text) : text));
+										const selectorPrefix = selected ? "> " : "  ";
+										const optionPrefix = `${optionIndex + 1}. `;
+										const continuationPrefix = " ".repeat(selectorPrefix.length + optionPrefix.length);
+										const wrappedOption = wrapWithPrefix(
+											allOptions[optionIndex],
+											width,
+											selectorPrefix + optionPrefix,
+											continuationPrefix,
+										);
+
+										for (const line of wrappedOption) {
+											addLine(selected ? theme.fg("accent", line) : line);
+										}
 									}
 
 									lines.push("");
-									add(theme.fg("dim", "↑/↓, j/k, or Ctrl+P/Ctrl+N to navigate • Enter to select • Esc to cancel"));
+									addLine(theme.fg("dim", "↑/↓, j/k, or Ctrl+P/Ctrl+N to navigate • Enter to select • Esc to cancel"));
 
 									cachedLines = lines;
 									return lines;
