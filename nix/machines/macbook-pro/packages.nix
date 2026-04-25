@@ -100,7 +100,6 @@
     masApps = {
       "DaisyDisk" = 411643860;
       "Fantastical" = 975937182;
-      "Numbers" = 409203825;
       "Photomator" = 1444636541;
     };
 
