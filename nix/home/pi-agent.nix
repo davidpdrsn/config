@@ -28,13 +28,11 @@ in {
   programs."pi-agent" = {
     enable = true;
     settings = {
-      lastChangelogVersion = "0.66.1";
+      lastChangelogVersion = "0.70.2";
       defaultProvider = "openai-codex";
-      defaultModel = "gpt-5.3-codex";
+      defaultModel = "gpt-5.5";
       enabledModels = [
-        "openai-codex/gpt-5.3-codex"
-        "openai-codex/gpt-5.3-codex-spark"
-        "openai-codex/gpt-5.4"
+        "openai-codex/gpt-5.5"
       ];
       images = {
         blockImages = false;

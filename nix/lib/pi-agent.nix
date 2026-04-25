@@ -9,20 +9,6 @@ in {
       type = jsonFormat.type;
       default = {};
       description = "Settings attrset written to ~/.pi/agent/settings.json as JSON.";
-      example = lib.literalExpression ''
-        {
-          defaultProvider = "openai-codex";
-          defaultModel = "gpt-5.3-codex";
-          enabledModels = [
-            "openai-codex/gpt-5.3-codex"
-            "openai-codex/gpt-5.3-codex-spark"
-          ];
-          images.blockImages = false;
-          transport = "websocket";
-          theme = "catppuccin-mocha";
-          packages = [];
-        }
-      '';
     };
   };
 
