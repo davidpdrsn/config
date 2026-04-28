@@ -18,6 +18,10 @@ import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
  * Best-effort only: failures never block prompt submission.
  */
 export default function (pi: ExtensionAPI): void {
+	// Disabled intentionally. Keep this file around so the extension can be
+	// re-enabled later without restoring it from version control.
+	return;
+
 	pi.on("input", async (event, ctx) => {
 		// Only run in interactive/RPC contexts with UI.
 		if (!ctx.hasUI) return { action: "continue" };
