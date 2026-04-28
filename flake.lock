@@ -82,11 +82,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1777384208,
-        "narHash": "sha256-B4FekSbFVQcw6Y8zDX8dqaFah0XkZiUq8EjcEgaXGuQ=",
+        "lastModified": 1777408845,
+        "narHash": "sha256-8TI87uHViD1uAHdLZv6vH3pb0T4c7pyAPHE39/+nnVU=",
         "ref": "refs/heads/main",
-        "rev": "7de4353f44f7da194089e0ea7aeaf752b4314b6f",
-        "revCount": 281,
+        "rev": "1b73161be15a27c65e1226e3274c985ca710f086",
+        "revCount": 290,
         "type": "git",
         "url": "ssh://git@github.com/davidpdrsn/dnd-character-sheet.git"
       },
