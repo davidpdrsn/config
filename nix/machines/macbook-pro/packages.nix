@@ -90,6 +90,7 @@
       "blackhole-2ch"
       "telegram"
       "linearmouse"
+      "tuple"
 
       "wezterm"
       "iterm2"
