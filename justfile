@@ -146,3 +146,10 @@ gc:
     if [ "$failed" -ne 0 ]; then
         exit 1
     fi
+
+update-dnd:
+    nix flake update "dnd-character-sheet" --no-warn-dirty
+    jj commit -m "update dnd"
+    jj bookmark move main --to @-
+    jj git push --all
+    just switch-vps-1
