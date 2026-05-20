@@ -45,6 +45,13 @@ return {
 
             vim.keymap.set(
                 "n",
+                "<leader>g",
+                require("repo_hunks").open,
+                { desc = "Show repo hunks" }
+            )
+
+            vim.keymap.set(
+                "n",
                 "<leader>lD",
                 ":Telescope diagnostics severity=error<cr>",
                 { desc = "Find LSP error" }
