@@ -58,20 +58,26 @@ return {
 
             vim.keymap.set(
                 "n",
-                "<leader>gc",
-                require("gitbutler_rub").rub_hunk_into_most_recent_commit,
+                "<leader>gr",
+                require("gitbutler").rub_hunk_into_most_recent_commit,
                 { desc = "Rub current hunk into most recent commit" }
             )
             vim.keymap.set(
                 "n",
+                "<leader>gd",
+                require("gitbutler").discard_current_hunk,
+                { desc = "Discard current hunk" }
+            )
+            vim.keymap.set(
+                "n",
                 "<leader>gu",
-                require("gitbutler_rub").undo,
+                require("gitbutler").undo,
                 { desc = "Undo last operation" }
             )
             vim.keymap.set(
                 "n",
                 "<leader>gU",
-                require("gitbutler_rub").redo,
+                require("gitbutler").redo,
                 { desc = "Redo last operation" }
             )
 

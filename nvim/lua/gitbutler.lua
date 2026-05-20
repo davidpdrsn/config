@@ -231,6 +231,15 @@ local function rub(root, source_cli_id, target_cli_id)
     return output
 end
 
+local function discard(root, cli_id)
+    local output, err = system({ but, "discard", cli_id }, { cwd = root, text = true })
+    if not output then
+        return nil, err
+    end
+
+    return output
+end
+
 local function run_but_simple(command)
     local root, root_err = repo_root()
     if not root then
@@ -256,7 +265,7 @@ function M.redo()
     return run_but_simple("redo")
 end
 
-function M.rub_hunk_into_most_recent_commit()
+local function current_hunk_cli_id()
     local root, root_err = repo_root()
     if not root then
         notify_error("Not in a git repo: " .. root_err)
@@ -275,15 +284,24 @@ function M.rub_hunk_into_most_recent_commit()
         return false
     end
 
-    local commit, commit_err = most_recent_commit(root)
-    if not commit then
-        notify_error(commit_err)
-        return false
-    end
-
     local hunk_cli_id, hunk_cli_err = find_hunk_cli_id(root, hunk)
     if not hunk_cli_id then
         notify_error(hunk_cli_err)
+        return false
+    end
+
+    return root, hunk_cli_id
+end
+
+function M.rub_hunk_into_most_recent_commit()
+    local root, hunk_cli_id = current_hunk_cli_id()
+    if not root then
+        return false
+    end
+
+    local commit, commit_err = most_recent_commit(root)
+    if not commit then
+        notify_error(commit_err)
         return false
     end
 
@@ -295,6 +313,28 @@ function M.rub_hunk_into_most_recent_commit()
 
     vim.notify(
         string.format("Rubbed %s into %s", hunk_cli_id, commit.cliId),
+        vim.log.levels.INFO,
+        { title = "GitButler rub" }
+    )
+    return true
+end
+
+function M.discard_current_hunk()
+    local root, hunk_cli_id = current_hunk_cli_id()
+    if not root then
+        return false
+    end
+
+    local _, discard_err = discard(root, hunk_cli_id)
+    if discard_err then
+        notify_error(discard_err)
+        return false
+    end
+
+    vim.cmd("checktime")
+
+    vim.notify(
+        string.format("Discarded %s", hunk_cli_id),
         vim.log.levels.INFO,
         { title = "GitButler rub" }
     )
