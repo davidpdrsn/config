@@ -45,7 +45,7 @@ return {
 
             vim.keymap.set(
                 "n",
-                "<leader>g",
+                "<leader>gg",
                 require("repo_hunks").open_current_file,
                 { desc = "Show current file hunks" }
             )
@@ -54,6 +54,25 @@ return {
                 "<leader>G",
                 require("repo_hunks").open_repo,
                 { desc = "Show repo hunks" }
+            )
+
+            vim.keymap.set(
+                "n",
+                "<leader>gc",
+                require("gitbutler_rub").rub_hunk_into_most_recent_commit,
+                { desc = "Rub current hunk into most recent commit" }
+            )
+            vim.keymap.set(
+                "n",
+                "<leader>gu",
+                require("gitbutler_rub").undo,
+                { desc = "Undo last operation" }
+            )
+            vim.keymap.set(
+                "n",
+                "<leader>gU",
+                require("gitbutler_rub").redo,
+                { desc = "Redo last operation" }
             )
 
             vim.keymap.set(
