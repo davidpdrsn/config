@@ -35,14 +35,16 @@ local function parse_start(start)
     return line
 end
 
-local function collect_hunks(root)
-    local lines, err = system_list(
-        { "git", "diff", "--unified=0", "--no-ext-diff", "--relative" },
-        {
-            cwd = root,
-            text = true,
-        }
-    )
+local function collect_hunks(root, pathspec)
+    local cmd = { "git", "diff", "--unified=0", "--no-ext-diff", "--relative" }
+    if pathspec then
+        vim.list_extend(cmd, { "--", pathspec })
+    end
+
+    local lines, err = system_list(cmd, {
+        cwd = root,
+        text = true,
+    })
     if not lines then
         return nil, err
     end
@@ -157,14 +159,31 @@ local function jump_to_hunk(bufnr, winid, entry)
     end)
 end
 
-function M.open()
+local function current_file_pathspec(root)
+    local filename = vim.fn.expand("%:p")
+    if filename == "" then
+        return nil
+    end
+
+    if vim.fs and vim.fs.relpath then
+        return vim.fs.relpath(root, filename)
+    end
+
+    if filename:sub(1, #root + 1) == root .. "/" then
+        return filename:sub(#root + 2)
+    end
+
+    return nil
+end
+
+local function open(pathspec)
     local root, root_err = repo_root()
     if not root then
         vim.notify("Not in a git repo: " .. root_err, vim.log.levels.WARN)
         return
     end
 
-    local hunks, hunks_err = collect_hunks(root)
+    local hunks, hunks_err = collect_hunks(root, pathspec)
     if not hunks then
         vim.notify("Failed to collect git hunks: " .. hunks_err, vim.log.levels.ERROR)
         return
@@ -231,5 +250,27 @@ function M.open()
         })
         :find()
 end
+
+function M.open_current_file()
+    local root, root_err = repo_root()
+    if not root then
+        vim.notify("Not in a git repo: " .. root_err, vim.log.levels.WARN)
+        return
+    end
+
+    local pathspec = current_file_pathspec(root)
+    if not pathspec then
+        vim.notify("Current file is not in the git repo", vim.log.levels.WARN)
+        return
+    end
+
+    open(pathspec)
+end
+
+function M.open_repo()
+    open()
+end
+
+M.open = M.open_repo
 
 return M

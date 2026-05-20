@@ -46,7 +46,13 @@ return {
             vim.keymap.set(
                 "n",
                 "<leader>g",
-                require("repo_hunks").open,
+                require("repo_hunks").open_current_file,
+                { desc = "Show current file hunks" }
+            )
+            vim.keymap.set(
+                "n",
+                "<leader>G",
+                require("repo_hunks").open_repo,
                 { desc = "Show repo hunks" }
             )
 
