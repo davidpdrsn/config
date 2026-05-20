@@ -253,6 +253,8 @@ local function run_but_simple(command)
         return false
     end
 
+    vim.cmd("checktime")
+
     vim.notify("Ran but " .. command, vim.log.levels.INFO, { title = "GitButler" })
     return true
 end
