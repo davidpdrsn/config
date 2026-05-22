@@ -36,7 +36,7 @@ local function parse_start(start)
 end
 
 local function collect_hunks(root, pathspec)
-    local cmd = { "git", "diff", "--unified=0", "--no-ext-diff", "--relative" }
+    local cmd = { "git", "diff", "HEAD", "--unified=0", "--no-ext-diff", "--relative" }
     if pathspec then
         vim.list_extend(cmd, { "--", pathspec })
     end

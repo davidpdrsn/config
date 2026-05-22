@@ -81,7 +81,7 @@ end
 
 local function current_cursor_hunk(root, pathspec)
     local stdout, err = system(
-        { "git", "diff", "--unified=0", "--no-ext-diff", "--relative", "--", pathspec },
+        { "git", "diff", "HEAD", "--unified=0", "--no-ext-diff", "--relative", "--", pathspec },
         { cwd = root, text = true }
     )
     if not stdout then
