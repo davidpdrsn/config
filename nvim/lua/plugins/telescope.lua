@@ -8,10 +8,10 @@ return {
             require("telescope").setup({
                 defaults = require("telescope.themes").get_ivy({
                     file_ignore_patterns = {
-                        ".glb",
-                        ".ogg",
-                        ".png",
-                        ".uid",
+                        "%.glb$",
+                        "%.ogg$",
+                        "%.png$",
+                        "%.uid$",
                     },
                 }),
                 extensions = {
