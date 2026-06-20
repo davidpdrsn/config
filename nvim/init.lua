@@ -91,8 +91,10 @@ require("run_tests")
 require("run_project")
 require("test_file")
 require("live_diff").setup({
-    auto_enable = true,
+    auto_enable = false,
 })
+require("pi_msg").setup()
+require("pi_nvim_server").setup()
 
 --------------------------------------------
 -- Auto commands
@@ -105,6 +107,7 @@ vim.cmd([[
         " when in a git commit buffer go the beginning
         autocmd FileType gitcommit au! BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0])
     augroup END
+
 
     " https://stackoverflow.com/questions/14068751/how-to-hide-cursor-line-when-focus-in-on-other-window-in-vim
     augroup CursorLine
@@ -197,12 +200,7 @@ end, { desc = "GitButler redo" })
 vim.keymap.set("n", "<leader>L", ":Lazy<cr>", { desc = "Open Lazy" })
 vim.keymap.set("n", "<leader>lu", ":Lazy update<cr>", { desc = "Update plugins" })
 
-vim.keymap.set(
-    "n",
-    "<leader>gh",
-    require("repo_hunks").open_repo,
-    { desc = "Show repo hunks" }
-)
+vim.keymap.set("n", "<leader>gh", require("repo_hunks").open_repo, { desc = "Show repo hunks" })
 vim.keymap.set(
     "n",
     "<leader>gH",

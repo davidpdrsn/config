@@ -15,6 +15,7 @@
     llmAgentPackages = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
     linearCli = pkgs.callPackage ../../shared/packages/linear-cli.nix {};
     agentStatus = pkgs.callPackage ../../shared/packages/agent-status.nix {};
+    piMsg = pkgs.callPackage ./packages/pi-msg.nix {};
     alacritty = pkgs.callPackage ./packages/alacritty.nix {};
     test-cli = opWrapped {
       name = "test-cli";
@@ -32,6 +33,7 @@
       resvg
       linearCli
       agentStatus
+      piMsg
       alacritty
       test-cli
       gettext
