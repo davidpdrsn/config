@@ -139,8 +139,8 @@ local function most_recent_commit(root)
         for _, branch in ipairs(stack.branches or {}) do
             for _, commit in ipairs(branch.commits or {}) do
                 if
-                    commit.cliId
-                    and commit.cliId ~= ""
+                    commit.commitId
+                    and commit.commitId ~= ""
                     and (not latest or (commit.createdAt or "") > (latest.createdAt or ""))
                 then
                     latest = commit
@@ -313,19 +313,24 @@ function M.rub_hunk_id_into_most_recent_commit(hunk_cli_id)
         return false
     end
 
-    local _, rub_err = rub(root, hunk_cli_id, commit.cliId)
+    local _, rub_err = rub(root, hunk_cli_id, commit.commitId)
     if rub_err then
         notify_error(rub_err)
         return false
     end
 
     vim.cmd("checktime")
-    pcall(function()
-        require("live_diff").reload()
+    local ok, reloaded = pcall(function()
+        return require("live_diff").reload()
     end)
+    if not ok then
+        notify_error("Failed to reload live_diff: " .. reloaded)
+    elseif not reloaded then
+        notify_error("live_diff was not enabled for the current buffer")
+    end
 
     vim.notify(
-        string.format("Rubbed %s into %s", hunk_cli_id, commit.cliId),
+        string.format("Rubbed %s into %s", hunk_cli_id, commit.commitId),
         vim.log.levels.INFO,
         { title = "GitButler rub" }
     )

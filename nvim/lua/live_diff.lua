@@ -2,6 +2,7 @@ local M = {}
 
 local namespace = vim.api.nvim_create_namespace("live_diff")
 local state = {}
+local global_enabled = false
 
 local defaults = {
 	auto_enable = false,
@@ -63,13 +64,8 @@ local function relative_path(root, path)
 end
 
 local function base_lines(root, pathspec)
-	local stdout, err = system({ "git", "show", config.base_ref .. ":" .. pathspec }, { cwd = root, text = true })
+	local stdout = system({ "git", "show", config.base_ref .. ":" .. pathspec }, { cwd = root, text = true })
 	if not stdout then
-		local tracked = system({ "git", "ls-files", "--error-unmatch", pathspec }, { cwd = root, text = true })
-		if tracked then
-			return nil, err
-		end
-
 		return {}
 	end
 
@@ -130,8 +126,10 @@ local function but_hunk_id(root, pathspec, hunk)
 				local new_start = but_hunk.newStart or but_hunk.new_start
 				local new_lines = but_hunk.newLines or but_hunk.new_lines or 0
 				if old_start and new_start then
-					local old_matches = ranges_overlap(hunk.old_start, hunk.old_count, old_start, old_lines)
-					local new_matches = ranges_overlap(hunk.new_start, hunk.new_count, new_start, new_lines)
+					local old_matches = (hunk.old_count == 0 and old_lines == 0)
+						or ranges_overlap(hunk.old_start, hunk.old_count, old_start, old_lines)
+					local new_matches = (hunk.new_count == 0 and new_lines == 0)
+						or ranges_overlap(hunk.new_start, hunk.new_count, new_start, new_lines)
 					if old_matches and new_matches then
 						return change.id
 					end
@@ -351,7 +349,10 @@ local function render_hunk(bufnr, hunk, selected)
 	local row
 
 	if hunk.new_count == 0 then
-		row = math.min(math.max(hunk.new_start - 1, 0), line_count)
+		-- For pure deletions, vim.diff reports new_start as the line before the
+		-- deletion. Anchor the virtual deleted lines above the next real line so
+		-- deleted lines that were adjacent to that line still look adjacent.
+		row = math.min(math.max(hunk.new_start, 0), math.max(line_count - 1, 0))
 	else
 		row = math.min(math.max(hunk.new_start - 1, 0), math.max(line_count - 1, 0))
 	end
@@ -409,6 +410,7 @@ local function render_hunk(bufnr, hunk, selected)
 end
 
 local update_real_cursor_visibility
+local disable_buffer
 
 local function render(bufnr)
 	if not vim.api.nvim_buf_is_valid(bufnr) then
@@ -561,7 +563,7 @@ local function should_enable(bufnr)
 	return true
 end
 
-function M.enable(bufnr, opts)
+local function enable_buffer(bufnr, opts)
 	opts = opts or {}
 	bufnr = bufnr or vim.api.nvim_get_current_buf()
 	if not vim.api.nvim_buf_is_valid(bufnr) or not should_enable(bufnr) then
@@ -585,21 +587,13 @@ function M.enable(bufnr, opts)
 		return false
 	end
 
-	local base, base_err = base_lines(root, pathspec)
-	if not base then
-		if not opts.silent then
-			notify("Failed to read " .. config.base_ref .. ":" .. pathspec .. ": " .. base_err, vim.log.levels.WARN)
-		end
-		return false
-	end
-
-	M.disable(bufnr)
+	disable_buffer(bufnr)
 
 	state[bufnr] = {
 		enabled = true,
 		root = root,
 		pathspec = pathspec,
-		base_lines = base,
+		base_lines = base_lines(root, pathspec),
 		hunks = {},
 		metadata = {},
 		selected_key = nil,
@@ -626,7 +620,7 @@ function M.enable(bufnr, opts)
 	return true
 end
 
-function M.disable(bufnr)
+function disable_buffer(bufnr)
 	bufnr = bufnr or vim.api.nvim_get_current_buf()
 	local item = state[bufnr]
 	if item and item.timer then
@@ -644,31 +638,58 @@ function M.disable(bufnr)
 	update_real_cursor_visibility()
 end
 
-function M.toggle(bufnr)
-	bufnr = bufnr or vim.api.nvim_get_current_buf()
-	if M.is_enabled(bufnr) then
-		M.disable(bufnr)
+function M.enable()
+	global_enabled = true
+	local enabled_any = false
+	for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+		if vim.api.nvim_buf_is_loaded(bufnr) and should_enable(bufnr) then
+			enabled_any = enable_buffer(bufnr, { silent = true }) or enabled_any
+		end
+	end
+	return enabled_any
+end
+
+function M.disable()
+	global_enabled = false
+	for bufnr in pairs(state) do
+		disable_buffer(bufnr)
+	end
+	return true
+end
+
+function M.toggle()
+	if global_enabled then
+		M.disable()
 		return false
 	end
 
-	return M.enable(bufnr)
+	M.enable()
+	return true
 end
 
 function M.reload(bufnr)
 	bufnr = bufnr or vim.api.nvim_get_current_buf()
-	local was_enabled = M.is_enabled(bufnr)
+	local item = state[bufnr]
 	but_diff_cache = {}
-	if not was_enabled then
-		return false
+	if not item or not item.enabled then
+		if vim.api.nvim_buf_is_valid(bufnr) then
+			vim.api.nvim_buf_clear_namespace(bufnr, namespace, 0, -1)
+		end
+		if not global_enabled then
+			return false
+		end
+		return enable_buffer(bufnr, { silent = true })
 	end
 
-	M.disable(bufnr)
-	return M.enable(bufnr, { silent = true })
+	item.base_lines = base_lines(item.root, item.pathspec)
+	item.selected_key = nil
+	item.virtual_cursor = nil
+	render(bufnr)
+	return true
 end
 
-function M.is_enabled(bufnr)
-	bufnr = bufnr or vim.api.nvim_get_current_buf()
-	return state[bufnr] ~= nil and state[bufnr].enabled == true
+function M.is_enabled()
+	return global_enabled
 end
 
 function M.get_hunks(bufnr)
@@ -823,7 +844,12 @@ local function hunk_anchor_line(bufnr, hunk)
 		return 1
 	end
 
-	return math.min(math.max(hunk.new_start, 1), line_count)
+	local line = hunk.new_start
+	if hunk.new_count == 0 then
+		line = line + 1
+	end
+
+	return math.min(math.max(line, 1), line_count)
 end
 
 local function normal_move(command)
@@ -937,8 +963,7 @@ local function jump_hunk(bufnr, direction)
 	end
 
 	item.virtual_cursor = nil
-	local line_count = vim.api.nvim_buf_line_count(bufnr)
-	local line = math.min(math.max(target.new_start, 1), line_count)
+	local line = hunk_anchor_line(bufnr, target)
 	vim.api.nvim_win_set_cursor(0, { line, 0 })
 	if target.old_count > 0 then
 		item.virtual_cursor = { key = target.key }
@@ -959,25 +984,21 @@ function M.setup(opts)
 	config = vim.tbl_deep_extend("force", vim.deepcopy(defaults), opts or {})
 	set_highlights()
 
-	if config.auto_enable then
-		local group = vim.api.nvim_create_augroup("LiveDiffAutoEnable", { clear = true })
-		vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
-			group = group,
-			callback = function(event)
-				vim.schedule(function()
-					if vim.api.nvim_buf_is_valid(event.buf) and should_enable(event.buf) then
-						M.enable(event.buf, { silent = true })
-					end
-				end)
-			end,
-		})
-
-		vim.schedule(function()
-			for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
-				if vim.api.nvim_buf_is_loaded(bufnr) and should_enable(bufnr) then
-					M.enable(bufnr, { silent = true })
+	local group = vim.api.nvim_create_augroup("LiveDiffAutoEnable", { clear = true })
+	vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
+		group = group,
+		callback = function(event)
+			vim.schedule(function()
+				if global_enabled and vim.api.nvim_buf_is_valid(event.buf) and should_enable(event.buf) then
+					enable_buffer(event.buf, { silent = true })
 				end
-			end
+			end)
+		end,
+	})
+
+	if config.auto_enable then
+		vim.schedule(function()
+			M.enable()
 		end)
 	end
 end

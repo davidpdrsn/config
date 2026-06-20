@@ -126,6 +126,9 @@ function M.reload_files(paths)
 
     for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
         if buffer_matches_path(bufnr, changed_paths) then
+            pcall(function()
+                require("live_diff").reload(bufnr)
+            end)
             sync_lsp_for_buffer(bufnr)
         end
     end

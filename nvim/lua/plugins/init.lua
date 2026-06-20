@@ -97,6 +97,12 @@ return {
                 lualine_c = { "diagnostics", common.path_to_file },
                 lualine_x = {
                     function()
+                        if require("live_diff").is_enabled() then
+                            return "diff on"
+                        end
+                        return ""
+                    end,
+                    function()
                         return require("live_diff").status_hunk_id()
                     end,
                 },

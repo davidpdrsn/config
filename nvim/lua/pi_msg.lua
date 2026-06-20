@@ -15,7 +15,120 @@ local function current_file()
     return vim.fn.fnamemodify(path, ":.")
 end
 
+local function hunk_overlaps_range(hunk, start_line, end_line)
+    if hunk.new_count > 0 then
+        local hunk_start = hunk.new_start
+        local hunk_end = hunk.new_start + hunk.new_count - 1
+        return hunk_start <= end_line and start_line <= hunk_end
+    end
+
+    local anchor = math.max(hunk.new_start, 1)
+    return start_line <= anchor and anchor <= end_line
+end
+
+local function format_hunk(hunk)
+    local lines = {
+        string.format(
+            "@@ -%d,%d +%d,%d @@",
+            hunk.old_start,
+            hunk.old_count,
+            hunk.new_start,
+            hunk.new_count
+        ),
+    }
+
+    if hunk.id then
+        table.insert(lines, string.format("Hunk id: %s", hunk.id))
+    end
+
+    for _, line in ipairs(hunk.old_lines or {}) do
+        table.insert(lines, "-" .. line)
+    end
+    for _, line in ipairs(hunk.new_lines or {}) do
+        table.insert(lines, "+" .. line)
+    end
+
+    return table.concat(lines, "\n")
+end
+
+local function live_diff_hunk_at_cursor()
+    local ok, live_diff = pcall(require, "live_diff")
+    if not ok or not live_diff.is_enabled() then
+        return nil
+    end
+
+    return live_diff.hunk_at_cursor()
+end
+
+local function live_diff_hunks_in_range(start_line, end_line)
+    local ok, live_diff = pcall(require, "live_diff")
+    if not ok or not live_diff.is_enabled() then
+        return {}
+    end
+
+    local hunks = {}
+    for _, hunk in ipairs(live_diff.get_hunks()) do
+        if hunk_overlaps_range(hunk, start_line, end_line) then
+            table.insert(hunks, hunk)
+        end
+    end
+
+    return hunks
+end
+
+local function build_hunk_message(input, hunk)
+    local file = current_file()
+    if file == nil then
+        return nil, "current buffer has no file"
+    end
+
+    return table.concat({
+        "I'm currently reviewing your changes and have a question about this hunk.",
+        "",
+        file,
+        "",
+        "Live diff hunk:",
+        format_hunk(hunk),
+        "",
+        "User prompt:",
+        input,
+    }, "\n")
+end
+
+local function build_hunks_message(input, hunks, start_line, end_line)
+    local file = current_file()
+    if file == nil then
+        return nil, "current buffer has no file"
+    end
+
+    local parts = {
+        "I'm currently reviewing your changes and have a question about these hunks.",
+        "",
+        string.format("%s:%d-%d", file, start_line, end_line),
+        "",
+        "Live diff hunks:",
+    }
+
+    for index, hunk in ipairs(hunks) do
+        if index > 1 then
+            table.insert(parts, "")
+        end
+        table.insert(parts, format_hunk(hunk))
+    end
+
+    table.insert(parts, "")
+    table.insert(parts, "User prompt:")
+    table.insert(parts, input)
+
+    return table.concat(parts, "\n")
+end
+
 local function build_current_line_message(input)
+    local hunk = live_diff_hunk_at_cursor()
+    if hunk ~= nil then
+        return build_hunk_message(input, hunk)
+    end
+
     local file = current_file()
     if file == nil then
         return nil, "current buffer has no file"
@@ -71,6 +184,11 @@ local function build_selection_message(input)
     local selection, start_line, end_line = selected_text()
     if selection == nil then
         return nil, "no visual selection found"
+    end
+
+    local hunks = live_diff_hunks_in_range(start_line, end_line)
+    if #hunks > 0 then
+        return build_hunks_message(input, hunks, start_line, end_line)
     end
 
     return table.concat({
