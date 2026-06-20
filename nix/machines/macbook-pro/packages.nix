@@ -49,7 +49,9 @@
       llmAgentPackages.codex
       llmAgentPackages.claude-code
     ]
-    ++ map (pkg: inputs.${pkg}.packages.${pkgs.stdenv.hostPlatform.system}.default) [];
+    ++ map (pkg: inputs.${pkg}.packages.${pkgs.stdenv.hostPlatform.system}.default) [
+      "hunk"
+    ];
 
   fonts.packages = with pkgs; [
     nerd-fonts.iosevka

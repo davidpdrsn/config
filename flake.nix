@@ -28,6 +28,10 @@
     jjui.inputs.nixpkgs.follows = "nixpkgs";
 
     llm-agents.url = "github:numtide/llm-agents.nix";
+    hunk = {
+      url = "github:modem-dev/hunk";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     pi-prompt-suggester = {
       url = "github:guwidoe/pi-prompt-suggester";
       flake = false;

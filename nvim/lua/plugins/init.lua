@@ -273,6 +273,4 @@ return {
     },
     -- notifications
     { "rcarriga/nvim-notify" },
-    -- git gutter
-    { "lewis6991/gitsigns.nvim" },
 }

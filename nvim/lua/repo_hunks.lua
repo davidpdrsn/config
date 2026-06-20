@@ -134,7 +134,7 @@ local function inject_diff(bufnr, entry)
 
     for index, line in ipairs(diff_lines) do
         local row = start_row + index - 1
-        local hl_group = line:sub(1, 1) == "-" and "GitSignsDeletePreview" or "GitSignsAddPreview"
+        local hl_group = line:sub(1, 1) == "-" and "DiffDelete" or "DiffAdd"
         vim.api.nvim_buf_set_extmark(bufnr, namespace, row, 0, {
             hl_group = hl_group,
             end_row = row + 1,
