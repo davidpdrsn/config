@@ -1,5 +1,30 @@
 local M = {}
 
+local but = "/Users/davidpdrsn/code/gitbutler/gitbutler-git/target/release/but"
+
+local function system(cmd, opts)
+    local result = vim.system(cmd, opts):wait()
+    if result.code ~= 0 then
+        return nil, vim.trim(result.stderr or result.stdout or "")
+    end
+
+    return result.stdout or ""
+end
+
+local function system_json(cmd, opts)
+    local stdout, err = system(cmd, opts)
+    if not stdout then
+        return nil, err
+    end
+
+    local ok, decoded = pcall(vim.json.decode, stdout)
+    if not ok then
+        return nil, "Failed to parse JSON: " .. decoded
+    end
+
+    return decoded
+end
+
 local function system_list(cmd, opts)
     local result = vim.system(cmd, opts):wait()
     if result.code ~= 0 then
@@ -35,62 +60,51 @@ local function parse_start(start)
     return line
 end
 
-local function collect_hunks(root, pathspec)
-    local cmd = { "git", "diff", "HEAD", "--unified=0", "--no-ext-diff", "--relative" }
-    if pathspec then
-        vim.list_extend(cmd, { "--", pathspec })
+local function add_diff_lines(target, diff_text)
+    for _, line in ipairs(vim.split(diff_text or "", "\n", { plain = true })) do
+        if not line:match("^@@ ") and line ~= "" then
+            table.insert(target.lines, line)
+            if line:sub(1, 1) == "+" then
+                table.insert(target.added_lines, line:sub(2))
+            elseif line:sub(1, 1) == "-" then
+                table.insert(target.removed_lines, line:sub(2))
+            end
+        end
     end
+end
 
-    local lines, err = system_list(cmd, {
-        cwd = root,
-        text = true,
-    })
-    if not lines then
+local function collect_hunks(root, pathspec)
+    local diff, err = system_json({ but, "diff", "--format", "json" }, { cwd = root, text = true })
+    if not diff then
         return nil, err
     end
 
     local hunks = {}
-    local current_file
-    local current_hunk
+    for _, change in ipairs(diff.changes or {}) do
+        if (not pathspec or change.path == pathspec) and change.diff and change.diff.type == "patch" then
+            local first_hunk = (change.diff.hunks or {})[1]
+            if first_hunk then
+                local hunk = {
+                    id = change.id,
+                    filename = root .. "/" .. change.path,
+                    path = change.path,
+                    lnum = parse_start(first_hunk.newStart or first_hunk.new_start),
+                    old_start = tostring(first_hunk.oldStart or first_hunk.old_start or 1),
+                    old_count = tostring(first_hunk.oldLines or first_hunk.old_lines or 1),
+                    new_start = tostring(first_hunk.newStart or first_hunk.new_start or 1),
+                    new_count = tostring(first_hunk.newLines or first_hunk.new_lines or 1),
+                    context = change.id or "",
+                    header = change.id or "",
+                    lines = {},
+                    added_lines = {},
+                    removed_lines = {},
+                }
 
-    for _, line in ipairs(lines) do
-        if line:match("^diff %-%-git ") then
-            current_file = nil
-            current_hunk = nil
-        end
+                for _, diff_hunk in ipairs(change.diff.hunks or {}) do
+                    add_diff_lines(hunk, diff_hunk.diff)
+                end
 
-        local file = line:match("^%+%+%+ b/(.+)$")
-        if file then
-            current_file = file
-        elseif line == "+++ /dev/null" then
-            current_file = nil
-            current_hunk = nil
-        end
-
-        local old_start, old_count, new_start, new_count, context =
-            line:match("^@@ %-(%d+),?(%d*) %+(%d+),?(%d*) @@ ?(.*)$")
-        if current_file and old_start and new_start then
-            current_hunk = {
-                filename = root .. "/" .. current_file,
-                path = current_file,
-                lnum = parse_start(new_start),
-                old_start = old_start,
-                old_count = old_count ~= "" and old_count or "1",
-                new_start = new_start,
-                new_count = new_count ~= "" and new_count or "1",
-                context = context,
-                header = line,
-                lines = {},
-                added_lines = {},
-                removed_lines = {},
-            }
-            table.insert(hunks, current_hunk)
-        elseif current_hunk and not line:match("^%-%-%- ") and not line:match("^%+%+%+ ") then
-            table.insert(current_hunk.lines, line)
-            if line:sub(1, 1) == "+" then
-                table.insert(current_hunk.added_lines, line:sub(2))
-            elseif line:sub(1, 1) == "-" then
-                table.insert(current_hunk.removed_lines, line:sub(2))
+                table.insert(hunks, hunk)
             end
         end
     end

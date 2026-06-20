@@ -45,44 +45,6 @@ return {
 
             vim.keymap.set(
                 "n",
-                "<leader>gg",
-                require("repo_hunks").open_current_file,
-                { desc = "Show current file hunks" }
-            )
-            vim.keymap.set(
-                "n",
-                "<leader>G",
-                require("repo_hunks").open_repo,
-                { desc = "Show repo hunks" }
-            )
-
-            vim.keymap.set(
-                "n",
-                "<leader>gr",
-                require("gitbutler").rub_hunk_into_most_recent_commit,
-                { desc = "Rub current hunk into most recent commit" }
-            )
-            vim.keymap.set(
-                "n",
-                "<leader>gd",
-                require("gitbutler").discard_current_hunk,
-                { desc = "Discard current hunk" }
-            )
-            vim.keymap.set(
-                "n",
-                "<leader>gu",
-                require("gitbutler").undo,
-                { desc = "Undo last operation" }
-            )
-            vim.keymap.set(
-                "n",
-                "<leader>gU",
-                require("gitbutler").redo,
-                { desc = "Redo last operation" }
-            )
-
-            vim.keymap.set(
-                "n",
                 "<leader>lD",
                 ":Telescope diagnostics severity=error<cr>",
                 { desc = "Find LSP error" }

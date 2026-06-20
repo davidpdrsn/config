@@ -90,6 +90,9 @@ vim.notify = require("notify")
 require("run_tests")
 require("run_project")
 require("test_file")
+require("live_diff").setup({
+    auto_enable = true,
+})
 
 --------------------------------------------
 -- Auto commands
@@ -173,11 +176,39 @@ end, { desc = "Insert GUID" })
 
 vim.keymap.set("n", "<leader>cm", ":!chmod +x %<cr>", { desc = "Make file executable" })
 vim.keymap.set("n", "<leader>h", ":nohlsearch<cr>", { desc = "Remove search highlight" })
--- vim.keymap.set("n", "<leader>K", function()
---     vim.diagnostic.open_float({ source = true })
--- end, { desc = "Open diagnostic for curret line" })
+vim.keymap.set("n", "<leader>gg", function()
+    require("live_diff").toggle()
+end, { desc = "Toggle live diff" })
+vim.keymap.set("n", "<leader>[", function()
+    require("live_diff").prev_hunk()
+end, { desc = "Previous live diff hunk" })
+vim.keymap.set("n", "<leader>]", function()
+    require("live_diff").next_hunk()
+end, { desc = "Next live diff hunk" })
+vim.keymap.set("n", "<leader>gr", function()
+    require("gitbutler").rub_hunk_id_into_most_recent_commit(require("live_diff").current_hunk_id())
+end, { desc = "Rub current hunk into most recent commit" })
+vim.keymap.set("n", "<leader>gu", function()
+    require("gitbutler").undo()
+end, { desc = "GitButler undo" })
+vim.keymap.set("n", "<leader>gU", function()
+    require("gitbutler").redo()
+end, { desc = "GitButler redo" })
 vim.keymap.set("n", "<leader>L", ":Lazy<cr>", { desc = "Open Lazy" })
 vim.keymap.set("n", "<leader>lu", ":Lazy update<cr>", { desc = "Update plugins" })
+
+vim.keymap.set(
+    "n",
+    "<leader>gh",
+    require("repo_hunks").open_repo,
+    { desc = "Show repo hunks" }
+)
+vim.keymap.set(
+    "n",
+    "<leader>gH",
+    require("repo_hunks").open_current_file,
+    { desc = "Show current file hunks" }
+)
 
 vim.keymap.set("n", "<leader>m", ":call MergeTabs()<cr>", { desc = "Merge tab" })
 vim.keymap.set("n", "<leader>rn", ":call RenameFile()<cr>", { desc = "Rename file" })

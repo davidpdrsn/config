@@ -295,9 +295,15 @@ local function current_hunk_cli_id()
     return root, hunk_cli_id
 end
 
-function M.rub_hunk_into_most_recent_commit()
-    local root, hunk_cli_id = current_hunk_cli_id()
+function M.rub_hunk_id_into_most_recent_commit(hunk_cli_id)
+    if not hunk_cli_id or hunk_cli_id == "" then
+        notify_error("Missing hunk id")
+        return false
+    end
+
+    local root, root_err = repo_root()
     if not root then
+        notify_error("Not in a git repo: " .. root_err)
         return false
     end
 
@@ -312,6 +318,11 @@ function M.rub_hunk_into_most_recent_commit()
         notify_error(rub_err)
         return false
     end
+
+    vim.cmd("checktime")
+    pcall(function()
+        require("live_diff").reload()
+    end)
 
     vim.notify(
         string.format("Rubbed %s into %s", hunk_cli_id, commit.cliId),

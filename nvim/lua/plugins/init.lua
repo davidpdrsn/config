@@ -95,7 +95,11 @@ return {
                 lualine_a = { "mode" },
                 lualine_b = { "branch" },
                 lualine_c = { "diagnostics", common.path_to_file },
-                lualine_x = {},
+                lualine_x = {
+                    function()
+                        return require("live_diff").status_hunk_id()
+                    end,
+                },
                 lualine_y = { run_tests.test_for_status },
                 lualine_z = { common.filetype },
             },
