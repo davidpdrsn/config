@@ -19,16 +19,12 @@
       runHook postInstall
     '';
   };
-
-  piRalphWiggum = pkgs.runCommand "pi-ralph-wiggum" {} ''
-    mkdir -p "$out"
-    cp -R ${inputs.pi-extensions}/ralph-wiggum/. "$out"/
-  '';
 in {
   programs."pi-agent" = {
     enable = true;
     settings = {
-      lastChangelogVersion = "0.70.2";
+      lastChangelogVersion = "0.79.9";
+      collapseChangelog = true;
       defaultProvider = "openai-codex";
       defaultModel = "gpt-5.5";
       enabledModels = [
@@ -42,7 +38,6 @@ in {
       packages = [
         "${config.home.homeDirectory}/config/pi"
         "${piPromptSuggester}"
-        # "${piRalphWiggum}"
       ];
     };
   };
