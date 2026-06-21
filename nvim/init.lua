@@ -240,6 +240,100 @@ vim.keymap.set("n", "<leader>cp", function()
     vim.notify(path, "info", { title = "Copied to clipboard" })
 end, { desc = "Copy path to current file" })
 
+local treesitter_identifier_types = {
+    field_identifier = true,
+    identifier = true,
+    property_identifier = true,
+    type_identifier = true,
+}
+
+local treesitter_function_types = {
+    arrow_function = true,
+    closure_expression = true,
+    ["function"] = true,
+    function_declaration = true,
+    function_definition = true,
+    function_expression = true,
+    function_item = true,
+    lambda_expression = true,
+    local_function = true,
+    method = true,
+    method_declaration = true,
+    method_definition = true,
+    singleton_method = true,
+}
+
+local function first_treesitter_field(node, field)
+    local nodes = node:field(field)
+    return nodes and nodes[1]
+end
+
+local function first_treesitter_identifier(node, max_depth)
+    if not node or max_depth < 0 then
+        return nil
+    end
+
+    if treesitter_identifier_types[node:type()] then
+        return node
+    end
+
+    for child in node:iter_children() do
+        local found = first_treesitter_identifier(child, max_depth - 1)
+        if found then
+            return found
+        end
+    end
+end
+
+local function treesitter_function_name_node(function_node)
+    local direct_name = first_treesitter_field(function_node, "name")
+    if direct_name then
+        return first_treesitter_identifier(direct_name, 4) or direct_name
+    end
+
+    local declarator_name = first_treesitter_identifier(first_treesitter_field(function_node, "declarator"), 4)
+    if declarator_name then
+        return declarator_name
+    end
+
+    -- Handle anonymous functions assigned to a name, e.g. `const foo = () => {}`.
+    local parent = function_node:parent()
+    local parent_name = parent
+        and (first_treesitter_field(parent, "name")
+            or first_treesitter_field(parent, "key")
+            or first_treesitter_field(parent, "left"))
+
+    if parent_name then
+        return first_treesitter_identifier(parent_name, 4) or parent_name
+    end
+end
+
+local function copy_current_function_name()
+    local ok, node = pcall(vim.treesitter.get_node, { bufnr = 0 })
+    if not ok or not node then
+        vim.notify("No Tree-sitter node found for current buffer", "warn")
+        return
+    end
+
+    while node do
+        if treesitter_function_types[node:type()] then
+            local name_node = treesitter_function_name_node(node)
+            if name_node then
+                local name = vim.treesitter.get_node_text(name_node, 0)
+                vim.fn.setreg("+", name)
+                vim.notify(name, "info", { title = "Copied function name" })
+                return
+            end
+        end
+
+        node = node:parent()
+    end
+
+    vim.notify("Not inside a named function", "warn")
+end
+
+vim.keymap.set("n", "<leader>cf", copy_current_function_name, { desc = "Copy current function name" })
+
 -- exit insert mode and save just by hitting ctrl-s
 vim.keymap.set("i", "<c-s>", "<esc>:w<cr>", { desc = "Save and leave insert mode" })
 vim.keymap.set("n", "<c-s>", ":w<cr>", { desc = "Save" })
