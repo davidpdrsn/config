@@ -26,6 +26,10 @@ local function hunk_overlaps_range(hunk, start_line, end_line)
     return start_line <= anchor and anchor <= end_line
 end
 
+local function indent_block(text)
+    return "    " .. text:gsub("\n", "\n    ")
+end
+
 local function format_hunk(hunk)
     local lines = {
         string.format(
@@ -88,7 +92,7 @@ local function build_hunk_message(input, hunk)
         file,
         "",
         "Live diff hunk:",
-        format_hunk(hunk),
+        indent_block(format_hunk(hunk)),
         "",
         "User prompt:",
         input,
@@ -113,7 +117,7 @@ local function build_hunks_message(input, hunks, start_line, end_line)
         if index > 1 then
             table.insert(parts, "")
         end
-        table.insert(parts, format_hunk(hunk))
+        table.insert(parts, indent_block(format_hunk(hunk)))
     end
 
     table.insert(parts, "")
@@ -141,7 +145,7 @@ local function build_current_line_message(input)
         string.format("%s:%d", file, line_number),
         "",
         "Current line:",
-        line,
+        indent_block(line),
         "",
         "User prompt:",
         input,
@@ -195,7 +199,7 @@ local function build_selection_message(input)
         string.format("%s:%d-%d", file, start_line, end_line),
         "",
         "Selection:",
-        selection,
+        indent_block(selection),
         "",
         "User prompt:",
         input,
