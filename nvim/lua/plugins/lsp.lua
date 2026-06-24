@@ -105,7 +105,6 @@ return {
         "saghen/blink.cmp",
         dependencies = {
             "rafamadriz/friendly-snippets",
-            "Kaiser-Yang/blink-cmp-avante",
         },
         version = "1.*",
         opts = {
@@ -131,19 +130,15 @@ return {
             },
             snippets = { preset = "luasnip" },
             sources = {
-                default = { "avante", "snippets", "lsp", "path", "buffer" },
+                default = { "snippets", "lsp", "path", "buffer" },
                 per_filetype = {
                     -- sql = { "dadbod", "buffer" },
                 },
                 providers = {
-                    dadbod = { name = "Dadbod", module = "vim_dadbod_completion.blink" },
-                    avante = {
-                        module = "blink-cmp-avante",
-                        name = "Avante",
-                        opts = {
-                            -- options for blink-cmp-avante
-                        },
+                    lsp = {
+                        fallbacks = {},
                     },
+                    dadbod = { name = "Dadbod", module = "vim_dadbod_completion.blink" },
                 },
             },
         },

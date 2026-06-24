@@ -45,6 +45,7 @@
       "**/.pi/suggester"
       "vmux-debug.log"
       ".pi/skills/but"
+      ".pi/skills/committing"
     ];
     settings =
       {
