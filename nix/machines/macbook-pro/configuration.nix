@@ -29,7 +29,10 @@
     showhidden = true;
     slow-motion-allowed = true;
     persistent-apps = [
-      # no apps in the dock plz
+      "/Applications/Ghostty.app"
+      "/Applications/Arc.app"
+      "/System/Applications/Mail.app"
+      "/Applications/Discord.app"
     ];
     magnification = false;
     # hot corners
