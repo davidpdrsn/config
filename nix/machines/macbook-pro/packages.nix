@@ -95,6 +95,7 @@
       "telegram"
       "linearmouse"
       "tuple"
+      "bbedit"
 
       "wezterm"
       "iterm2"
