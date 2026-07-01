@@ -244,13 +244,13 @@ end
 function M.setup()
     vim.keymap.set(
         "n",
-        "<leader>pi",
+        "<leader>P",
         M.send_current_location,
         { desc = "Send current file/line to pi agent" }
     )
     vim.keymap.set(
         "x",
-        "<leader>pi",
+        "<leader>P",
         M.send_visual_selection,
         { desc = "Send visual selection to pi agent" }
     )

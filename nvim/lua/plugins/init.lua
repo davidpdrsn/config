@@ -77,10 +77,30 @@ return {
                 pattern = "oil",
                 callback = function()
                     local smart_splits = require("smart-splits")
-                    vim.keymap.set("n", "<C-h>", smart_splits.move_cursor_left, { buffer = true, desc = "Move left" })
-                    vim.keymap.set("n", "<C-j>", smart_splits.move_cursor_down, { buffer = true, desc = "Move down" })
-                    vim.keymap.set("n", "<C-k>", smart_splits.move_cursor_up, { buffer = true, desc = "Move up" })
-                    vim.keymap.set("n", "<C-l>", smart_splits.move_cursor_right, { buffer = true, desc = "Move right" })
+                    vim.keymap.set(
+                        "n",
+                        "<C-h>",
+                        smart_splits.move_cursor_left,
+                        { buffer = true, desc = "Move left" }
+                    )
+                    vim.keymap.set(
+                        "n",
+                        "<C-j>",
+                        smart_splits.move_cursor_down,
+                        { buffer = true, desc = "Move down" }
+                    )
+                    vim.keymap.set(
+                        "n",
+                        "<C-k>",
+                        smart_splits.move_cursor_up,
+                        { buffer = true, desc = "Move up" }
+                    )
+                    vim.keymap.set(
+                        "n",
+                        "<C-l>",
+                        smart_splits.move_cursor_right,
+                        { buffer = true, desc = "Move right" }
+                    )
                 end,
             })
 
@@ -143,13 +163,6 @@ return {
             "kana/vim-textobj-user",
         },
     },
-    -- highlight yanked text
-    {
-        "machakann/vim-highlightedyank",
-        config = function()
-            vim.g.highlightedyank_highlight_duration = 170
-        end,
-    },
     -- dependency of other plugins
     { "nvim-lua/plenary.nvim" },
     -- mkdir for full path
@@ -167,9 +180,9 @@ return {
             local leap = require("leap")
 
             -- Set up default keymaps manually
-            vim.keymap.set({'n', 'x', 'o'}, 's', '<Plug>(leap-forward)')
-            vim.keymap.set({'n', 'o'}, 'S', '<Plug>(leap-backward)')
-            vim.keymap.set({'n', 'x', 'o'}, 'gs', '<Plug>(leap-from-window)')
+            vim.keymap.set({ "n", "x", "o" }, "s", "<Plug>(leap-forward)")
+            vim.keymap.set({ "n", "o" }, "S", "<Plug>(leap-backward)")
+            vim.keymap.set({ "n", "x", "o" }, "gs", "<Plug>(leap-from-window)")
 
             vim.keymap.set("n", "<leader>s", "<Plug>(leap-cross-window)", { desc = "Big leap" })
         end,
@@ -283,4 +296,35 @@ return {
     },
     -- notifications
     { "rcarriga/nvim-notify" },
+    -- better yank
+    {
+        "gbprod/yanky.nvim",
+        config = function()
+            require("telescope").load_extension("yank_history")
+
+            require("yanky").setup({
+                highlight = {
+                    on_put = true,
+                    on_yank = true,
+                    timer = 200,
+                },
+                preserve_cursor_position = {
+                    enabled = true,
+                },
+            })
+
+            vim.keymap.set({ "n", "x" }, "y", "<Plug>(YankyYank)")
+            vim.keymap.set({ "n", "x" }, "p", "<Plug>(YankyPutAfter)")
+            vim.keymap.set({ "n", "x" }, "P", "<Plug>(YankyPutBefore)")
+            vim.keymap.set({ "n", "x" }, "gp", "<Plug>(YankyGPutAfter)")
+            vim.keymap.set({ "n", "x" }, "gP", "<Plug>(YankyGPutBefore)")
+
+            vim.keymap.set("n", "<c-p>", "<Plug>(YankyPreviousEntry)")
+            vim.keymap.set("n", "<c-n>", "<Plug>(YankyNextEntry)")
+
+            vim.keymap.set("n", "<leader>p", function()
+                require("telescope").extensions.yank_history.yank_history()
+            end)
+        end,
+    },
 }
