@@ -172,7 +172,7 @@ in {
     enable = true;
     hostName = "127.0.0.1";
     exports = ''
-      /srv/gitbutler-nfs 127.0.0.1(rw,sync,no_subtree_check,no_root_squash,insecure,fsid=0)
+      /srv/gitbutler-nfs 127.0.0.1(rw,sync,no_subtree_check,insecure,fsid=0,all_squash,anonuid=1000,anongid=100)
     '';
   };
 
