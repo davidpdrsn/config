@@ -141,7 +141,11 @@ in {
     ]
     ++ openclawPackages;
 
-  systemd.tmpfiles.rules = map mkRuntimeBinLink openclawPackages;
+  systemd.tmpfiles.rules =
+    [
+      "d /srv/gitbutler-nfs 0755 ${username} users - -"
+    ]
+    ++ map mkRuntimeBinLink openclawPackages;
 
   system.activationScripts.openclawRuntimeBinLinks.text = ''
     ${pkgs.coreutils}/bin/mkdir -p /home/${username}/config/bin
@@ -163,6 +167,14 @@ in {
   users.users.${username}.extraGroups = ["wheel" "docker"];
 
   virtualisation.docker.enable = true;
+
+  services.nfs.server = {
+    enable = true;
+    hostName = "127.0.0.1";
+    exports = ''
+      /srv/gitbutler-nfs 127.0.0.1(rw,sync,no_subtree_check,no_root_squash)
+    '';
+  };
 
   programs.nix-ld = {
     enable = true;
