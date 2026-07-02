@@ -90,7 +90,7 @@
       bind k last-pane
 
       # Popup for but
-      bind j display-popup -E -w 80% -h 80% -d "#{pane_current_path}" "/Users/davidpdrsn/code/gitbutler/gitbutler-git/target/release/but tui"
+      bind j display-popup -E -w 80% -h 80% -d "#{pane_current_path}" "/Users/davidpdrsn/code/gitbutler/gitbutler-git/target/release/but tui --remember-selection"
 
       # Popup for vim
       bind v display-popup -E -w 80% -h 80% -d "#{pane_current_path}" "nvim"
