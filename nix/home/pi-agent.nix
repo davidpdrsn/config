@@ -1,4 +1,5 @@
 {config, inputs, pkgs, ...}: let
+  pi = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.pi;
   piPromptSuggester = pkgs.buildNpmPackage {
     pname = "pi-prompt-suggester";
     version = "unstable";
@@ -23,12 +24,12 @@ in {
   programs."pi-agent" = {
     enable = true;
     settings = {
-      lastChangelogVersion = "0.79.9";
+      lastChangelogVersion = pi.version;
       collapseChangelog = true;
       defaultProvider = "openai-codex";
-      defaultModel = "gpt-5.5";
+      defaultModel = "gpt-5.6-sol";
       enabledModels = [
-        "openai-codex/gpt-5.5"
+        "openai-codex/gpt-5.6-sol"
       ];
       images = {
         blockImages = false;
