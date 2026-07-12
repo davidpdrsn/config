@@ -15,7 +15,8 @@ local defaults = {
 local config = vim.deepcopy(defaults)
 local but_diff_cache = {}
 local saved_guicursor
-local saved_cursorline = {}
+local saved_cursorline
+local hidden_cursor_winid
 local cursor_hidden = false
 
 local function notify(message, level)
@@ -503,36 +504,34 @@ local function normal_bg()
 end
 
 update_real_cursor_visibility = function()
-	local should_hide = false
-	for _, item in pairs(state) do
-		if item.enabled and item.virtual_cursor then
-			should_hide = true
-			break
+	local current_bufnr = vim.api.nvim_get_current_buf()
+	local current_winid = vim.api.nvim_get_current_win()
+	local item = state[current_bufnr]
+	local should_hide = item and item.enabled and item.virtual_cursor ~= nil
+
+	-- 'guicursor' is global, so restore it when leaving the window whose
+	-- virtual cursor required hiding the real cursor.
+	if cursor_hidden and (not should_hide or hidden_cursor_winid ~= current_winid) then
+		if saved_guicursor then
+			vim.o.guicursor = saved_guicursor
 		end
+		if hidden_cursor_winid and vim.api.nvim_win_is_valid(hidden_cursor_winid) then
+			vim.api.nvim_set_option_value("cursorline", saved_cursorline, { win = hidden_cursor_winid })
+		end
+		saved_guicursor = nil
+		saved_cursorline = nil
+		hidden_cursor_winid = nil
+		cursor_hidden = false
 	end
 
 	if should_hide and not cursor_hidden then
 		saved_guicursor = vim.o.guicursor
-		saved_cursorline = {}
-		for _, winid in ipairs(vim.api.nvim_list_wins()) do
-			saved_cursorline[winid] = vim.api.nvim_get_option_value("cursorline", { win = winid })
-			vim.api.nvim_set_option_value("cursorline", false, { win = winid })
-		end
+		saved_cursorline = vim.api.nvim_get_option_value("cursorline", { win = current_winid })
+		hidden_cursor_winid = current_winid
+		vim.api.nvim_set_option_value("cursorline", false, { win = current_winid })
 		vim.api.nvim_set_hl(0, "LiveDiffHiddenCursor", { fg = normal_bg(), bg = normal_bg(), blend = 100 })
 		vim.o.guicursor = "n-v-c:block-LiveDiffHiddenCursor/lCursor"
 		cursor_hidden = true
-	elseif not should_hide and cursor_hidden then
-		if saved_guicursor then
-			vim.o.guicursor = saved_guicursor
-		end
-		for winid, cursorline in pairs(saved_cursorline) do
-			if vim.api.nvim_win_is_valid(winid) then
-				vim.api.nvim_set_option_value("cursorline", cursorline, { win = winid })
-			end
-		end
-		saved_guicursor = nil
-		saved_cursorline = {}
-		cursor_hidden = false
 	end
 end
 
@@ -613,6 +612,7 @@ local function enable_buffer(bufnr, opts)
 		end,
 		on_detach = function(_, attached_bufnr)
 			state[attached_bufnr] = nil
+			vim.schedule(update_real_cursor_visibility)
 		end,
 	})
 
@@ -993,6 +993,15 @@ function M.setup(opts)
 					enable_buffer(event.buf, { silent = true })
 				end
 			end)
+		end,
+	})
+
+	vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter" }, {
+		group = group,
+		callback = function()
+			-- Run after other enter autocmds so cursorline ends in the state
+			-- required by the active virtual cursor.
+			vim.schedule(update_real_cursor_visibility)
 		end,
 	})
 
