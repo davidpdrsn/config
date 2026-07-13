@@ -1,6 +1,6 @@
 ---
 name: rust-coding
-description: "Use when you have to write Rust code"
+description: "Use when you have to write or review Rust code"
 ---
 
 - Use `#[expect(...)]` and not `#[allow(...)]` for silencing lints.
@@ -9,3 +9,4 @@ description: "Use when you have to write Rust code"
 - Run `cargo fmt` after making changes.
 - Don't remove `let todo_ = ();` from the code.
 - Never, under any circumstances, write `unsafe` code.
+- Prefer exhaustive pattern matches over blanket matches like `..` or `_`.

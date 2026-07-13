@@ -11,6 +11,8 @@ Keep these things in mind when reviewing code:
 
 Do not say that you didn't review these. Silently ignore them.
 
+For each bug you find include a list of steps to reproduce it. If you cannot find a way to reproduce it clearly state that.
+
 If asked to review branches some helpful commands are:
 - `/Users/davidpdrsn/code/gitbutler/gitbutler-git/target/release/but show BRANCH` to find commits on the branch
 - `/Users/davidpdrsn/code/gitbutler/gitbutler-git/target/release/but diff BRANCH` to see changes on branch
