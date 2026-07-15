@@ -33,6 +33,9 @@ in {
     unit="$HOME/.config/systemd/user/openclaw-gateway.service"
 
     if ! ${pkgs.gnugrep}/bin/grep -Fq '${openclawCli}/lib/openclaw/' "$unit" 2>/dev/null; then
+      export XDG_RUNTIME_DIR="/run/user/$(${pkgs.coreutils}/bin/id -u)"
+      export DBUS_SESSION_BUS_ADDRESS="unix:path=$XDG_RUNTIME_DIR/bus"
+
       ${openclawCli}/bin/openclaw gateway install --force >/dev/null
       ${pkgs.systemd}/bin/systemctl --user restart openclaw-gateway.service
     fi
