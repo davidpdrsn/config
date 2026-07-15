@@ -1,7 +1,11 @@
 {
+  inputs,
   lib,
+  pkgs,
   ...
-}: {
+}: let
+  openclawCli = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.openclaw;
+in {
   nix.gc.options = lib.mkForce "--delete-older-than 3d";
 
   programs.ssh.matchBlocks = {
@@ -20,7 +24,17 @@
 
   services.ssh-agent.enable = true;
 
-  home.activation.openclawSkillDirs = lib.hm.dag.entryAfter ["writeBoundary"] ''
-    /run/current-system/sw/bin/openclaw config set skills.load.extraDirs '["/home/davidpdrsn/config/openclaw/skills"]' --json >/dev/null
+  home.activation.openclawConfig = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    ${openclawCli}/bin/openclaw config set skills.load.extraDirs '["/home/davidpdrsn/config/openclaw/skills"]' --json >/dev/null
+    ${openclawCli}/bin/openclaw config set agents.defaults.model.primary openai/gpt-5.4 >/dev/null
+  '';
+
+  home.activation.openclawGateway = lib.hm.dag.entryAfter ["openclawConfig"] ''
+    unit="$HOME/.config/systemd/user/openclaw-gateway.service"
+
+    if ! ${pkgs.gnugrep}/bin/grep -Fq '${openclawCli}/lib/openclaw/' "$unit" 2>/dev/null; then
+      ${openclawCli}/bin/openclaw gateway install --force >/dev/null
+      ${pkgs.systemd}/bin/systemctl --user restart openclaw-gateway.service
+    fi
   '';
 }
