@@ -62,13 +62,47 @@ ssh hetzner-2 'systemctl --user status openclaw-gateway.service --no-pager -l | 
 
 CLI and service should report the same OpenClaw version.
 
-## If CLI is newer than gateway service
+### Verify model changes against the runtime
 
-1. Fix stale/invalid config keys:
+`openclaw models status --plain` reports the configured default, not necessarily
+the model held by an already-running, pre-warmed Codex runtime. After changing
+the default model:
+
+1. Restart the gateway rather than relying only on config hot reload:
 
 ```bash
+ssh hetzner-2 'openclaw gateway restart'
+```
+
+2. Run a real, non-delivered test turn with a fresh session ID (change the ID on
+each run):
+
+```bash
+ssh hetzner-2 'openclaw agent --session-id model-verification-1 --message "Reply with exactly OK." --json'
+```
+
+The request consumes tokens and creates a session. Verify these response fields:
+
+- `result.meta.agentMeta.model`
+- `result.meta.executionTrace.winnerModel`
+- `result.meta.executionTrace.fallbackUsed`
+
+The configured model and both runtime model fields should agree, and
+`fallbackUsed` should be `false`. For channel conversations such as Telegram,
+start a new session with `/new` after the gateway restart; existing sessions may
+retain their previous model.
+
+## If CLI is newer than gateway service
+
+1. Inspect and fix stale/invalid config keys:
+
+```bash
+ssh hetzner-2 'openclaw doctor'
 ssh hetzner-2 'openclaw doctor --fix'
 ```
+
+`doctor --fix` mutates OpenClaw state and configuration and may disable skills
+whose dependencies are unavailable. Review its output and preserve its backup.
 
 2. Reinstall gateway service from current CLI:
 
@@ -91,6 +125,13 @@ If restart/install fails, inspect service logs:
 ```bash
 ssh hetzner-2 'journalctl --user -u openclaw-gateway.service -n 100 --no-pager'
 ```
+
+If startup migrations repeatedly fail with `canonical plugin state changed`,
+`doctor --fix` may intentionally leave a conflicting legacy Codex sidecar in
+place rather than overwrite newer canonical state. Review the exact path from
+the warning, rename that legacy sidecar to a timestamped backup, restart the
+gateway, and verify connectivity. Never delete the sidecar without preserving
+a backup.
 
 ## Safety
 
