@@ -36,7 +36,8 @@ in {
       export XDG_RUNTIME_DIR="/run/user/$(${pkgs.coreutils}/bin/id -u)"
       export DBUS_SESSION_BUS_ADDRESS="unix:path=$XDG_RUNTIME_DIR/bus"
 
-      ${openclawCli}/bin/openclaw gateway install --force >/dev/null
+      PATH="${lib.makeBinPath [pkgs.systemd]}:$PATH" \
+        ${openclawCli}/bin/openclaw gateway install --force >/dev/null
       ${pkgs.systemd}/bin/systemctl --user restart openclaw-gateway.service
     fi
   '';
