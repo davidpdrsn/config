@@ -11,6 +11,8 @@ Personal nix configuration using flakes.
 
 ## Important
 
+This repo uses jj (not gitbutler or git)
+
 Always run `just test` after making changes.
 
 `just test` bootstraps `opencode` dependencies via `bun install --cwd opencode --frozen-lockfile`.
