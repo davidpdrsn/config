@@ -26,7 +26,7 @@ in {
 
   home.activation.openclawConfig = lib.hm.dag.entryAfter ["writeBoundary"] ''
     ${openclawCli}/bin/openclaw config set skills.load.extraDirs '["/home/davidpdrsn/config/openclaw/skills"]' --json >/dev/null
-    ${openclawCli}/bin/openclaw config set agents.defaults.model.primary openai/gpt-5.4 >/dev/null
+    ${openclawCli}/bin/openclaw config set agents.defaults.model.primary openai/gpt-5.6-sol >/dev/null
   '';
 
   home.activation.openclawGateway = lib.hm.dag.entryAfter ["openclawConfig"] ''
