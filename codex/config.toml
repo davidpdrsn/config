@@ -1,8 +1,9 @@
-model = "gpt-5.4"
+model = "gpt-5.6-sol"
 personality = "pragmatic"
-model_reasoning_effort = "medium"
+model_reasoning_effort = "high"
 responses_websockets_v2 = true
 service_tier = "fast"
+approvals_reviewer = "auto_review"
 
 [features]
 collaboration_modes = true
@@ -75,6 +76,10 @@ hide_gpt5_1_migration_prompt = true
 [notice.model_migrations]
 "gpt-5.1-codex" = "gpt-5.2-codex"
 "gpt-5.3-codex" = "gpt-5.4"
+"gpt-5.4" = "gpt-5.6-terra"
 
 [tui]
 notifications = true
+
+[tui.model_availability_nux]
+"gpt-5.6-sol" = 4
