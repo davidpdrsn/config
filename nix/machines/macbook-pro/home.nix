@@ -1,4 +1,30 @@
-{config, ...}: {
+{config, pkgs, ...}: let
+  gitButlerPrograms = [
+    {
+      id = "nvim-remote";
+      name = "Neovim Remote";
+      executable = {
+        nameOrPath = "nvim";
+        requiresTerminal = false;
+      };
+      category = "editor";
+      openArgs = [
+        "--server"
+        "/tmp/nvim-server.pipe"
+        "--remote-expr"
+        "v:lua.require'gitbutler'.open_file('{{filepath}}')"
+      ];
+      openAtLineArgs = [
+        "--server"
+        "/tmp/nvim-server.pipe"
+        "--remote-expr"
+        "v:lua.require'gitbutler'.open_file('{{filepath}}', {{line_number}})"
+      ];
+    }
+  ];
+  gitButlerProgramsJson =
+    (pkgs.formats.json {}).generate "gitbutler-programs.json" gitButlerPrograms;
+in {
   # Mac-specific SSH: UseKeychain + colima
   programs.ssh.includes = ["${config.home.homeDirectory}/.colima/ssh_config"];
   programs.ssh.matchBlocks."*".extraOptions.UseKeychain = "yes";
@@ -20,6 +46,9 @@
   home.file.".agents/skills".source =
     config.lib.file.mkOutOfStoreSymlink
     "${config.home.homeDirectory}/config/pi/skills";
+
+  home.file."Library/Application Support/gitbutler/programs.json".source =
+    gitButlerProgramsJson;
 
   # Mac-specific shell aliases
   programs.fish.shellAliases = {

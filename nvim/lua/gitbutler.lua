@@ -267,6 +267,11 @@ function M.redo()
     return run_but_simple("redo")
 end
 
+function M.open_file(filepath, line_number)
+    package.loaded.gitbutler_open = nil
+    return require("gitbutler_open").open_file(filepath, line_number)
+end
+
 local function current_hunk_cli_id()
     local root, root_err = repo_root()
     if not root then
