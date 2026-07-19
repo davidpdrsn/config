@@ -17,7 +17,7 @@
       {
         plugin = catppuccin;
         extraConfig = ''
-          set -g @catppuccin_flavor "macchiato"
+          set -g @catppuccin_flavor "mocha"
           set -g @catppuccin_window_status_style "rounded"
           set -g @catppuccin_window_text " #W"
           set -g @catppuccin_window_current_text " #W"
@@ -33,6 +33,9 @@
     extraConfig = ''
       # True color support
       set -ag terminal-overrides ",xterm-256color:RGB"
+
+      # Match popup colors to the terminal defaults
+      set -g popup-style "bg=default,fg=default"
 
       # Hyperlink/URL passthrough
       # Use Shift+Cmd+click to open URLs (Shift bypasses tmux mouse capture)
@@ -90,7 +93,7 @@
       bind k last-pane
 
       # Popup for but
-      bind j display-popup -E -w 80% -h 80% -d "#{pane_current_path}" "/Users/davidpdrsn/code/gitbutler/gitbutler-git/target/release/but tui"
+      bind j display-popup -E -w 80% -h 80% -d "#{pane_current_path}" "/Users/davidpdrsn/code/gitbutler/gitbutler-git/target/release/but tui --remember-selection"
 
       # Popup for vim
       bind v display-popup -E -w 80% -h 80% -d "#{pane_current_path}" "nvim"
