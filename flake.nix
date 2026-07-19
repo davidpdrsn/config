@@ -32,10 +32,6 @@
       url = "github:modem-dev/hunk";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    pi-prompt-suggester = {
-      url = "github:guwidoe/pi-prompt-suggester";
-      flake = false;
-    };
     fyc-site = {
       url = "git+ssh://git@github.com/davidpdrsn/fyc-site.git";
       inputs.fyc.url = "git+ssh://git@github.com/davidpdrsn/fyc.git";

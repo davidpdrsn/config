@@ -666,22 +666,6 @@
         "type": "github"
       }
     },
-    "pi-prompt-suggester": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1775485271,
-        "narHash": "sha256-6xsOwcSfR+CVY2c8hVFHOi7AisH+CJgdGElUyYxgZ1M=",
-        "owner": "guwidoe",
-        "repo": "pi-prompt-suggester",
-        "rev": "e060cd5be1255c05b2b0699c17a330dce0e666d0",
-        "type": "github"
-      },
-      "original": {
-        "owner": "guwidoe",
-        "repo": "pi-prompt-suggester",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
         "dnd-character-sheet": "dnd-character-sheet",
@@ -697,7 +681,6 @@
         "nix-homebrew": "nix-homebrew",
         "nixpkgs": "nixpkgs_5",
         "nixpkgs-neovim-011": "nixpkgs-neovim-011",
-        "pi-prompt-suggester": "pi-prompt-suggester",
         "website": "website"
       }
     },
