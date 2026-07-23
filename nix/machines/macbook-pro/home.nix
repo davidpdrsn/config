@@ -21,6 +21,20 @@
         "v:lua.require'gitbutler'.open_file('{{filepath}}', {{line_number}})"
       ];
     }
+    {
+      id = "safari";
+      name = "Safari";
+      executable = {
+        nameOrPath = "/usr/bin/open";
+        requiresTerminal = false;
+      };
+      category = "editor";
+      openArgs = [
+        "-a"
+        "Safari.app"
+        "{{filepath}}"
+      ];
+    }
   ];
   gitButlerProgramsJson =
     (pkgs.formats.json {}).generate "gitbutler-programs.json" gitButlerPrograms;
