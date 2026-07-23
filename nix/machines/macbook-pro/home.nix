@@ -16,6 +16,11 @@
     "${config.home.homeDirectory}/.local/bin"
   ];
 
+  # Make the Pi skills available to Codex in every project on this Mac.
+  home.file.".agents/skills".source =
+    config.lib.file.mkOutOfStoreSymlink
+    "${config.home.homeDirectory}/config/pi/skills";
+
   # Mac-specific shell aliases
   programs.fish.shellAliases = {
     o = "open .";
