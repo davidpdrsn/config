@@ -1,44 +1,4 @@
-{config, pkgs, ...}: let
-  gitButlerPrograms = [
-    {
-      id = "nvim-remote";
-      name = "Neovim Remote";
-      executable = {
-        nameOrPath = "nvim";
-        requiresTerminal = false;
-      };
-      category = "editor";
-      openArgs = [
-        "--server"
-        "/tmp/nvim-server.pipe"
-        "--remote-expr"
-        "v:lua.require'gitbutler'.open_file('{{filepath}}')"
-      ];
-      openAtLineArgs = [
-        "--server"
-        "/tmp/nvim-server.pipe"
-        "--remote-expr"
-        "v:lua.require'gitbutler'.open_file('{{filepath}}', {{line_number}})"
-      ];
-    }
-    {
-      id = "safari";
-      name = "Safari";
-      executable = {
-        nameOrPath = "/usr/bin/open";
-        requiresTerminal = false;
-      };
-      category = "editor";
-      openArgs = [
-        "-a"
-        "Safari.app"
-        "{{filepath}}"
-      ];
-    }
-  ];
-  gitButlerProgramsJson =
-    (pkgs.formats.json {}).generate "gitbutler-programs.json" gitButlerPrograms;
-in {
+{config, pkgs, ...}: {
   # Mac-specific SSH: UseKeychain + colima
   programs.ssh.includes = ["${config.home.homeDirectory}/.colima/ssh_config"];
   programs.ssh.matchBlocks."*".extraOptions.UseKeychain = "yes";
@@ -62,7 +22,9 @@ in {
     "${config.home.homeDirectory}/config/pi/skills";
 
   home.file."Library/Application Support/gitbutler/programs.json".source =
-    gitButlerProgramsJson;
+    (pkgs.formats.json {}).generate
+    "gitbutler-programs.json"
+    (import ./gitbutler-programs.nix);
 
   # Mac-specific shell aliases
   programs.fish.shellAliases = {

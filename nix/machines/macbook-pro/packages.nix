@@ -16,6 +16,7 @@
     linearCli = pkgs.callPackage ../../shared/packages/linear-cli.nix {};
     agentStatus = pkgs.callPackage ../../shared/packages/agent-status.nix {};
     piMsg = pkgs.callPackage ./packages/pi-msg.nix {};
+    gitButlerPiMsg = pkgs.callPackage ./packages/gitbutler-pi-msg.nix {inherit piMsg;};
     alacritty = pkgs.callPackage ./packages/alacritty.nix {};
     test-cli = opWrapped {
       name = "test-cli";
@@ -34,6 +35,7 @@
       linearCli
       agentStatus
       piMsg
+      gitButlerPiMsg
       alacritty
       test-cli
       gettext
