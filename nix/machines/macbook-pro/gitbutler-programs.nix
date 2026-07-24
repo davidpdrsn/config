@@ -1,29 +1,24 @@
 [
   {
-    id = "nvim-remote";
-    name = "Neovim Remote";
+    id = "compare-svg";
+    name = "Compare SVG";
     executable = {
-      nameOrPath = "nvim";
+      type = "pathExecutable";
+      nameOrPath = "compare-svg";
       requiresTerminal = false;
     };
-    category = "editor";
+    category = "other";
     openArgs = [
-      "--server"
-      "/tmp/nvim-server.pipe"
-      "--remote-expr"
-      "v:lua.require'gitbutler'.open_file('{{filepath}}')"
+      "--open"
+      "{{filepath}}"
     ];
-    openAtLineArgs = [
-      "--server"
-      "/tmp/nvim-server.pipe"
-      "--remote-expr"
-      "v:lua.require'gitbutler'.open_file('{{filepath}}', {{line_number}})"
-    ];
+    extensions = ["svg"];
   }
   {
     id = "arc";
     name = "Arc";
     executable = {
+      type = "pathExecutable";
       nameOrPath = "/usr/bin/open";
       requiresTerminal = false;
     };
@@ -33,24 +28,32 @@
       "/Applications/Arc.app"
       "{{filepath}}"
     ];
+    extensions = ["svg"];
   }
   {
-    id = "compare-svg";
-    name = "Compare SVG";
+    id = "nvim-remote";
+    name = "Neovim Remote";
     executable = {
-      nameOrPath = "compare-svg";
+      type = "pathExecutable";
+      nameOrPath = "gitbutler-nvim-remote";
       requiresTerminal = false;
     };
-    category = "other";
+    category = "editor";
     openArgs = [
-      "--open"
       "{{filepath}}"
     ];
+    openAtLineArgs = [
+      "--line"
+      "{{line_number}}"
+      "{{filepath}}"
+    ];
+    extensions = ["*"];
   }
   {
     id = "cargo-fmt";
     name = "Cargo Format";
     executable = {
+      type = "pathExecutable";
       nameOrPath = "nix";
       requiresTerminal = false;
     };
@@ -61,11 +64,13 @@
       "cargo"
       "fmt"
     ];
+    extensions = ["rs"];
   }
   {
     id = "git-blame";
     name = "Git Blame";
     executable = {
+      type = "pathExecutable";
       nameOrPath = "git";
       requiresTerminal = true;
     };
@@ -75,11 +80,13 @@
       "--"
       "{{filepath}}"
     ];
+    extensions = ["*"];
   }
   {
     id = "ask-pi";
     name = "Ask Pi";
     executable = {
+      type = "pathExecutable";
       nameOrPath = "gitbutler-pi-msg";
       requiresTerminal = true;
     };
@@ -91,5 +98,6 @@
       "{{filepath}}"
       "{{line_number}}"
     ];
+    extensions = ["*"];
   }
 ]

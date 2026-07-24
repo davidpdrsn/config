@@ -26,4 +26,14 @@ function M.open_file(filepath, line_number)
     end
 end
 
+function M.open_files_base64(filepaths_base64, line_number)
+    local filepaths_json = vim.base64.decode(filepaths_base64)
+    local filepaths = vim.json.decode(filepaths_json)
+    assert(vim.islist(filepaths), "Expected filepaths to decode to a list")
+
+    for _, filepath in ipairs(filepaths) do
+        M.open_file(filepath, line_number)
+    end
+end
+
 return M

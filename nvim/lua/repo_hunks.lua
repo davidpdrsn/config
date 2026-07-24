@@ -74,7 +74,7 @@ local function add_diff_lines(target, diff_text)
 end
 
 local function collect_hunks(root, pathspec)
-    local diff, err = system_json({ but, "diff", "--format", "json" }, { cwd = root, text = true })
+    local diff, err = system_json({ but, "diff", "--json" }, { cwd = root, text = true })
     if not diff then
         return nil, err
     end

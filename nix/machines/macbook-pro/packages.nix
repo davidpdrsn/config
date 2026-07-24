@@ -17,6 +17,7 @@
     agentStatus = pkgs.callPackage ../../shared/packages/agent-status.nix {};
     piMsg = pkgs.callPackage ./packages/pi-msg.nix {};
     gitButlerPiMsg = pkgs.callPackage ./packages/gitbutler-pi-msg.nix {inherit piMsg;};
+    gitButlerNvimRemote = pkgs.callPackage ./packages/gitbutler-nvim-remote.nix {};
     alacritty = pkgs.callPackage ./packages/alacritty.nix {};
     test-cli = opWrapped {
       name = "test-cli";
@@ -36,6 +37,7 @@
       agentStatus
       piMsg
       gitButlerPiMsg
+      gitButlerNvimRemote
       alacritty
       test-cli
       gettext

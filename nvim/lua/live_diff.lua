@@ -106,7 +106,7 @@ local function but_diff_changes(root)
 		return cached.changes
 	end
 
-	local stdout = system({ config.but_diff_cmd, "diff", "--format", "json" }, { cwd = root, text = true })
+	local stdout = system({ config.but_diff_cmd, "diff", "--json" }, { cwd = root, text = true })
 	if not stdout then
 		but_diff_cache[root] = { time = now, changes = {} }
 		return {}

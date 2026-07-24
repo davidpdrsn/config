@@ -211,6 +211,21 @@ vim.keymap.set(
 vim.keymap.set("n", "<leader>m", ":call MergeTabs()<cr>", { desc = "Merge tab" })
 vim.keymap.set("n", "<leader>rn", ":call RenameFile()<cr>", { desc = "Rename file" })
 
+vim.keymap.set("n", "<leader>S", function()
+    local address = "/tmp/nvim-server.pipe"
+    if vim.tbl_contains(vim.fn.serverlist(), address) then
+        vim.notify("Already listening on " .. address)
+        return
+    end
+
+    local ok, result = pcall(vim.fn.serverstart, address)
+    if ok then
+        vim.notify("Listening on " .. result)
+    else
+        vim.notify("Failed to listen on " .. address .. ": " .. result, vim.log.levels.ERROR)
+    end
+end, { desc = "Start Neovim server" })
+
 vim.keymap.set("n", "<leader>x", ":set filetype=", { desc = "Set filetype" })
 
 vim.cmd([[

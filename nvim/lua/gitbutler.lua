@@ -129,7 +129,7 @@ local function current_cursor_hunk(root, pathspec)
 end
 
 local function most_recent_commit(root)
-    local status, err = system_json({ but, "status", "--format", "json" }, { cwd = root, text = true })
+    local status, err = system_json({ but, "status", "--json" }, { cwd = root, text = true })
     if not status then
         return nil, err
     end
@@ -192,7 +192,7 @@ local function hunk_matches(change, diff_hunk, cursor_hunk)
 end
 
 local function find_hunk_cli_id(root, cursor_hunk)
-    local diff, err = system_json({ but, "diff", "--format", "json" }, { cwd = root, text = true })
+    local diff, err = system_json({ but, "diff", "--json" }, { cwd = root, text = true })
     if not diff then
         return nil, err
     end
@@ -221,7 +221,7 @@ end
 
 local function rub(root, source_cli_id, target_cli_id)
     local output, err = system(
-        { but, "rub", "--format", "json", source_cli_id, target_cli_id },
+        { but, "rub", "--json", source_cli_id, target_cli_id },
         { cwd = root, text = true }
     )
     if not output then
@@ -270,6 +270,11 @@ end
 function M.open_file(filepath, line_number)
     package.loaded.gitbutler_open = nil
     return require("gitbutler_open").open_file(filepath, line_number)
+end
+
+function M.open_files_base64(filepaths_base64, line_number)
+    package.loaded.gitbutler_open = nil
+    return require("gitbutler_open").open_files_base64(filepaths_base64, line_number)
 end
 
 local function current_hunk_cli_id()
