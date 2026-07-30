@@ -100,6 +100,7 @@
       "linearmouse"
       "tuple"
       "bbedit"
+      "zoom"
 
       "wezterm"
       "iterm2"
