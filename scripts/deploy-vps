@@ -15,25 +15,4 @@ case "$1" in
     ;;
 esac
 
-# Check that @ is empty (no uncommitted changes)
-if [ -n "$(jj diff --summary)" ]; then
-  echo "error: working copy (@) is not empty" >&2
-  exit 1
-fi
-
-# Check that @- is main
-main_id=$(jj log -r "main" --no-graph -T 'commit_id')
-parent_id=$(jj log -r "@-" --no-graph -T 'commit_id')
-if [ "$main_id" != "$parent_id" ]; then
-  echo "error: @- is not main" >&2
-  exit 1
-fi
-
-# Check that main is pushed to origin
-origin_id=$(jj log -r "main@origin" --no-graph -T 'commit_id')
-if [ "$main_id" != "$origin_id" ]; then
-  echo "error: main is not pushed to origin" >&2
-  exit 1
-fi
-
 ssh -t "$host" 'cd /home/davidpdrsn/config && jj git fetch && jj new main && ./scripts/bootstrap-pi-deps && /run/wrappers/bin/sudo nixos-rebuild switch --flake ".#$(hostname)"'

@@ -5,7 +5,6 @@ default:
 # Build and apply changes (requires sudo)
 switch:
     #!/usr/bin/env bash
-    jj util snapshot
     if [ "$(uname)" = "Darwin" ]; then
         sudo nix run '.#darwin-rebuild' -- switch --flake '.#macos'
     else
@@ -149,7 +148,6 @@ gc:
 
 update-dnd:
     nix flake update "dnd-character-sheet" --no-warn-dirty
-    jj commit -m "update dnd"
-    jj bookmark move main --to @-
-    jj git push --all
+    /Users/davidpdrsn/code/gitbutler/gitbutler-git/target/release/but commit flake.lock -b update-dnd -m 'update dnd'
+    /Users/davidpdrsn/code/gitbutler/gitbutler-git/target/release/but land update-dnd --yes
     just switch-vps-1
