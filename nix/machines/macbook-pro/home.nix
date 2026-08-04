@@ -1,4 +1,8 @@
-{config, pkgs, ...}: {
+{
+  config,
+  pkgs,
+  ...
+}: {
   # Mac-specific SSH: UseKeychain + colima
   programs.ssh.includes = ["${config.home.homeDirectory}/.colima/ssh_config"];
   programs.ssh.matchBlocks."*".extraOptions.UseKeychain = "yes";
@@ -9,6 +13,7 @@
     # required for go test containers to work with colima
     DOCKER_HOST = "unix://${config.home.homeDirectory}/.colima/default/docker.sock";
     TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE = "/var/run/docker.sock";
+    NO_BG_TASKS = 1;
   };
 
   # Make user-local executables available in interactive shells and launchd jobs
