@@ -128,32 +128,20 @@ local function current_cursor_hunk(root, pathspec)
     return current_hunk
 end
 
-local function most_recent_commit(root)
+local function top_commit(root)
     local status, err = system_json({ but, "status", "--json" }, { cwd = root, text = true })
     if not status then
         return nil, err
     end
 
-    local latest
-    for _, stack in ipairs(status.stacks or {}) do
-        for _, branch in ipairs(stack.branches or {}) do
-            for _, commit in ipairs(branch.commits or {}) do
-                if
-                    commit.cliId
-                    and commit.cliId ~= ""
-                    and (not latest or (commit.createdAt or "") > (latest.createdAt or ""))
-                then
-                    latest = commit
-                end
-            end
-        end
+    local stack = (status.stacks or {})[1]
+    local branch = stack and (stack.branches or {})[1]
+    local commit = branch and (branch.commits or {})[1]
+    if not commit or not commit.cliId or commit.cliId == "" then
+        return nil, "No commit found on the top branch in GitButler status"
     end
 
-    if not latest then
-        return nil, "No commit found in GitButler status"
-    end
-
-    return latest
+    return commit
 end
 
 local function diff_text_matches(diff_text, cursor_hunk)
@@ -305,7 +293,7 @@ local function current_hunk_cli_id()
     return root, hunk_cli_id
 end
 
-function M.squash_hunk_id_into_most_recent_commit(hunk_cli_id)
+function M.squash_hunk_id_into_top_commit(hunk_cli_id)
     if not hunk_cli_id or hunk_cli_id == "" then
         notify_error("Missing hunk id")
         return false
@@ -317,7 +305,7 @@ function M.squash_hunk_id_into_most_recent_commit(hunk_cli_id)
         return false
     end
 
-    local commit, commit_err = most_recent_commit(root)
+    local commit, commit_err = top_commit(root)
     if not commit then
         notify_error(commit_err)
         return false
