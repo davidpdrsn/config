@@ -26,6 +26,10 @@
       };
       command = /Users/davidpdrsn/.bin/test-cli;
     };
+
+    but = pkgs.writeShellScriptBin "but" ''
+      exec /Users/davidpdrsn/code/gitbutler/gitbutler-git/target/release/but "$@"
+    '';
   in
     [
       autoraise
@@ -49,6 +53,7 @@
       gh-dash
       diffnav
       strip-ansi
+      but
     ]
     ++ [
       llmAgentPackages.opencode
