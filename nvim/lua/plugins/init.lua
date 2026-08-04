@@ -327,4 +327,11 @@ return {
             end)
         end,
     },
+    -- gitbutler
+    {
+        "abosnjakovic/gitbutler.nvim",
+        config = function()
+            require("gitbutler.init").setup()
+        end,
+    },
 }
