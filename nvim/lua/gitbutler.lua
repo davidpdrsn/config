@@ -3,7 +3,7 @@ local M = {}
 local but = "/Users/davidpdrsn/code/gitbutler/gitbutler-git/target/release/but"
 
 local function notify_error(message)
-    vim.notify(message, vim.log.levels.ERROR, { title = "GitButler rub" })
+    vim.notify(message, vim.log.levels.ERROR, { title = "GitButler" })
 end
 
 local function system(cmd, opts)
@@ -139,8 +139,8 @@ local function most_recent_commit(root)
         for _, branch in ipairs(stack.branches or {}) do
             for _, commit in ipairs(branch.commits or {}) do
                 if
-                    commit.commitId
-                    and commit.commitId ~= ""
+                    commit.cliId
+                    and commit.cliId ~= ""
                     and (not latest or (commit.createdAt or "") > (latest.createdAt or ""))
                 then
                     latest = commit
@@ -219,9 +219,9 @@ local function find_hunk_cli_id(root, cursor_hunk)
     return matches[1]
 end
 
-local function rub(root, source_cli_id, target_cli_id)
+local function squash(root, source_cli_id, target_cli_id)
     local output, err = system(
-        { but, "rub", "--json", source_cli_id, target_cli_id },
+        { but, "squash", source_cli_id, "--target", target_cli_id, "--use-target-message" },
         { cwd = root, text = true }
     )
     if not output then
@@ -305,7 +305,7 @@ local function current_hunk_cli_id()
     return root, hunk_cli_id
 end
 
-function M.rub_hunk_id_into_most_recent_commit(hunk_cli_id)
+function M.squash_hunk_id_into_most_recent_commit(hunk_cli_id)
     if not hunk_cli_id or hunk_cli_id == "" then
         notify_error("Missing hunk id")
         return false
@@ -323,9 +323,9 @@ function M.rub_hunk_id_into_most_recent_commit(hunk_cli_id)
         return false
     end
 
-    local _, rub_err = rub(root, hunk_cli_id, commit.commitId)
-    if rub_err then
-        notify_error(rub_err)
+    local _, squash_err = squash(root, hunk_cli_id, commit.cliId)
+    if squash_err then
+        notify_error(squash_err)
         return false
     end
 
@@ -340,9 +340,9 @@ function M.rub_hunk_id_into_most_recent_commit(hunk_cli_id)
     end
 
     vim.notify(
-        string.format("Rubbed %s into %s", hunk_cli_id, commit.commitId),
+        string.format("Squashed %s into %s", hunk_cli_id, commit.cliId),
         vim.log.levels.INFO,
-        { title = "GitButler rub" }
+        { title = "GitButler squash" }
     )
     return true
 end
@@ -364,7 +364,7 @@ function M.discard_current_hunk()
     vim.notify(
         string.format("Discarded %s", hunk_cli_id),
         vim.log.levels.INFO,
-        { title = "GitButler rub" }
+        { title = "GitButler" }
     )
     return true
 end
