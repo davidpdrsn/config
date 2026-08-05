@@ -151,3 +151,6 @@ update-dnd:
     /Users/davidpdrsn/code/gitbutler/gitbutler-git/target/release/but commit flake.lock -b update-dnd -m 'update dnd'
     /Users/davidpdrsn/code/gitbutler/gitbutler-git/target/release/but land update-dnd --yes
     just switch-vps-1
+
+update-but-skill:
+    but skill install --path ./pi/skills/but
