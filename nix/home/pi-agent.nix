@@ -15,6 +15,7 @@ in {
         blockImages = false;
       };
       transport = "websocket";
+      tuiMode = "fullscreen";
       theme = "catppuccin-mocha-contrast";
       packages = [
         "${config.home.homeDirectory}/config/pi"
