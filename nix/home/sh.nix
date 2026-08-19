@@ -66,6 +66,7 @@
       git-cargo-lock-conflict = "git checkout main -- Cargo.lock";
       gl = "git log --graph --decorate --oneline -20";
       gll = "git log --graph --decorate --oneline";
+      gla = "git log --graph --decorate --oneline --all";
       gp = "git push";
       gpf = "git push --force-with-lease";
       gd = "git diff";
