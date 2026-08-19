@@ -1,8 +1,13 @@
 {
+  pkgs,
   username,
   inputs,
   ...
-}: {
+}: let
+  obsidianVaultsPull = import ../../lib/obsidian-vaults-pull.nix {
+    inherit pkgs username;
+  };
+in {
   imports = [
     ../hetzner/common.nix
     ./hardware.nix
@@ -15,6 +20,9 @@
   boot.loader.grub.device = "/dev/sda";
 
   networking.hostName = "nix-4gb-nbg1-1";
+
+  systemd.services.obsidian-vaults-pull = obsidianVaultsPull.service;
+  systemd.timers.obsidian-vaults-pull = obsidianVaultsPull.timer;
 
   services.fyc-site = {
     enable = true;

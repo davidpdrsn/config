@@ -1,10 +1,8 @@
 {
   pkgs,
-  openclawCli,
   username,
 }: let
   repo = "/home/${username}/obsidian-vaults";
-  stateDir = "/home/${username}/.local/state/obsidian-vaults-pull";
 
   pullScript = pkgs.writeShellApplication {
     name = "obsidian-vaults-pull";
@@ -12,33 +10,15 @@
       pkgs.coreutils
       pkgs.git
       pkgs.openssh
-      openclawCli
     ];
     text = ''
       set -euo pipefail
 
       repo='${repo}'
-      state_dir='${stateDir}'
-      state_file="$state_dir/last-status"
-
-      mkdir -p "$state_dir"
-
-      old_status=""
-      if [ -f "$state_file" ]; then
-        old_status="$(<"$state_file")"
-      fi
 
       new_status="ok"
       message=""
       max_attempts=3
-
-      notify() {
-        local text="$1"
-        openclaw message send \
-          --channel telegram \
-          --target 8355979215 \
-          --message "$text" >/dev/null 2>&1 || true
-      }
 
       fail() {
         local status="$1"
@@ -110,18 +90,6 @@
             break
           fi
         done
-      fi
-
-      if [ "$new_status" = "ok" ] && [ "$old_status" != "ok" ] && [ -n "$old_status" ]; then
-        notify "Obsidian pull recovered on $branch ($upstream)."
-      fi
-
-      if [ "$new_status" != "ok" ] && [ "$new_status" != "$old_status" ]; then
-        notify "$message"
-      fi
-
-      if [ "$new_status" != "$old_status" ]; then
-        printf '%s\n' "$new_status" >"$state_file"
       fi
 
       if [ "$new_status" != "ok" ]; then

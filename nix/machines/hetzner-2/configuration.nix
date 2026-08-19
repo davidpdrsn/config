@@ -86,7 +86,7 @@
   cloudAgent = pkgs.callPackage ../../shared/packages/cloud-agent.nix {};
   openclawCli = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.openclaw;
   obsidianVaultsPull = import ../../lib/obsidian-vaults-pull.nix {
-    inherit pkgs openclawCli username;
+    inherit pkgs username;
   };
   piWrapped = import ../../lib/pi-wrapped.nix {inherit pkgs inputs;};
 
