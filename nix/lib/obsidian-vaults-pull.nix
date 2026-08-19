@@ -11,6 +11,7 @@
     runtimeInputs = [
       pkgs.coreutils
       pkgs.git
+      pkgs.openssh
       openclawCli
     ];
     text = ''
