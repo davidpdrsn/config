@@ -56,6 +56,7 @@
       diffnav
       strip-ansi
       but
+      btop
     ]
     ++ [
       llmAgentPackages.opencode

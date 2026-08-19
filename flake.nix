@@ -38,6 +38,10 @@
     };
     website.url = "git+ssh://git@github.com/davidpdrsn/website.git";
     "dnd-character-sheet".url = "git+ssh://git@github.com/davidpdrsn/dnd-character-sheet.git";
+    "npc-browser" = {
+      url = "github:davidpdrsn/npc-browser";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # other dev tools managed via `make clone-dev-tools` + cargo install
   };

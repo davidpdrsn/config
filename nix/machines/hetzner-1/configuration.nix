@@ -48,6 +48,22 @@ in {
     group = "users";
   };
 
+  systemd.services.npc-browser = {
+    description = "NPC browser";
+    wantedBy = ["multi-user.target"];
+    after = ["network.target"];
+    serviceConfig = {
+      ExecStart = "${inputs."npc-browser".packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/npc-browser --notes-dir /home/${username}/obsidian-vaults/dnd --host 127.0.0.1 --port 3003";
+      User = username;
+      Group = "users";
+      Restart = "on-failure";
+      NoNewPrivileges = true;
+      PrivateTmp = true;
+      ProtectHome = "read-only";
+      ProtectSystem = "strict";
+    };
+  };
+
   users.users.${username} = {
     extraGroups = ["wheel" "docker"];
   };
@@ -69,6 +85,22 @@ in {
         locations = {
           "/" = {
             proxyPass = "http://127.0.0.1:3000";
+            extraConfig = ''
+              proxy_set_header Host $host;
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+            '';
+          };
+        };
+      };
+      "npc.davidpdrsn.com" = {
+        enableACME = true;
+        forceSSL = true;
+        basicAuthFile = "/var/lib/nginx-secrets/htpasswd";
+        locations = {
+          "/" = {
+            proxyPass = "http://127.0.0.1:3003";
             extraConfig = ''
               proxy_set_header Host $host;
               proxy_set_header X-Real-IP $remote_addr;
