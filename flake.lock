@@ -709,11 +709,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1787339679,
-        "narHash": "sha256-magDNwSHCjr7SDwes85mKXIpiSoWELJpMbnBK4mS7Xo=",
+        "lastModified": 1787424489,
+        "narHash": "sha256-BCjP5fw3ROXpLe9ZdvM5FnIBXeE2zZ67nMa/Wu9Kzhk=",
         "owner": "davidpdrsn",
         "repo": "npc-browser",
-        "rev": "a8dcb48a24c51e675b9cdc982a7fce9262d42448",
+        "rev": "1712a189ea197d5afacf074b5250684b70a6438d",
         "type": "github"
       },
       "original": {
