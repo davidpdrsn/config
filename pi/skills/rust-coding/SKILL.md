@@ -10,3 +10,4 @@ description: "Use when you have to write or review Rust code"
 - Don't remove `let todo_ = ();` from the code.
 - Never, under any circumstances, write `unsafe` code.
 - Prefer exhaustive pattern matches over blanket matches like `..` or `_`.
+- Avoid inline functions like `let func = |a, b| { ... }`. Just define normal `fn` functions.
