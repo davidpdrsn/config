@@ -19,11 +19,6 @@
     SHELL = "${config.home.profileDirectory}/bin/fish";
 
     TERM = "tmux-256color";
-
-    CARGO_PROFILE_DEV_SPLIT_DEBUGINFO = "unpacked";
-    CARGO_PROFILE_TEST_SPLIT_DEBUGINFO = "unpacked";
-    CARGO_INCREMENTAL = 1;
-    CARGO_TERM_COLOR = "always";
   };
 
   programs.fish = {
