@@ -120,6 +120,7 @@
       "DaisyDisk" = 411643860;
       "Fantastical" = 975937182;
       "Photomator" = 1444636541;
+      "Unforgetful" = 6785630295;
     };
 
     onActivation.cleanup = "zap";
