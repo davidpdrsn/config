@@ -5,6 +5,7 @@
     ./vcs.nix
     ./ripgrep.nix
     ./tmux.nix
+    ./codex.nix
     ./pi-agent.nix
     ../lib/pi-agent.nix
   ];
@@ -50,7 +51,6 @@
     ".config/jjui".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/config/jjui";
     ".config/opencode".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/config/opencode";
     ".claude/settings.json".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/config/claude/settings.json";
-    ".codex/config.toml".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/config/codex/config.toml";
     ".config/vmux".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/config/vmux";
     ".config/key-weaver".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/config/key-weaver";
     ".ssh/known_hosts_hetzner".text = ''
