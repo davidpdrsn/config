@@ -35,6 +35,7 @@
       "--glob=!dist-ssr"
       "--glob=!package"
       "--glob=!.pnpm-store"
+      "--glob=!.worktrees"
       "--glob=!test-results*"
       "--glob=!playwright-report"
       "--glob=!storybook-static"
