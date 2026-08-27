@@ -101,7 +101,6 @@
       "arc"
       "keycastr"
       "poedit"
-      "chatgpt"
       "audio-hijack"
       "blackhole-2ch"
       "telegram"
