@@ -103,9 +103,18 @@
 
   zramSwap.enable = true;
 
-  nix.settings = {
-    max-jobs = lib.mkForce 1;
-    cores = lib.mkForce 1;
+  nix = {
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 7d";
+    };
+    settings = {
+      max-jobs = lib.mkForce 1;
+      cores = lib.mkForce 1;
+      min-free = 2 * 1024 * 1024 * 1024;
+      max-free = 5 * 1024 * 1024 * 1024;
+    };
   };
 
   system.stateVersion = "25.05";
