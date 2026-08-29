@@ -15,4 +15,134 @@ case "$1" in
     ;;
 esac
 
-ssh -t "$host" 'cd /home/davidpdrsn/config && jj git fetch && jj new main && ./scripts/bootstrap-pi-deps && /run/wrappers/bin/sudo nixos-rebuild switch --flake ".#$(hostname)"'
+ssh "$host" 'bash -s' <<'REMOTE'
+set -euo pipefail
+
+unit="config-deploy.service"
+state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/config-deploy"
+metadata="$state_dir/current"
+mkdir -p "$state_dir"
+
+active_state="$(systemctl --user show "$unit" --property=ActiveState --value 2>/dev/null || true)"
+
+case "$active_state" in
+  active|activating|reloading)
+    if [ ! -r "$metadata" ]; then
+      echo "error: $unit is running, but its deployment metadata is missing" >&2
+      exit 1
+    fi
+
+    {
+      IFS= read -r marker
+      IFS= read -r started_at
+    } < "$metadata"
+
+    echo "==> deployment already running; reconnecting to its output"
+    ;;
+  *)
+    token="$(date +%s%N)-$$"
+    marker="__CONFIG_DEPLOY_${token}_EXIT__="
+    started_at="$(date --iso-8601=seconds)"
+
+    metadata_tmp="$metadata.$$"
+    printf '%s\n%s\n' "$marker" "$started_at" > "$metadata_tmp"
+    mv "$metadata_tmp" "$metadata"
+
+    deploy_command=$(cat <<EOF
+set -euo pipefail
+
+finish() {
+  status=\$?
+  trap - EXIT
+  host=\$(hostname)
+
+  if [ "\$status" -eq 0 ]; then
+    notification="[config/\$host] done: NixOS deployment succeeded"
+  else
+    notification="[config/\$host] failed: NixOS deployment exited \$status"
+  fi
+
+  if ! /run/current-system/sw/bin/openclaw-msg "\$notification"; then
+    printf 'warning: failed to send OpenClaw notification\\n' >&2
+  fi
+
+  printf '\\n%s%s\\n' '$marker' "\$status"
+  exit "\$status"
+}
+trap finish EXIT
+
+cd /home/davidpdrsn/config
+git fetch origin main
+git reset --hard origin/main
+./scripts/bootstrap-pi-deps
+/run/wrappers/bin/sudo nixos-rebuild switch --flake ".#\$(hostname)"
+EOF
+)
+
+    # A failed transient unit can remain loaded briefly before --collect removes it.
+    systemctl --user reset-failed "$unit" >/dev/null 2>&1 || true
+    for _ in $(seq 1 20); do
+      load_state="$(systemctl --user show "$unit" --property=LoadState --value 2>/dev/null || true)"
+      if [ -z "$load_state" ] || [ "$load_state" = "not-found" ]; then
+        break
+      fi
+      sleep 0.1
+    done
+
+    systemd-run \
+      --user \
+      --unit="$unit" \
+      --collect \
+      --service-type=exec \
+      --working-directory=/home/davidpdrsn/config \
+      /run/current-system/sw/bin/bash -lc "$deploy_command"
+
+    echo "==> started detached deployment on $(hostname)"
+    ;;
+esac
+
+echo "==> streaming deployment output (disconnecting will not stop it)"
+
+viewer_dir="$(mktemp -d "$state_dir/viewer.XXXXXX")"
+journal_fifo="$viewer_dir/journal"
+journal_pid=""
+mkfifo "$journal_fifo"
+
+cleanup() {
+  trap - EXIT INT TERM HUP
+  if [ -n "$journal_pid" ]; then
+    kill "$journal_pid" >/dev/null 2>&1 || true
+    wait "$journal_pid" 2>/dev/null || true
+  fi
+  rm -rf "$viewer_dir"
+}
+trap cleanup EXIT INT TERM HUP
+
+journalctl \
+  --user \
+  --unit="$unit" \
+  --since="$started_at" \
+  --follow \
+  --output=cat \
+  --no-pager > "$journal_fifo" &
+journal_pid=$!
+
+status=""
+while IFS= read -r line; do
+  if [[ "$line" == "$marker"* ]]; then
+    status="${line#"$marker"}"
+    break
+  fi
+  printf '%s\n' "$line"
+done < "$journal_fifo"
+
+cleanup
+
+if [[ ! "$status" =~ ^[0-9]+$ ]]; then
+  echo "error: deployment output ended without an exit status" >&2
+  exit 1
+fi
+
+echo "==> deployment finished (exit $status)"
+exit "$status"
+REMOTE
