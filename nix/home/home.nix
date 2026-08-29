@@ -33,6 +33,7 @@
 
   home.packages = [
     pkgs.neovim
+    pkgs.tree-sitter
   ];
 
   # Work around nixpkgs#485682, which emits a broken string-context warning
