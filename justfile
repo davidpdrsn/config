@@ -6,7 +6,7 @@ default:
 switch:
     #!/usr/bin/env bash
     if [ "$(uname)" = "Darwin" ]; then
-        sudo nix run '.#darwin-rebuild' -- switch --flake '.#macos'
+        sudo -H nix run '.#darwin-rebuild' -- switch --flake '.#macos'
     else
         sudo nixos-rebuild switch --flake ".#$(hostname)"
     fi
@@ -31,7 +31,7 @@ ci-build:
 
 # Validate the flake structure
 check:
-    nix flake check
+    nix flake check --all-systems --no-build
 
 # Run extension tests
 test:

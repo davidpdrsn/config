@@ -16,4 +16,4 @@ repo_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$repo_root"
 
 echo "bootstrap: applying nix-darwin configuration '.#macos'"
-sudo nix run '.#darwin-rebuild' -- switch --flake '.#macos'
+sudo -H nix run '.#darwin-rebuild' -- switch --flake '.#macos'

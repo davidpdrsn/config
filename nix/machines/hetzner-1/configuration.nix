@@ -26,6 +26,7 @@ in {
 
   services.fyc-site = {
     enable = true;
+    package = inputs.fyc-site.packages.${pkgs.stdenv.hostPlatform.system}.default;
     listenAddress = "127.0.0.1";
     port = 3002;
     # Must contain at least: FYC_SITE_COOKIE_SECRET=...
@@ -35,11 +36,13 @@ in {
 
   services.website = {
     enable = true;
+    package = inputs.website.packages.${pkgs.stdenv.hostPlatform.system}.default;
     port = 3001;
   };
 
   services."dnd-character-sheet" = {
     enable = true;
+    package = inputs."dnd-character-sheet".packages.${pkgs.stdenv.hostPlatform.system}.website;
     listenAddress = "127.0.0.1";
     port = 3000;
     charactersDir = "/var/lib/dnd-character-sheet";

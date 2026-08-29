@@ -5,6 +5,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nixpkgs-neovim-011.url = "github:NixOS/nixpkgs/nixos-25.05";
     flake-utils.url = "github:numtide/flake-utils";
+    systems.url = "github:nix-systems/triplet";
 
     nix-darwin.url = "github:nix-darwin/nix-darwin/master";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
@@ -31,6 +32,7 @@
     hunk = {
       url = "github:modem-dev/hunk";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.bun2nix.inputs.systems.follows = "systems";
     };
     fyc-site = {
       url = "git+ssh://git@github.com/davidpdrsn/fyc-site.git";
@@ -75,7 +77,7 @@
       home-manager.extraSpecialArgs = commonArgs;
     };
   in
-    flake-utils.lib.eachDefaultSystem (system: let
+    flake-utils.lib.eachSystem ["aarch64-darwin" "x86_64-linux"] (system: let
       pkgs = nixpkgs.legacyPackages.${system};
       llmAgentPackages = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
       piWrapped = import ./nix/lib/pi-wrapped.nix {inherit pkgs inputs;};

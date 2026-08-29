@@ -32,8 +32,12 @@
   };
 
   home.packages = [
-    (pkgs.wrapNeovim inputs.nixpkgs-neovim-011.legacyPackages.${pkgs.system}.neovim-unwrapped {})
+    (pkgs.wrapNeovim inputs.nixpkgs-neovim-011.legacyPackages.${pkgs.stdenv.hostPlatform.system}.neovim-unwrapped {})
   ];
+
+  # Work around nixpkgs#485682, which emits a broken string-context warning
+  # while generating the Home Manager options documentation.
+  manual.manpages.enable = false;
 
   programs.atuin = {
     enable = true;
