@@ -11,7 +11,6 @@ in {
   imports = [
     ../hetzner/common.nix
     ./hardware.nix
-    inputs.fyc-site.nixosModules.default
     inputs.website.nixosModules.default
     inputs."dnd-character-sheet".nixosModules.default
   ];
@@ -23,16 +22,6 @@ in {
 
   systemd.services.obsidian-vaults-pull = obsidianVaultsPull.service;
   systemd.timers.obsidian-vaults-pull = obsidianVaultsPull.timer;
-
-  services.fyc-site = {
-    enable = true;
-    package = inputs.fyc-site.packages.${pkgs.stdenv.hostPlatform.system}.default;
-    listenAddress = "127.0.0.1";
-    port = 3002;
-    # Must contain at least: FYC_SITE_COOKIE_SECRET=...
-    environmentFile = "/run/secrets/fyc-site.env";
-    secureCookies = true;
-  };
 
   services.website = {
     enable = true;
@@ -104,21 +93,6 @@ in {
         locations = {
           "/" = {
             proxyPass = "http://127.0.0.1:3003";
-            extraConfig = ''
-              proxy_set_header Host $host;
-              proxy_set_header X-Real-IP $remote_addr;
-              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-              proxy_set_header X-Forwarded-Proto $scheme;
-            '';
-          };
-        };
-      };
-      "fyc.davidpdrsn.com" = {
-        enableACME = true;
-        forceSSL = true;
-        locations = {
-          "/" = {
-            proxyPass = "http://127.0.0.1:3002";
             extraConfig = ''
               proxy_set_header Host $host;
               proxy_set_header X-Real-IP $remote_addr;

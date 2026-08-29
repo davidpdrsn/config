@@ -33,10 +33,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.bun2nix.inputs.systems.follows = "systems";
     };
-    fyc-site = {
-      url = "git+ssh://git@github.com/davidpdrsn/fyc-site.git";
-      inputs.fyc.url = "git+ssh://git@github.com/davidpdrsn/fyc.git";
-    };
     website.url = "git+ssh://git@github.com/davidpdrsn/website.git";
     "dnd-character-sheet".url = "git+ssh://git@github.com/davidpdrsn/dnd-character-sheet.git";
     "npc-browser" = {
