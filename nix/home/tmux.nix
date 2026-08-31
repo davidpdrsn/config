@@ -92,8 +92,8 @@
       # Jump to previous pane
       bind k last-pane
 
-      # Popup for but
-      bind j display-popup -E -w 80% -h 80% -d "#{pane_current_path}" "/Users/davidpdrsn/code/gitbutler/gitbutler-git/target/release/but tui --remember-selection"
+      # Window for but
+      bind j new-window -n "#{window_name}-but" -c "#{pane_current_path}" "/Users/davidpdrsn/code/gitbutler/gitbutler-git/target/release/but tui --remember-selection"
 
       # Popup for vim
       bind v display-popup -E -w 80% -h 80% -d "#{pane_current_path}" "nvim"
