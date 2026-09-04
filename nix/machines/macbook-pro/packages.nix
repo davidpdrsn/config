@@ -57,6 +57,7 @@
       strip-ansi
       but
       btop
+      chafa
     ]
     ++ [
       llmAgentPackages.opencode

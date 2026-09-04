@@ -9,7 +9,23 @@
     };
     category = "other";
     openArgs = [
-      "--open"
+      "{{filepath}}"
+    ];
+    extensions = ["svg"];
+  }
+  {
+    id = "preview-svg";
+    name = "Preview SVG";
+    executable = {
+      type = "pathExecutable";
+      nameOrPath = "/bin/sh";
+      requiresTerminal = true;
+    };
+    category = "other";
+    openArgs = [
+      "-c"
+      ''chafa "$1"; printf '\nPress Enter to close...'; IFS= read -r _''
+      "preview-svg"
       "{{filepath}}"
     ];
     extensions = ["svg"];
