@@ -2,47 +2,39 @@
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
-    matchBlocks = {
+    settings = {
       "*" = {
-        addKeysToAgent = "yes";
+        AddKeysToAgent = "yes";
       };
       "bitbucket.org" = {
-        addKeysToAgent = "yes";
-        identityFile = "~/.ssh/bitbucket_lun";
+        AddKeysToAgent = "yes";
+        IdentityFile = "~/.ssh/bitbucket_lun";
       };
       "46.225.16.43" = {
-        user = "davidpdrsn";
-        identityFile = "~/.ssh/hetzner";
-        extraOptions = {
-          StrictHostKeyChecking = "yes";
-          UserKnownHostsFile = "~/.ssh/known_hosts_hetzner";
-        };
+        User = "davidpdrsn";
+        IdentityFile = "~/.ssh/hetzner";
+        StrictHostKeyChecking = "yes";
+        UserKnownHostsFile = "~/.ssh/known_hosts_hetzner";
       };
       "46.225.17.37" = {
-        user = "davidpdrsn";
-        identityFile = "~/.ssh/hetzner";
-        extraOptions = {
-          StrictHostKeyChecking = "yes";
-          UserKnownHostsFile = "~/.ssh/known_hosts_hetzner";
-        };
+        User = "davidpdrsn";
+        IdentityFile = "~/.ssh/hetzner";
+        StrictHostKeyChecking = "yes";
+        UserKnownHostsFile = "~/.ssh/known_hosts_hetzner";
       };
       "hetzner-1" = {
-        hostname = "46.225.16.43";
-        user = "davidpdrsn";
-        identityFile = "~/.ssh/hetzner";
-        extraOptions = {
-          StrictHostKeyChecking = "yes";
-          UserKnownHostsFile = "~/.ssh/known_hosts_hetzner";
-        };
+        HostName = "46.225.16.43";
+        User = "davidpdrsn";
+        IdentityFile = "~/.ssh/hetzner";
+        StrictHostKeyChecking = "yes";
+        UserKnownHostsFile = "~/.ssh/known_hosts_hetzner";
       };
       "hetzner-2" = {
-        hostname = "46.225.17.37";
-        user = "davidpdrsn";
-        identityFile = "~/.ssh/hetzner";
-        extraOptions = {
-          StrictHostKeyChecking = "yes";
-          UserKnownHostsFile = "~/.ssh/known_hosts_hetzner";
-        };
+        HostName = "46.225.17.37";
+        User = "davidpdrsn";
+        IdentityFile = "~/.ssh/hetzner";
+        StrictHostKeyChecking = "yes";
+        UserKnownHostsFile = "~/.ssh/known_hosts_hetzner";
       };
     };
   };

@@ -8,17 +8,17 @@
     CARGO_TARGET_DIR = "/home/davidpdrsn/.rust-shared-target";
   };
 
-  programs.ssh.matchBlocks = {
+  programs.ssh.settings = {
     "github.com" = {
-      user = "git";
-      identityFile = "~/.ssh/github";
-      identitiesOnly = true;
-      extraOptions.AddKeysToAgent = "yes";
+      User = "git";
+      IdentityFile = "~/.ssh/github";
+      IdentitiesOnly = true;
+      AddKeysToAgent = "yes";
     };
 
     "hetzner-2" = {
-      identityFile = lib.mkForce "~/.ssh/hetzner-to-hetzner-2";
-      identitiesOnly = lib.mkForce true;
+      IdentityFile = lib.mkForce "~/.ssh/hetzner-to-hetzner-2";
+      IdentitiesOnly = lib.mkForce true;
     };
   };
 
