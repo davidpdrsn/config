@@ -1,4 +1,5 @@
 .DS_Store
+.nvimlog
 result
 node_modules/
 opencode/pipes/

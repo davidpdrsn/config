@@ -11,7 +11,6 @@ return {
         config = function()
             require("catppuccin").setup({
                 flavour = "mocha",
-                -- flavour = "latte",
                 dim_inactive = {
                     enabled = true,
                 },
@@ -41,8 +40,8 @@ return {
     {
         "mrjones2014/smart-splits.nvim",
         config = function()
-            require("smart-splits").setup()
             local smart_splits = require("smart-splits")
+            smart_splits.setup()
             vim.keymap.set("n", "<c-h>", smart_splits.move_cursor_left, { desc = "Move left" })
             vim.keymap.set("n", "<c-j>", smart_splits.move_cursor_down, { desc = "Move down" })
             vim.keymap.set("n", "<c-k>", smart_splits.move_cursor_up, { desc = "Move up" })
@@ -177,7 +176,7 @@ return {
     {
         url = "https://codeberg.org/andyg/leap.nvim",
         config = function()
-            local leap = require("leap")
+            require("leap")
 
             -- Set up default keymaps manually
             vim.keymap.set({ "n", "x", "o" }, "s", "<Plug>(leap-forward)")
@@ -251,12 +250,6 @@ return {
         config = function()
             require("luasnip.loaders.from_snipmate").lazy_load({ paths = "~/.config/nvim/snippets" })
             require("luasnip.loaders.from_vscode").lazy_load()
-
-            -- Not sure what these do
-            -- vim.keymap.set("i", "<c-k>", require("luasnip").expand, { silent = true })
-            -- vim.keymap.set("i", "<c-j>", function()
-            --     require("luasnip").jump(1)
-            -- end, { silent = true })
         end,
     },
     -- toggle quickfix
@@ -272,7 +265,6 @@ return {
             { "tpope/vim-dadbod", lazy = true },
             {
                 "kristijanhusak/vim-dadbod-completion",
-                -- ft = { "sql", "mysql", "plsql" },
                 lazy = true,
             },
         },
@@ -283,7 +275,6 @@ return {
             "DBUIFindBuffer",
         },
         init = function()
-            -- Your DBUI configuration
             vim.g.db_ui_use_nerd_fonts = 1
         end,
     },

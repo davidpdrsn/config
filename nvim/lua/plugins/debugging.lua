@@ -1,5 +1,3 @@
-local common = require("common")
-
 return {
     {
         "mfussenegger/nvim-dap",
@@ -40,21 +38,6 @@ return {
                     stopOnEntry = false,
                     args = {},
                 },
-                -- {
-                --     name = "Test",
-                --     type = "lldb",
-                --     request = "launch",
-                --     program = function()
-                --         -- TODO: parse `cargo test --no-run --message-format=json`
-                --         return "/Users/davidpdrsn/code/dev-tools/test-command/target/debug/deps/test_command-eb9db06ed68b4515"
-                --     end,
-                --     args = function()
-                --         -- TODO: get this using `test-command`
-                --         return { "test_one" }
-                --     end,
-                --     cwd = "${workspaceFolder}",
-                --     stopOnEntry = false,
-                -- },
             }
 
             dap.adapters.coreclr_godot = {
@@ -148,7 +131,7 @@ return {
 
             overseer.register_template({
                 name = "rust_compile",
-                builder = function(params)
+                builder = function()
                     return {
                         cmd = { "cargo" },
                         args = { "build", "--all-features" },
@@ -161,7 +144,7 @@ return {
 
             overseer.register_template({
                 name = "cs_compile",
-                builder = function(params)
+                builder = function()
                     return {
                         cmd = { "dotnet" },
                         args = { "build" },
