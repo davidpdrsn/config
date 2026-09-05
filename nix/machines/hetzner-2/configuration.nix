@@ -77,11 +77,6 @@
     };
   };
 
-  # inputs.atlas-nixpkgs.legacyPackages.${system}.atlas
-  # inputs.oapi-codegen-nixpkgs.legacyPackages.${system}.oapi-codegen
-  # inputs.golangci-lint-nixpkgs.legacyPackages.${system}.golangci-lint
-  # inputs.gotools-nixpkgs.legacyPackages.${system}.gotools
-
   linearCli = pkgs.callPackage ../../shared/packages/linear-cli.nix {};
   cloudAgent = pkgs.callPackage ../../shared/packages/cloud-agent.nix {};
   openclawCli = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.openclaw;
@@ -127,7 +122,6 @@
     pkgs.vdirsyncer
     pkgs.watchexec
     pkgs.wget
-    pkgs.wget
   ];
 in {
   imports = [
@@ -135,11 +129,7 @@ in {
     ./hardware.nix
   ];
 
-  environment.systemPackages =
-    [
-      # other packages not available to openclaw
-    ]
-    ++ openclawPackages;
+  environment.systemPackages = openclawPackages;
 
   systemd.tmpfiles.rules =
     [

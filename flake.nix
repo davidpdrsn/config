@@ -40,7 +40,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # other dev tools managed via `make clone-dev-tools` + cargo install
+    # Other dev tools are managed via `just clone-dev-tools` + cargo install.
   };
 
   outputs = inputs @ {
