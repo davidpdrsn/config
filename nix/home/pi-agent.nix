@@ -7,9 +7,9 @@ in {
       lastChangelogVersion = pi.version;
       collapseChangelog = true;
       defaultProvider = "openai-codex";
-      defaultModel = "gpt-5.6-sol";
+      defaultModel = "gpt-6-astra";
       enabledModels = [
-        "openai-codex/gpt-5.6-sol"
+        "openai-codex/gpt-6-astra"
       ];
       images = {
         blockImages = false;

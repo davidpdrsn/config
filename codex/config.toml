@@ -1,6 +1,6 @@
-model = "gpt-5.6-sol"
+model = "gpt-6-astra"
 personality = "pragmatic"
-model_reasoning_effort = "high"
+model_reasoning_effort = "medium"
 responses_websockets_v2 = true
 service_tier = "fast"
 approvals_reviewer = "auto_review"
@@ -98,3 +98,4 @@ notifications = true
 
 [tui.model_availability_nux]
 "gpt-5.6-sol" = 4
+gpt-6-astra = 3
