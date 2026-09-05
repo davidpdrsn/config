@@ -100,7 +100,7 @@
           ];
         };
       }
-      // nixpkgs.lib.optionalAttrs pkgs.stdenv.isDarwin {
+      // nixpkgs.lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
         apps.darwin-rebuild = {
           type = "app";
           program = "${nix-darwin.packages.${system}.darwin-rebuild}/bin/darwin-rebuild";

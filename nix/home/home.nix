@@ -64,7 +64,7 @@
       hetzner-2 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINnytj8FmLxKn36zdZjWFbcaJyLrqTBm/C1zEqtbWah6
       46.225.17.37 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINnytj8FmLxKn36zdZjWFbcaJyLrqTBm/C1zEqtbWah6
     '';
-  } // lib.optionalAttrs pkgs.stdenv.isDarwin {
+  } // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
     ".config/git/allowed_signers".text = ''
       david.pdrsn@gmail.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFvO65GGpQLI6lCjDPo0Owyp222vjG1RAkc0eKmWAWbE
     '';

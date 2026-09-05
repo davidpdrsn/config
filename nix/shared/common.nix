@@ -9,7 +9,7 @@
 
   # Determinate Nix includes /etc/nix/nix.custom.conf from /etc/nix/nix.conf.
   # Keep this cache config in a shared module so it applies on all macOS hosts.
-  environment.etc = lib.mkIf pkgs.stdenv.isDarwin {
+  environment.etc = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
     "nix/nix.custom.conf" = {
       text = ''
       extra-substituters = https://cache.numtide.com

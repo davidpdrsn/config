@@ -58,7 +58,7 @@
             name = "David Pedersen";
             email = "david.pdrsn@gmail.com";
           }
-          // lib.optionalAttrs pkgs.stdenv.isDarwin {
+          // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
             signingkey = "${config.home.homeDirectory}/.ssh/id_ed25519_signing.pub";
           };
         init = {
@@ -86,14 +86,14 @@
           {
             verbose = true;
           }
-          // lib.optionalAttrs pkgs.stdenv.isDarwin {
+          // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
             gpgsign = true;
           };
         branch = {
           sort = "-committerdate";
         };
       }
-      // lib.optionalAttrs pkgs.stdenv.isDarwin {
+      // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
         gpg = {
           format = "ssh";
           ssh = {
@@ -235,7 +235,7 @@
           '';
         };
       }
-      // lib.optionalAttrs pkgs.stdenv.isDarwin {
+      // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
         signing = {
           backend = "ssh";
           behavior = "own";

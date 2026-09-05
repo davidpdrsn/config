@@ -5,7 +5,7 @@
   ...
 }: {
   home.sessionPath =
-    (lib.optionals pkgs.stdenv.isLinux [
+    (lib.optionals pkgs.stdenv.hostPlatform.isLinux [
       "/run/wrappers/bin"
     ])
     ++ [
