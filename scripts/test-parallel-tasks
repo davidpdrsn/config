@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+tmp_dir="$(mktemp -d)"
+trap 'rm -rf "$tmp_dir"' EXIT
+
+assert_line() {
+  if ! grep -Fxq -- "$1" "$tmp_dir/output"; then
+    printf 'Missing output: %s\n' "$1" >&2
+    exit 1
+  fi
+}
+
+(
+  source ./scripts/lib/parallel-tasks.sh
+  start_task first printf '%s\n' 'argument with spaces'
+  start_task second bash -c 'echo stderr >&2'
+  wait_for_tasks
+) >"$tmp_dir/output"
+assert_line '[first] argument with spaces'
+assert_line '[second] stderr'
+assert_line '  first: exit 0'
+assert_line '  second: exit 0'
+
+# Both tasks must start before either can finish; retries bound a failed test.
+meet_peer() {
+  local name="$1" peer="$2" i
+  touch "$tmp_dir/$name"
+  for ((i = 0; i < 100; i++)); do
+    if [[ -f "$tmp_dir/$peer" ]]; then
+      echo "met $peer"
+      return 0
+    fi
+    sleep 0.01
+  done
+  return 1
+}
+
+(
+  source ./scripts/lib/parallel-tasks.sh
+  start_task first meet_peer first second
+  start_task second meet_peer second first
+  wait_for_tasks
+) >"$tmp_dir/output"
+assert_line '[first] met second'
+assert_line '[second] met first'
+
+status=0
+(
+  source ./scripts/lib/parallel-tasks.sh
+  start_task failed bash -c 'exit 7'
+  start_task slow bash -c 'sleep 0.1; echo finished'
+  wait_for_tasks
+) >"$tmp_dir/output" || status=$?
+[[ "$status" -eq 1 ]]
+assert_line '  failed: exit 7'
+assert_line '[slow] finished'
+assert_line '  slow: exit 0'
+
+echo 'parallel-tasks tests passed'
