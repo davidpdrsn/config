@@ -1,9 +1,15 @@
 {
   pkgs,
+  lib,
   username,
   inputs,
   ...
 }: let
+  activateDnd = pkgs.writeShellApplication {
+    name = "activate-dnd-character-sheet";
+    runtimeInputs = [pkgs.nix pkgs.coreutils pkgs.gnugrep pkgs.util-linux pkgs.systemd];
+    text = builtins.readFile ../../../scripts/activate-dnd-character-sheet;
+  };
   obsidianVaultsPull = import ../../lib/obsidian-vaults-pull.nix {
     inherit pkgs username;
   };
@@ -31,7 +37,6 @@ in {
 
   services."dnd-character-sheet" = {
     enable = true;
-    package = inputs."dnd-character-sheet".packages.${pkgs.stdenv.hostPlatform.system}.website;
     listenAddress = "127.0.0.1";
     port = 3000;
     charactersDir = "/var/lib/dnd-character-sheet";
@@ -60,11 +65,30 @@ in {
     extraGroups = ["wheel" "docker"];
   };
 
-  systemd.services.dnd-character-sheet.serviceConfig = {
-    StateDirectory = "dnd-character-sheet";
-    StateDirectoryMode = "0770";
-    User = "dnd-character-sheet";
-    Group = "users";
+  environment.systemPackages = [activateDnd];
+  security.sudo.extraRules = [
+    {
+      users = [username];
+      commands = [
+        {
+          command = "/run/current-system/sw/bin/activate-dnd-character-sheet";
+          options = ["NOPASSWD"];
+        }
+      ];
+    }
+  ];
+
+  systemd.services.dnd-character-sheet = {
+    # The first deployment creates this profile. Until then, skip startup.
+    unitConfig.ConditionPathExists = "/nix/var/nix/profiles/dnd-character-sheet/bin/website";
+    serviceConfig = {
+      # Keep the app out of the system closure; deploy it with scripts/deploy-dnd.
+      ExecStart = lib.mkForce "/nix/var/nix/profiles/dnd-character-sheet/bin/website";
+      StateDirectory = "dnd-character-sheet";
+      StateDirectoryMode = "0770";
+      User = "dnd-character-sheet";
+      Group = "users";
+    };
   };
 
   services.nginx = {

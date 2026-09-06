@@ -104,11 +104,16 @@ gc:
 
     wait_for_tasks
 
-update-dnd:
+# Deploy the pinned D&D version: build on VPS 2, copy to VPS 1, and restart
+deploy-dnd-pinned:
+    ./scripts/deploy-dnd
+
+# Update D&D to latest, commit and land the lock file, then deploy
+update-and-deploy-dnd:
     nix flake update "dnd-character-sheet" --no-warn-dirty
     /Users/davidpdrsn/code/gitbutler/gitbutler-git/target/release/but commit flake.lock -b update-dnd -m 'update dnd'
     /Users/davidpdrsn/code/gitbutler/gitbutler-git/target/release/but land update-dnd --yes
-    just switch-vps-1
+    just deploy-dnd-pinned
 
 update-but-skill:
     but skill install --path ./pi/skills/but

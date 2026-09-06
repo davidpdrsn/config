@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Installed by NixOS with a fixed PATH and exposed through a sudo rule.
+profile=/nix/var/nix/profiles/dnd-character-sheet
+service=dnd-character-sheet.service
+
+if [[ $# -ne 1 ]]; then
+  echo "usage: $0 <--check|/nix/store/...-dnd-character-sheet-website-...>" >&2
+  exit 1
+fi
+if [[ $(id -u) -ne 0 ]]; then
+  echo "Must run as root." >&2
+  exit 1
+fi
+
+# Check that the one-time service migration has actually been activated.
+if [[ "$(systemctl show --property=ExecStart --value "$service")" != *"$profile/bin/website"* ]]; then
+  echo "Activate the NixOS configuration with the D&D deployment profile first." >&2
+  exit 1
+fi
+if [[ "$1" == --check ]]; then
+  exit 0
+fi
+
+package="$1"
+if [[ ! "$package" =~ ^/nix/store/[a-z0-9]{32}-dnd-character-sheet-website-[a-zA-Z0-9.+_-]+$ ]]; then
+  echo "Invalid D&D package path: $package" >&2
+  exit 1
+fi
+
+# Serialize imports/profile changes/restarts from concurrent deployments.
+exec 9>/run/lock/activate-dnd-character-sheet.lock
+flock -n 9
+
+# Locally built outputs are unsigned. Only this privileged deployment entry
+# point imports them; the daemon's global trust/signature settings stay intact.
+imported="$(nix-store --import --option require-sigs false)"
+if ! grep -Fxq -- "$package" <<< "$imported"; then
+  echo "The runtime closure did not contain the requested package." >&2
+  exit 1
+fi
+if [[ ! -x "$package/bin/website" ]]; then
+  echo "The imported package has no executable bin/website." >&2
+  exit 1
+fi
+
+# nix-env --set switches the profile atomically and creates a GC-rooted
+# generation. This does not build anything or activate a NixOS generation.
+nix-env --profile "$profile" --set "$package"
+systemctl restart "$service"

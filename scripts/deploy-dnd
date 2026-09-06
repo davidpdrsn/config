@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+# SSH arguments intentionally expand locally; interpolated paths are fixed or validated.
+# shellcheck disable=SC2029
+set -euo pipefail
+
+if [[ $# -ne 0 ]]; then
+  echo "usage: $0" >&2
+  exit 1
+fi
+
+cd "$(dirname "$0")/.."
+builder=hetzner-2
+target=hetzner-1
+helper=/run/current-system/sw/bin/activate-dnd-character-sheet
+
+# Fail before building if the one-time NixOS setup hasn't been activated.
+ssh "$target" "/run/wrappers/bin/sudo -n '$helper' --check"
+
+work_dir="$(ssh "$builder" 'mktemp -d /tmp/deploy-dnd.XXXXXXXX')"
+if [[ ! "$work_dir" =~ ^/tmp/deploy-dnd\.[a-zA-Z0-9]+$ ]]; then
+  echo "Unexpected builder temporary directory: $work_dir" >&2
+  exit 1
+fi
+cleanup() {
+  ssh "$builder" "rm -rf -- '$work_dir'" >&2 || true
+}
+trap cleanup EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
+
+# Use the local lock file (including uncommitted updates), without changing
+# either server's config checkout. The result symlink roots the build until
+# the target has imported it and installed its own profile generation.
+tar -czf - flake.nix flake.lock nix scripts | ssh "$builder" "tar -xzf - -C '$work_dir'"
+echo "Building D&D on $builder..." >&2
+package="$(ssh "$builder" "bash -s -- '$work_dir'" <<'BUILD'
+set -euo pipefail
+cd "$1"
+nix build --out-link "$1/result" --print-out-paths --no-write-lock-file \
+  --impure --expr '(builtins.getFlake (toString ./.)).inputs."dnd-character-sheet".packages.x86_64-linux.website'
+BUILD
+)"
+if [[ ! "$package" =~ ^/nix/store/[a-z0-9]{32}-dnd-character-sheet-website-[a-zA-Z0-9.+_-]+$ ]]; then
+  echo "Unexpected build output: $package" >&2
+  exit 1
+fi
+
+echo "Streaming runtime closure to $target and activating $package..." >&2
+# No build dependencies or intermediate archive are stored on hetzner-1.
+# A privileged import avoids granting the SSH user blanket Nix trusted-user
+# permissions. The stream is relayed through this machine, not saved to disk.
+ssh "$builder" "bash -s -- '$package'" <<'EXPORT' |
+set -euo pipefail
+closure="$(nix-store --query --requisites "$1")"
+mapfile -t paths <<< "$closure"
+[[ -n "$closure" ]]
+nix-store --export "${paths[@]}"
+EXPORT
+  ssh "$target" "/run/wrappers/bin/sudo -n '$helper' '$package'"
+
+echo "D&D deployed successfully."
