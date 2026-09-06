@@ -1,6 +1,6 @@
 model = "gpt-6-astra"
 personality = "pragmatic"
-model_reasoning_effort = "medium"
+model_reasoning_effort = "high"
 responses_websockets_v2 = true
 service_tier = "fast"
 approvals_reviewer = "auto_review"
