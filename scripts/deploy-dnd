@@ -36,6 +36,9 @@ echo "Building D&D on $builder..." >&2
 package="$(ssh "$builder" "bash -s -- '$work_dir'" <<'BUILD'
 set -euo pipefail
 cd "$1"
+# Use the read-only D&D deploy key for this build only. Ignore the shared SSH
+# configuration, whose GitHub key belongs to Obsidian; still verify host keys.
+export GIT_SSH_COMMAND="ssh -F /dev/null -i '$HOME/.ssh/github-dnd-character-sheet' -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes"
 nix build --out-link "$1/result" --print-out-paths --no-write-lock-file \
   --impure --expr '(builtins.getFlake (toString ./.)).inputs."dnd-character-sheet".packages.x86_64-linux.website'
 BUILD
