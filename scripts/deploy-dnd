@@ -13,8 +13,8 @@ builder=hetzner-2
 target=hetzner-1
 helper=/run/current-system/sw/bin/activate-dnd-character-sheet
 
-# Fail before building if the one-time NixOS setup hasn't been activated.
-ssh "$target" "/run/wrappers/bin/sudo -n '$helper' --check"
+# Verify direct builder-to-target access and the one-time NixOS setup before building.
+ssh "$builder" "ssh -o BatchMode=yes -o StrictHostKeyChecking=yes -o ConnectTimeout=10 '$target' /run/wrappers/bin/sudo -n '$helper' --check"
 
 work_dir="$(ssh "$builder" 'mktemp -d /tmp/deploy-dnd.XXXXXXXX')"
 if [[ ! "$work_dir" =~ ^/tmp/deploy-dnd\.[a-zA-Z0-9]+$ ]]; then
@@ -48,17 +48,26 @@ if [[ ! "$package" =~ ^/nix/store/[a-z0-9]{32}-dnd-character-sheet-website-[a-zA
   exit 1
 fi
 
-echo "Streaming runtime closure to $target and activating $package..." >&2
+echo "Streaming missing runtime paths directly from $builder to $target and activating $package..." >&2
 # No build dependencies or intermediate archive are stored on hetzner-1.
 # A privileged import avoids granting the SSH user blanket Nix trusted-user
-# permissions. The stream is relayed through this machine, not saved to disk.
-ssh "$builder" "bash -s -- '$package'" <<'EXPORT' |
+# permissions. Only control traffic passes through this machine.
+ssh "$builder" "bash -s -- '$package' '$target' '$helper'" <<'EXPORT'
 set -euo pipefail
-closure="$(nix-store --query --requisites "$1")"
-mapfile -t paths <<< "$closure"
+package="$1"
+target="$2"
+helper="$3"
+ssh_options=(-o BatchMode=yes -o StrictHostKeyChecking=yes -o ConnectTimeout=10)
+closure="$(nix-store --query --requisites "$package")"
 [[ -n "$closure" ]]
-nix-store --export "${paths[@]}"
+mapfile -t paths <<< "$closure"
+missing="$(ssh -n "${ssh_options[@]}" "$target" nix-store --check-validity --print-invalid "${paths[@]}")"
+# Always include the application, even on redeploy: the activation helper
+# requires it in the import result before switching the profile.
+mapfile -t transfer_paths < <(printf '%s\n' "$package" "$missing" | grep -v '^$' | sort -u)
+echo "Transferring ${#transfer_paths[@]} of ${#paths[@]} runtime paths (including the application)..." >&2
+nix-store --export "${transfer_paths[@]}" |
+  ssh "${ssh_options[@]}" "$target" "/run/wrappers/bin/sudo -n '$helper' '$package'"
 EXPORT
-  ssh "$target" "/run/wrappers/bin/sudo -n '$helper' '$package'"
 
 echo "D&D deployed successfully."
