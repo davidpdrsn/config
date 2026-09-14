@@ -104,7 +104,6 @@
       "poedit"
       "audio-hijack"
       "blackhole-2ch"
-      "telegram"
       "linearmouse"
       "tuple"
       "bbedit"
