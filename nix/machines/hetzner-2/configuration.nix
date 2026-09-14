@@ -131,6 +131,35 @@ in {
   systemd.services.obsidian-vaults-pull = obsidianVaultsPull.service;
   systemd.timers.obsidian-vaults-pull = obsidianVaultsPull.timer;
 
+  systemd.services.gitbutler-pr-digest = {
+    description = "Email the daily GitButler merged PR digest";
+    wants = ["network-online.target"];
+    after = ["network-online.target"];
+    path = [(pkgs.callPackage ../../shared/packages/mail-me.nix {})];
+    environment.HOME = "/home/${username}";
+    serviceConfig = {
+      Type = "oneshot";
+      User = username;
+      WorkingDirectory = "/home/${username}";
+      TimeoutStartSec = "2h";
+    };
+    script = ''
+      set -euo pipefail
+      /run/current-system/sw/bin/pr-digest gitbutlerapp/gitbutler |
+        mail-me --html "GitButler daily PR digest"
+    '';
+  };
+
+  systemd.timers.gitbutler-pr-digest = {
+    description = "Send the GitButler PR digest at 16:00 Copenhagen time";
+    wantedBy = ["timers.target"];
+    timerConfig = {
+      OnCalendar = "*-*-* 16:00:00 Europe/Copenhagen";
+      Persistent = true;
+      AccuracySec = "1s";
+    };
+  };
+
   boot.loader.grub = {
     enable = true;
     efiSupport = true;
