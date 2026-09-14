@@ -137,9 +137,15 @@ def render(repo, start, end, entries):
     if not entries:
         parts.append("<p>No PRs merged during this window.</p>")
     for pr, summary, failed in entries:
+        author = (pr.get("user") or {}).get("login")
+        author_line = (
+            f'By <a href="https://github.com/{escape(author)}">@{escape(author)}</a>'
+            if author else "By unknown author"
+        )
         parts += [
             '<section style="margin-bottom:24px">',
             f'<h2 style="font-size:18px;margin-bottom:4px"><a href="https://github.com/{escape(repo)}/pull/{pr["number"]}">#{pr["number"]}: {escape(pr["title"])}</a></h2>',
+            f'<p style="margin:4px 0;color:#666">{author_line}</p>',
             f'<p style="margin-top:4px">{escape(summary)}</p>',
             '</section>',
         ]
