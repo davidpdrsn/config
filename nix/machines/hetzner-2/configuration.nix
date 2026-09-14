@@ -145,8 +145,12 @@ in {
     };
     script = ''
       set -euo pipefail
-      /run/current-system/sw/bin/pr-digest gitbutlerapp/gitbutler |
-        mail-me --html "GitButler daily PR digest"
+      status=0
+      digest=$(/run/current-system/sw/bin/pr-digest gitbutlerapp/gitbutler) || status=$?
+      if [ -n "$digest" ]; then
+        printf '%s\n' "$digest" | mail-me --html "GitButler daily PR digest"
+      fi
+      exit "$status"
     '';
   };
 

@@ -169,6 +169,9 @@ def main():
     progress = Progress()
     try:
         prs = find_prs(args.repo, start, end, progress)
+        if not prs:
+            progress.finish()
+            return 0
         entries = [None] * len(prs)
         # Avoid inheriting repository-local pi settings or system prompts.
         with tempfile.TemporaryDirectory(prefix="pr-digest-") as cwd:
