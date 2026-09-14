@@ -4,7 +4,6 @@
   ...
 }: let
   countTokens = pkgs.callPackage ./packages/count-tokens.nix {};
-  openclawMsg = pkgs.callPackage ./packages/openclaw-msg.nix {};
   cloudAgent = pkgs.callPackage ./packages/cloud-agent.nix {};
   piWrapped = import ../lib/pi-wrapped.nix {inherit pkgs inputs;};
 in {
@@ -38,7 +37,6 @@ in {
       nil # nix language server
       oxlint
       countTokens
-      openclawMsg
       cloudAgent
       piWrapped
     ];

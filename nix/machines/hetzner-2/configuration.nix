@@ -4,11 +4,6 @@
   username,
   ...
 }: let
-  mkRuntimeBinLink = pkg: let
-    exe = pkgs.lib.getExe pkg;
-    binName = builtins.baseNameOf exe;
-  in "L+ /home/${username}/config/bin/${binName} - - - - ${exe}";
-
   gog = pkgs.stdenvNoCC.mkDerivation {
     pname = "gog";
     version = "0.11.0";
@@ -79,18 +74,16 @@
 
   linearCli = pkgs.callPackage ../../shared/packages/linear-cli.nix {};
   cloudAgent = pkgs.callPackage ../../shared/packages/cloud-agent.nix {};
-  openclawCli = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.openclaw;
   obsidianVaultsPull = import ../../lib/obsidian-vaults-pull.nix {
     inherit pkgs username;
   };
   piWrapped = import ../../lib/pi-wrapped.nix {inherit pkgs inputs;};
 
-  openclawPackages = [
+  serverPackages = [
     cloudAgent
     gog
     goplaces
     linearCli
-    openclawCli
     piWrapped
     pkgs.chromium
     pkgs.curl
@@ -129,18 +122,11 @@ in {
     ./hardware.nix
   ];
 
-  environment.systemPackages = openclawPackages;
+  environment.systemPackages = serverPackages;
 
-  systemd.tmpfiles.rules =
-    [
-      "d /srv/gitbutler-nfs 0755 ${username} users - -"
-    ]
-    ++ map mkRuntimeBinLink openclawPackages;
-
-  system.activationScripts.openclawRuntimeBinLinks.text = ''
-    ${pkgs.coreutils}/bin/mkdir -p /home/${username}/config/bin
-    ${pkgs.systemd}/bin/systemd-tmpfiles --create --prefix=/home/${username}/config/bin
-  '';
+  systemd.tmpfiles.rules = [
+    "d /srv/gitbutler-nfs 0755 ${username} users - -"
+  ];
 
   systemd.services.obsidian-vaults-pull = obsidianVaultsPull.service;
   systemd.timers.obsidian-vaults-pull = obsidianVaultsPull.timer;

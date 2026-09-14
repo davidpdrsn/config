@@ -3,7 +3,7 @@ set -euo pipefail
 
 host="$(hostname -s 2>/dev/null || hostname)"
 
-# OpenClaw runtime on hetzner-2 executes cloud-agent from ~/config/pi.
+# cloud-agent on hetzner-2 runs from ~/config/pi.
 # Keep deps bootstrapped there so commands like `cloud-agent status` don't fail
 # with missing JS packages (e.g. cac).
 if [ "$host" != "nix-4gb-nbg1-2" ] && [ "$host" != "hetzner-2" ]; then
