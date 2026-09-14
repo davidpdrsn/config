@@ -18,3 +18,5 @@ Always run `just test` after making changes.
 Always run `just check && just build` after making changes to nix files.
 
 When running into configuration issues, never run random commands to try and fix it. Always consider if there is a way to change the nix configuration to make it work.
+
+Never manually copy nix files onto the servers. Use the normal deployment workflow.
