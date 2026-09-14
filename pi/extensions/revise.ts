@@ -86,10 +86,6 @@ export default function (pi: ExtensionAPI): void {
 				if (editor) {
 					if (isTerminalEditorCommand(editor)) {
 						ctx.ui.setEditorText(text);
-						ctx.ui.notify(
-							"/revise can't safely launch terminal editors inside the Pi TUI. Loaded draft instead; press Ctrl+G, or set $EDITOR/$VISUAL to a GUI editor (e.g. 'code --wait').",
-							"warning",
-						);
 						return;
 					}
 					exitCode = await runEditorCommand(`${editor} "${filePath.replace(/"/g, '\\"')}"`);
