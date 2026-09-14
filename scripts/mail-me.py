@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Send plain-text stdin to David's Gmail account: mail-me "Subject" < output.txt."""
+"""Send stdin to David's Gmail: mail-me [--html] "Subject" < body."""
 
 import argparse
 from email.message import EmailMessage
@@ -13,6 +13,7 @@ RECIPIENT = "david.pdrsn@gmail.com"
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("subject", help="Email subject (one nonempty line)")
+    parser.add_argument("--html", action="store_true", help="Treat stdin as HTML")
     args = parser.parse_args(argv)
     if not args.subject.strip() or "\r" in args.subject or "\n" in args.subject:
         parser.error("subject must be a single nonempty line")
@@ -23,7 +24,9 @@ def main(argv=None):
     message["From"] = RECIPIENT
     message["To"] = RECIPIENT
     message["Subject"] = args.subject
-    message.set_content(sys.stdin.read(), charset="utf-8")
+    message.set_content(
+        sys.stdin.read(), subtype="html" if args.html else "plain", charset="utf-8"
+    )
     try:
         return subprocess.run(
             ["msmtp", "--account=gmail", "--", RECIPIENT],

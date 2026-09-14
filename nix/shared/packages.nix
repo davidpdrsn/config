@@ -6,6 +6,14 @@
   countTokens = pkgs.callPackage ./packages/count-tokens.nix {};
   cloudAgent = pkgs.callPackage ./packages/cloud-agent.nix {};
   piWrapped = import ../lib/pi-wrapped.nix {inherit pkgs inputs;};
+  prDigest = pkgs.writeShellApplication {
+    name = "pr-digest";
+    runtimeInputs = [pkgs.gh piWrapped];
+    text = ''
+      export PYTHONIOENCODING=utf-8
+      exec ${pkgs.python3}/bin/python3 ${../../scripts/pr-digest.py} "$@"
+    '';
+  };
 in {
   environment.systemPackages = with pkgs;
     [
@@ -39,5 +47,6 @@ in {
       countTokens
       cloudAgent
       piWrapped
+      prDigest
     ];
 }
