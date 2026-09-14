@@ -79,6 +79,41 @@
   };
   piWrapped = import ../../lib/pi-wrapped.nix {inherit pkgs inputs;};
 
+  prDigest = name: repo: title: {
+    systemd.services."${name}-pr-digest" = {
+      description = "Email the daily ${title} merged PR digest";
+      wants = ["network-online.target"];
+      after = ["network-online.target"];
+      path = [(pkgs.callPackage ../../shared/packages/mail-me.nix {})];
+      environment.HOME = "/home/${username}";
+      serviceConfig = {
+        Type = "oneshot";
+        User = username;
+        WorkingDirectory = "/home/${username}";
+        TimeoutStartSec = "2h";
+      };
+      script = ''
+        set -euo pipefail
+        status=0
+        digest=$(/run/current-system/sw/bin/pr-digest ${pkgs.lib.escapeShellArg repo}) || status=$?
+        if [ -n "$digest" ]; then
+          printf '%s\n' "$digest" | mail-me --html ${pkgs.lib.escapeShellArg "${title} daily PR digest"}
+        fi
+        exit "$status"
+      '';
+    };
+
+    systemd.timers."${name}-pr-digest" = {
+      description = "Send the ${title} PR digest at 16:00 Copenhagen time";
+      wantedBy = ["timers.target"];
+      timerConfig = {
+        OnCalendar = "*-*-* 16:00:00 Europe/Copenhagen";
+        Persistent = true;
+        AccuracySec = "1s";
+      };
+    };
+  };
+
   serverPackages = [
     cloudAgent
     gog
@@ -120,6 +155,10 @@ in {
   imports = [
     ../hetzner/common.nix
     ./hardware.nix
+    (prDigest "gitbutler" "gitbutlerapp/gitbutler" "GitButler")
+    (prDigest "axum" "tokio-rs/axum" "axum")
+    (prDigest "tower" "tower-rs/tower" "tower")
+    (prDigest "tower-http" "tower-rs/tower-http" "tower-http")
   ];
 
   environment.systemPackages = serverPackages;
@@ -130,39 +169,6 @@ in {
 
   systemd.services.obsidian-vaults-pull = obsidianVaultsPull.service;
   systemd.timers.obsidian-vaults-pull = obsidianVaultsPull.timer;
-
-  systemd.services.gitbutler-pr-digest = {
-    description = "Email the daily GitButler merged PR digest";
-    wants = ["network-online.target"];
-    after = ["network-online.target"];
-    path = [(pkgs.callPackage ../../shared/packages/mail-me.nix {})];
-    environment.HOME = "/home/${username}";
-    serviceConfig = {
-      Type = "oneshot";
-      User = username;
-      WorkingDirectory = "/home/${username}";
-      TimeoutStartSec = "2h";
-    };
-    script = ''
-      set -euo pipefail
-      status=0
-      digest=$(/run/current-system/sw/bin/pr-digest gitbutlerapp/gitbutler) || status=$?
-      if [ -n "$digest" ]; then
-        printf '%s\n' "$digest" | mail-me --html "GitButler daily PR digest"
-      fi
-      exit "$status"
-    '';
-  };
-
-  systemd.timers.gitbutler-pr-digest = {
-    description = "Send the GitButler PR digest at 16:00 Copenhagen time";
-    wantedBy = ["timers.target"];
-    timerConfig = {
-      OnCalendar = "*-*-* 16:00:00 Europe/Copenhagen";
-      Persistent = true;
-      AccuracySec = "1s";
-    };
-  };
 
   systemd.services.neovim-release-watch = {
     description = "Check nixpkgs-unstable for Neovim >= 0.13.0 using Pi";
