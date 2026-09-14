@@ -31,13 +31,16 @@
     passwordCommand = "${pkgs.coreutils}/bin/cat ${lib.escapeShellArg "${config.xdg.configHome}/msmtp/gmail-app-password"}";
     smtp = {
       host = "smtp.gmail.com";
-      port = 465;
+      port = 587;
       tls = {
         enable = true;
-        useStartTls = false;
+        useStartTls = true;
       };
     };
-    msmtp.enable = true;
+    msmtp = {
+      enable = true;
+      extraConfig.timeout = "15";
+    };
   };
 
   services.ssh-agent.enable = true;
