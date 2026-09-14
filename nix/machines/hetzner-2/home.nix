@@ -20,6 +20,8 @@
     };
   };
 
+  home.packages = [(pkgs.callPackage ../../shared/packages/mail-me.nix {})];
+
   programs.msmtp.enable = true;
 
   accounts.email.accounts.gmail = {
