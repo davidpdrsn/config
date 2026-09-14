@@ -166,6 +166,7 @@ in {
     after = ["network-online.target"];
     path = [
       piWrapped
+      pkgs.bash
       pkgs.curl
       pkgs.jq
       pkgs.nix
