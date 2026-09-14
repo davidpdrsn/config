@@ -88,6 +88,7 @@
       cc = "claude --dangerously-skip-permissions";
       vi = "nvim";
       vim = "nvim";
+      te = "run-most-recent-cargo-test";
     };
   };
 
