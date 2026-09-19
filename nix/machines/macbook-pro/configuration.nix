@@ -31,7 +31,6 @@
     persistent-apps = [
       "/Applications/Ghostty.app"
       "/Applications/Arc.app"
-      "/System/Applications/Mail.app"
       "/Applications/Discord.app"
     ];
     magnification = false;
