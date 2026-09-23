@@ -41,7 +41,7 @@ return {
         "mrjones2014/smart-splits.nvim",
         config = function()
             local smart_splits = require("smart-splits")
-            smart_splits.setup()
+            smart_splits.setup(require("mux_navigation").setup())
             vim.keymap.set("n", "<c-h>", smart_splits.move_cursor_left, { desc = "Move left" })
             vim.keymap.set("n", "<c-j>", smart_splits.move_cursor_down, { desc = "Move down" })
             vim.keymap.set("n", "<c-k>", smart_splits.move_cursor_up, { desc = "Move up" })
