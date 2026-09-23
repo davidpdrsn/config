@@ -5,6 +5,16 @@ function M.setup()
     if not vim.env.MUX_SOCKET or not vim.env.MUX_PANE then
         return {}
     end
+    local executable = vim.env.MUX_BIN
+    if not executable or executable == "" then
+        executable = vim.fn.exepath("mux")
+    end
+    if executable == "" or vim.fn.executable(executable) ~= 1 then
+        vim.schedule(function()
+            vim.notify("mux: executable not found; restart mux with the updated binary or set MUX_BIN to its absolute path", vim.log.levels.WARN)
+        end)
+        return {}
+    end
     -- Modern Neovim runs its TUI separately from the Lua/core process.
     local editor_pid = vim.fn.getpid()
     for _, ui in ipairs(vim.api.nvim_list_uis()) do
@@ -16,10 +26,18 @@ function M.setup()
     end
     local pid = tostring(editor_pid)
     local function command(args)
-        local argv = { "mux", "--socket", vim.env.MUX_SOCKET, "pane" }
+        local argv = { executable, "--socket", vim.env.MUX_SOCKET, "pane" }
         vim.list_extend(argv, args)
         -- Wait for registration/navigation so subsequent keys see the updated state.
-        local result = vim.system(argv, { text = true }):wait()
+        local ok, result = pcall(function()
+            return vim.system(argv, { text = true }):wait()
+        end)
+        if not ok then
+            vim.schedule(function()
+                vim.notify("mux: " .. tostring(result), vim.log.levels.WARN)
+            end)
+            return
+        end
         if result.code ~= 0 then
             vim.schedule(function()
                 vim.notify("mux: " .. (result.stderr or "command failed"), vim.log.levels.WARN)
