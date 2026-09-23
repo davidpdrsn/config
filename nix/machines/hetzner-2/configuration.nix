@@ -156,6 +156,7 @@ in {
     ../hetzner/common.nix
     ./hardware.nix
     (prDigest "gitbutler" "gitbutlerapp/gitbutler" "GitButler")
+    (prDigest "but-dev" "gitbutlerapp/but-dev" "but-dev")
     (prDigest "axum" "tokio-rs/axum" "axum")
     (prDigest "tower" "tower-rs/tower" "tower")
     (prDigest "tower-http" "tower-rs/tower-http" "tower-http")
