@@ -24,9 +24,6 @@
       flake = false;
     };
 
-    jjui.url = "github:davidpdrsn/jjui";
-    jjui.inputs.nixpkgs.follows = "nixpkgs";
-
     llm-agents.url = "github:numtide/llm-agents.nix";
     hunk = {
       url = "github:modem-dev/hunk";

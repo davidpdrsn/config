@@ -1,5 +1,5 @@
 [ephemeral.jjui]
-command = ["/Users/davidpdrsn/.bin/jjui"]
+command = ["jjui"]
 shortcut = "alt-j"
 
 [ephemeral.gitbutler]

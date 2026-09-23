@@ -28,6 +28,7 @@ in {
       gh
       htop
       jq
+      jjui
       mergiraf
       ruby_3_4
       speedtest-cli
