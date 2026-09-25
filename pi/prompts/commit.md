@@ -1,1 +1,1 @@
-Using the GitButler CLI, inspect the uncommitted changes and make topical commits to the appropriate branches. You might need to create new branches.
+Using the GitButler CLI, inspect the uncommitted changes and make topical commits to the appropriate branches. Also consider if the changes should instead be amended into existing commits, if they're fix up style changes. You might need to create new independent branches or stacked branches.
