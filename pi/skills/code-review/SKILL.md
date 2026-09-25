@@ -5,7 +5,7 @@ description: "Use this skill when reviewing code"
 
 Keep these things in mind when reviewing code:
 
-- Your primary job is to find bugs.
+- Your primary job is to find bugs and new duplication thats been introduced.
 - Your secondary job is to suggest refactors.
 - Don't build, run checks, or report potential type errors. Trust the human to have done that, otherwise CI will catch it.
 - Don't run tests. Trust that the human has ensured they pass, otherwise CI will catch it.
