@@ -3,6 +3,15 @@
 in {
   programs."pi-agent" = {
     enable = true;
+    keybindings = {
+      "tui.select.up" = ["up" "ctrl+p"];
+      "tui.select.down" = ["down" "ctrl+n"];
+      # Reserve Ctrl+P/N for list navigation rather than context-specific actions.
+      "app.model.cycleForward" = [];
+      "app.session.togglePath" = [];
+      "app.session.toggleNamedFilter" = [];
+      "app.models.toggleProvider" = [];
+    };
     settings = {
       lastChangelogVersion = pi.version;
       collapseChangelog = true;
