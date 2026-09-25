@@ -110,13 +110,11 @@ local function chain(f, g)
     end
 end
 
-vim.keymap.set("n", "<leader>t", test_file, { desc = "Run test file" })
-
-vim.keymap.set("n", "<leader>T", chain(set_test_command, test_file), { desc = "Run+set test file" })
-
-vim.keymap.set("n", "<leader>k", test_line, { desc = "Run test line" })
-
-vim.keymap.set("n", "<leader>K", chain(set_test_command, test_line), { desc = "Run+set test line" })
+-- no bindings added, I'm trying to use multiplexer instead
+-- vim.keymap.set("n", "<leader>t", test_file, { desc = "Run test file" })
+-- vim.keymap.set("n", "<leader>T", chain(set_test_command, test_file), { desc = "Run+set test file" })
+-- vim.keymap.set("n", "<leader>k", test_line, { desc = "Run test line" })
+-- vim.keymap.set("n", "<leader>K", chain(set_test_command, test_line), { desc = "Run+set test line" })
 
 vim.keymap.set("n", "<leader>dt", test_file_debugger, { desc = "Run test file, in debugger" })
 
