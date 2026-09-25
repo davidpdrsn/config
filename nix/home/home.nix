@@ -28,7 +28,28 @@
 
   programs.direnv = {
     enable = true;
-    nix-direnv.enable = true;
+    nix-direnv = {
+      enable = true;
+      # Refresh GC roots without touching the watched .rc cache files, which
+      # otherwise cause reloads to bounce between shells in the same project.
+      package = pkgs.nix-direnv.overrideAttrs (old: {
+        installPhase = old.installPhase + ''
+          cd "$out"
+          chmod u+w share/nix-direnv/direnvrc
+          substituteInPlace share/nix-direnv/direnvrc --replace-fail \
+            'if ! touch -h "''${layout_dir}"/flake-profile-* "''${layout_dir}"/flake-inputs/* "''${layout_dir}"/nix-profile-* 2>/dev/null; then' \
+            'local root
+          for root in "''${layout_dir}"/flake-profile-* "''${layout_dir}"/flake-inputs/* "''${layout_dir}"/nix-profile-*; do
+            [[ -L $root ]] || continue
+            if ! touch -h "$root" 2>/dev/null; then' \
+            --replace-fail '_nix_direnv_warning "could not refresh gcroots; layout directory may be read-only"
+            fi' \
+            '_nix_direnv_warning "could not refresh gcroots; layout directory may be read-only"
+            fi
+          done'
+        '';
+      });
+    };
   };
 
   home.packages = [
