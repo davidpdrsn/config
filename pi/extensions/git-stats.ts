@@ -44,7 +44,7 @@ export default function (pi: ExtensionAPI): void {
 					directory = `~${directory.slice(home.length)}`;
 				}
 				const branch = footerData.getGitBranch();
-				if (branch) directory += ` (${branch})`;
+				if (branch && branch !== "gitbutler/workspace") directory += ` (${branch})`;
 				const name = ctx.sessionManager.getSessionName();
 				if (name) directory += ` • ${name}`;
 				const git = stats
