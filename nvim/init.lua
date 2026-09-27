@@ -252,7 +252,6 @@ vim.keymap.set("n", "<leader>Q", ":qall!<cr>", { desc = "Force quit" })
 vim.keymap.set("n", "<leader>cp", function()
     local path = vim.fn.expand("%:.")
     vim.fn.setreg("+", path)
-    vim.notify(path, "info", { title = "Copied to clipboard" })
 end, { desc = "Copy path to current file" })
 
 local treesitter_identifier_types = {
@@ -336,7 +335,6 @@ local function copy_current_function_name()
             if name_node then
                 local name = vim.treesitter.get_node_text(name_node, 0)
                 vim.fn.setreg("+", name)
-                vim.notify(name, "info", { title = "Copied function name" })
                 return
             end
         end

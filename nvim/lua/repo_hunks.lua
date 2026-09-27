@@ -204,7 +204,6 @@ local function open(pathspec)
     end
 
     if vim.tbl_isempty(hunks) then
-        vim.notify("No git hunks")
         return
     end
 

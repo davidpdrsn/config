@@ -220,7 +220,6 @@ local function send(build_message)
 
         vim.system({ "pi-msg", message }, { text = true }, function(result)
             if result.code == 0 then
-                notify(vim.trim(result.stdout), vim.log.levels.INFO)
                 return
             end
 

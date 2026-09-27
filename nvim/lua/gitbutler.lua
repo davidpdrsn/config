@@ -243,7 +243,6 @@ local function run_but_simple(command)
 
     vim.cmd("checktime")
 
-    vim.notify("Ran but " .. command, vim.log.levels.INFO, { title = "GitButler" })
     return true
 end
 
@@ -327,11 +326,6 @@ function M.squash_hunk_id_into_top_commit(hunk_cli_id)
         notify_error("live_diff was not enabled for the current buffer")
     end
 
-    vim.notify(
-        string.format("Squashed %s into %s", hunk_cli_id, commit.cliId),
-        vim.log.levels.INFO,
-        { title = "GitButler squash" }
-    )
     return true
 end
 
