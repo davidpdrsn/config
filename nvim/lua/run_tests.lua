@@ -111,10 +111,29 @@ local function chain(f, g)
 end
 
 -- no bindings added, I'm trying to use multiplexer instead
--- vim.keymap.set("n", "<leader>t", test_file, { desc = "Run test file" })
 -- vim.keymap.set("n", "<leader>T", chain(set_test_command, test_file), { desc = "Run+set test file" })
--- vim.keymap.set("n", "<leader>k", test_line, { desc = "Run test line" })
 -- vim.keymap.set("n", "<leader>K", chain(set_test_command, test_line), { desc = "Run+set test line" })
+
+vim.keymap.set("n", "<leader>t", function()
+    vim.cmd("silent write")
+    vim.system({ "mux", "run", "--", "nix", "develop", "-c", "run-most-recent-cargo-test" }, {
+        stdout = false,
+        stderr = false,
+    }, function() end)
+end, { desc = "Run most recent cargo test in mux" })
+
+vim.keymap.set("n", "<leader>k", function()
+    local name = require("current_function").name()
+    if not name then
+        return
+    end
+
+    vim.cmd("silent write")
+    vim.system({ "mux", "run", "--", "nix", "develop", "-c", "rust-test-finder", name }, {
+        stdout = false,
+        stderr = false,
+    }, function() end)
+end, { desc = "Run current test in mux" })
 
 vim.keymap.set("n", "<leader>dt", test_file_debugger, { desc = "Run test file, in debugger" })
 
