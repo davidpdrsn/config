@@ -50,8 +50,17 @@ export default function (pi: ExtensionAPI): void {
 				const git = stats
 					? theme.fg("dim", ` +${stats.added} −${stats.removed}`)
 					: "";
-				const pathWidth = Math.max(0, width - visibleWidth(git));
-				const lines = [truncateToWidth(theme.fg("dim", truncateToWidth(singleLine(directory), pathWidth)) + git, width)];
+				const sessionId = ctx.sessionManager.getSessionId();
+				// Keep the UUID intact for copying. Hide it when the row is too narrow.
+				const sessionWidth = visibleWidth(sessionId);
+				const showSession = width >= sessionWidth + visibleWidth(git) + 3;
+				const directoryWidth = showSession ? width - sessionWidth - 2 : width;
+				const pathWidth = Math.max(0, directoryWidth - visibleWidth(git));
+				let directoryLine = truncateToWidth(theme.fg("dim", truncateToWidth(singleLine(directory), pathWidth)) + git, directoryWidth);
+				if (showSession) {
+					directoryLine += " ".repeat(width - visibleWidth(directoryLine) - sessionWidth) + theme.fg("dim", sessionId);
+				}
+				const lines = [directoryLine];
 
 				let input = 0, output = 0, cacheRead = 0, cacheWrite = 0, cost = 0;
 				for (const entry of ctx.sessionManager.getEntries()) {
