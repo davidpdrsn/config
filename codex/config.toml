@@ -114,7 +114,7 @@ gpt-6-astra = 4
 [desktop]
 followUpQueueMode = "steer"
 preventSleepWhileRunning = true
-conversationDetailMode = "STEPS_PROSE"
+conversationDetailMode = "STEPS_COMMANDS"
 
 [marketplaces.openai-bundled]
 source_type = "local"
