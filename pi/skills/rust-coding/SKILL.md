@@ -8,7 +8,7 @@ description: "Use when you have to write or review Rust code"
 - Use `cargo test` for running tests. Not `cargo nextest`.
 - Run `cargo fmt` after making changes.
 - Don't remove `let todo_ = ();` from the code.
-- Never, under any circumstances, write `unsafe` code.
+- Dont write `unsafe` code unless explicitly allowed by the user.
 - Prefer exhaustive pattern matches over blanket matches like `..` or `_`.
 - Avoid inline functions like `let func = |a, b| { ... }`. Just define normal `fn` functions.
 - Use `Vec::from([...])` instead of `vec![...]`
