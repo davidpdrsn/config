@@ -47,6 +47,24 @@
     extensions = ["svg"];
   }
   {
+    id = "nvim";
+    name = "Neovim";
+    executable = {
+      type = "pathExecutable";
+      nameOrPath = "nvim";
+      requiresTerminal = true;
+    };
+    category = "editor";
+    openArgs = [
+      "{{filepath}}"
+    ];
+    openAtLineArgs = [
+      "+{{line_number}}"
+      "{{filepath}}"
+    ];
+    extensions = ["*"];
+  }
+  {
     id = "nvim-remote";
     name = "Neovim Remote";
     executable = {
