@@ -12,5 +12,7 @@ After opening a pull request start a loop where you babysit the PR:
 - If there are review comments from a human, let the operator know. Use the questionnaire tool
 - Never merge a PR unless explicitly told to do so
 - If CI is green and there are no review comments use the questionnaire tool and ask the user if it should be merged. If yes, you now have permission to merge it
+- Dont wait on CI steps that aren't required.
+- Use the footer_link tool to add the PR to the Pi footer. The label must be "#PR-NUMBER ⋅ PR TITLE"
 
 Return to this babysitting loop after completing a step (for example, continue babysitting after fixing CI)
