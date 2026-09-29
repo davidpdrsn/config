@@ -13,6 +13,7 @@ interface AgentStatusRecord {
 	host: string;
 	sessionId: string;
 	sessionFile: string | null;
+	untouched: boolean;
 	cwd: string;
 	state: AgentActivityState;
 	startedAt: string;
@@ -78,6 +79,7 @@ export default function (pi: ExtensionAPI): void {
 	let heartbeat: NodeJS.Timeout | undefined;
 	let lastPublishedTitle: string | null = null;
 	let caffeinateProcess: ChildProcess | null = null;
+	let pendingWrite: Promise<void> = Promise.resolve();
 
 	let record: AgentStatusRecord = {
 		version: 1,
@@ -86,6 +88,7 @@ export default function (pi: ExtensionAPI): void {
 		host: process.env.HOSTNAME || process.env.HOST || "unknown",
 		sessionId: "unknown",
 		sessionFile: null,
+		untouched: false,
 		cwd: process.cwd(),
 		state: "unknown",
 		startedAt,
@@ -135,7 +138,10 @@ export default function (pi: ExtensionAPI): void {
 
 	async function flush(): Promise<void> {
 		record.updatedAt = nowIso();
-		await writeAtomicJson(statusFile, record);
+		const snapshot = { ...record };
+		// Never let an older heartbeat overwrite a later input/touched report.
+		pendingWrite = pendingWrite.catch(() => {}).then(() => writeAtomicJson(statusFile, snapshot));
+		await pendingWrite;
 		publishTitle();
 		syncSleepPrevention();
 	}
@@ -145,9 +151,16 @@ export default function (pi: ExtensionAPI): void {
 			...record,
 			...updates,
 			state,
+			untouched: state === "busy" ? false : record.untouched,
 			lastEvent: eventName,
 			lastActivityAt: nowIso(),
 		};
+		await flush();
+	}
+
+	async function markTouched(): Promise<void> {
+		if (!record.untouched) return;
+		record.untouched = false;
 		await flush();
 	}
 
@@ -156,6 +169,11 @@ export default function (pi: ExtensionAPI): void {
 			...record,
 			sessionId: ctx.sessionManager.getSessionId(),
 			sessionFile: ctx.sessionManager.getSessionFile() ?? null,
+			// Inspect the whole tree, not just the selected branch. A missing
+			// file or an empty editor is not evidence of an untouched session.
+			untouched: ctx.isIdle() && !ctx.hasPendingMessages() && !ctx.sessionManager.getEntries().some(
+				entry => ["message", "custom_message", "compaction", "branch_summary"].includes(entry.type),
+			),
 			cwd: ctx.cwd,
 			state: "idle",
 			lastEvent: "session_start",
@@ -171,10 +189,16 @@ export default function (pi: ExtensionAPI): void {
 	});
 
 	pi.on("input", async (event) => {
-		if (event.source === "extension") return { action: "continue" };
+		if (event.source === "extension") {
+			await markTouched();
+			return { action: "continue" };
+		}
 		await setState("busy", "input", { currentTool: null });
 		return { action: "continue" };
 	});
+
+	pi.on("message_start", markTouched);
+	pi.on("user_bash", markTouched);
 
 	pi.on("agent_start", async () => {
 		await setState("busy", "agent_start", { currentTool: null });
@@ -218,6 +242,7 @@ export default function (pi: ExtensionAPI): void {
 			heartbeat = undefined;
 		}
 		stopCaffeinate();
+		await pendingWrite.catch(() => {});
 		await rm(statusFile, { force: true });
 		lastPublishedTitle = null;
 		writeTerminalTitle("pi");
