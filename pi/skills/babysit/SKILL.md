@@ -3,7 +3,7 @@ name: babysit
 description: "Use to watch pull request after opening them"
 ---
 
-After openig a pull request start a loop where you babysit the PR:
+After opening a pull request start a loop where you babysit the PR:
 
 - Keep watching the PR for changes such as CI success/failures or review comments
 - If the CI failure is trivial (such as formatting or simple test cases just amend and push a fix)
@@ -11,5 +11,6 @@ After openig a pull request start a loop where you babysit the PR:
 - If there are review comments from an agent use the "address-copilot-feedback" skill to address them
 - If there are review comments from a human, let the operator know. Use the questionnaire tool
 - Never merge a PR unless explicitly told to do so
+- If CI is green and there are no review comments use the questionnaire tool and ask the user if it should be merged. If yes, you now have permission to merge it
 
 Return to this babysitting loop after completing a step (for example, continue babysitting after fixing CI)
