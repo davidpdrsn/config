@@ -59,6 +59,11 @@ update-opencode:
     ./scripts/nix-update-opencode
     just switch
 
+# Update buti to latest GitHub release binary
+update-buti:
+    ./scripts/nix-update-buti
+    just switch
+
 # Compare available updates
 compare-updates:
     ./scripts/nix-compare-updates
