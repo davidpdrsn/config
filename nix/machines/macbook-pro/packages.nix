@@ -20,6 +20,7 @@
     gitButlerNvimRemote = pkgs.callPackage ./packages/gitbutler-nvim-remote.nix {};
     alacritty = pkgs.callPackage ./packages/alacritty.nix {};
     lazybut = pkgs.callPackage ./packages/lazybut.nix {};
+    buti = pkgs.callPackage ./packages/buti.nix {};
     test-cli = opWrapped {
       name = "test-cli";
       env = {
@@ -45,6 +46,7 @@
       gitButlerNvimRemote
       alacritty
       lazybut
+      buti
       test-cli
       gettext
       ffmpeg
