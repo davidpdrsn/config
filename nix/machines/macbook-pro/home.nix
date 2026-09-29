@@ -26,6 +26,11 @@
     config.lib.file.mkOutOfStoreSymlink
     "${config.home.homeDirectory}/config/pi/skills";
 
+  # GitButler checks Pi's own skill directory. Pi deduplicates the shared target.
+  home.file.".pi/agent/skills/gitbutler".source =
+    config.lib.file.mkOutOfStoreSymlink
+    "${config.home.homeDirectory}/config/pi/skills/but";
+
   home.file."Library/Application Support/gitbutler/programs.json".source =
     (pkgs.formats.json {}).generate
     "gitbutler-programs.json"

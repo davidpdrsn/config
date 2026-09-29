@@ -118,4 +118,5 @@ update-and-deploy-dnd:
     just deploy-dnd-pinned
 
 update-but-skill:
+    # this gets symlinked into ~/.agents/skills/but by Home Manager
     but skill install --path ./pi/skills/but
