@@ -15,6 +15,7 @@ After opening a pull request start a loop where you babysit the PR:
 - After pushing a fix to a review comment, mark that comment as resolved on github.
 - If the human tells you to ignore a review comment mark it as resolved on github.
 - Dont wait for the "lite-e2e" ci step. Its not required.
-- Never merge a PR unless explicitly told to do so
+- Never merge a PR unless explicitly told to do so.
+- Do normal merge, not rebase or squash.
 
 After doing some work never just sit idle. Either return to the babysit loop or use questionnaire ask for what to do next.
