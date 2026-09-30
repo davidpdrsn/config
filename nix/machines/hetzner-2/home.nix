@@ -6,6 +6,8 @@
 }: {
   nix.gc.options = lib.mkForce "--delete-older-than 3d";
 
+  home.sessionPath = ["/home/davidpdrsn/.local/bin"];
+
   programs.ssh.settings = {
     "github.com" = {
       User = "git";
