@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import extension from "../extensions/footer-link";
-import { truncateToWidth, visibleWidth } from "@mariozechner/pi-tui";
+import { truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
 
 function setup() {
 	let tool: any;

@@ -4,7 +4,7 @@ import { execFile } from "node:child_process";
 import { readdir, readFile, realpath, rm } from "node:fs/promises";
 import { promisify } from "node:util";
 import path from "node:path";
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 
 const execFileAsync = promisify(execFile);
 const REGISTRY_ROOT = process.env.PI_NVIM_SERVER_DIR ?? "/tmp/pi-nvim-servers";

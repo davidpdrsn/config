@@ -2,7 +2,7 @@ import { createServer, type Server, type Socket } from "node:net";
 import { chmod, mkdir, realpath, rename, rm, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
-import type { ExtensionAPI, ExtensionContext } from "@mariozechner/pi-coding-agent";
+import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 
 interface MessageAgentRecord {
 	version: 1;
