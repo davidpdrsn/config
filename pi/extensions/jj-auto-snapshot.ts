@@ -174,14 +174,6 @@ export default function (pi: ExtensionAPI): void {
 		resetState(ctx);
 	});
 
-	pi.on("session_switch", async (_event, ctx) => {
-		resetState(ctx);
-	});
-
-	pi.on("session_fork", async (_event, ctx) => {
-		resetState(ctx);
-	});
-
 	pi.on("session_tree", async (_event, ctx) => {
 		resetState(ctx);
 	});

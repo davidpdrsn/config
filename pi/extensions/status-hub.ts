@@ -75,18 +75,6 @@ export default function (pi: ExtensionAPI): void {
 		startPolling(ctx);
 	});
 
-	pi.on("session_switch", async (_event, ctx) => {
-		stopPolling();
-		lastSignature.value = "";
-		startPolling(ctx);
-	});
-
-	pi.on("session_fork", async (_event, ctx) => {
-		stopPolling();
-		lastSignature.value = "";
-		startPolling(ctx);
-	});
-
 	pi.on("session_tree", async (_event, ctx) => {
 		stopPolling();
 		lastSignature.value = "";

@@ -62,7 +62,5 @@ export default function (pi: ExtensionAPI): void {
 	});
 
 	pi.on("session_start", (_event, ctx) => restore(ctx));
-	pi.on("session_switch", (_event, ctx) => restore(ctx));
-	pi.on("session_fork", (_event, ctx) => restore(ctx));
 	pi.on("session_tree", (_event, ctx) => restore(ctx));
 }

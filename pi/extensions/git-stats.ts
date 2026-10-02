@@ -120,8 +120,6 @@ export default function (pi: ExtensionAPI): void {
 	}
 
 	pi.on("session_start", (_event, ctx) => start(ctx));
-	pi.on("session_switch", (_event, ctx) => start(ctx));
-	pi.on("session_fork", (_event, ctx) => start(ctx));
 	pi.on("tool_execution_end", (_event, ctx) => refresh(ctx));
 	pi.on("agent_end", (_event, ctx) => refresh(ctx));
 	pi.on("session_shutdown", (_event, ctx) => {

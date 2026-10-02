@@ -62,10 +62,14 @@ describe("footer_link", () => {
 		const result = await h.run({ action: "set", url: "https://example.com", label: "Issue" });
 		h.entries.push({ type: "message", message: { role: "toolResult", toolName: "footer_link", ...result } });
 		await h.run({ action: "clear" });
-		for (const name of ["session_start", "session_switch", "session_fork", "session_tree"]) {
-			h.handlers.get(name)!({}, h.ctx);
+		for (const reason of ["startup", "reload", "new", "resume", "fork"]) {
+			await h.run({ action: "clear" });
+			h.handlers.get("session_start")!({ type: "session_start", reason }, h.ctx);
 			expect(h.status()).toContain("Issue");
 		}
+		await h.run({ action: "clear" });
+		h.handlers.get("session_tree")!({ type: "session_tree" }, h.ctx);
+		expect(h.status()).toContain("Issue");
 		h.entries.push({ type: "message", message: { role: "toolResult", toolName: "footer_link", details: { link: null } } });
 		h.handlers.get("session_start")!({}, h.ctx);
 		expect(h.status()).toBeUndefined();
