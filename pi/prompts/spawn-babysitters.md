@@ -1,0 +1,1 @@
+For each of my current branches that dont have a babysitting pr loop running in mux (see mux cli), start a pi in the babysitting window. Ignore branches that dont have PRs. Create panes that stack horizontally. Equalize the panes when you're done. In your prompt to pi don't repeat whats in the skill. Quit the current pi session when you're done.
