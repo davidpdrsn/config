@@ -15,6 +15,7 @@ in {
     settings = {
       lastChangelogVersion = pi.version;
       collapseChangelog = true;
+      defaultTools = ["+codemode"];
       defaultProvider = "openai-codex";
       defaultModel = "gpt-6-astra";
       enabledModels = [
