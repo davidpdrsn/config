@@ -187,7 +187,7 @@ function shortAgent(agent: ObservedRecord): string {
 	return `pid=${agent.pid} session=${agent.sessionId} cwd=${agent.cwd} socket=${agent.socketPath}`;
 }
 
-async function run(args: string[], options: { cwd?: string; steer?: boolean; followUp?: boolean; session?: string; staleMs?: string; list?: boolean }): Promise<number> {
+async function run(args: string[], options: { cwd?: string; steer?: boolean; followUp?: boolean; session?: string; staleMs?: string; list?: boolean; check?: boolean }): Promise<number> {
 	const staleMs = Number(options.staleMs ?? process.env.PI_MESSAGE_AGENT_STALE_MS ?? DEFAULT_STALE_MS);
 	if (!Number.isInteger(staleMs) || staleMs < 1) throw new Error("--stale-ms must be a positive integer");
 
@@ -198,7 +198,9 @@ async function run(args: string[], options: { cwd?: string; steer?: boolean; fol
 		return 0;
 	}
 
-	const { cwd, message } = resolveTargetAndMessage(args, options.cwd);
+	const { cwd, message } = options.check
+		? { cwd: options.cwd || process.env.PI_MSG_CALLER_CWD || process.cwd(), message: "" }
+		: resolveTargetAndMessage(args, options.cwd);
 	const canonicalCwd = await canonicalizeCwd(cwd);
 	const delivery = validateDelivery(options);
 	let matches = agents.filter((agent) => agent.cwd === canonicalCwd);
@@ -215,6 +217,8 @@ async function run(args: string[], options: { cwd?: string; steer?: boolean; fol
 		process.stderr.write("Use --session <id-prefix> to select one.\n");
 		return 1;
 	}
+
+	if (options.check) return 0;
 
 	const response = await sendToSocket(matches[0].socketPath, { message, deliverAs: delivery });
 	if (!isObject(response) || response.ok !== true) {
@@ -239,6 +243,7 @@ cli
 	.option("--session <id-prefix>", "Select an agent by session ID prefix")
 	.option("--stale-ms <n>", "Ignore records older than this")
 	.option("--list", "List discoverable message targets")
+	.option("--check", "Check that exactly one target matches without sending a message")
 	.action(async (args: string[], options) => {
 		try {
 			process.exitCode = await run(args, options as any);
