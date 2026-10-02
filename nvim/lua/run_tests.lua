@@ -133,7 +133,7 @@ vim.keymap.set("n", "<leader>k", function()
     end
 
     vim.cmd("silent write")
-    vim.system({ "mux", "run", "--", "nix", "develop", "-c", "rust-test-finder", name }, {
+    vim.system({ "mux", "run", "--height", "7", "--", "nix", "develop", "-c", "rust-test-finder", name }, {
         stdout = false,
         stderr = false,
     }, function() end)
