@@ -19,5 +19,6 @@ After being told to baby a pr, or told to open one, start a loop where you:
 - If you're watching a draft pr and ci passes and all initial review comments have been resolved, offer to mark it as ready for review and continue looping
 - Never merge a PR unless explicitly told to do so
 - Do normal merge, not rebase or squash
+- Once the pr has merged use the shutdown tool
 
 After doing some work never just sit idle. Either return to the babysit loop or use questionnaire to ask for what to do next.
