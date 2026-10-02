@@ -42,6 +42,9 @@ export default function (pi: ExtensionAPI): void {
 
 	pi.registerTool({
 		name: "footer_link",
+		// Restoration depends on top-level tool-result details in the session branch.
+		exposure: "model-only",
+		executionMode: "sequential",
 		label: "Footer Link",
 		description: "Set or clear a clickable HTTP(S) link in the Pi footer. Setting replaces the previous link. The link is restored with the session. Clicking requires terminal hyperlink support.",
 		parameters: Type.Object({

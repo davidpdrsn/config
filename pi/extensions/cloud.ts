@@ -239,6 +239,11 @@ async function runWorker(
 	command: "run" | "clean",
 	context: Record<string, unknown>,
 ): Promise<void> {
+	// Headless workers retain their non-interactive path. RPC has dialogs,
+	// but cannot render the custom terminal pickers used by these commands.
+	if (ctx.hasUI && ctx.mode !== "tui") {
+		throw new Error("Interactive cloud commands require the terminal UI.");
+	}
 	const cloudScript = await scriptPath(ctx);
 	const contextBase64 = Buffer.from(JSON.stringify(context), "utf8").toString("base64");
 	const child = spawn("bun", [cloudScript, command, "--mode", "ndjson", "--context-base64", contextBase64], {

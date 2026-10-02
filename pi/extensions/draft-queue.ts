@@ -119,7 +119,7 @@ export default function draftQueueExtension(pi: ExtensionAPI): void {
 	}
 
 	async function openManager(ctx: ExtensionContext): Promise<void> {
-		if (!ctx.hasUI) return;
+		if (ctx.mode !== "tui") return;
 		if (items.length === 0) {
 			ctx.ui.notify("Draft queue is empty", "info");
 			return;

@@ -129,7 +129,7 @@ function wrapText(text: string, width: number): string[] {
 
 function formatAnswersForModel(details: QuestionnaireDetails): string {
 	if (details.skipped) {
-		return "Questionnaire skipped because UI is unavailable.";
+		return "Questionnaire skipped because the terminal UI is unavailable.";
 	}
 
 	if (details.cancelled) {
@@ -154,6 +154,8 @@ export default function (pi: ExtensionAPI): void {
 
 	pi.registerTool({
 		name: "questionnaire",
+		exposure: "model-only",
+		executionMode: "sequential",
 		label: "Questionnaire",
 		description:
 			"Ask the user one or more clarification questions in a wizard. Supports single-choice, multi-select, and free-text answers.",
@@ -161,7 +163,7 @@ export default function (pi: ExtensionAPI): void {
 		async execute(_toolCallId, params, _signal, _onUpdate, ctx) {
 			const questions = params.questions as QuestionInput[];
 
-			if (!ctx.hasUI) {
+			if (ctx.mode !== "tui") {
 				const details: QuestionnaireDetails = {
 					skipped: true,
 					cancelled: false,
