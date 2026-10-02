@@ -206,7 +206,15 @@ local function build_selection_message(input)
     }, "\n")
 end
 
-local function send(build_message)
+local function report_failure(result)
+    local stderr = vim.trim(result.stderr or "")
+    if stderr == "" then
+        stderr = string.format("pi-msg exited with status %d", result.code)
+    end
+    notify(stderr, vim.log.levels.ERROR)
+end
+
+local function open_prompt(build_message)
     vim.ui.input({ prompt = "pi-msg " }, function(input)
         if input == nil or input == "" then
             return
@@ -223,11 +231,19 @@ local function send(build_message)
                 return
             end
 
-            local stderr = vim.trim(result.stderr)
-            if stderr == "" then
-                stderr = string.format("pi-msg exited with status %d", result.code)
-            end
-            notify(stderr, vim.log.levels.ERROR)
+            report_failure(result)
+        end)
+    end)
+end
+
+local function send(build_message)
+    vim.system({ "pi-msg", "--check" }, { text = true }, function(result)
+        if result.code ~= 0 then
+            report_failure(result)
+            return
+        end
+        vim.schedule(function()
+            open_prompt(build_message)
         end)
     end)
 end
