@@ -5,7 +5,7 @@ export default function (pi: ExtensionAPI): void {
 	pi.registerTool({
 		name: "shutdown",
 		label: "Shutdown",
-		description: "Gracefully shut down the current Pi process without a confirmation prompt. Use only when the user explicitly requests exiting Pi. This ends the session, not just the current turn.",
+		description: "Gracefully shut down the current Pi process without a confirmation prompt.",
 		exposure: "model-only",
 		executionMode: "sequential",
 		parameters: Type.Object({}),
