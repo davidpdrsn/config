@@ -78,6 +78,20 @@
     };
   };
 
+  programs.btop = {
+    enable = true;
+    # btop is installed in the system package set.
+    package = null;
+    settings.color_theme = "catppuccin_mocha";
+  };
+
+  xdg.configFile."btop/themes/catppuccin_mocha.theme".source = let
+    theme = pkgs.catppuccin.override {
+      variant = "mocha";
+      themeList = ["btop"];
+    };
+  in "${theme}/btop/catppuccin_mocha.theme";
+
   programs.lazygit = {
     enable = true;
     settings = {
