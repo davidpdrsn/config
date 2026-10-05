@@ -21,6 +21,7 @@
     alacritty = pkgs.callPackage ./packages/alacritty.nix {};
     lazybut = pkgs.callPackage ./packages/lazybut.nix {};
     buti = pkgs.callPackage ./packages/buti.nix {};
+    webScreenshot = pkgs.callPackage ./packages/web-screenshot.nix {};
     test-cli = opWrapped {
       name = "test-cli";
       env = {
@@ -48,6 +49,7 @@
       lazybut
       buti
       test-cli
+      webScreenshot
       gettext
       ffmpeg
       imagemagick
