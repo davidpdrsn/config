@@ -1,4 +1,4 @@
-Spawn a pi agent in a new mux pane and have it review your work
+Spawn a pi agent in a new mux vertically stacked pane and have it review your work
 
 Run `but review <but-cli-ids...>` in a new mux pane. Wait for completion,
 assess and report its findings. Leave the pane open.
