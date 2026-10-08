@@ -66,6 +66,38 @@ local function function_name_node(function_node)
     end
 end
 
+function M.select()
+    local ok, node = pcall(vim.treesitter.get_node, { bufnr = 0 })
+    if not ok or not node then
+        vim.notify("No Tree-sitter node found for current buffer", "warn")
+        return
+    end
+
+    while node and not function_types[node:type()] do
+        node = node:parent()
+    end
+
+    if not node then
+        vim.notify("Not inside a function", "warn")
+        return
+    end
+
+    local start_row, start_col, end_row, end_col = node:range()
+    if vim.o.selection ~= "exclusive" then
+        -- Tree-sitter's end position is exclusive; Visual mode normally is not.
+        if end_col == 0 then
+            end_row = end_row - 1
+            end_col = #vim.api.nvim_buf_get_lines(0, end_row, end_row + 1, true)[1]
+        end
+        local line = vim.api.nvim_buf_get_lines(0, end_row, end_row + 1, true)[1]
+        end_col = vim.fn.byteidx(line, vim.fn.charidx(line, end_col) - 1)
+    end
+
+    vim.api.nvim_win_set_cursor(0, { start_row + 1, start_col })
+    vim.cmd("normal! v")
+    vim.api.nvim_win_set_cursor(0, { end_row + 1, math.max(0, end_col) })
+end
+
 function M.name()
     local ok, node = pcall(vim.treesitter.get_node, { bufnr = 0 })
     if not ok or not node then

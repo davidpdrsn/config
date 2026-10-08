@@ -262,6 +262,9 @@ local function copy_current_function_name()
 end
 
 vim.keymap.set("n", "<leader>cf", copy_current_function_name, { desc = "Copy current function name" })
+vim.keymap.set("n", "<leader>af", function()
+    require("current_function").select()
+end, { desc = "Select current function" })
 
 -- exit insert mode and save just by hitting ctrl-s
 vim.keymap.set("i", "<c-s>", "<esc>:w<cr>", { desc = "Save and leave insert mode" })
