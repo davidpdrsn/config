@@ -4,4 +4,6 @@ Prefer making smaller more reviewable commits that tell a good story. Generally 
 
 Also consider if the changes should instead be amended into existing commits, if they're fix up style changes. You might need to create new independent branches or stacked branches.
 
+You should generally consider stacking branches instead of creating independent branches.
+
 Dont run tests or perform any verification before committing.
