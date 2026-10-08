@@ -1,5 +1,5 @@
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
-import { truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
+import { rgbColor, truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
 import { getGitStats, type GitStats } from "../scripts/git-stats";
 
 function formatTokens(count: number): string {
@@ -8,6 +8,9 @@ function formatTokens(count: number): string {
 	if (count < 1000000) return `${Math.round(count / 1000)}k`;
 	return `${(count / 1000000).toFixed(1)}M`;
 }
+
+const diffAddedColor = rgbColor(80, 130, 70);
+const diffRemovedColor = rgbColor(170, 70, 80);
 
 const singleLine = (text: string) => text.replace(/[\r\n\t]/g, " ");
 
@@ -48,7 +51,7 @@ export default function (pi: ExtensionAPI): void {
 				const name = ctx.sessionManager.getSessionName();
 				if (name) directory += ` • ${name}`;
 				const git = stats
-					? theme.fg("dim", ` +${stats.added} −${stats.removed}`)
+					? ` ${theme.style(`+${stats.added}`, { fg: diffAddedColor })} ${theme.style(`−${stats.removed}`, { fg: diffRemovedColor })}`
 					: "";
 				const sessionId = ctx.sessionManager.getSessionId();
 				// Keep the UUID intact for copying. Hide it when the row is too narrow.
