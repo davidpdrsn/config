@@ -112,6 +112,8 @@
       "tuple"
       "bbedit"
       "zoom"
+      "slack"
+      "cameracontroller"
 
       "wezterm"
       "iterm2"
