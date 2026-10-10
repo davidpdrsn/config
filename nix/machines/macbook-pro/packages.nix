@@ -22,6 +22,13 @@
     lazybut = pkgs.callPackage ./packages/lazybut.nix {};
     buti = pkgs.callPackage ./packages/buti.nix {};
     webScreenshot = pkgs.callPackage ./packages/web-screenshot.nix {};
+    flarectl = opWrapped {
+      name = "flarectl";
+      env = {
+        CF_API_TOKEN = "op://Personal/Cloudflare API key/credential";
+      };
+      command = pkgs.flarectl;
+    };
     test-cli = opWrapped {
       name = "test-cli";
       env = {
@@ -56,6 +63,7 @@
       yt-dlp
       graphviz
       google-cloud-sdk
+      flarectl
       gh-dash
       diffnav
       strip-ansi
