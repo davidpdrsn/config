@@ -88,6 +88,7 @@
     casks = [
       "1password"
       "bluesnooze"
+      "codexbar"
       "deckset"
       "discord"
       "ghostty"
