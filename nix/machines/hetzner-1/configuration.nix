@@ -94,6 +94,14 @@ in {
   services.nginx = {
     enable = true;
     virtualHosts = {
+      "dnd-next.davidpdrsn.com" = {
+        enableACME = true;
+        forceSSL = true;
+        locations."/".extraConfig = ''
+          default_type text/plain;
+          return 200 "Hello, World!";
+        '';
+      };
       "dnd.davidpdrsn.com" = {
         enableACME = true;
         forceSSL = true;
