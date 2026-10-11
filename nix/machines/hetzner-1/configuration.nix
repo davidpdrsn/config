@@ -10,6 +10,11 @@
     runtimeInputs = [pkgs.nix pkgs.coreutils pkgs.gnugrep pkgs.util-linux pkgs.systemd];
     text = builtins.readFile ../../../scripts/activate-dnd-character-sheet;
   };
+  activateDndNext = pkgs.writeShellApplication {
+    name = "activate-dnd-next";
+    runtimeInputs = [pkgs.coreutils pkgs.file pkgs.util-linux pkgs.systemd pkgs.curl];
+    text = builtins.readFile ../../../scripts/activate-dnd-next;
+  };
   obsidianVaultsPull = import ../../lib/obsidian-vaults-pull.nix {
     inherit pkgs username;
   };
@@ -65,13 +70,50 @@ in {
     extraGroups = ["wheel" "docker"];
   };
 
-  environment.systemPackages = [activateDnd];
+  users.groups.dnd-next = {};
+  users.users.dnd-next = {
+    isSystemUser = true;
+    group = "dnd-next";
+  };
+  systemd.tmpfiles.rules = ["d /opt/dnd-next 0755 root root -"];
+  systemd.services.dnd-next = {
+    description = "D&D character sheet";
+    wantedBy = ["multi-user.target"];
+    after = ["network.target"];
+    unitConfig.ConditionPathExists = "/opt/dnd-next/dnd-server";
+    serviceConfig = {
+      ExecStart = "/opt/dnd-next/dnd-server --host 127.0.0.1 --port 3002 --database /var/lib/dnd-next/characters.sqlite";
+      User = "dnd-next";
+      Group = "dnd-next";
+      StateDirectory = "dnd-next";
+      StateDirectoryMode = "0700";
+      UMask = "0077";
+      Restart = "on-failure";
+      RestartSec = 2;
+      TimeoutStopSec = 30;
+      NoNewPrivileges = true;
+      PrivateTmp = true;
+      ProtectHome = true;
+      ProtectSystem = "strict";
+      ProtectKernelTunables = true;
+      ProtectKernelModules = true;
+      ProtectControlGroups = true;
+      RestrictSUIDSGID = true;
+      CapabilityBoundingSet = "";
+    };
+  };
+
+  environment.systemPackages = [activateDnd activateDndNext];
   security.sudo.extraRules = [
     {
       users = [username];
       commands = [
         {
           command = "/run/current-system/sw/bin/activate-dnd-character-sheet";
+          options = ["NOPASSWD"];
+        }
+        {
+          command = "/run/current-system/sw/bin/activate-dnd-next";
           options = ["NOPASSWD"];
         }
       ];
@@ -98,11 +140,15 @@ in {
         enableACME = true;
         forceSSL = true;
         basicAuthFile = "/var/lib/nginx-secrets/htpasswd";
-        root = pkgs.writeTextDir "index.txt" "Hello, World!";
-        locations."/".extraConfig = ''
-          default_type text/plain;
-          index index.txt;
-        '';
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:3002";
+          extraConfig = ''
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+          '';
+        };
       };
       "dnd.davidpdrsn.com" = {
         enableACME = true;

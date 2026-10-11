@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Installed by NixOS with a fixed PATH. Never execute uploaded code as root.
+service=dnd-next.service
+directory=/opt/dnd-next
+
+if [[ $# -gt 1 || (${1:-} != "" && ${1:-} != --check) ]]; then
+  echo "usage: $0 [--check] (binary on stdin)" >&2
+  exit 1
+fi
+if [[ $(id -u) -ne 0 ]]; then
+  echo "Must run as root." >&2
+  exit 1
+fi
+if [[ "$(systemctl show --property=ExecStart --value "$service")" != *"$directory/dnd-server"* || ! -d "$directory" ]]; then
+  echo "Activate the dnd-next NixOS configuration first." >&2
+  exit 1
+fi
+if [[ ${1:-} == --check ]]; then
+  exit 0
+fi
+
+exec 9>/run/lock/activate-dnd-next.lock
+flock -n 9
+
+staging="$(mktemp "$directory/.dnd-server.XXXXXXXX")"
+trap 'rm -f -- "$staging"' EXIT
+cat > "$staging"
+description="$(file -b "$staging")"
+if [[ "$description" != *"ELF 64-bit LSB"* || "$description" != *"x86-64"* || "$description" != *"static"* ]]; then
+  echo "Expected a static x86_64 Linux binary, got: $description" >&2
+  exit 1
+fi
+chmod 0755 "$staging"
+if [[ -f "$directory/dnd-server" ]]; then
+  cp --preserve=mode "$directory/dnd-server" "$directory/dnd-server.previous"
+fi
+mv -f "$staging" "$directory/dnd-server"
+systemctl restart "$service"
+
+for ((attempt = 0; attempt < 30; attempt++)); do
+  if systemctl is-active --quiet "$service" &&
+    curl --fail --silent --output /dev/null --max-time 2 http://127.0.0.1:3002/; then
+    echo "dnd-next is healthy."
+    exit 0
+  fi
+  sleep 1
+done
+
+echo "dnd-next failed its health check. Inspect journalctl -u $service." >&2
+echo "Previous binary: $directory/dnd-server.previous (database migrations are not rolled back)." >&2
+exit 1
