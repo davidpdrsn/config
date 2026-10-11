@@ -97,9 +97,11 @@ in {
       "dnd-next.davidpdrsn.com" = {
         enableACME = true;
         forceSSL = true;
+        basicAuthFile = "/var/lib/nginx-secrets/htpasswd";
+        root = pkgs.writeTextDir "index.txt" "Hello, World!";
         locations."/".extraConfig = ''
           default_type text/plain;
-          return 200 "Hello, World!";
+          index index.txt;
         '';
       };
       "dnd.davidpdrsn.com" = {
