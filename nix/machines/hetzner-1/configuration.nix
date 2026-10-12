@@ -140,6 +140,17 @@ in {
         enableACME = true;
         forceSSL = true;
         basicAuthFile = "/var/lib/nginx-secrets/htpasswd";
+        locations."= /characters/import" = {
+          proxyPass = "http://127.0.0.1:3002";
+          extraConfig = ''
+            # Allow the app's 32 MiB ZIP limit plus multipart form overhead.
+            client_max_body_size 33m;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+          '';
+        };
         locations."/" = {
           proxyPass = "http://127.0.0.1:3002";
           extraConfig = ''
