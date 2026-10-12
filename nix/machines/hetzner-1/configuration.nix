@@ -140,6 +140,20 @@ in {
         enableACME = true;
         forceSSL = true;
         basicAuthFile = "/var/lib/nginx-secrets/htpasswd";
+        locations."~ \\.(css|js)$" = {
+          proxyPass = "http://127.0.0.1:3002";
+          extraConfig = ''
+            # These assets are public, including requests from signed-in browsers.
+            auth_basic off;
+            proxy_set_header Authorization "";
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            # Filenames are not fingerprinted, so keep the cache lifetime short.
+            add_header Cache-Control "public, max-age=300, s-maxage=300";
+          '';
+        };
         locations."= /characters/import" = {
           proxyPass = "http://127.0.0.1:3002";
           extraConfig = ''
