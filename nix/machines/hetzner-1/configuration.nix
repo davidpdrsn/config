@@ -137,6 +137,11 @@ in {
     enable = true;
     virtualHosts = {
       "dnd-next.davidpdrsn.com" = {
+        extraConfig = ''
+          gzip on;
+          gzip_vary on;
+          gzip_types text/css application/javascript application/json image/svg+xml;
+        '';
         enableACME = true;
         forceSSL = true;
         basicAuthFile = "/var/lib/nginx-secrets/htpasswd";
