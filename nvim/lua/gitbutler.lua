@@ -134,8 +134,50 @@ local function top_commit(root)
         return nil, err
     end
 
+    local dirs, dirs_err = system(
+        { "git", "rev-parse", "--path-format=absolute", "--git-dir", "--git-common-dir" },
+        { cwd = root, text = true }
+    )
+    if not dirs then
+        return nil, dirs_err
+    end
+    local paths = vim.split(vim.trim(dirs), "\n", { plain = true })
+    if #paths ~= 2 then
+        return nil, "Could not determine whether this checkout is a linked worktree"
+    end
+
     local stack = (status.stacks or {})[1]
     local branch = stack and (stack.branches or {})[1]
+    if paths[1] ~= paths[2] then
+        local reference, ref_err = system(
+            { "git", "symbolic-ref", "--quiet", "HEAD" },
+            { cwd = root, text = true }
+        )
+        if not reference then
+            return nil, "Could not determine the worktree branch: " .. ref_err
+        end
+        reference = vim.trim(reference)
+        branch = nil
+        for _, worktree in ipairs(status.worktrees or {}) do
+            if worktree.reference == reference then
+                branch = (worktree.branches or {})[1]
+                break
+            end
+        end
+        local commit = branch and (branch.commits or {})[1]
+        if not commit or not commit.cliId or commit.cliId == "" then
+            return nil, "No top commit found for the current worktree in GitButler status"
+        end
+        local head, head_err = system({ "git", "rev-parse", "HEAD" }, { cwd = root, text = true })
+        if not head then
+            return nil, head_err
+        end
+        if commit.commitId ~= vim.trim(head) then
+            return nil, "GitButler's top worktree commit does not match HEAD"
+        end
+        return commit
+    end
+
     local commit = branch and (branch.commits or {})[1]
     if not commit or not commit.cliId or commit.cliId == "" then
         return nil, "No commit found on the top branch in GitButler status"
