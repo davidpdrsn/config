@@ -6,11 +6,15 @@ in {
     keybindings = {
       "tui.select.up" = ["up" "ctrl+p"];
       "tui.select.down" = ["down" "ctrl+n"];
-      # Reserve Ctrl+P/N for list navigation rather than context-specific actions.
+      "tui.editor.historyPrevious" = "ctrl+p";
+      "tui.editor.historyNext" = "ctrl+n";
+      # Reserve Ctrl+P/N for history and list navigation.
       "app.model.cycleForward" = [];
       "app.session.togglePath" = [];
       "app.session.toggleNamedFilter" = [];
       "app.models.toggleProvider" = [];
+      # Reserve Ctrl+R for the prompt-history extension.
+      "app.session.rename" = [];
     };
     settings = {
       lastChangelogVersion = pi.version;
