@@ -65,7 +65,7 @@ export default function (pi: ExtensionAPI): void {
 				}
 				const lines = [directoryLine];
 
-				let input = 0, output = 0, cacheRead = 0, cacheWrite = 0, cost = 0;
+				let input = 0, output = 0, cacheRead = 0;
 				for (const entry of ctx.sessionManager.getEntries()) {
 					if (entry.type !== "message") continue;
 					const message = entry.message;
@@ -75,23 +75,17 @@ export default function (pi: ExtensionAPI): void {
 					input += usage.input;
 					output += usage.output;
 					cacheRead += usage.cacheRead;
-					cacheWrite += usage.cacheWrite;
-					cost += usage.cost.total;
 				}
-				const parts: string[] = [];
-				if (input) parts.push(`↑${formatTokens(input)}`);
-				if (output) parts.push(`↓${formatTokens(output)}`);
-				if (cacheRead) parts.push(`R${formatTokens(cacheRead)}`);
-				if (cacheWrite) parts.push(`W${formatTokens(cacheWrite)}`);
-				const totalInput = input + cacheRead + cacheWrite;
-				if (cacheRead && totalInput) parts.push(`CH${(100 * cacheRead / totalInput).toFixed(1)}%`);
-				const subscription = ctx.model && ctx.modelRegistry.isUsingOAuth(ctx.model);
-				if (cost || subscription) parts.push(`$${cost.toFixed(3)}${subscription ? " (sub)" : ""}`);
+				const parts = [
+					`input: ${formatTokens(input)}`,
+					`output: ${formatTokens(output)}`,
+					`cache: ${formatTokens(cacheRead)}`,
+				];
 				const context = ctx.getContextUsage();
 				const percent = context?.percent;
-				const contextText = `${percent == null ? "?" : percent.toFixed(1)}%/${formatTokens(context?.contextWindow ?? ctx.model?.contextWindow ?? 0)}`;
+				const contextText = `context: ${percent == null ? "?" : percent.toFixed(1)}%`;
 				parts.push(theme.fg((percent ?? 0) > 90 ? "error" : (percent ?? 0) > 70 ? "warning" : "dim", contextText));
-				const left = theme.fg("dim", parts.join(" "));
+				const left = theme.fg("dim", parts.join(" · "));
 				let right = ctx.model?.id ?? "no-model";
 				if (ctx.model?.reasoning) right += ` • ${pi.getThinkingLevel()}`;
 				if (ctx.model && footerData.getAvailableProviderCount() > 1) {
