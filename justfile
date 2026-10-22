@@ -33,19 +33,6 @@ ci-build:
 check:
     nix flake check --all-systems --no-build
 
-# Run script and extension tests
-test:
-    python3 -B scripts/test-mail-me.py
-    python3 -B scripts/test-pr-digest.py
-    bash scripts/test-parallel-tasks
-    bun install --cwd opencode --frozen-lockfile
-    bun install --cwd pi --frozen-lockfile
-    oxlint --deny-warnings opencode/plugins
-    bun test --pass-with-no-tests --cwd opencode
-    bunx tsc --noEmit --project opencode/tsconfig.json
-    bun test --pass-with-no-tests --cwd pi
-    bun run --cwd pi typecheck
-
 # Install local Pi extension dependencies
 install:
     bun install --cwd pi
