@@ -2,7 +2,89 @@
   config,
   pkgs,
   ...
-}: {
+}: let
+  # Use Core Audio directly: a default-device volume command could affect speakers
+  # or the physical microphone instead. Build once, rather than compiling at login.
+  unmuteBlackHole = pkgs.runCommandCC "unmute-blackhole" {} ''
+    mkdir -p "$out/bin"
+    $CC -Wall -Wextra -Werror -x c - -framework CoreAudio -framework CoreFoundation \
+      -o "$out/bin/unmute-blackhole" <<'EOF'
+    #include <CoreAudio/CoreAudio.h>
+    #include <CoreFoundation/CoreFoundation.h>
+    #include <stdbool.h>
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <unistd.h>
+
+    static bool unmute(void) {
+      AudioObjectPropertyAddress property = {
+        kAudioHardwarePropertyDevices, kAudioObjectPropertyScopeGlobal,
+        kAudioObjectPropertyElementMain
+      };
+      UInt32 size = 0;
+      if (AudioObjectGetPropertyDataSize(kAudioObjectSystemObject, &property,
+                                        0, NULL, &size) != noErr || size == 0)
+        return false;
+      AudioDeviceID *devices = malloc(size);
+      if (!devices) return false;
+      if (AudioObjectGetPropertyData(kAudioObjectSystemObject, &property,
+                                     0, NULL, &size, devices) != noErr) {
+        free(devices);
+        return false;
+      }
+      AudioDeviceID target = kAudioObjectUnknown;
+      for (UInt32 i = 0; i < size / sizeof(*devices); ++i) {
+        AudioObjectPropertyAddress uidProperty = {
+          kAudioDevicePropertyDeviceUID, kAudioObjectPropertyScopeGlobal,
+          kAudioObjectPropertyElementMain
+        };
+        CFStringRef uid = NULL;
+        UInt32 uidSize = sizeof(uid);
+        OSStatus status = AudioObjectGetPropertyData(devices[i], &uidProperty,
+                                                     0, NULL, &uidSize, &uid);
+        if (status == noErr && uid) {
+          if (CFEqual(uid, CFSTR("BlackHole2ch_UID"))) target = devices[i];
+          CFRelease(uid);
+        }
+        if (target != kAudioObjectUnknown) break;
+      }
+      free(devices);
+      if (target == kAudioObjectUnknown) return false;
+
+      const AudioObjectPropertyScope scopes[] = {
+        kAudioDevicePropertyScopeInput, kAudioDevicePropertyScopeOutput
+      };
+      for (unsigned i = 0; i < sizeof(scopes) / sizeof(*scopes); ++i) {
+        AudioObjectPropertyAddress muteProperty = {
+          kAudioDevicePropertyMute, scopes[i], kAudioObjectPropertyElementMain
+        };
+        UInt32 muted = 0;
+        if (AudioObjectSetPropertyData(target, &muteProperty, 0, NULL,
+                                      sizeof(muted), &muted) != noErr)
+          return false;
+        UInt32 muteSize = sizeof(muted);
+        if (AudioObjectGetPropertyData(target, &muteProperty, 0, NULL,
+                                      &muteSize, &muted) != noErr || muted != 0)
+          return false;
+      }
+      return true;
+    }
+
+    int main(void) {
+      // Core Audio or the Homebrew driver may not be ready at login.
+      for (int attempt = 0; attempt < 15; ++attempt) {
+        if (unmute()) {
+          puts("BlackHole 2ch input and output are unmuted.");
+          return EXIT_SUCCESS;
+        }
+        if (attempt < 14) sleep(2);
+      }
+      fputs("Could not find or unmute BlackHole 2ch after 15 attempts.\n", stderr);
+      return EXIT_FAILURE;
+    }
+    EOF
+  '';
+in {
   # Mac-specific SSH: UseKeychain + colima
   programs.ssh.includes = ["${config.home.homeDirectory}/.colima/ssh_config"];
   programs.ssh.settings."*".UseKeychain = "yes";
@@ -64,6 +146,18 @@
       /usr/bin/ssh-add --apple-use-keychain "$key" >/dev/null 2>&1 || true
     fi
   '';
+
+  # Once per login/load, not continuously: intentional muting still works.
+  launchd.agents.unmute-blackhole = {
+    enable = true;
+    config = {
+      Label = "com.davidpdrsn.unmute-blackhole";
+      ProgramArguments = ["${unmuteBlackHole}/bin/unmute-blackhole"];
+      RunAtLoad = true;
+      StandardOutPath = "${config.home.homeDirectory}/Library/Logs/unmute-blackhole.log";
+      StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/unmute-blackhole.err.log";
+    };
+  };
 
   launchd.agents.obsidian-auto-commit-push = {
     enable = true;
