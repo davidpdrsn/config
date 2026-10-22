@@ -34,7 +34,8 @@ return {
                                 enable = true,
                             },
                         },
-                        checkOnSave = {
+                        checkOnSave = true,
+                        check = {
                             overrideCommand = {
                                 "cargo",
                                 "clippy",
