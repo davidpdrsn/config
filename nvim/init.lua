@@ -211,19 +211,41 @@ vim.keymap.set(
 vim.keymap.set("n", "<leader>m", ":call MergeTabs()<cr>", { desc = "Merge tab" })
 vim.keymap.set("n", "<leader>rn", ":call RenameFile()<cr>", { desc = "Rename file" })
 
-vim.keymap.set("n", "<leader>S", function()
+local function start_project_server(quiet)
     local address = "/tmp/nvim-server.pipe"
+    local result = vim.system({ "git", "rev-parse", "--show-toplevel" }, { text = true }):wait()
+    if result.code == 0 then
+        local root = result.stdout:gsub("\n$", "")
+        root = vim.uv.fs_realpath(root) or root
+        address = "/tmp/nvim-" .. vim.fn.sha256(root):sub(1, 32) .. ".sock"
+    end
     if vim.tbl_contains(vim.fn.serverlist(), address) then
-        vim.notify("Already listening on " .. address)
+        if not quiet then
+            vim.notify("Already listening on " .. address)
+        end
         return
     end
 
     local ok, result = pcall(vim.fn.serverstart, address)
-    if ok then
-        vim.notify("Listening on " .. result)
-    else
-        vim.notify("Failed to listen on " .. address .. ": " .. result, vim.log.levels.ERROR)
+    if not quiet then
+        if ok then
+            vim.notify("Listening on " .. result)
+        else
+            vim.notify("Failed to listen on " .. address .. ": " .. result, vim.log.levels.ERROR)
+        end
     end
+end
+
+vim.api.nvim_create_autocmd("VimEnter", {
+    group = vim.api.nvim_create_augroup("ProjectServer", { clear = true }),
+    once = true,
+    callback = function()
+        start_project_server(true)
+    end,
+})
+
+vim.keymap.set("n", "<leader>S", function()
+    start_project_server(false)
 end, { desc = "Start Neovim server" })
 
 vim.keymap.set("n", "<leader>x", ":set filetype=", { desc = "Set filetype" })

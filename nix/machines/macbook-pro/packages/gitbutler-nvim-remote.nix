@@ -3,6 +3,7 @@ pkgs.writeShellApplication {
   name = "gitbutler-nvim-remote";
   runtimeInputs = [
     pkgs.coreutils
+    pkgs.git
     pkgs.jq
     pkgs.neovim
   ];
@@ -30,17 +31,33 @@ pkgs.writeShellApplication {
       exit 2
     fi
 
-    filepaths_json="$(jq --compact-output --null-input --args '$ARGS.positional' -- "$@")"
-    filepaths_base64="$(printf '%s' "$filepaths_json" | base64 | tr -d '\n')"
+    for filepath in "$@"; do
+      filepath="$(realpath -m -- "$filepath")"
+      directory="$(dirname -- "$filepath")"
+      # New files may have parent directories that do not exist yet.
+      while [[ ! -d "$directory" ]]; do
+        directory="$(dirname -- "$directory")"
+      done
 
-    expression="v:lua.require'gitbutler'.open_files_base64('$filepaths_base64'"
-    if [[ -n "$line_number" ]]; then
-      expression+=", $line_number"
-    fi
-    expression+=")"
+      address="/tmp/nvim-server.pipe"
+      if root="$(git -C "$directory" rev-parse --show-toplevel 2>/dev/null)"; then
+        root="$(realpath -- "$root")"
+        hash="$(printf '%s' "$root" | sha256sum)"
+        address="/tmp/nvim-''${hash:0:32}.sock"
+      fi
 
-    nvim \
-      --server /tmp/nvim-server.pipe \
-      --remote-expr "$expression"
+      filepaths_json="$(jq --compact-output --null-input --arg path "$filepath" '[$path]')"
+      filepaths_base64="$(printf '%s' "$filepaths_json" | base64 | tr -d '\n')"
+
+      expression="v:lua.require'gitbutler'.open_files_base64('$filepaths_base64'"
+      if [[ -n "$line_number" ]]; then
+        expression+=", $line_number"
+      fi
+      expression+=")"
+
+      nvim \
+        --server "$address" \
+        --remote-expr "$expression"
+    done
   '';
 }
