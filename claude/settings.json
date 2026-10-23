@@ -9,5 +9,7 @@
     "typescript-lsp@claude-plugins-official": true
   },
   "alwaysThinkingEnabled": true,
+  "autoDreamEnabled": false,
+  "autoMemoryEnabled": false,
   "skipDangerousModePermissionPrompt": true
 }
