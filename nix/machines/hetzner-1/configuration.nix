@@ -172,6 +172,8 @@ in {
 
   services.nginx = {
     enable = true;
+    # The x86 default (64) is too small for the 64-character dnd-next token.
+    mapHashBucketSize = 128;
     appendHttpConfig = ''
       include /var/lib/nginx-secrets/dnd-next-auth.conf;
     '';
