@@ -18,6 +18,12 @@
   obsidianVaultsPull = import ../../lib/obsidian-vaults-pull.nix {
     inherit pkgs username;
   };
+  # Basic auth is forgotten whenever the browser session ends, so successful
+  # dnd-next requests also get a long-lived cookie that skips the prompt. Only
+  # add this to locations behind auth; public locations would leak the token.
+  dndNextAuthCookie = ''
+    add_header Set-Cookie "dnd_next_auth=$dnd_next_auth_token; Path=/; Max-Age=31536000; Secure; HttpOnly; SameSite=Lax";
+  '';
 in {
   imports = [
     ../hetzner/common.nix
@@ -120,6 +126,37 @@ in {
     }
   ];
 
+  # Defines the dnd-next auth cookie maps that nginx includes. The token never
+  # enters the Nix store; delete the file and restart nginx to rotate it.
+  systemd.services.dnd-next-auth-token = {
+    description = "Generate dnd-next auth cookie token";
+    wantedBy = ["multi-user.target" "nginx.service"];
+    before = ["nginx.service"];
+    path = [pkgs.coreutils];
+    serviceConfig.Type = "oneshot";
+    script = ''
+      file=/var/lib/nginx-secrets/dnd-next-auth.conf
+      if [ -e "$file" ]; then
+        exit 0
+      fi
+      token=$(od -An -N32 -tx1 /dev/urandom | tr -d ' \n')
+      mkdir -p /var/lib/nginx-secrets
+      tmp=$(mktemp /var/lib/nginx-secrets/.dnd-next-auth.XXXXXX)
+      cat > "$tmp" <<EOF
+      map \$cookie_dnd_next_auth \$dnd_next_auth_realm {
+          default secured;
+          "$token" off;
+      }
+      map \$host \$dnd_next_auth_token {
+          default "$token";
+      }
+      EOF
+      chown root:nginx "$tmp"
+      chmod 0440 "$tmp"
+      mv "$tmp" "$file"
+    '';
+  };
+
   systemd.services.dnd-character-sheet = {
     # The first deployment creates this profile. Until then, skip startup.
     unitConfig.ConditionPathExists = "/nix/var/nix/profiles/dnd-character-sheet/bin/website";
@@ -135,16 +172,22 @@ in {
 
   services.nginx = {
     enable = true;
+    appendHttpConfig = ''
+      include /var/lib/nginx-secrets/dnd-next-auth.conf;
+    '';
     virtualHosts = {
       "dnd-next.davidpdrsn.com" = {
         extraConfig = ''
           gzip on;
           gzip_vary on;
           gzip_types text/css application/javascript application/json image/svg+xml;
+
+          # A valid dnd_next_auth cookie turns the realm into "off".
+          auth_basic $dnd_next_auth_realm;
+          auth_basic_user_file /var/lib/nginx-secrets/htpasswd;
         '';
         enableACME = true;
         forceSSL = true;
-        basicAuthFile = "/var/lib/nginx-secrets/htpasswd";
         locations."~ \\.(css|js)$" = {
           proxyPass = "http://127.0.0.1:3002";
           extraConfig = ''
@@ -159,23 +202,27 @@ in {
         };
         locations."= /characters/import" = {
           proxyPass = "http://127.0.0.1:3002";
-          extraConfig = ''
-            # Allow the app's 32 MiB ZIP limit plus multipart form overhead.
-            client_max_body_size 33m;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto $scheme;
-          '';
+          extraConfig =
+            ''
+              # Allow the app's 32 MiB ZIP limit plus multipart form overhead.
+              client_max_body_size 33m;
+              proxy_set_header Host $host;
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+            ''
+            + dndNextAuthCookie;
         };
         locations."/" = {
           proxyPass = "http://127.0.0.1:3002";
-          extraConfig = ''
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto $scheme;
-          '';
+          extraConfig =
+            ''
+              proxy_set_header Host $host;
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+            ''
+            + dndNextAuthCookie;
         };
       };
       "dnd.davidpdrsn.com" = {
@@ -237,6 +284,8 @@ in {
   #   nix-shell -p apacheHttpd --run "sudo htpasswd -Bc /var/lib/nginx-secrets/htpasswd ollie"
   #   sudo chown root:nginx /var/lib/nginx-secrets/htpasswd
   #   sudo chmod 0440 /var/lib/nginx-secrets/htpasswd
+  # Rotate the dnd-next auth cookie, signing everyone out:
+  #   sudo rm /var/lib/nginx-secrets/dnd-next-auth.conf && sudo systemctl restart nginx
 
   virtualisation.docker.enable = true;
   networking.firewall.allowedTCPPorts = [22 80 443];
