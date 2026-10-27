@@ -17,6 +17,7 @@ After being told to babysit a PR, or told to open one, start a loop where you:
 - If you see the human manually push commits to address review comments, ask if they should be resolved.
 - Don't wait for the "lite-e2e" CI step. It's not required
 - If you're watching a draft PR and CI passes and all initial review comments have been resolved, offer to mark it as ready for review and continue looping
+- Be on the lookout for stacked prs that need to be merged bottom to top or all at once
 - Never merge a PR unless explicitly told to do so
 - Do a normal merge, not a rebase or squash
 - Once the PR has merged, use the shutdown tool
