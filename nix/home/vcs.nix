@@ -41,6 +41,7 @@
       ".jj"
       ".go"
       ".worktrees"
+      ".worktreeinclude"
       "**/.pi/tmp/"
       "**/.pi/suggester"
       "vmux-debug.log"
