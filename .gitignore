@@ -8,3 +8,5 @@ opencode/plugins/events.log
 /vmux/session.toml
 .env
 tmp/
+pi/skills/synced
+pi/skills/.trash
