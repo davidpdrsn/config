@@ -30,6 +30,9 @@ in {
       };
       transport = "websocket";
       tuiMode = "fullscreen";
+      terminal = {
+        showTerminalProgress = true;
+      };
       theme = "catppuccin-mocha-contrast";
       packages = [
         "${config.home.homeDirectory}/config/pi"
