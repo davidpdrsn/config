@@ -25,7 +25,7 @@ function M.setup()
         end
     end
     local pid = tostring(editor_pid)
-    local function command(args)
+    local function command(args, silent)
         local argv = { executable, "--socket", vim.env.MUX_SOCKET, "pane" }
         vim.list_extend(argv, args)
         -- Wait for registration/navigation so subsequent keys see the updated state.
@@ -33,18 +33,26 @@ function M.setup()
             return vim.system(argv, { text = true }):wait()
         end)
         if not ok then
-            vim.schedule(function()
-                vim.notify("mux: " .. tostring(result), vim.log.levels.WARN)
-            end)
-            return
+            if not silent then
+                vim.schedule(function()
+                    vim.notify("mux: " .. tostring(result), vim.log.levels.WARN)
+                end)
+            end
+            return false
         end
         if result.code ~= 0 then
-            vim.schedule(function()
-                vim.notify("mux: " .. (result.stderr or "command failed"), vim.log.levels.WARN)
-            end)
+            if not silent then
+                vim.schedule(function()
+                    vim.notify("mux: " .. (result.stderr or "command failed"), vim.log.levels.WARN)
+                end)
+            end
+            return false
         end
+        return true
     end
-    command({ "register-editor", "--target", vim.env.MUX_PANE, "--pid", pid })
+    if not command({ "register-editor", "--target", vim.env.MUX_PANE, "--pid", pid }, true) then
+        return {}
+    end
     local group = vim.api.nvim_create_augroup("MuxNavigation", { clear = true })
     vim.api.nvim_create_autocmd("VimLeavePre", {
         group = group,
