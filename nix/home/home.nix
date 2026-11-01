@@ -28,6 +28,8 @@
 
   programs.direnv = {
     enable = true;
+    # Hide status logs and the env diff; errors are still printed.
+    silent = true;
     nix-direnv = {
       enable = true;
       # Refresh GC roots without touching the watched .rc cache files, which

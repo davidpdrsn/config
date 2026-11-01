@@ -24,6 +24,9 @@
   programs.fish = {
     enable = true;
     generateCompletions = true;
+    interactiveShellInit = ''
+      set -g fish_greeting
+    '';
     shellAliases = {
       v = "nvim";
       l = "eza --long --header --git --all --sort name";
