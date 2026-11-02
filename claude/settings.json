@@ -2,27 +2,28 @@
   "env": {
     "BASH_MAX_TIMEOUT_MS": "600000"
   },
-  "model": "opus",
   "attribution": {
     "commit": "",
     "pr": ""
   },
+  "permissions": {
+    "defaultMode": "bypassPermissions"
+  },
+  "model": "opus",
   "hooks": {},
   "enabledPlugins": {
     "rust-analyzer-lsp@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true
   },
   "alwaysThinkingEnabled": true,
-  "tui": "fullscreen",
-  "autoMemoryEnabled": false,
-  "autoDreamEnabled": false,
-  "skipDangerousModePermissionPrompt": true,
-  "permissions": {
-    "defaultMode": "bypassPermissions"
-  },
   "modelSettings": {
     "claude-opus-5-5": {
       "effortLevel": "high"
     }
-  }
+  },
+  "fastMode": true,
+  "tui": "fullscreen",
+  "autoMemoryEnabled": false,
+  "autoDreamEnabled": false,
+  "skipDangerousModePermissionPrompt": true
 }
