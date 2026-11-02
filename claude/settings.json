@@ -3,6 +3,10 @@
     "BASH_MAX_TIMEOUT_MS": "600000"
   },
   "model": "opus",
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
   "hooks": {},
   "enabledPlugins": {
     "rust-analyzer-lsp@claude-plugins-official": true,
