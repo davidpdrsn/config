@@ -20,6 +20,8 @@ linear issue view <ISSUE-ID> --json --no-pager --no-download
 
 3. Use the returned title, description, status, priority, assignee, labels, project, attachments, and comments as relevant to the user's request.
 
+Remember to consider the project when finding the scope for the ticket, in case it isn't clear from the ticket text itself.
+
 ## Safety
 
 - Do not run issue mutation commands such as `create`, `update`, `delete`, `start`, `comment`, `attach`, or `relation` while using this skill.
