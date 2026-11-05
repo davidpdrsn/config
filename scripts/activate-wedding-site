@@ -21,6 +21,17 @@ if [[ ${1:-} == --check ]]; then
   exit 0
 fi
 
+is_healthy() {
+  for ((attempt = 0; attempt < 30; attempt++)); do
+    if systemctl is-active --quiet "$service" &&
+      curl --fail --silent --output /dev/null --max-time 2 http://127.0.0.1:3004/da; then
+      return 0
+    fi
+    sleep 1
+  done
+  return 1
+}
+
 exec 9>/run/lock/activate-wedding-site.lock
 flock -n 9
 
@@ -39,21 +50,23 @@ fi
 mv -f "$staging" "$directory/wedding-site"
 systemctl restart "$service"
 
-for ((attempt = 0; attempt < 30; attempt++)); do
-  if systemctl is-active --quiet "$service" &&
-    curl --fail --silent --output /dev/null --max-time 2 http://127.0.0.1:3004/da; then
-    echo "wedding-site is healthy."
-    exit 0
-  fi
-  sleep 1
-done
+if is_healthy; then
+  echo "wedding-site is healthy."
+  exit 0
+fi
 
 echo "wedding-site failed its health check. Inspect journalctl -u $service." >&2
 if [[ -f "$directory/wedding-site.previous" ]]; then
   staging="$(mktemp "$directory/.wedding-site.XXXXXXXX")"
   cp --preserve=mode "$directory/wedding-site.previous" "$staging"
   mv -f "$staging" "$directory/wedding-site"
+  # A crashing binary uses up systemd's start limit, which would refuse this restart.
+  systemctl reset-failed "$service"
   systemctl restart "$service"
-  echo "Rolled back to the previous binary." >&2
+  if is_healthy; then
+    echo "Rolled back to the previous binary." >&2
+  else
+    echo "Rollback failed too. The site is down." >&2
+  fi
 fi
 exit 1
