@@ -15,6 +15,11 @@
     runtimeInputs = [pkgs.coreutils pkgs.file pkgs.util-linux pkgs.systemd pkgs.curl];
     text = builtins.readFile ../../../scripts/activate-dnd-next;
   };
+  activateWeddingSite = pkgs.writeShellApplication {
+    name = "activate-wedding-site";
+    runtimeInputs = [pkgs.coreutils pkgs.file pkgs.util-linux pkgs.systemd pkgs.curl];
+    text = builtins.readFile ../../../scripts/activate-wedding-site;
+  };
   obsidianVaultsPull = import ../../lib/obsidian-vaults-pull.nix {
     inherit pkgs username;
   };
@@ -81,7 +86,15 @@ in {
     isSystemUser = true;
     group = "dnd-next";
   };
-  systemd.tmpfiles.rules = ["d /opt/dnd-next 0755 root root -"];
+  users.groups.wedding-site = {};
+  users.users.wedding-site = {
+    isSystemUser = true;
+    group = "wedding-site";
+  };
+  systemd.tmpfiles.rules = [
+    "d /opt/dnd-next 0755 root root -"
+    "d /opt/wedding-site 0755 root root -"
+  ];
   systemd.services.dnd-next = {
     description = "D&D character sheet";
     wantedBy = ["multi-user.target"];
@@ -109,7 +122,32 @@ in {
     };
   };
 
-  environment.systemPackages = [activateDnd activateDndNext];
+  systemd.services.wedding-site = {
+    description = "Wedding website";
+    wantedBy = ["multi-user.target"];
+    after = ["network.target"];
+    unitConfig.ConditionPathExists = "/opt/wedding-site/wedding-site";
+    environment.PORT = "3004";
+    serviceConfig = {
+      ExecStart = "/opt/wedding-site/wedding-site";
+      User = "wedding-site";
+      Group = "wedding-site";
+      Restart = "on-failure";
+      RestartSec = 2;
+      TimeoutStopSec = 30;
+      NoNewPrivileges = true;
+      PrivateTmp = true;
+      ProtectHome = true;
+      ProtectSystem = "strict";
+      ProtectKernelTunables = true;
+      ProtectKernelModules = true;
+      ProtectControlGroups = true;
+      RestrictSUIDSGID = true;
+      CapabilityBoundingSet = "";
+    };
+  };
+
+  environment.systemPackages = [activateDnd activateDndNext activateWeddingSite];
   security.sudo.extraRules = [
     {
       users = [username];
@@ -120,6 +158,10 @@ in {
         }
         {
           command = "/run/current-system/sw/bin/activate-dnd-next";
+          options = ["NOPASSWD"];
+        }
+        {
+          command = "/run/current-system/sw/bin/activate-wedding-site";
           options = ["NOPASSWD"];
         }
       ];
@@ -225,6 +267,24 @@ in {
               proxy_set_header X-Forwarded-Proto $scheme;
             ''
             + dndNextAuthCookie;
+        };
+      };
+      "wedding.davidpdrsn.com" = {
+        extraConfig = ''
+          gzip on;
+          gzip_vary on;
+          gzip_types text/css text/javascript image/svg+xml;
+        '';
+        enableACME = true;
+        forceSSL = true;
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:3004";
+          extraConfig = ''
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+          '';
         };
       };
       "dnd.davidpdrsn.com" = {
