@@ -269,7 +269,12 @@ in {
             + dndNextAuthCookie;
         };
       };
-      "wedding.davidpdrsn.com" = {
+      "www.pedersenlarsen.wedding" = {
+        enableACME = true;
+        forceSSL = true;
+        globalRedirect = "pedersenlarsen.wedding";
+      };
+      "pedersenlarsen.wedding" = {
         extraConfig = ''
           gzip on;
           gzip_vary on;
