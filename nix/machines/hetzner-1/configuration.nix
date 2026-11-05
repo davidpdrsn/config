@@ -143,6 +143,11 @@ in {
       ExecStart = "/opt/wedding-site/wedding-site";
       User = "wedding-site";
       Group = "wedding-site";
+      # Provision this file separately with mode 0600; never put the secret in Nix.
+      LoadCredential = "gmail-app-password:/var/lib/wedding-site-secrets/gmail-app-password";
+      StateDirectory = "wedding-site";
+      StateDirectoryMode = "0700";
+      UMask = "0077";
       Restart = "on-failure";
       RestartSec = 2;
       TimeoutStopSec = 30;
