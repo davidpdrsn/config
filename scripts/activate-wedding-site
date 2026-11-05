@@ -41,7 +41,7 @@ systemctl restart "$service"
 
 for ((attempt = 0; attempt < 30; attempt++)); do
   if systemctl is-active --quiet "$service" &&
-    curl --fail --silent --output /dev/null --max-time 2 http://127.0.0.1:3004/; then
+    curl --fail --silent --output /dev/null --max-time 2 http://127.0.0.1:3004/da; then
     echo "wedding-site is healthy."
     exit 0
   fi
@@ -49,5 +49,11 @@ for ((attempt = 0; attempt < 30; attempt++)); do
 done
 
 echo "wedding-site failed its health check. Inspect journalctl -u $service." >&2
-echo "Previous binary: $directory/wedding-site.previous." >&2
+if [[ -f "$directory/wedding-site.previous" ]]; then
+  staging="$(mktemp "$directory/.wedding-site.XXXXXXXX")"
+  cp --preserve=mode "$directory/wedding-site.previous" "$staging"
+  mv -f "$staging" "$directory/wedding-site"
+  systemctl restart "$service"
+  echo "Rolled back to the previous binary." >&2
+fi
 exit 1

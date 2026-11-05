@@ -91,6 +91,17 @@ in {
     isSystemUser = true;
     group = "wedding-site";
   };
+  # GitHub Actions deploys with this key. All it can do is send a binary to
+  # activate-wedding-site; there is no shell, port forwarding or other command.
+  users.groups.deploy-wedding-site = {};
+  users.users.deploy-wedding-site = {
+    isSystemUser = true;
+    group = "deploy-wedding-site";
+    shell = pkgs.bash;
+    openssh.authorizedKeys.keys = [
+      ''restrict,command="/run/wrappers/bin/sudo -n /run/current-system/sw/bin/activate-wedding-site" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIdZlcqgatvvE3Cxu9zfSf2mnAJ2ZjQeopfvbPRbuBgV wedding-site-github-actions''
+    ];
+  };
   systemd.tmpfiles.rules = [
     "d /opt/dnd-next 0755 root root -"
     "d /opt/wedding-site 0755 root root -"
@@ -160,6 +171,15 @@ in {
           command = "/run/current-system/sw/bin/activate-dnd-next";
           options = ["NOPASSWD"];
         }
+        {
+          command = "/run/current-system/sw/bin/activate-wedding-site";
+          options = ["NOPASSWD"];
+        }
+      ];
+    }
+    {
+      users = ["deploy-wedding-site"];
+      commands = [
         {
           command = "/run/current-system/sw/bin/activate-wedding-site";
           options = ["NOPASSWD"];
