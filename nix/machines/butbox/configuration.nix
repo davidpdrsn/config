@@ -26,4 +26,13 @@
   environment.systemPackages = [
     inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.claude-code
   ];
+
+  # Run generic Linux binaries, such as the GitButler CLI from its install script.
+  programs.nix-ld = {
+    enable = true;
+    libraries = with pkgs; [
+      stdenv.cc.cc.lib
+      stdenv.cc.libc
+    ];
+  };
 }
