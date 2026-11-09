@@ -16,6 +16,16 @@
 
   services.ssh-agent.enable = true;
 
+  xdg.configFile."mux/config.toml".source = (pkgs.formats.toml {}).generate "mux-config.toml" {
+    layout = {
+      tabbar = true;
+      sidebar = false;
+      agent_sidebar = false;
+      sidebar_position = "left";
+      agent_sidebar_position = "left";
+    };
+  };
+
   # Keep a mux server running so `ssh butbox` can always attach to it.
   # `mux server restart` hands over to a new `server run --wait` and exits, so
   # loop with `--wait` too: whichever process gets the socket lock serves, and
