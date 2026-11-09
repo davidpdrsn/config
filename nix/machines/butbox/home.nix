@@ -16,6 +16,14 @@
 
   services.ssh-agent.enable = true;
 
+  # `ssh butbox` lands in mux and detaching disconnects. Commands (`ssh butbox cmd`) and
+  # shells inside mux panes are left alone; `ssh -t butbox fish` gives a plain shell.
+  programs.fish.interactiveShellInit = ''
+    if status is-login; and set -q SSH_TTY; and not set -q MUX_PANE
+        ${config.home.homeDirectory}/.cargo/bin/mux attach; and exit
+    end
+  '';
+
   xdg.configFile."mux/config.toml".source = (pkgs.formats.toml {}).generate "mux-config.toml" {
     layout = {
       tabbar = true;
