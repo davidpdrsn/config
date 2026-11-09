@@ -121,7 +121,7 @@
         };
       };
       hostname = {
-        ssh_only = true;
+        ssh_only = lib.mkDefault true;
         format = "[$hostname]($style) ";
         style = "bold yellow";
       };

@@ -16,6 +16,10 @@
 
   services.ssh-agent.enable = true;
 
+  # mux panes are started by the systemd-run server, not the SSH session, so starship can't
+  # tell they're remote.
+  programs.starship.settings.hostname.ssh_only = false;
+
   # `ssh butbox` lands in mux and detaching disconnects. Commands (`ssh butbox cmd`) and
   # shells inside mux panes are left alone; `ssh -t butbox fish` gives a plain shell.
   programs.fish.interactiveShellInit = ''
