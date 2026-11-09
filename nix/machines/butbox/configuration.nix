@@ -1,5 +1,7 @@
 {
   lib,
+  pkgs,
+  inputs,
   modulesPath,
   ...
 }: {
@@ -20,4 +22,8 @@
   services.openssh.settings.PermitRootLogin = lib.mkForce "no";
 
   networking.hostName = "butbox";
+
+  environment.systemPackages = [
+    inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.claude-code
+  ];
 }
