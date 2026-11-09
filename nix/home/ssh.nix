@@ -8,9 +8,11 @@
       };
       "butbox" = {
         HostName = "3.72.241.28";
-        User = "ubuntu";
-        IdentityFile = "~/.ssh/butbox.pem";
+        User = "davidpdrsn";
+        IdentityFile = "~/.ssh/hetzner";
         IdentitiesOnly = true;
+        StrictHostKeyChecking = "yes";
+        UserKnownHostsFile = "~/.ssh/known_hosts_butbox";
       };
       "bitbucket.org" = {
         AddKeysToAgent = "yes";

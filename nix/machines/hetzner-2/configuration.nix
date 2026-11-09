@@ -78,6 +78,7 @@
     inherit pkgs username;
   };
   piWrapped = import ../../lib/pi-wrapped.nix {inherit pkgs inputs;};
+  llmAgentPackages = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
 
   prDigest = name: repo: title: {
     systemd.services."${name}-pr-digest" = {
@@ -119,7 +120,9 @@
     gog
     goplaces
     linearCli
+    llmAgentPackages.codex
     piWrapped
+    (pkgs.callPackage ../../shared/packages/pr-digest.nix {inherit piWrapped;})
     pkgs.chromium
     pkgs.curl
     pkgs.fd

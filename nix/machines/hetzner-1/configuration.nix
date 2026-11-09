@@ -23,6 +23,8 @@
   obsidianVaultsPull = import ../../lib/obsidian-vaults-pull.nix {
     inherit pkgs username;
   };
+  llmAgentPackages = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
+  piWrapped = import ../../lib/pi-wrapped.nix {inherit pkgs inputs;};
   # Basic auth is forgotten whenever the browser session ends, so successful
   # dnd-next requests also get a long-lived cookie that skips the prompt. Only
   # add this to locations behind auth; public locations would leak the token.
@@ -166,7 +168,15 @@ in {
     };
   };
 
-  environment.systemPackages = [activateDnd activateDndNext activateWeddingSite];
+  environment.systemPackages = [
+    activateDnd
+    activateDndNext
+    activateWeddingSite
+    llmAgentPackages.codex
+    piWrapped
+    (pkgs.callPackage ../../shared/packages/cloud-agent.nix {})
+    (pkgs.callPackage ../../shared/packages/pr-digest.nix {inherit piWrapped;})
+  ];
   security.sudo.extraRules = [
     {
       users = [username];

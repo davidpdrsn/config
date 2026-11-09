@@ -1,18 +1,12 @@
 {
   lib,
   pkgs,
-  inputs,
   username,
   ...
 }: {
   imports = [
     ../../shared/common.nix
     ../../shared/packages.nix
-  ];
-
-  environment.systemPackages = with pkgs; [
-    inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.codex
-    inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.opencode
   ];
 
   users.users.root.openssh.authorizedKeys.keys = [

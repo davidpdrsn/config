@@ -2,15 +2,16 @@
 set -euo pipefail
 
 if [ "$#" -ne 1 ]; then
-  echo "usage: $0 <1|2>" >&2
+  echo "usage: $0 <1|2|butbox>" >&2
   exit 1
 fi
 
 case "$1" in
   1) host="hetzner-1" ;;
   2) host="hetzner-2" ;;
+  butbox) host="butbox" ;;
   *)
-    echo "error: invalid VPS '$1' (expected 1 or 2)" >&2
+    echo "error: invalid VPS '$1' (expected 1, 2 or butbox)" >&2
     exit 1
     ;;
 esac

@@ -22,6 +22,9 @@
     lazybut = pkgs.callPackage ./packages/lazybut.nix {};
     buti = pkgs.callPackage ./packages/buti.nix {};
     webScreenshot = pkgs.callPackage ./packages/web-screenshot.nix {};
+    cloudAgent = pkgs.callPackage ../../shared/packages/cloud-agent.nix {};
+    piWrapped = import ../../lib/pi-wrapped.nix {inherit pkgs inputs;};
+    prDigest = pkgs.callPackage ../../shared/packages/pr-digest.nix {inherit piWrapped;};
     flarectl = opWrapped {
       name = "flarectl";
       env = {
@@ -72,9 +75,11 @@
       chafa
     ]
     ++ [
-      llmAgentPackages.opencode
       llmAgentPackages.codex
       llmAgentPackages.claude-code
+      cloudAgent
+      piWrapped
+      prDigest
     ]
     ++ map (pkg: inputs.${pkg}.packages.${pkgs.stdenv.hostPlatform.system}.default) [
       "hunk"

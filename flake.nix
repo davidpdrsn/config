@@ -13,6 +13,10 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
+    # declarative disk partitioning (used by nixos-anywhere installs)
+    disko.url = "github:nix-community/disko";
+    disko.inputs.nixpkgs.follows = "nixpkgs";
+
     # homebrew (macOS only)
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
     homebrew-core = {
@@ -152,6 +156,19 @@
 
           home-manager.nixosModules.home-manager
           (mkHomeManagerConfig [./nix/machines/hetzner-2/home.nix])
+        ];
+      };
+
+      # ── NixOS (AWS EC2 test box) ────────────────────────────────────
+      nixosConfigurations."butbox" = nixpkgs.lib.nixosSystem {
+        specialArgs = commonArgs;
+
+        modules = [
+          inputs.disko.nixosModules.disko
+          ./nix/machines/butbox/configuration.nix
+
+          home-manager.nixosModules.home-manager
+          (mkHomeManagerConfig [./nix/machines/butbox/home.nix])
         ];
       };
     };

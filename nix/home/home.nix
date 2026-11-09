@@ -77,7 +77,6 @@
     ".config/ghostty".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/config/ghostty";
     ".config/nvim".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/config/nvim";
     ".config/jjui".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/config/jjui";
-    ".config/opencode".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/config/opencode";
     ".claude/settings.json".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/config/claude/settings.json";
     ".config/vmux".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/config/vmux";
     ".config/key-weaver".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/config/key-weaver";
@@ -86,6 +85,10 @@
       46.225.16.43 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDTrvqqopEOL+XGqbsQugUqaKOBx7foziysoB7oIMUnr
       hetzner-2 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINnytj8FmLxKn36zdZjWFbcaJyLrqTBm/C1zEqtbWah6
       46.225.17.37 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINnytj8FmLxKn36zdZjWFbcaJyLrqTBm/C1zEqtbWah6
+    '';
+    ".ssh/known_hosts_butbox".text = ''
+      butbox ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPvmb9t6F4VlFYW23+s69LK3LsmZgRNjYh70fhGv5XCQ
+      3.72.241.28 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPvmb9t6F4VlFYW23+s69LK3LsmZgRNjYh70fhGv5XCQ
     '';
   } // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
     ".config/git/allowed_signers".text = ''

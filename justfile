@@ -28,6 +28,7 @@ build:
 ci-build:
     nix build .#nixosConfigurations.nix-4gb-nbg1-1.config.system.build.toplevel
     nix build .#nixosConfigurations.nix-4gb-nbg1-2.config.system.build.toplevel
+    nix build .#nixosConfigurations.butbox.config.system.build.toplevel
 
 # Validate the flake structure
 check:
@@ -40,11 +41,6 @@ install:
 # Update a flake input (interactive picker)
 update:
     ./scripts/nix-update-input
-
-# Update opencode to latest GitHub release tag
-update-opencode:
-    ./scripts/nix-update-opencode
-    just switch
 
 # Update buti to latest GitHub release binary
 update-buti:
@@ -82,6 +78,14 @@ switch-vps-1:
 # Deploy latest config to VPS 2
 switch-vps-2:
     ./scripts/deploy-vps 2
+
+# SSH into the AWS butbox
+ssh-butbox:
+    ssh butbox
+
+# Deploy latest config to butbox
+switch-butbox:
+    ./scripts/deploy-vps butbox
 
 # Run Nix garbage collection locally and on both VPSes in parallel
 gc:
