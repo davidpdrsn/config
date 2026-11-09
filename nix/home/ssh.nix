@@ -6,6 +6,12 @@
       "*" = {
         AddKeysToAgent = "yes";
       };
+      "butbox" = {
+        HostName = "3.72.241.28";
+        User = "ubuntu";
+        IdentityFile = "~/.ssh/butbox.pem";
+        IdentitiesOnly = true;
+      };
       "bitbucket.org" = {
         AddKeysToAgent = "yes";
         IdentityFile = "~/.ssh/bitbucket_lun";
