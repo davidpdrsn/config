@@ -1,12 +1,12 @@
 # Config
 
-Personal nix configuration using flakes.
+Personal nix configuration.
 
 ## Commands
 
 - `just check` - Validate the flake structure
-- `just build` - Build the system configuration without activating (no sudo required)
-- `just switch` - Build and apply changes (requires sudo)
+- `just build` - Build the system configuration without activating
+- `just switch` - Build and apply changes
 
 ## Important
 
