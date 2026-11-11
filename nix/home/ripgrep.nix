@@ -44,6 +44,8 @@
       "--glob=!.agents/*"
       "--glob=!.claude/*"
       "--glob=!.pi/suggester/*"
+      "--glob=!**/skills/synced"
+      "--glob=!**/skills/.trash"
       # Because who cares about case!?
       "--smart-case"
     ];
