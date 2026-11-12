@@ -21,6 +21,10 @@
     TERM = "tmux-256color";
   };
 
+  # fish is the shell, but tools still start zsh. Without any zsh startup file it stops at
+  # zsh-newuser-install's first-run menu.
+  home.file.".zshrc".text = "";
+
   programs.fish = {
     enable = true;
     generateCompletions = true;
