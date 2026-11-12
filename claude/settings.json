@@ -23,10 +23,14 @@
       }
     ]
   },
+  "worktree": {
+    "baseRef": "fresh"
+  },
   "enabledPlugins": {
     "rust-analyzer-lsp@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true
   },
+  "feedbackDrafts": "off",
   "alwaysThinkingEnabled": true,
   "modelSettings": {
     "claude-opus-5-5": {
@@ -36,9 +40,12 @@
       "effortLevel": "high"
     }
   },
-  "fastMode": true,
+  "promptSuggestionEnabled": false,
+  "awaySummaryEnabled": false,
   "tui": "fullscreen",
+  "timeFormat": "24-hour",
   "autoMemoryEnabled": false,
   "autoDreamEnabled": false,
-  "skipDangerousModePermissionPrompt": true
+  "skipDangerousModePermissionPrompt": true,
+  "fileCheckpointingEnabled": false
 }
