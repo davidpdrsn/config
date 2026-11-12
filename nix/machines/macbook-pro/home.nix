@@ -123,6 +123,38 @@ in {
     "gitbutler-programs.json"
     (import ./gitbutler-programs.nix);
 
+  # A locally patched cargo that garbage collects target directories. A dangling
+  # link (it isn't built) is skipped by PATH lookup, which finds the flake's cargo.
+  home.file.".local/share/patched-cargo/bin/cargo".source =
+    config.lib.file.mkOutOfStoreSymlink
+    "${config.home.homeDirectory}/code/cargo/target/release/cargo";
+
+  # How long the patched cargo keeps build artifacts that no build has used.
+  # Stock cargo ignores the setting.
+  home.file.".cargo/config.toml".text = ''
+    [cache.target-clean]
+    max-age = "4 days"
+  '';
+
+  # Use the patched cargo in the GitButler checkout and its worktrees without
+  # changing the repo. `use flake` prepends the dev shell to PATH, so the patched
+  # cargo has to be added after it, hence the wrapper.
+  programs.direnv.stdlib = ''
+    if declare -F use_flake >/dev/null; then
+      eval "_patched_cargo_$(declare -f use_flake)"
+
+      use_flake() {
+        _patched_cargo_use_flake "$@" || return
+
+        case "$PWD/" in
+          "${config.home.homeDirectory}/code/gitbutler/gitbutler-git/"* | "${config.home.homeDirectory}/.gitbutler-worktrees/gitbutler-git/"*)
+            PATH_add "${config.home.homeDirectory}/.local/share/patched-cargo/bin"
+            ;;
+        esac
+      }
+    fi
+  '';
+
   # Mac-specific shell aliases
   programs.fish.shellAliases = {
     o = "open .";
