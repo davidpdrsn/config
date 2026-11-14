@@ -1,8 +1,8 @@
 {config, lib, pkgs, ...}: let
-  piPromptsDir = ../../pi/prompts;
-  piPromptFiles = lib.filterAttrs
+  promptsDir = ../../agents/prompts;
+  promptFiles = lib.filterAttrs
     (name: type: type == "regular" && lib.hasSuffix ".md" name)
-    (builtins.readDir piPromptsDir);
+    (builtins.readDir promptsDir);
   codexSkillFiles = lib.mapAttrs'
     (fileName: _: let
       name = lib.removeSuffix ".md" fileName;
@@ -13,10 +13,10 @@
         description: Run the ${name} workflow
         ---
 
-        ${builtins.readFile "${piPromptsDir}/${fileName}"}
+        ${builtins.readFile "${promptsDir}/${fileName}"}
       ''))
-    piPromptFiles;
-  generatedCodexSkills = pkgs.runCommand "codex-skills-from-pi-prompts" {} (''
+    promptFiles;
+  generatedCodexSkills = pkgs.runCommand "codex-skills-from-agent-prompts" {} (''
       mkdir -p "$out"
     ''
     + lib.concatStringsSep "\n" (lib.mapAttrsToList (name: skillFile: ''

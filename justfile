@@ -115,6 +115,6 @@ update-and-deploy-dnd:
 
 update-but-skill:
     # this gets symlinked into ~/.agents/skills/but by Home Manager
-    but skill install --path ./pi/skills/but
-    mkdir -p ./pi/skills/but-briefs
-    { printf '%s\n' '---' 'name: but-briefs' 'description: Create and review code briefs with but briefs.' '---' ''; but briefs skill; } > ./pi/skills/but-briefs/SKILL.md
+    but skill install --path ./agents/skills/but
+    mkdir -p ./agents/skills/but-briefs
+    { printf '%s\n' '---' 'name: but-briefs' 'description: Create and review code briefs with but briefs.' '---' ''; but briefs skill; } > ./agents/skills/but-briefs/SKILL.md

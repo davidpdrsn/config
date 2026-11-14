@@ -103,20 +103,31 @@ in {
     "${config.home.homeDirectory}/.local/bin"
   ];
 
-  # Make the Pi skills available to Codex in every project on this Mac.
+  # Make the shared agent skills available to Codex and Pi in every project on this Mac.
   home.file.".agents/skills".source =
     config.lib.file.mkOutOfStoreSymlink
-    "${config.home.homeDirectory}/config/pi/skills";
+    "${config.home.homeDirectory}/config/agents/skills";
 
-  # Make the Pi skills available to Claude Code in every project on this Mac.
+  # Make the shared agent skills available to Claude Code in every project on this Mac.
   home.file.".claude/skills".source =
     config.lib.file.mkOutOfStoreSymlink
-    "${config.home.homeDirectory}/config/pi/skills";
+    "${config.home.homeDirectory}/config/agents/skills";
+
+  # Share one set of global instructions between Claude Code, Codex and Pi.
+  home.file.".claude/CLAUDE.md".source =
+    config.lib.file.mkOutOfStoreSymlink
+    "${config.home.homeDirectory}/config/agents/AGENTS.md";
+  home.file.".codex/AGENTS.md".source =
+    config.lib.file.mkOutOfStoreSymlink
+    "${config.home.homeDirectory}/config/agents/AGENTS.md";
+  home.file.".pi/agent/AGENTS.md".source =
+    config.lib.file.mkOutOfStoreSymlink
+    "${config.home.homeDirectory}/config/agents/AGENTS.md";
 
   # GitButler checks Pi's own skill directory. Pi deduplicates the shared target.
   home.file.".pi/agent/skills/gitbutler".source =
     config.lib.file.mkOutOfStoreSymlink
-    "${config.home.homeDirectory}/config/pi/skills/but";
+    "${config.home.homeDirectory}/config/agents/skills/but";
 
   home.file."Library/Application Support/gitbutler/programs.json".source =
     (pkgs.formats.json {}).generate

@@ -6,5 +6,5 @@ node_modules/
 /vmux/session.toml
 .env
 tmp/
-pi/skills/synced
-pi/skills/.trash
+agents/skills/synced
+agents/skills/.trash

@@ -37,6 +37,13 @@ in {
       packages = [
         "${config.home.homeDirectory}/config/pi"
       ];
+      # Skills and prompts are shared with other agents, so they live outside the Pi package.
+      skills = [
+        "${config.home.homeDirectory}/config/agents/skills"
+      ];
+      prompts = [
+        "${config.home.homeDirectory}/config/agents/prompts"
+      ];
     };
   };
 }
