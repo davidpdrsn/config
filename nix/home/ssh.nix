@@ -14,6 +14,10 @@
         StrictHostKeyChecking = "yes";
         UserKnownHostsFile = "~/.ssh/known_hosts_butbox";
       };
+      "bi-web bi-worker-1 bi-worker-2" = {
+        HostName = "%h.meerkat-delta.ts.net";
+        User = "bi";
+      };
       "bitbucket.org" = {
         AddKeysToAgent = "yes";
         IdentityFile = "~/.ssh/bitbucket_lun";
