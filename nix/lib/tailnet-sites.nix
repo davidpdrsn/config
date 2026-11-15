@@ -8,11 +8,12 @@
   opWrapped = import ./op-wrapper.nix {inherit pkgs;};
   stateDir = "${config.home.homeDirectory}/.local/state/tailnet-sites";
 
-  # Every site plus the directory gets its own Tailscale node. The directory
-  # serves a static page; sites forward to a local port.
+  # Every site plus the directory gets its own Tailscale node, and each node
+  # forwards to a local port. The directory page has its own small web server,
+  # because tagged nodes may not serve files directly.
   nodes =
     lib.mapAttrs (name: site: {target = "http://127.0.0.1:${toString site.port}";}) cfg.sites
-    // {${cfg.directoryName} = {target = "${directoryPage}";};};
+    // {${cfg.directoryName} = {target = "http://127.0.0.1:${toString cfg.directoryPort}";};};
 
   siteUrl = name: "https://${name}.${cfg.tailnet}";
 
@@ -184,9 +185,11 @@
     </html>
   '';
 
-  # Runs a userspace tailscaled for one node. Once the node is logged in, a
-  # background job replaces the node's serve config with the one from this
-  # module. tailscaled replaces the shell, so launchd stops it directly.
+  # Runs a userspace tailscaled for one node. A background job sets the node's
+  # serve config from this module once the node is logged in, replacing any
+  # config from an earlier version. After that it sets it again whenever the
+  # config is gone, which happens when the node logs in again. tailscaled
+  # replaces the shell, so launchd stops it directly.
   nodeScript = name: node:
     pkgs.writeShellApplication {
       name = "tailnet-site-${name}";
@@ -198,39 +201,164 @@
 
         # $$ stays this script's pid, which becomes tailscaled's after exec.
         (
-          until tailscale --socket="$sock" status --json 2>/dev/null | jq -e '.BackendState == "Running"' >/dev/null; do
-            kill -0 "$$" 2>/dev/null || exit 0
+          applied=false
+          while kill -0 "$$" 2>/dev/null; do
+            if tailscale --socket="$sock" status --json 2>/dev/null | jq -e '.BackendState == "Running"' >/dev/null; then
+              if [ "$applied" = false ] || tailscale --socket="$sock" serve status --json | jq -e '. == {}' >/dev/null; then
+                # Inside an if, a failure doesn't end the job, so it tries again.
+                if tailscale --socket="$sock" serve reset \
+                  && tailscale --socket="$sock" serve --bg --https=443 "${node.target}"; then
+                  echo "serving ${siteUrl name} -> ${node.target}"
+                  applied=true
+                fi
+              fi
+            fi
             sleep 5
           done
-
-          tailscale --socket="$sock" serve reset
-          tailscale --socket="$sock" serve --bg --https=443 "${node.target}"
-          echo "serving ${siteUrl name} -> ${node.target}"
         ) &
 
         exec tailscaled --tun=userspace-networking --statedir="$dir" --socket="$sock" --port=0
       '';
     };
 
-  # Logs in the nodes named in its arguments. op-wrapper puts the auth key from
-  # 1Password in TS_AUTHKEY. The key goes through stdin, so it never shows up in
-  # the process list.
-  joinScript = opWrapped {
-    name = "tailnet-site-join";
-    env.TS_AUTHKEY = cfg.authKey;
+  # Carries out the actions sync decided on, each written as <action>:<name>.
+  # op-wrapper puts the OAuth client from 1Password in TS_CLIENT_ID and
+  # TS_CLIENT_SECRET. Secrets go through stdin, so they never show up in the
+  # process list.
+  #
+  #   join    log the node in, tagged so its key doesn't expire
+  #   retag   replace an untagged node with a tagged one
+  #   remove  delete the node from the tailnet and its state from disk
+  applyScript = opWrapped {
+    name = "tailnet-site-apply";
+    env = {
+      TS_CLIENT_ID = cfg.oauthClient.id;
+      TS_CLIENT_SECRET = cfg.oauthClient.secret;
+    };
     # Shells started before OP_ACCOUNT was set don't have it in their environment.
     account = config.home.sessionVariables.OP_ACCOUNT or "";
     command = pkgs.writeShellApplication {
-      name = "tailnet-site-join";
-      runtimeInputs = [pkgs.tailscale];
+      name = "tailnet-site-apply";
+      runtimeInputs = [pkgs.tailscale pkgs.jq pkgs.curl pkgs.coreutils];
       text = ''
-        for name in "$@"; do
+        api=https://api.tailscale.com/api/v2
+        token=
+
+        api_call() {
+          if [ -z "$token" ]; then
+            token=$(printf 'client_id=%s&client_secret=%s' "$TS_CLIENT_ID" "$TS_CLIENT_SECRET" \
+              | curl -fsS --data @- "$api/oauth/token" | jq -r '.access_token')
+          fi
+          curl -sS -H @<(printf 'Authorization: Bearer %s\n' "$token") "$@"
+        }
+
+        # Recorded at join. Falls back to the login profile, and then to the
+        # hostname, for nodes that joined before node-id files existed.
+        node_id() {
+          local name=$1 dir="${stateDir}/$1" id
+          id=$(cat "$dir/node-id" 2>/dev/null || true)
+          if [ -z "$id" ] && [ -f "$dir/tailscaled.state" ]; then
+            id=$(jq -r '._profiles // empty' "$dir/tailscaled.state" | base64 -d 2>/dev/null \
+              | jq -r '[.[].NodeID][0] // empty' 2>/dev/null || true)
+          fi
+          if [ -z "$id" ]; then
+            id=$(api_call "$api/tailnet/-/devices" \
+              | jq -r --arg name "$name" '[.devices[] | select(.hostname == $name)] | if length == 1 then .[0].nodeId else empty end')
+          fi
+          echo "$id"
+        }
+
+        delete_device() {
+          local name=$1 id=$2 status
+          if [ -z "$id" ]; then
+            echo "couldn't find $name on the tailnet. Remove it in the admin console if it's still there." >&2
+            return
+          fi
+          status=$(api_call -o /dev/null -w '%{http_code}' -X DELETE "$api/device/$id")
+          case "$status" in
+            200 | 404) echo "deleted $name.${cfg.tailnet}" ;;
+            *) echo "couldn't delete $name ($id): HTTP $status. Remove it in the admin console." >&2 ;;
+          esac
+        }
+
+        join() {
+          local name=$1 sock="${stateDir}/$1/tailscaled.sock"
           echo "joining $name.${cfg.tailnet}"
-          tailscale --socket="${stateDir}/$name/tailscaled.sock" up \
-            --auth-key=file:/dev/stdin --hostname="$name" --accept-dns=false <<<"$TS_AUTHKEY"
+          tailscale --socket="$sock" up --auth-key=file:/dev/stdin \
+            --advertise-tags=${cfg.tag} --hostname="$name" --accept-dns=false \
+            <<<"$TS_CLIENT_SECRET?ephemeral=false&preauthorized=true"
+          tailscale --socket="$sock" status --json | jq -r '.Self.ID' >"${stateDir}/$name/node-id"
+        }
+
+        for action in "$@"; do
+          name=''${action#*:}
+          [ -n "$name" ] || continue
+          case "$action" in
+            join:*)
+              join "$name"
+              ;;
+            retag:*)
+              id=$(node_id "$name")
+              tailscale --socket="${stateDir}/$name/tailscaled.sock" logout
+              delete_device "$name" "$id"
+              join "$name"
+              ;;
+            remove:*)
+              delete_device "$name" "$(node_id "$name")"
+              rm -rf "${stateDir}/$name"
+              ;;
+          esac
         done
       '';
     };
+  };
+
+  # Makes the tailnet match the configured nodes: logs in new nodes, replaces
+  # untagged ones and removes nodes that are no longer configured. Reads the
+  # OAuth client from 1Password only when there's something to do, so a switch
+  # that changes no sites doesn't ask for Touch ID.
+  syncScript = pkgs.writeShellApplication {
+    name = "tailnet-site-sync";
+    runtimeInputs = [pkgs.tailscale pkgs.jq];
+    text = ''
+      stateDir="${stateDir}"
+      nodes=(${lib.concatStringsSep " " (lib.attrNames nodes)})
+      actions=()
+
+      for name in "''${nodes[@]}"; do
+        sock="$stateDir/$name/tailscaled.sock"
+        # A node's tailscaled may still be starting right after a switch.
+        status=
+        for _ in $(seq 1 20); do
+          if [ -S "$sock" ]; then
+            status=$(tailscale --socket="$sock" status --json 2>/dev/null || true)
+            state=$(jq -r '.BackendState // empty' <<<"$status" 2>/dev/null || true)
+            [ -n "$state" ] && [ "$state" != NoState ] && break
+          fi
+          sleep 0.5
+        done
+        case "''${state:-}" in
+          NeedsLogin) actions+=("join:$name") ;;
+          Running)
+            if ! jq -e '.Self.Tags // [] | index("${cfg.tag}")' <<<"$status" >/dev/null; then
+              actions+=("retag:$name")
+            fi
+            ;;
+          "") echo "$name: tailscaled isn't running, skipping" >&2 ;;
+        esac
+      done
+
+      for dir in "$stateDir"/*/; do
+        [ -d "$dir" ] || continue
+        name=$(basename "$dir")
+        case " ''${nodes[*]} " in
+          *" $name "*) ;;
+          *) actions+=("remove:$name") ;;
+        esac
+      done
+
+      [ ''${#actions[@]} -eq 0 ] || exec ${applyScript}/bin/tailnet-site-apply "''${actions[@]}"
+    '';
   };
 
   cli = pkgs.writeShellApplication {
@@ -240,7 +368,7 @@
       nodes="${lib.concatStringsSep " " (lib.attrNames nodes)}"
 
       usage() {
-        echo "usage: tailnet-site join             log in nodes that aren't on the tailnet yet"
+        echo "usage: tailnet-site sync             make the tailnet match the configured sites"
         echo "       tailnet-site status           list nodes and their state"
         echo "       tailnet-site ts <name> ...    run a tailscale command against <name>'s node"
         echo
@@ -255,24 +383,8 @@
       }
 
       case "''${1:-}" in
-        join)
-          # A node's tailscaled may still be starting right after a switch.
-          need_login=()
-          for name in $nodes; do
-            state=
-            for _ in $(seq 1 20); do
-              if [ -S "$(sock "$name")" ]; then
-                state=$(tailscale --socket="$(sock "$name")" status --json 2>/dev/null | jq -r '.BackendState' || true)
-                [ -n "$state" ] && [ "$state" != NoState ] && break
-              fi
-              sleep 0.5
-            done
-            case "$state" in
-              NeedsLogin) need_login+=("$name") ;;
-              "") echo "$name: tailscaled isn't running, skipping" >&2 ;;
-            esac
-          done
-          [ ''${#need_login[@]} -eq 0 ] || exec ${joinScript}/bin/tailnet-site-join "''${need_login[@]}"
+        sync)
+          exec ${syncScript}/bin/tailnet-site-sync
           ;;
         status)
           for name in $nodes; do
@@ -302,19 +414,38 @@ in {
       description = "The tailnet's DNS name. Used to build the links on the directory page.";
     };
 
-    authKey = lib.mkOption {
+    oauthClient = {
+      id = lib.mkOption {
+        type = lib.types.str;
+        default = "op://Personal/Tailscale OAuth client/username";
+        description = "1Password reference to the Tailscale OAuth client's ID.";
+      };
+      secret = lib.mkOption {
+        type = lib.types.str;
+        default = "op://Personal/Tailscale OAuth client/credential";
+        description = ''
+          1Password reference to the Tailscale OAuth client's secret. The client
+          needs write access to devices and auth keys for `tag`.
+        '';
+      };
+    };
+
+    tag = lib.mkOption {
       type = lib.types.str;
-      default = "op://Personal/Tailscale auth key/credential";
-      description = ''
-        1Password reference to a reusable Tailscale auth key. `tailnet-site join`
-        reads it when a node needs to log in.
-      '';
+      default = "tag:site";
+      description = "Tag every node joins with. Tagged nodes don't expire.";
     };
 
     directoryName = lib.mkOption {
       type = lib.types.str;
       default = "sites";
       description = "Hostname of the node that serves the directory page.";
+    };
+
+    directoryPort = lib.mkOption {
+      type = lib.types.port;
+      default = 7780;
+      description = "Local port of the web server for the directory page.";
     };
 
     sites = lib.mkOption {
@@ -335,11 +466,22 @@ in {
         assertion = !(cfg.sites ? ${cfg.directoryName});
         message = "services.tailnet-sites.sites can't contain the directory name \"${cfg.directoryName}\".";
       }
+      {
+        assertion = !(lib.any (site: site.port == cfg.directoryPort) (lib.attrValues cfg.sites));
+        message = "services.tailnet-sites.directoryPort ${toString cfg.directoryPort} is also a site's port.";
+      }
     ];
 
     home.packages = [cli];
 
-    launchd.agents = lib.mapAttrs' (name: node:
+    # Runs after the agents have started, so new nodes are waiting for a login.
+    home.activation.tailnetSites = lib.hm.dag.entryAfter ["setupLaunchAgents"] ''
+      run ${syncScript}/bin/tailnet-site-sync \
+        || warnEcho "tailnet-site sync failed. Run 'tailnet-site sync' to retry."
+    '';
+
+    launchd.agents =
+      lib.mapAttrs' (name: node:
       lib.nameValuePair "tailnet-site-${name}" {
         enable = true;
         config = {
@@ -351,6 +493,26 @@ in {
           StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/tailnet-site-${name}.err.log";
         };
       })
-    nodes;
+      nodes
+      // {
+        tailnet-sites-directory = {
+          enable = true;
+          config = {
+            Label = "com.davidpdrsn.tailnet-sites.directory";
+            ProgramArguments = [
+              (lib.getExe pkgs.darkhttpd)
+              "${directoryPage}"
+              "--addr"
+              "127.0.0.1"
+              "--port"
+              (toString cfg.directoryPort)
+            ];
+            RunAtLoad = true;
+            KeepAlive = true;
+            StandardOutPath = "${config.home.homeDirectory}/Library/Logs/tailnet-sites-directory.log";
+            StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/tailnet-sites-directory.err.log";
+          };
+        };
+      };
   };
 }

@@ -7,8 +7,6 @@ switch:
     #!/usr/bin/env bash
     if [ "$(uname)" = "Darwin" ]; then
         sudo -H nix run '.#darwin-rebuild' -- switch --flake '.#macos'
-        # Log new tailnet sites in. Asks 1Password for the key only when one needs it.
-        "/etc/profiles/per-user/$USER/bin/tailnet-site" join
     else
         sudo nixos-rebuild switch --flake ".#$(hostname)"
     fi
