@@ -8,7 +8,7 @@
     enable = true;
     tailnet = "tailbfde08.ts.net";
     sites = {
-      counter.port = 3000;
+      # counter.port = 3000;
     };
   };
 }
