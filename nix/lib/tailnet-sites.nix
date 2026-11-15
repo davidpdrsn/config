@@ -185,6 +185,33 @@
     </html>
   '';
 
+  # Serves the directory page on every path. Reads the page on each request and
+  # tells browsers not to keep it, so a browser never shows an old list.
+  directoryScript = pkgs.writers.writePython3Bin "tailnet-sites-directory" {} ''
+    from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+    PAGE = "${directoryPage}/index.html"
+
+
+    class Handler(BaseHTTPRequestHandler):
+        def do_GET(self):
+            with open(PAGE, "rb") as f:
+                body = f.read()
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.send_header("Content-Length", str(len(body)))
+            self.send_header("Cache-Control", "no-store")
+            self.end_headers()
+            self.wfile.write(body)
+
+        def log_message(self, format, *args):
+            pass
+
+
+    server = ThreadingHTTPServer(("127.0.0.1", ${toString cfg.directoryPort}), Handler)
+    server.serve_forever()
+  '';
+
   # Runs a userspace tailscaled for one node. A background job sets the node's
   # serve config from this module once the node is logged in, replacing any
   # config from an earlier version. After that it sets it again whenever the
@@ -499,14 +526,7 @@ in {
           enable = true;
           config = {
             Label = "com.davidpdrsn.tailnet-sites.directory";
-            ProgramArguments = [
-              (lib.getExe pkgs.darkhttpd)
-              "${directoryPage}"
-              "--addr"
-              "127.0.0.1"
-              "--port"
-              (toString cfg.directoryPort)
-            ];
+            ProgramArguments = ["${directoryScript}/bin/tailnet-sites-directory"];
             RunAtLoad = true;
             KeepAlive = true;
             StandardOutPath = "${config.home.homeDirectory}/Library/Logs/tailnet-sites-directory.log";
