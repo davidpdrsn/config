@@ -85,6 +85,8 @@
     EOF
   '';
 in {
+  imports = [./tailnet-sites.nix];
+
   # Mac-specific SSH: UseKeychain + colima
   programs.ssh.includes = ["${config.home.homeDirectory}/.colima/ssh_config"];
   programs.ssh.settings."*".UseKeychain = "yes";
