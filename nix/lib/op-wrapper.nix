@@ -29,6 +29,9 @@ in
 
     account="${accountValue}"
     if [ -z "$account" ]; then
+      account="''${OP_ACCOUNT:-}"
+    fi
+    if [ -z "$account" ]; then
       account="$(${jqBin} -r '.[0].account_uuid' < <(${opBin} account list --format json))"
     fi
 

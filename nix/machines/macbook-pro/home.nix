@@ -96,6 +96,8 @@ in {
     DOCKER_HOST = "unix://${config.home.homeDirectory}/.colima/default/docker.sock";
     TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE = "/var/run/docker.sock";
     NO_BG_TASKS = 1;
+    # The 1Password CLI uses the personal account unless told otherwise.
+    OP_ACCOUNT = "my.1password.com";
   };
 
   # Make user-local executables available in interactive shells and launchd jobs
