@@ -128,6 +128,10 @@ in {
     config.lib.file.mkOutOfStoreSymlink
     "${config.home.homeDirectory}/config/agents/AGENTS.md";
 
+  home.file.".pi/agent/SYSTEM.md".source =
+    config.lib.file.mkOutOfStoreSymlink
+    "${config.home.homeDirectory}/config/agents/pi/SYSTEM.md";
+
   # GitButler checks Pi's own skill directory. Pi deduplicates the shared target.
   home.file.".pi/agent/skills/gitbutler".source =
     config.lib.file.mkOutOfStoreSymlink

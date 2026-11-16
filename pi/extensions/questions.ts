@@ -144,14 +144,6 @@ function formatAnswersForModel(details: QuestionnaireDetails): string {
 }
 
 export default function (pi: ExtensionAPI): void {
-	pi.on("before_agent_start", async (event) => {
-		return {
-			systemPrompt:
-				event.systemPrompt +
-				"\n\n[Question-asking policy]\n- Do not ask the user direct questions in normal assistant text.\n- If you need clarification, requirements, or a decision from the user, call the questionnaire tool instead.\n- Keep questionnaire questions concrete and minimal, and include options whenever possible.",
-		};
-	});
-
 	pi.registerTool({
 		name: "questionnaire",
 		exposure: "model-only",
