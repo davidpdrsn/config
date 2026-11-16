@@ -73,7 +73,6 @@
   };
 
   linearCli = pkgs.callPackage ../../shared/packages/linear-cli.nix {};
-  cloudAgent = pkgs.callPackage ../../shared/packages/cloud-agent.nix {};
   obsidianVaultsPull = import ../../lib/obsidian-vaults-pull.nix {
     inherit pkgs username;
   };
@@ -116,7 +115,6 @@
   };
 
   serverPackages = [
-    cloudAgent
     gog
     goplaces
     linearCli

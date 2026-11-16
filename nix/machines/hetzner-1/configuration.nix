@@ -174,7 +174,6 @@ in {
     activateWeddingSite
     llmAgentPackages.codex
     piWrapped
-    (pkgs.callPackage ../../shared/packages/cloud-agent.nix {})
     (pkgs.callPackage ../../shared/packages/pr-digest.nix {inherit piWrapped;})
   ];
   security.sudo.extraRules = [

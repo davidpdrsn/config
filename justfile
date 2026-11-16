@@ -112,9 +112,3 @@ update-and-deploy-dnd:
     /Users/davidpdrsn/code/gitbutler/gitbutler-git/target/release/but commit flake.lock -b update-dnd -m 'update dnd'
     /Users/davidpdrsn/code/gitbutler/gitbutler-git/target/release/but land update-dnd --yes
     just deploy-dnd-pinned
-
-update-but-skill:
-    # this gets symlinked into ~/.agents/skills/but by Home Manager
-    but skill install --path ./agents/skills/but
-    mkdir -p ./agents/skills/but-briefs
-    { printf '%s\n' '---' 'name: but-briefs' 'description: Create and review code briefs with but briefs.' '---' ''; but briefs skill; } > ./agents/skills/but-briefs/SKILL.md

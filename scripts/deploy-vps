@@ -16,4 +16,4 @@ case "$1" in
     ;;
 esac
 
-ssh -t "$host" 'cd /home/davidpdrsn/config && git fetch && git reset --hard origin/main && ./scripts/bootstrap-pi-deps && /run/wrappers/bin/sudo nixos-rebuild switch --flake ".#$(hostname)"'
+ssh -t "$host" 'cd /home/davidpdrsn/config && git fetch && git reset --hard origin/main && /run/wrappers/bin/sudo nixos-rebuild switch --flake ".#$(hostname)"'

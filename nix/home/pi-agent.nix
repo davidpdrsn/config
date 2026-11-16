@@ -20,8 +20,9 @@ in {
       lastChangelogVersion = pi.version;
       collapseChangelog = true;
       defaultTools = ["+codemode"];
-      defaultProvider = "openai-codex";
-      defaultModel = "gpt-6-astra";
+      defaultProvider = "anthropic";
+      defaultModel = "claude-opus-5-5";
+      defaultThinkingLevel = "high";
       enabledModels = [
         "openai-codex/gpt-6-astra"
         "anthropic/*"
@@ -38,12 +39,9 @@ in {
       packages = [
         "${config.home.homeDirectory}/config/pi"
       ];
-      # Skills and prompts are shared with other agents, so they live outside the Pi package.
+      # Skills are shared with other agents, so they live outside the Pi package.
       skills = [
         "${config.home.homeDirectory}/config/agents/skills"
-      ];
-      prompts = [
-        "${config.home.homeDirectory}/config/agents/prompts"
       ];
     };
   };

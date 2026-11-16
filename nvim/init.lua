@@ -94,7 +94,6 @@ require("live_diff").setup({
     auto_enable = false,
 })
 require("pi_msg").setup()
-require("pi_nvim_server").setup()
 
 --------------------------------------------
 -- Auto commands

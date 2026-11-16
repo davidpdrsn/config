@@ -14,7 +14,6 @@
     opWrapped = import ../../lib/op-wrapper.nix {inherit pkgs;};
     llmAgentPackages = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
     linearCli = pkgs.callPackage ../../shared/packages/linear-cli.nix {};
-    agentStatus = pkgs.callPackage ../../shared/packages/agent-status.nix {};
     piMsg = pkgs.callPackage ./packages/pi-msg.nix {};
     gitButlerPiMsg = pkgs.callPackage ./packages/gitbutler-pi-msg.nix {inherit piMsg;};
     gitButlerNvimRemote = pkgs.callPackage ./packages/gitbutler-nvim-remote.nix {};
@@ -22,7 +21,6 @@
     lazybut = pkgs.callPackage ./packages/lazybut.nix {};
     buti = pkgs.callPackage ./packages/buti.nix {};
     webScreenshot = pkgs.callPackage ./packages/web-screenshot.nix {};
-    cloudAgent = pkgs.callPackage ../../shared/packages/cloud-agent.nix {};
     piWrapped = import ../../lib/pi-wrapped.nix {inherit pkgs inputs;};
     prDigest = pkgs.callPackage ../../shared/packages/pr-digest.nix {inherit piWrapped;};
     flarectl = opWrapped {
@@ -51,7 +49,6 @@
       nxv
       resvg
       linearCli
-      agentStatus
       piMsg
       gitButlerPiMsg
       gitButlerNvimRemote
@@ -77,7 +74,6 @@
     ++ [
       llmAgentPackages.codex
       llmAgentPackages.claude-code
-      cloudAgent
       piWrapped
       prDigest
     ]

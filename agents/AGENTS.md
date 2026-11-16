@@ -4,9 +4,9 @@ Shared by Claude Code (`~/.claude/CLAUDE.md`), Codex (`~/.codex/AGENTS.md`) and 
 
 ## Writing
 
-Apply these rules to all prose you write for people: replies, commit messages, PR descriptions, docs and code comments. The `unslop` skill applies the same rules when rewriting existing text.
+Apply these rules to all prose you write for people: replies, commit messages, PR descriptions, docs and code comments.
 
-Rule numbers are stable ids that other skills cite. A removed rule leaves a gap.
+Rule numbers are stable ids. A removed rule leaves a gap.
 
 ### Content
 
