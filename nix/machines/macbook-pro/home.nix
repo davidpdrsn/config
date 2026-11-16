@@ -107,27 +107,6 @@ in {
     "${config.home.homeDirectory}/.local/bin"
   ];
 
-  # Make the shared agent skills available to Codex and Pi in every project on this Mac.
-  home.file.".agents/skills".source =
-    config.lib.file.mkOutOfStoreSymlink
-    "${config.home.homeDirectory}/config/agents/skills";
-
-  # Make the shared agent skills available to Claude Code in every project on this Mac.
-  home.file.".claude/skills".source =
-    config.lib.file.mkOutOfStoreSymlink
-    "${config.home.homeDirectory}/config/agents/skills";
-
-  # Share one set of global instructions between Claude Code, Codex and Pi.
-  home.file.".claude/CLAUDE.md".source =
-    config.lib.file.mkOutOfStoreSymlink
-    "${config.home.homeDirectory}/config/agents/AGENTS.md";
-  home.file.".codex/AGENTS.md".source =
-    config.lib.file.mkOutOfStoreSymlink
-    "${config.home.homeDirectory}/config/agents/AGENTS.md";
-  home.file.".pi/agent/AGENTS.md".source =
-    config.lib.file.mkOutOfStoreSymlink
-    "${config.home.homeDirectory}/config/agents/AGENTS.md";
-
   home.file.".pi/agent/SYSTEM.md".source =
     config.lib.file.mkOutOfStoreSymlink
     "${config.home.homeDirectory}/config/agents/pi/SYSTEM.md";

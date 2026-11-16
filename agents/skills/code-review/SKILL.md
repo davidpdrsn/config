@@ -1,16 +1,17 @@
 ---
 name: code-review
-description: "Use this skill when reviewing code"
+description: "Use when reviewing code, such as a branch, a diff or a pull request"
 ---
 
-Keep these things in mind when reviewing code:
+Look for these, most important first:
 
-- Your primary job is to find bugs and new duplication thats been introduced.
-- Your secondary job is to suggest refactors.
-- Don't build, run checks, or report potential type errors. Trust the human to have done that, otherwise CI will catch it.
-- Don't run tests. Trust that the human has ensured they pass, otherwise CI will catch it.
-- Don't review formatting such as commas, indentation, etc
+1. Bugs that normal users can hit. Skip edge cases normal users never hit.
+2. Duplication that the change added.
+3. Refactors that make the change simpler, such as removing code the change made unnecessary or giving what it added a simpler shape.
 
-Do not say that you didn't review these. Silently ignore them.
+For each bug, list the steps to reproduce it. If you can't find a way to reproduce it, say so.
 
-For each bug you find include a list of steps to reproduce it. If you cannot find a way to reproduce it clearly state that.
+Skip these, and don't mention that you skipped them:
+
+- Building, running checks or tests, and reporting possible type errors. The author has done that, and CI catches what they missed.
+- Formatting and style nits, such as commas and indentation.

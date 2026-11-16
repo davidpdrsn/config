@@ -30,6 +30,9 @@ in {
       images = {
         blockImages = false;
       };
+      warnings = {
+        anthropicExtraUsage = false;
+      };
       transport = "websocket";
       tuiMode = "fullscreen";
       terminal = {
@@ -39,7 +42,6 @@ in {
       packages = [
         "${config.home.homeDirectory}/config/pi"
       ];
-      # Skills are shared with other agents, so they live outside the Pi package.
       skills = [
         "${config.home.homeDirectory}/config/agents/skills"
       ];
