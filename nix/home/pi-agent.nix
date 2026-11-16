@@ -24,6 +24,7 @@ in {
       defaultModel = "gpt-6-astra";
       enabledModels = [
         "openai-codex/gpt-6-astra"
+        "anthropic/*"
       ];
       images = {
         blockImages = false;
