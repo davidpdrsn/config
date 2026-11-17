@@ -49,5 +49,12 @@ in {
         "${config.home.homeDirectory}/config/agents/skills"
       ];
     };
+    # Sign in once with `pi mcp login <name>`.
+    mcpServers = {
+      linear = {
+        url = "https://mcp.linear.app/mcp";
+        description = "Linear issues, projects, cycles, and comments";
+      };
+    };
   };
 }
