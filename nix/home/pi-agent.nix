@@ -1,4 +1,4 @@
-{config, inputs, pkgs, ...}: let
+{config, inputs, lib, pkgs, ...}: let
   pi = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.pi;
 in {
   programs."pi-agent" = {
@@ -54,6 +54,42 @@ in {
       linear = {
         url = "https://mcp.linear.app/mcp";
         description = "Linear issues, projects, cycles, and comments";
+      };
+      # Slack's server has no dynamic client registration, so this uses the
+      # "Pi MCP" app (A0CJJJYAV7G) in the GitButler workspace. Its redirect
+      # URL is http://127.0.0.1:8765/callback, and its user scopes must match
+      # `scope`.
+      slack = {
+        url = "https://mcp.slack.com/mcp";
+        description = "Slack messages, channels, DMs, threads, canvases, and search";
+        oauth = {
+          clientId = "4737498559169.12630644369254";
+          clientSecret = "!${lib.getExe pkgs._1password-cli} read 'op://Personal/Slack Pi MCP/credential'";
+          callbackPort = 8765;
+          scope = lib.concatStringsSep " " [
+            "canvases:read"
+            "channels:history"
+            "channels:read"
+            "emoji:read"
+            "files:read"
+            "groups:history"
+            "groups:read"
+            "im:history"
+            "im:read"
+            "lists:read"
+            "mpim:history"
+            "mpim:read"
+            "reactions:read"
+            "search:read.files"
+            "search:read.im"
+            "search:read.mpim"
+            "search:read.private"
+            "search:read.public"
+            "search:read.users"
+            "users:read"
+            "users:read.email"
+          ];
+        };
       };
     };
   };
