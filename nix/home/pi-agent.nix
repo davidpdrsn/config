@@ -39,7 +39,9 @@ in {
       terminal = {
         showTerminalProgress = true;
       };
-      theme = "catppuccin-mocha-contrast";
+      # Light theme first, dark theme second. Pi picks one from the
+      # terminal's background and switches when the terminal changes.
+      theme = "catppuccin-latte-contrast/catppuccin-mocha-contrast";
       packages = [
         "${config.home.homeDirectory}/config/pi"
       ];

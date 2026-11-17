@@ -535,19 +535,41 @@ update_real_cursor_visibility = function()
 	end
 end
 
+local highlight_colors = {
+	dark = {
+		LiveDiffDeleteWord = { bg = "#7a3030" },
+		LiveDiffAddWord = { bg = "#496a3a" },
+		LiveDiffSelectedDelete = { bg = "#7a3f55" },
+		LiveDiffSelectedAdd = { bg = "#4f684b" },
+		LiveDiffSelectedDeleteWord = { bg = "#a54242" },
+		LiveDiffSelectedAddWord = { bg = "#6d8f4b" },
+		LiveDiffVirtualCursorDelete = { bg = "#5f4b7a" },
+		LiveDiffVirtualCursorDeleteWord = { bg = "#8a5fb3" },
+		LiveDiffHunkMarker = { fg = "#7f849c", bg = "NONE" },
+		LiveDiffSelectedHunkMarker = { fg = "#f5c2e7", bg = "NONE" },
+	},
+	light = {
+		LiveDiffDeleteWord = { bg = "#f2b8c2" },
+		LiveDiffAddWord = { bg = "#bfe3b5" },
+		LiveDiffSelectedDelete = { bg = "#f0c8d6" },
+		LiveDiffSelectedAdd = { bg = "#cfe8c6" },
+		LiveDiffSelectedDeleteWord = { bg = "#e88d9e" },
+		LiveDiffSelectedAddWord = { bg = "#93d086" },
+		LiveDiffVirtualCursorDelete = { bg = "#dccbf2" },
+		LiveDiffVirtualCursorDeleteWord = { bg = "#bb9ce8" },
+		LiveDiffHunkMarker = { fg = "#8c8fa1", bg = "NONE" },
+		LiveDiffSelectedHunkMarker = { fg = "#ea76cb", bg = "NONE" },
+	},
+}
+
 local function set_highlights()
 	vim.api.nvim_set_hl(0, "LiveDiffDelete", { link = "DiffDelete", default = true })
 	vim.api.nvim_set_hl(0, "LiveDiffAdd", { link = "DiffAdd", default = true })
-	vim.api.nvim_set_hl(0, "LiveDiffDeleteWord", { bg = "#7a3030", default = true })
-	vim.api.nvim_set_hl(0, "LiveDiffAddWord", { bg = "#496a3a", default = true })
-	vim.api.nvim_set_hl(0, "LiveDiffSelectedDelete", { bg = "#7a3f55", default = true })
-	vim.api.nvim_set_hl(0, "LiveDiffSelectedAdd", { bg = "#4f684b", default = true })
-	vim.api.nvim_set_hl(0, "LiveDiffSelectedDeleteWord", { bg = "#a54242", default = true })
-	vim.api.nvim_set_hl(0, "LiveDiffSelectedAddWord", { bg = "#6d8f4b", default = true })
-	vim.api.nvim_set_hl(0, "LiveDiffVirtualCursorDelete", { bg = "#5f4b7a", default = true })
-	vim.api.nvim_set_hl(0, "LiveDiffVirtualCursorDeleteWord", { bg = "#8a5fb3", default = true })
-	vim.api.nvim_set_hl(0, "LiveDiffHunkMarker", { fg = "#7f849c", bg = "NONE", default = true })
-	vim.api.nvim_set_hl(0, "LiveDiffSelectedHunkMarker", { fg = "#f5c2e7", bg = "NONE", default = true })
+
+	local colors = highlight_colors[vim.o.background] or highlight_colors.dark
+	for name, hl in pairs(colors) do
+		vim.api.nvim_set_hl(0, name, vim.tbl_extend("force", hl, { default = true }))
+	end
 end
 
 local function should_enable(bufnr)
@@ -985,6 +1007,12 @@ function M.setup(opts)
 	set_highlights()
 
 	local group = vim.api.nvim_create_augroup("LiveDiffAutoEnable", { clear = true })
+	-- Loading a colorscheme clears these, and switching 'background' reloads
+	-- the colorscheme.
+	vim.api.nvim_create_autocmd("ColorScheme", {
+		group = group,
+		callback = set_highlights,
+	})
 	vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
 		group = group,
 		callback = function(event)

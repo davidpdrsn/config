@@ -10,7 +10,13 @@ return {
         priority = 1000,
         config = function()
             require("catppuccin").setup({
-                flavour = "mocha",
+                -- Follow 'background', which Neovim sets from the terminal's
+                -- background color and updates when the terminal switches.
+                flavour = "auto",
+                background = {
+                    light = "latte",
+                    dark = "mocha",
+                },
                 dim_inactive = {
                     enabled = true,
                 },
