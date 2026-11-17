@@ -68,7 +68,6 @@ export function formatUsage(usage: UsageTotals): string {
 	if (usage.turns) parts.push(`${usage.turns} turn${usage.turns === 1 ? "" : "s"}`);
 	if (usage.input || usage.cacheRead) parts.push(`↑${formatTokens(usage.input + usage.cacheRead)}`);
 	if (usage.output) parts.push(`↓${formatTokens(usage.output)}`);
-	if (usage.cost) parts.push(`$${usage.cost.toFixed(3)}`);
 	return parts.join(" ");
 }
 
