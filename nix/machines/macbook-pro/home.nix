@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   pkgs,
   ...
 }: let
@@ -107,9 +108,23 @@ in {
     "${config.home.homeDirectory}/.local/bin"
   ];
 
-  home.file.".pi/agent/SYSTEM.md".source =
-    config.lib.file.mkOutOfStoreSymlink
-    "${config.home.homeDirectory}/config/agents/pi/SYSTEM.md";
+  # Pi's system prompt is every .md file in agents/system, sorted by name and
+  # joined with a blank line. This reads the working tree at switch time rather
+  # than the flake source, because the flake only sees files git tracks, and a
+  # new part should be included before it is committed.
+  home.activation.piSystemPrompt = lib.hm.dag.entryAfter ["linkGeneration"] ''
+    (
+      export LC_ALL=C
+      parts=("${config.home.homeDirectory}/config/agents/system"/*.md)
+      dest="${config.home.homeDirectory}/.pi/agent/SYSTEM.md"
+      tmp="$(mktemp)"
+      ${pkgs.gawk}/bin/awk 'FNR == 1 && NR != 1 { print "" } { print }' "''${parts[@]}" > "$tmp"
+      run mkdir -p "$(dirname "$dest")"
+      # Remove first: an older generation linked this path into the repo.
+      run rm -f "$dest"
+      run mv "$tmp" "$dest"
+    )
+  '';
 
   home.file."Library/Application Support/gitbutler/programs.json".source =
     (pkgs.formats.json {}).generate
