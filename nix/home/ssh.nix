@@ -18,10 +18,6 @@
         HostName = "%h.meerkat-delta.ts.net";
         User = "bi";
       };
-      "bitbucket.org" = {
-        AddKeysToAgent = "yes";
-        IdentityFile = "~/.ssh/bitbucket_lun";
-      };
       "46.225.16.43" = {
         User = "davidpdrsn";
         IdentityFile = "~/.ssh/hetzner";

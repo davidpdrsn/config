@@ -79,10 +79,6 @@ in {
     };
   };
 
-  users.users.${username} = {
-    extraGroups = ["wheel" "docker"];
-  };
-
   users.groups.dnd-next = {};
   users.users.dnd-next = {
     isSystemUser = true;
@@ -417,6 +413,5 @@ in {
   # Rotate the dnd-next auth cookie, signing everyone out:
   #   sudo rm /var/lib/nginx-secrets/dnd-next-auth.conf && sudo systemctl restart nginx
 
-  virtualisation.docker.enable = true;
   networking.firewall.allowedTCPPorts = [22 80 443];
 }

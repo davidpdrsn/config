@@ -74,7 +74,6 @@ return {
             vim.lsp.enable({
                 "csharp_ls",
                 "eslint",
-                "gopls",
                 "ts_ls",
                 "rust_analyzer",
                 "nil_ls",
@@ -84,23 +83,6 @@ return {
     },
     -- icons in lsp suggestions window
     { "onsails/lspkind.nvim" },
-    -- more lsp code actions
-    {
-        "nvimtools/none-ls.nvim",
-        config = function()
-            local null_ls = require("null-ls")
-
-            null_ls.setup({
-                sources = {
-                    null_ls.builtins.formatting.golines,
-                    null_ls.builtins.formatting.goimports,
-                    -- null_ls.builtins.code_actions.impl,
-                    -- null_ls.builtins.code_actions.gomodifytags,
-                    -- null_ls.builtins.diagnostics.golangci_lint,
-                },
-            })
-        end,
-    },
     -- completion
     {
         "saghen/blink.cmp",
@@ -132,14 +114,10 @@ return {
             snippets = { preset = "luasnip" },
             sources = {
                 default = { "snippets", "lsp", "path", "buffer" },
-                per_filetype = {
-                    -- sql = { "dadbod", "buffer" },
-                },
                 providers = {
                     lsp = {
                         fallbacks = {},
                     },
-                    dadbod = { name = "Dadbod", module = "vim_dadbod_completion.blink" },
                 },
             },
         },

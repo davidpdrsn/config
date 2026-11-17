@@ -34,17 +34,14 @@
       ".reload-on-demand.toml"
       ".temp"
       ".tmp"
-      "__debug_bin*"
       ".direnv"
       ".claude/settings.local.json"
       ".cache"
       ".jj"
-      ".go"
       ".worktrees"
       ".worktreeinclude"
       "**/.pi/tmp/"
       "**/.pi/suggester"
-      "vmux-debug.log"
       ".pi/skills/but"
       ".pi/skills/committing"
     ];
@@ -116,132 +113,11 @@
     };
   };
 
-  programs.jujutsu = let
-    private-revset = "description(glob:'ai*') | description(glob:'wip:*') | description(glob:'private:*') | description(glob:'megamerge*')";
-  in {
+  programs.jujutsu = {
     enable = true;
-    settings =
-      {
-        user = {
-          email = "david.pdrsn@gmail.com";
-          name = "David Pedersen";
-        };
-      ui = {
-        default-command = ["log"];
-        diff-editor = ":builtin";
-        pager = "delta";
-        diff-formatter = [
-          "bash"
-          "-c"
-          "delta --width $width $left $right --features=split-view || true"
-        ];
-      };
-      snapshot = {
-        auto-update-stale = true;
-      };
-      colors = {
-        "diff token" = {underline = false;};
-        "diff removed token" = {bg = "#221111";};
-        "diff added token" = {bg = "#002200";};
-        "log commit change_id shortest" = "green";
-      };
-      template-aliases = {
-        "format_short_signature(signature)" = "signature.name().trim().split(\" \", 2).first().lower()";
-        "in_branch(commit)" = "commit.contained_in(\"immutable_heads()..bookmarks()\")";
-      };
-      aliases = {
-        c = ["commit"];
-        n = ["new"];
-        rb = ["rebase"];
-        blame = ["file" "annotate"];
-        # decribe change using ai
-        desc-ai = ["util" "exec" "--" "jj-desc-ai"];
-        # integrate changes into a mega merge
-        integrate = [
-          "rebase"
-          "-A"
-          "trunk()"
-          "-B"
-          "merge"
-          "-r"
-        ];
-        restack = [
-          "util"
-          "exec"
-          "--"
-          "bash"
-          "-c"
-          "jj restack-inner && jj abandon-empty-inner"
-        ];
-        # rebase all changes on top of trunk
-        restack-inner = [
-          "rebase"
-          "-s"
-          "roots(trunk()..) & mutable()"
-          "-o"
-          "trunk()"
-          "--simplify-parents"
-        ];
-        # sometimes after restacking the changes that were merged remain in the tree
-        # but are empty. This abandons those changes.
-        abandon-empty-inner = [
-          "abandon"
-          "-r"
-          "children(trunk()) & empty() & mutable()"
-        ];
-        # squash all ai commits
-        squash-ai = [
-          "squash"
-          "--from"
-          "mutable() & description(glob:'ai*') & ::@"
-          "--into"
-          "roots(mutable() & description(glob:'ai*') & ::@)"
-          "--use-destination-message"
-        ];
-      };
-      revset-aliases = {
-        "siblings(x)" = "children(parents(x)) ~ x";
-        "merge" = "description(glob:'megamerge*')";
-      };
-      git = {
-        # Prevent pushing work in progress, anything explicitly labeled "private", or the mega merge commit
-        private-commits = private-revset;
-      };
-      remotes = {
-        origin = {
-          auto-track-created-bookmarks = "*";
-        };
-      };
-        templates = {
-          git_push_bookmark = "\"dp/\" ++ change_id. short()";
-          draft_commit_description = ''
-            concat(
-              coalesce(description, default_commit_description, "\n"),
-              surround(
-                "\nJJ: This commit contains the following changes:\n", "",
-                indent("JJ:     ", diff.stat(72)),
-              ),
-              "\nJJ: ignore-rest\n",
-              diff.git(),
-            )
-          '';
-          log_node = ''
-            if(self && !current_working_copy && !immutable && !conflict && in_branch(self),
-              "◇",
-              if(self && !current_working_copy && !immutable && !conflict && self.contained_in("${private-revset}"),
-                "∴",
-                builtin_log_node
-              )
-            )
-          '';
-        };
-      }
-      // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
-        signing = {
-          backend = "ssh";
-          behavior = "own";
-          key = "${config.home.homeDirectory}/.ssh/id_ed25519_signing.pub";
-        };
-      };
+    settings.user = {
+      email = "david.pdrsn@gmail.com";
+      name = "David Pedersen";
+    };
   };
 }

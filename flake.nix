@@ -4,7 +4,6 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
-    systems.url = "github:nix-systems/triplet";
 
     nix-darwin.url = "github:nix-darwin/nix-darwin/master";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
@@ -29,11 +28,6 @@
     };
 
     llm-agents.url = "github:numtide/llm-agents.nix";
-    hunk = {
-      url = "github:modem-dev/hunk";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.bun2nix.inputs.systems.follows = "systems";
-    };
     website.url = "git+ssh://git@github.com/davidpdrsn/website.git";
     "dnd-character-sheet".url = "git+ssh://git@github.com/davidpdrsn/dnd-character-sheet.git";
     "npc-browser" = {

@@ -42,11 +42,6 @@ install:
 update:
     ./scripts/nix-update-input
 
-# Update buti to latest GitHub release binary
-update-buti:
-    ./scripts/nix-update-buti
-    just switch
-
 # Compare available updates
 compare-updates:
     ./scripts/nix-compare-updates
@@ -63,14 +58,6 @@ update-clone-dev-tools:
 ssh:
     ssh hetzner-2
 
-# SSH into Hetzner VPS 1
-ssh-1:
-    ssh hetzner-1
-
-# SSH into Hetzner VPS 2
-ssh-2:
-    ssh hetzner-2
-
 # Deploy latest config to VPS 1
 switch-vps-1:
     ./scripts/deploy-vps 1
@@ -78,10 +65,6 @@ switch-vps-1:
 # Deploy latest config to VPS 2
 switch-vps-2:
     ./scripts/deploy-vps 2
-
-# SSH into the AWS butbox
-ssh-butbox:
-    ssh butbox
 
 # Deploy latest config to butbox
 switch-butbox:

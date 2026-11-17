@@ -378,14 +378,6 @@ vim.cmd([[
 ]])
 
 common.lsp_format_leader_command("rust")
-common.lsp_format_leader_command("go")
-
-vim.api.nvim_create_autocmd("BufWritePre", {
-    pattern = "*.go",
-    callback = function(ev)
-        vim.lsp.buf.format({ async = false })
-    end,
-})
 
 common.custom_format_leader_command("cs", function(path)
     return { "csharpier", "format", path }

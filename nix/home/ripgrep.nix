@@ -18,7 +18,6 @@
       "--glob=!.turbo"
       "--glob=!.svelte-kit"
       "--glob=!.git"
-      "--glob=!.go"
       "--glob=!.direnv"
       "--glob=!.pnpm-global"
       "--glob=!temp"

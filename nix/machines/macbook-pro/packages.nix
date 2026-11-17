@@ -16,9 +16,6 @@
     piMsg = pkgs.callPackage ./packages/pi-msg.nix {};
     gitButlerPiMsg = pkgs.callPackage ./packages/gitbutler-pi-msg.nix {inherit piMsg;};
     gitButlerNvimRemote = pkgs.callPackage ./packages/gitbutler-nvim-remote.nix {};
-    alacritty = pkgs.callPackage ./packages/alacritty.nix {};
-    lazybut = pkgs.callPackage ./packages/lazybut.nix {};
-    buti = pkgs.callPackage ./packages/buti.nix {};
     webScreenshot = pkgs.callPackage ./packages/web-screenshot.nix {};
     piWrapped = import ../../lib/pi-wrapped.nix {inherit pkgs inputs;};
     prDigest = pkgs.callPackage ../../shared/packages/pr-digest.nix {inherit piWrapped;};
@@ -29,42 +26,24 @@
       };
       command = pkgs.flarectl;
     };
-    test-cli = opWrapped {
-      name = "test-cli";
-      env = {
-        TEST_SECRET = "op://Personal/Test Secret/credential";
-      };
-      command = /Users/davidpdrsn/.bin/test-cli;
-    };
 
     but = pkgs.writeShellScriptBin "but" ''
       exec /Users/davidpdrsn/code/gitbutler/gitbutler-git/target/release/but "$@"
     '';
   in
     [
-      autoraise
       mas
-      colima
       nxv
       resvg
       piMsg
       gitButlerPiMsg
       gitButlerNvimRemote
-      alacritty
-      lazybut
-      buti
-      test-cli
       webScreenshot
-      gettext
       ffmpeg
       imagemagick
       yt-dlp
       graphviz
-      google-cloud-sdk
       flarectl
-      gh-dash
-      diffnav
-      strip-ansi
       but
       btop
       chafa
@@ -74,9 +53,6 @@
       llmAgentPackages.claude-code
       piWrapped
       prDigest
-    ]
-    ++ map (pkg: inputs.${pkg}.packages.${pkgs.stdenv.hostPlatform.system}.default) [
-      "hunk"
     ];
 
   fonts.packages = with pkgs; [
@@ -94,8 +70,6 @@
 
     casks = [
       "1password"
-      "bluesnooze"
-      "codexbar"
       "deckset"
       "discord"
       "ghostty"
@@ -104,12 +78,9 @@
       "obs"
       "obsidian"
       "raycast"
-      "sf-symbols"
       "signal"
       "spotify"
       "steam"
-      "voiceink"
-      "unnaturalscrollwheels"
       "vlc"
       "arc"
       "keycastr"
@@ -122,11 +93,6 @@
       "zoom"
       "slack"
       "cameracontroller"
-
-      "wezterm"
-      "iterm2"
-      "kitty"
-      "warp"
     ];
 
     masApps = {

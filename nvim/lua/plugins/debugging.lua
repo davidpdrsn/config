@@ -60,15 +60,6 @@ return {
                 },
             }
 
-            dap.configurations.go = {
-                {
-                    type = "go",
-                    name = "Attach remote",
-                    mode = "remote",
-                    request = "attach",
-                },
-            }
-
             vim.keymap.set("n", "<leader><up>", dap.step_out, { desc = "Step out" })
             vim.keymap.set("n", "<leader><down>", dap.step_into, { desc = "Step into" })
             vim.keymap.set("n", "<leader><left>", dap.step_back, { desc = "Step back" })
@@ -104,7 +95,7 @@ return {
                     size = 12,
                     position = "below",
                     terminal = {
-                        hide = { "go", "lldb", "coreclr_godot" },
+                        hide = { "lldb", "coreclr_godot" },
                     },
                 },
             })
@@ -167,17 +158,6 @@ return {
                 callback = function()
                     vim.g.baleia.automatically(vim.api.nvim_get_current_buf())
                 end,
-            })
-        end,
-    },
-    {
-        "leoluz/nvim-dap-go",
-        config = function()
-            require("dap-go").setup({
-                delve = {
-                    -- required for "Attach remote"
-                    port = "38697",
-                },
             })
         end,
     },

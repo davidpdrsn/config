@@ -3,7 +3,6 @@
 result
 node_modules/
 /bin/*
-/vmux/session.toml
 .env
 tmp/
 agents/skills/synced

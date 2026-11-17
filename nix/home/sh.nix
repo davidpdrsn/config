@@ -41,30 +41,16 @@
       ca = "cargo";
       cat = "bat";
       dt = "cd ~/Desktop";
-      diff = "diff --color";
       p = "pi";
-
-      j = "jjui";
-      jc = "jj commit";
-      jd = "jj desc";
-      jn = "jj new";
-      jb = "jj bookmark";
-      jp = "jj git push --all";
-      jf = "jj git fetch";
-      jpll = "jj git pull";
 
       b = "/Users/davidpdrsn/code/gitbutler/gitbutler-git/target/release/but";
       bt = "/Users/davidpdrsn/code/gitbutler/gitbutler-git/target/release/but tui";
 
       gaa = "git add --all";
-      gap = "git add -p";
       gb = "git branch";
       gc = "git commit --verbose";
       gco = "git checkout";
-      gcob = "git checkout -b";
       gcof = "git-branch-picker checkout";
-      gmf = "git-branch-picker merge";
-      git-cargo-lock-conflict = "git checkout main -- Cargo.lock";
       gl = "git log --graph --decorate --oneline -20";
       gll = "git log --graph --decorate --oneline";
       gla = "git log --graph --decorate --oneline --all";
@@ -75,22 +61,13 @@
       gdc = "git diff --cached";
       gr = "git reset";
       grh = "git reset --hard";
-      grs = "git reset --soft";
       gca = "git commit --amend --verbose";
       gpll = "git pull";
       ga = "git add";
       grb = "git rebase";
-      gm = "git merge";
       grbc = "git rebase --continue";
-      grba = "git rebase --abort";
       grbi = "git rebase -i";
-      gs = "git show";
-      xtask = "cargo xtask";
       r = "t run";
-      at = "tmux attach";
-      dbui = "nvim +DBUI";
-      claude-json = "claude --print --output-format json";
-      claude-yolo = "claude --dangerously-skip-permissions";
       cc = "claude --dangerously-skip-permissions";
       vi = "nvim";
       vim = "nvim";
@@ -106,24 +83,9 @@
       format = lib.concatStrings [
         "$hostname"
         "$directory"
-        "\${custom.git_prompt}"
         "$line_break"
         "$character"
       ];
-      custom = {
-        git_prompt = {
-          command = "git-prompt";
-          format = "$output";
-          when = true;
-        };
-        jj_current_operation = {
-          command = "jj-current-operation";
-          format = "[$output]($style)";
-          when = true;
-          detect_files = [".jj"];
-          style = "yellow";
-        };
-      };
       hostname = {
         ssh_only = lib.mkDefault true;
         format = "[$hostname]($style) ";
@@ -137,9 +99,6 @@
         format = "[$name]($style)";
       };
       rust = {
-        format = "[$symbol($version)]($style)";
-      };
-      golang = {
         format = "[$symbol($version)]($style)";
       };
       nodejs = {

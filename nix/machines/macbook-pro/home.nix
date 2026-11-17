@@ -88,16 +88,12 @@
 in {
   imports = [./tailnet-sites.nix];
 
-  # Mac-specific SSH: UseKeychain + colima
-  programs.ssh.includes = ["${config.home.homeDirectory}/.colima/ssh_config"];
+  # Mac-specific SSH: UseKeychain
   programs.ssh.settings."*".UseKeychain = "yes";
 
   # Mac-specific env vars
   home.sessionVariables = {
     TERMINAL = "ghostty";
-    # required for go test containers to work with colima
-    DOCKER_HOST = "unix://${config.home.homeDirectory}/.colima/default/docker.sock";
-    TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE = "/var/run/docker.sock";
     NO_BG_TASKS = 1;
     # The 1Password CLI uses the personal account unless told otherwise.
     OP_ACCOUNT = "my.1password.com";

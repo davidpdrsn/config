@@ -1,5 +1,3 @@
-local common = require("common")
-
 local M = {}
 
 local prev_test_buffer = nil
@@ -14,36 +12,28 @@ local function run_test_command(cmd)
 
     vim.cmd("write")
 
-    local wrapped_cmd =
-        common.vmux_wrap(cmd.command .. " " .. table.concat(cmd.args, " "))
-
-    if wrapped_cmd.in_vmux then
-        -- print(wrapped_cmd.cmd)
-        vim.fn.jobstart(wrapped_cmd.cmd)
-    else
-        local original_win_id = vim.api.nvim_get_current_win()
-        vim.cmd("botright 20new")
-        prev_test_buffer = vim.api.nvim_get_current_buf()
-        local job_id = vim.fn.jobstart(wrapped_cmd.cmd, {
-            term = true,
-            on_exit = function(_, status)
-                if status == 0 then
-                    vim.api.nvim_buf_delete(prev_test_buffer, { force = false })
-                    prev_test_buffer = nil
-                end
-            end,
-            on_stdout = function(_, data, _)
-                vim.schedule(function()
-                    -- Move cursor to last line
-                    local last_line = vim.api.nvim_buf_line_count(prev_test_buffer)
-                    vim.api.nvim_buf_call(prev_test_buffer, function()
-                        vim.api.nvim_win_set_cursor(0, { last_line, 0 })
-                    end)
+    local original_win_id = vim.api.nvim_get_current_win()
+    vim.cmd("botright 20new")
+    prev_test_buffer = vim.api.nvim_get_current_buf()
+    vim.fn.jobstart(cmd.command .. " " .. table.concat(cmd.args, " "), {
+        term = true,
+        on_exit = function(_, status)
+            if status == 0 then
+                vim.api.nvim_buf_delete(prev_test_buffer, { force = false })
+                prev_test_buffer = nil
+            end
+        end,
+        on_stdout = function(_, data, _)
+            vim.schedule(function()
+                -- Move cursor to last line
+                local last_line = vim.api.nvim_buf_line_count(prev_test_buffer)
+                vim.api.nvim_buf_call(prev_test_buffer, function()
+                    vim.api.nvim_win_set_cursor(0, { last_line, 0 })
                 end)
-            end,
-        })
-        vim.api.nvim_set_current_win(original_win_id)
-    end
+            end)
+        end,
+    })
+    vim.api.nvim_set_current_win(original_win_id)
 end
 
 local function json_shell(cmd)
