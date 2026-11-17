@@ -1,6 +1,6 @@
 import { watch, type FSWatcher } from "node:fs";
-import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
-import { rgbColor, truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
+import { copyToClipboard, type ExtensionAPI, type ExtensionContext } from "@earendil-works/pi-coding-agent";
+import { rgbColor, truncateToWidth, visibleWidth, type TuiMouseEvent, type TuiMouseEventResult } from "@earendil-works/pi-tui";
 import { getGitStats, type GitStats } from "../scripts/git-stats";
 
 function formatTokens(count: number): string {
@@ -86,11 +86,23 @@ export default function (pi: ExtensionAPI): void {
 		ctx.ui.setFooter((tui, theme, footerData) => {
 			requestRender = () => tui.requestRender();
 			const unsubscribe = footerData.onBranchChange(requestRender);
+			// Columns of the session ID on the first footer line, from the last render.
+			let sessionColumns: { start: number; end: number } | undefined;
 			return {
 				invalidate() {},
 				dispose() {
 					unsubscribe();
 					requestRender = undefined;
+				},
+				handleMouse(event: TuiMouseEvent): TuiMouseEventResult | undefined {
+					if (event.type !== "click" || event.button !== "left" || event.y !== 0 || !sessionColumns) return undefined;
+					if (event.x < sessionColumns.start || event.x >= sessionColumns.end) return undefined;
+					const command = `pi --session ${ctx.sessionManager.getSessionId()}`;
+					copyToClipboard(command).then(
+						() => ctx.ui.notify(`Copied ${command}`, "info"),
+						(error: unknown) => ctx.ui.notify(`Copy failed: ${error instanceof Error ? error.message : String(error)}`, "error"),
+					);
+					return { handled: true };
 				},
 				render(width: number): string[] {
 				const home = process.env.HOME || process.env.USERPROFILE;
@@ -112,6 +124,7 @@ export default function (pi: ExtensionAPI): void {
 				const directoryWidth = showSession ? width - sessionWidth - 2 : width;
 				const pathWidth = Math.max(0, directoryWidth - visibleWidth(git));
 				let directoryLine = truncateToWidth(theme.fg("dim", truncateToWidth(singleLine(directory), pathWidth)) + git, directoryWidth);
+				sessionColumns = showSession ? { start: width - sessionWidth, end: width } : undefined;
 				if (showSession) {
 					directoryLine += " ".repeat(width - visibleWidth(directoryLine) - sessionWidth) + theme.fg("dim", sessionId);
 				}
