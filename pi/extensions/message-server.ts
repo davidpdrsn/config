@@ -87,6 +87,9 @@ function sendUserMessage(pi: ExtensionAPI, ctx: ExtensionContext, message: strin
 }
 
 export default function (pi: ExtensionAPI): void {
+	// Subagents share their parent's cwd, so pi-msg could not tell them apart from the parent.
+	if (process.env.PI_SUBAGENT_DEPTH) return;
+
 	let server: Server | undefined;
 	let heartbeat: ReturnType<typeof setInterval> | undefined;
 	let recordFile: string | undefined;
