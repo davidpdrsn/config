@@ -72,7 +72,6 @@
     };
   };
 
-  linearCli = pkgs.callPackage ../../shared/packages/linear-cli.nix {};
   obsidianVaultsPull = import ../../lib/obsidian-vaults-pull.nix {
     inherit pkgs username;
   };
@@ -117,7 +116,6 @@
   serverPackages = [
     gog
     goplaces
-    linearCli
     llmAgentPackages.codex
     piWrapped
     (pkgs.callPackage ../../shared/packages/pr-digest.nix {inherit piWrapped;})

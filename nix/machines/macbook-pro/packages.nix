@@ -13,7 +13,6 @@
   environment.systemPackages = with pkgs; let
     opWrapped = import ../../lib/op-wrapper.nix {inherit pkgs;};
     llmAgentPackages = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
-    linearCli = pkgs.callPackage ../../shared/packages/linear-cli.nix {};
     piMsg = pkgs.callPackage ./packages/pi-msg.nix {};
     gitButlerPiMsg = pkgs.callPackage ./packages/gitbutler-pi-msg.nix {inherit piMsg;};
     gitButlerNvimRemote = pkgs.callPackage ./packages/gitbutler-nvim-remote.nix {};
@@ -48,7 +47,6 @@
       colima
       nxv
       resvg
-      linearCli
       piMsg
       gitButlerPiMsg
       gitButlerNvimRemote
