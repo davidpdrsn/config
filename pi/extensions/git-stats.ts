@@ -1,3 +1,4 @@
+import { watch, type FSWatcher } from "node:fs";
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { rgbColor, truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
 import { getGitStats, type GitStats } from "../scripts/git-stats";
@@ -14,10 +15,26 @@ const diffRemovedColor = rgbColor(170, 70, 80);
 
 const singleLine = (text: string) => text.replace(/[\r\n\t]/g, " ");
 
+// Delay between a file change and the refresh it triggers. Changes during the
+// delay share one refresh.
+const refreshDelayMs = 300;
+
+// Inside .git, only these paths change the diff against HEAD. Other writes,
+// such as lock files, logs and GitButler metadata, would only cause extra refreshes.
+function isRelevantChange(filename: string | null): boolean {
+	if (!filename) return true;
+	const path = filename.replaceAll("\\", "/");
+	if (path !== ".git" && !path.startsWith(".git/")) return true;
+	return path === ".git/HEAD" || path === ".git/index" || path === ".git/packed-refs" || path.startsWith(".git/refs/");
+}
+
 export default function (pi: ExtensionAPI): void {
 	let generation = 0;
 	let stats: GitStats | undefined;
 	let requestRender: (() => void) | undefined;
+	let watcher: FSWatcher | undefined;
+	let watchedRoot: string | undefined;
+	let refreshTimer: ReturnType<typeof setTimeout> | undefined;
 
 	async function refresh(ctx: ExtensionContext): Promise<void> {
 		if (!ctx.hasUI) return;
@@ -25,7 +42,42 @@ export default function (pi: ExtensionAPI): void {
 		const result = await getGitStats(ctx.cwd);
 		if (current !== generation) return;
 		stats = result;
+		watchRoot(ctx, result?.root);
 		requestRender?.();
+	}
+
+	function scheduleRefresh(ctx: ExtensionContext): void {
+		if (refreshTimer) return;
+		refreshTimer = setTimeout(() => {
+			refreshTimer = undefined;
+			void refresh(ctx);
+		}, refreshDelayMs);
+	}
+
+	// Tool events miss edits made outside pi, such as in an editor or another
+	// terminal, so the footer also refreshes when files in the repository change.
+	function watchRoot(ctx: ExtensionContext, root: string | undefined): void {
+		if (root === watchedRoot) return;
+		stopWatching();
+		if (!root) return;
+		try {
+			watcher = watch(root, { recursive: true }, (_event, filename) => {
+				if (isRelevantChange(filename)) scheduleRefresh(ctx);
+			});
+			watcher.on("error", () => stopWatching());
+			watchedRoot = root;
+		} catch {
+			// Without a watcher, the tool and agent events below still refresh the stats.
+			watcher = undefined;
+		}
+	}
+
+	function stopWatching(): void {
+		watcher?.close();
+		watcher = undefined;
+		watchedRoot = undefined;
+		if (refreshTimer) clearTimeout(refreshTimer);
+		refreshTimer = undefined;
 	}
 
 	function installFooter(ctx: ExtensionContext): void {
@@ -111,6 +163,7 @@ export default function (pi: ExtensionAPI): void {
 	}
 
 	async function start(ctx: ExtensionContext): Promise<void> {
+		stopWatching();
 		stats = undefined;
 		installFooter(ctx);
 		await refresh(ctx);
@@ -121,6 +174,7 @@ export default function (pi: ExtensionAPI): void {
 	pi.on("agent_end", (_event, ctx) => refresh(ctx));
 	pi.on("session_shutdown", (_event, ctx) => {
 		generation++;
+		stopWatching();
 		requestRender = undefined;
 		if (ctx.hasUI) ctx.ui.setFooter(undefined);
 	});

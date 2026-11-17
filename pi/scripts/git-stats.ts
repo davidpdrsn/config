@@ -5,9 +5,9 @@ import { promisify } from "node:util";
 
 const exec = promisify(execFile);
 
-export type GitStats = { added: number; removed: number };
+export type GitStats = { root: string; added: number; removed: number };
 
-export function parseNumstat(output: string): GitStats {
+export function parseNumstat(output: string): { added: number; removed: number } {
 	const stats = { added: 0, removed: 0 };
 	// --no-renames ensures each NUL-delimited record has exactly one path.
 	for (const record of output.split("\0")) {
@@ -52,7 +52,7 @@ export async function getGitStats(cwd: string): Promise<GitStats | undefined> {
 				if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
 			}
 		}
-		return stats;
+		return { root, ...stats };
 	} catch {
 		return undefined; // Not a repository, unavailable Git, or failed refresh.
 	}
