@@ -29,7 +29,7 @@ If there are several reasonable ways to fix the bug, send them as suggestions af
 
 ## Building a feature
 
-New features take one review. Build the feature, then send proof that it works, for example a screenshot or recording of the running app or the output of the tests that cover it. Wait for the review before calling the task done.
+New features take one review. Build the feature, then send proof that it works, for example a screenshot or recording of the running app or the output of the tests that cover it. Wait for the review before calling the task done. Dont send gifs. Use videos for flows and images for single design changes.
 
 ## Offering suggestions
 
