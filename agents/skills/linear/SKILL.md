@@ -3,7 +3,7 @@ name: linear-issue-fetch
 description: When told to do something with Linear. Use when the user provides a Linear issue identifier or URL and asks to read, inspect, summarize, or work from that issue.
 ---
 
-Use the `linear` CLI.
+Use the `linear` MCP.
 
 # Finding issues
 
@@ -12,11 +12,7 @@ Use the `linear` CLI.
    - For a Linear URL, extract the issue identifier from the URL path.
    - Preserve the identifier's original team prefix.
 
-2. Fetch the issue as JSON, including comments:
-
-```bash
-linear issue view <ISSUE-ID> --json --no-pager --no-download
-```
+2. Fetch the issue.
 
 3. Use the returned title, description, status, priority, assignee, labels, project, attachments, and comments as relevant to the user's request.
 
