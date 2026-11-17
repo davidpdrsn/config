@@ -23,6 +23,7 @@ in {
       defaultProvider = "anthropic";
       defaultModel = "claude-opus-5-5";
       defaultThinkingLevel = "high";
+      hideThinkingBlock = true;
       enabledModels = [
         "openai-codex/gpt-6-astra"
         "anthropic/*"
