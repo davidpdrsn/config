@@ -1,6 +1,6 @@
 ---
 name: minimize-reader-load
-description: "Read when reviewing code or a diff, and when writing code that adds a wrapper, adapter, trait, one-caller helper, struct field or shared mutable state. Collapse layers that only forward calls and shrink the scope of mutable state, so a reader can tell where a value comes from and what changes it."
+description: "Apply when reviewing code"
 ---
 
 # Minimize Reader Load

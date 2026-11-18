@@ -1,11 +1,11 @@
 ---
 name: fix-root-causes
-description: "Read before changing code to fix a bug: an error, crash, panic, failing test, regression, or anything the user says is broken, wrong or doesn't work, including requests like 'fix it'. Trace each symptom back to the first place the system went wrong and fix it there. A guard is a fix only when the state it handles is legitimate."
+description: "Apply when fixing bugs, crashes, failing tests, performance regressions, or anything the user says is broken, wrong, or doesn't work, including requests like 'fix it'"
 ---
 
-Use use foundational-thinking and model-the-domain skills when using this.
-
 # Fix Root Causes
+
+Trace each symptom back to the first place the system went wrong and fix it there. A guard is a fix only when the state it handles is legitimate.
 
 Fix the fault, not the place where it surfaced. The root cause is the first place the system did something it should not do, or failed to handle a state it should handle.
 

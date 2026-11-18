@@ -1,6 +1,6 @@
 ---
 name: foundational-thinking
-description: "Read before writing a new feature, module, type or function, and before adding state that more than one task, thread or process touches. Get the core types and data structures right before the logic, and build shared groundwork such as tests and types before features."
+description: "Apply when writing or changing code, including bug fixes"
 ---
 
 Use use foundational-thinking skill when using this.

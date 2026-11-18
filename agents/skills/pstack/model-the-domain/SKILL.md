@@ -1,6 +1,6 @@
 ---
 name: model-the-domain
-description: "Read when writing code that tracks state or modes, adds a bool, flag or enum, adds another if/else or match branch, passes raw strings or IDs around, or checks the same condition in more than one file. Encode the domain in types so invalid states can't exist and branches go away."
+description: "Apply when writing or changing code, including bug fixes"
 ---
 
 # Model the Domain

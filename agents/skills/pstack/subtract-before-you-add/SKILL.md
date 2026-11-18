@@ -1,6 +1,6 @@
 ---
 name: subtract-before-you-add
-description: "Read before adding a feature, refactoring or rewriting existing code, and before adding a validator, guard, fallback or option. Remove dead code, redundant validators and stub references first, then build on the simpler base."
+description: "Apply when writing or changing code, including bug fixes"
 ---
 
 # Subtract Before You Add

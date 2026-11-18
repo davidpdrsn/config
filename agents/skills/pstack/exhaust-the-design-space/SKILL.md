@@ -1,9 +1,11 @@
 ---
 name: exhaust-the-design-space
-description: "Apply when building a new UI or interaction or making an architectural decision with no precedent in the codebase. This includes UI the user describes by comparison to another app, and UI the user just rejected. Build 5 competing prototypes and compare side by side before committing."
+description: "Apply when building UI"
 ---
 
 # Exhaust the Design Space
+
+Build 5 competing prototypes and compare side by side before committing.
 
 It also applies to product design decisions where user experience depends on feel, not logic.
 
