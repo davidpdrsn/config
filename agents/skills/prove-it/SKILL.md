@@ -29,9 +29,7 @@ If there are several reasonable ways to fix the bug, send them as suggestions af
 
 ## Building a feature
 
-New features take one review. Build the feature, then send proof that it works, for example a screenshot or recording of the running app or the output of the tests that cover it. Wait for the review before calling the task done. Dont send gifs. Use videos for flows and images for single design changes.
-
-For terminal apps, record videos and screenshots with `tui-record` (see the tui-record skill).
+New features take one review. Build the feature, then send proof that it works, for example a screenshot or recording of the running app or the output of the tests that cover it. Wait for the review before calling the task done.
 
 ## Offering suggestions
 
