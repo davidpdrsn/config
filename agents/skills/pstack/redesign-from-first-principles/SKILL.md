@@ -1,6 +1,6 @@
 ---
 name: redesign-from-first-principles
-description: "Apply when integrating a new requirement into an existing design."
+description: "Read when a request changes how existing code must behave or adds a requirement it wasn't built for, such as a new case, input, platform or mode. Redesign as if the requirement had been there from the start instead of bolting it on, and update every type, doc and caller it touches."
 ---
 
 # Redesign From First Principles

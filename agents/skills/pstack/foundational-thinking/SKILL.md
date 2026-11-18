@@ -1,6 +1,6 @@
 ---
 name: foundational-thinking
-description: "Apply before writing logic: choosing core types and data structures, sequencing scaffold-vs-feature work, asking what concurrent actors share. Get the data structures right so downstream code becomes obvious."
+description: "Read before writing a new feature, module, type or function, and before adding state that more than one task, thread or process touches. Get the core types and data structures right before the logic, and build shared groundwork such as tests and types before features."
 ---
 
 Use use foundational-thinking skill when using this.

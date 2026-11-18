@@ -1,6 +1,6 @@
 ---
 name: minimize-reader-load
-description: "Apply when reviewing or shaping code that's hard to trace. Count layers between question and answer, and hidden state in the reader's head; collapse one-caller wrappers and shrink mutable scope."
+description: "Read when reviewing code or a diff, and when writing code that adds a wrapper, adapter, trait, one-caller helper, struct field or shared mutable state. Collapse layers that only forward calls and shrink the scope of mutable state, so a reader can tell where a value comes from and what changes it."
 ---
 
 # Minimize Reader Load

@@ -1,6 +1,6 @@
 ---
 name: fix-root-causes
-description: "Apply when debugging. Trace each symptom back to the first place the system went wrong and fix it there. A guard is a fix only when the state it handles is legitimate."
+description: "Read before changing code to fix a bug: an error, crash, panic, failing test, regression, or anything the user says is broken, wrong or doesn't work, including requests like 'fix it'. Trace each symptom back to the first place the system went wrong and fix it there. A guard is a fix only when the state it handles is legitimate."
 ---
 
 Use use foundational-thinking and model-the-domain skills when using this.
