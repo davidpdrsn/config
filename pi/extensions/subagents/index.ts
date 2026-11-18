@@ -31,7 +31,6 @@ import {
 
 const DEPTH = Number(process.env.PI_SUBAGENT_DEPTH || 0);
 const MAX_DEPTH = Number(process.env.PI_SUBAGENT_MAX_DEPTH || 1);
-const MAX_LIVE_AGENTS = 8;
 const MAX_OUTPUT_CHARS = 50_000;
 const RESULT_MESSAGE_TYPE = "subagent-result";
 const WIDGET_KEY = "subagents";
@@ -403,11 +402,6 @@ export default function (pi: ExtensionAPI): void {
 		parameters: SpawnParams,
 		async execute(_toolCallId, params, signal, onUpdate, ctx) {
 			uiCtx ??= ctx;
-			const live = [...agents.values()].filter((agent) => agent.alive).length;
-			if (live >= MAX_LIVE_AGENTS) {
-				throw new Error(`${live} subagents are already alive (limit ${MAX_LIVE_AGENTS}). Stop idle ones with subagent_stop first.`);
-			}
-
 			let model: string | undefined;
 			let thinking = params.thinking;
 			if (params.model) {
