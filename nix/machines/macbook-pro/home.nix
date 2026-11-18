@@ -140,10 +140,24 @@ in {
     max-age = "4 days"
   '';
 
-  # Use the patched cargo in the GitButler checkout and its worktrees without
-  # changing the repo. `use flake` prepends the dev shell to PATH, so the patched
-  # cargo has to be added after it, hence the wrapper.
-  programs.direnv.stdlib = ''
+  # Use the patched cargo in these projects, and in everything below them such
+  # as worktrees, without changing the repos. `use flake` prepends the dev shell
+  # to PATH, so the patched cargo has to be added after it, hence the wrapper.
+  programs.direnv.stdlib = let
+    patchedCargoDirs = [
+      "code/gitbutler/gitbutler-git"
+      ".gitbutler-worktrees/gitbutler-git"
+      "code/foreverapp"
+      "code/yet-another-slob-multiplexer"
+      # The fork itself. If a change breaks it, delete target/release/cargo
+      # and the flake's cargo takes over.
+      "code/cargo"
+    ];
+    patterns =
+      lib.concatMapStringsSep " | "
+      (dir: ''"${config.home.homeDirectory}/${dir}/"*'')
+      patchedCargoDirs;
+  in ''
     if declare -F use_flake >/dev/null; then
       eval "_patched_cargo_$(declare -f use_flake)"
 
@@ -151,7 +165,7 @@ in {
         _patched_cargo_use_flake "$@" || return
 
         case "$PWD/" in
-          "${config.home.homeDirectory}/code/gitbutler/gitbutler-git/"* | "${config.home.homeDirectory}/.gitbutler-worktrees/gitbutler-git/"*)
+          ${patterns})
             PATH_add "${config.home.homeDirectory}/.local/share/patched-cargo/bin"
             ;;
         esac
