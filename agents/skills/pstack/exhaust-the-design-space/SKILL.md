@@ -1,6 +1,6 @@
 ---
 name: exhaust-the-design-space
-description: "Apply when building UI"
+description: "Apply when building UI or when told to 'iterate on the ui'"
 ---
 
 # Exhaust the Design Space
