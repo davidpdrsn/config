@@ -1,6 +1,8 @@
 ---
 name: principle-exhaust-the-design-space
 description: "Apply when building UI or when told to 'iterate on the ui'"
+metadata:
+  group: ui
 ---
 
 # Exhaust the Design Space
