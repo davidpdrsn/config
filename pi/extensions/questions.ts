@@ -269,7 +269,7 @@ export default function (pi: ExtensionAPI): void {
 									cachedLines = undefined;
 								},
 							};
-						});
+						}, { blocked: { kind: "question", message: q.question } });
 
 						if (picked === undefined) {
 							const details: QuestionnaireDetails = {
@@ -379,7 +379,7 @@ export default function (pi: ExtensionAPI): void {
 									cachedLines = undefined;
 								},
 							};
-						});
+						}, { blocked: { kind: "question", message: q.question } });
 
 						if (choice === undefined) {
 							const details: QuestionnaireDetails = {
