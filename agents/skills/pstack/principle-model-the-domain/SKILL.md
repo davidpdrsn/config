@@ -1,6 +1,8 @@
 ---
 name: principle-model-the-domain
 description: "Apply when writing or changing code, including bug fixes"
+metadata:
+  group: code
 ---
 
 # Model the Domain

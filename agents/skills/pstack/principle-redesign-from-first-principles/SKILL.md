@@ -1,6 +1,8 @@
 ---
 name: principle-redesign-from-first-principles
 description: "Apply when writing or changing code, including bug fixes"
+metadata:
+  group: code
 ---
 
 # Redesign From First Principles

@@ -1,6 +1,8 @@
 ---
 name: code-review
 description: "Use when reviewing code, such as a branch, a diff or a pull request"
+metadata:
+  group: review
 ---
 
 Look for these, most important first:

@@ -1,6 +1,8 @@
 ---
 name: principle-minimize-reader-load
 description: "Apply when reviewing code"
+metadata:
+  group: review
 ---
 
 # Minimize Reader Load

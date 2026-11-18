@@ -1,6 +1,8 @@
 ---
 name: principle-foundational-thinking
 description: "Apply when writing or changing code, including bug fixes"
+metadata:
+  group: code
 ---
 
 Use use principle-foundational-thinking skill when using this.
