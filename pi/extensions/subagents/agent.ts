@@ -15,6 +15,10 @@ import path from "node:path";
  */
 export type AgentStatus = "starting" | "running" | "done" | "failed" | "aborted" | "stopped";
 
+export function isBusyStatus(status: AgentStatus): boolean {
+	return status === "starting" || status === "running";
+}
+
 export const THINKING_LEVELS = ["off", "minimal", "low", "medium", "high", "xhigh", "max"] as const;
 export type ThinkingLevel = (typeof THINKING_LEVELS)[number];
 
@@ -58,6 +62,8 @@ export interface SubagentOptions {
 	depth: number;
 	onChange: (agent: Subagent) => void;
 	onRunFinished: (agent: Subagent) => void;
+	/** Called with the usage of each assistant message. */
+	onUsage: (usage: UsageTotals) => void;
 	onUiRequest: (agent: Subagent, request: UiRequest) => Promise<UiResponse>;
 }
 
@@ -70,8 +76,22 @@ const MAX_TRANSCRIPT_ITEMS = 400;
 const MAX_STDERR = 8 * 1024;
 const DIALOG_METHODS = new Set(["select", "confirm", "input", "editor"]);
 
-function emptyUsage(): UsageTotals {
+export function emptyUsage(): UsageTotals {
 	return { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, cost: 0, turns: 0 };
+}
+
+export function addUsage(into: UsageTotals, from: UsageTotals): void {
+	into.input += from.input;
+	into.output += from.output;
+	into.cacheRead += from.cacheRead;
+	into.cacheWrite += from.cacheWrite;
+	into.cost += from.cost;
+	into.turns += from.turns;
+}
+
+/** Collapse all whitespace, newlines included, into single spaces. */
+export function oneLine(text: string): string {
+	return text.replace(/\s+/g, " ").trim();
 }
 
 /** Run the same pi binary as the parent so the child matches its version and configuration. */
@@ -107,7 +127,7 @@ export function summarizeToolCall(name: string, args: Record<string, unknown> | 
 			: name === "codemode"
 				? pick("code")
 				: pick("path", "file_path", "pattern", "query", "url", "command") ?? JSON.stringify(a);
-	return detail ? detail.replace(/\s+/g, " ").trim() : "";
+	return detail ? oneLine(detail) : "";
 }
 
 export class Subagent {
@@ -127,6 +147,8 @@ export class Subagent {
 	activity?: string;
 	usage: UsageTotals = emptyUsage();
 	transcript: TranscriptItem[] = [];
+	/** Number of items ever pushed to the transcript. Changes on every push, unlike the capped length. */
+	transcriptVersion = 0;
 	/** Final assistant text of the last finished run. */
 	output?: string;
 	error?: string;
@@ -147,7 +169,6 @@ export class Subagent {
 	private lastStopReason?: string;
 	private lastErrorMessage?: string;
 	private exitPromise?: Promise<void>;
-	private reportedUsage: UsageTotals = emptyUsage();
 
 	constructor(options: SubagentOptions) {
 		this.options = options;
@@ -164,25 +185,11 @@ export class Subagent {
 	}
 
 	get isBusy(): boolean {
-		return this.status === "starting" || this.status === "running";
+		return isBusyStatus(this.status);
 	}
 
 	get hasUndeliveredResult(): boolean {
 		return this.finishedRuns > this.deliveredRuns;
-	}
-
-	/** Usage accumulated since the last call, for reporting on the parent's tool results. */
-	takeUsageDelta(): UsageTotals {
-		const delta: UsageTotals = {
-			input: this.usage.input - this.reportedUsage.input,
-			output: this.usage.output - this.reportedUsage.output,
-			cacheRead: this.usage.cacheRead - this.reportedUsage.cacheRead,
-			cacheWrite: this.usage.cacheWrite - this.reportedUsage.cacheWrite,
-			cost: this.usage.cost - this.reportedUsage.cost,
-			turns: this.usage.turns - this.reportedUsage.turns,
-		};
-		this.reportedUsage = { ...this.usage };
-		return delta;
 	}
 
 	/** Spawn the process, wait until it answers RPC, then send the task. */
@@ -235,8 +242,15 @@ export class Subagent {
 		await this.prompt(this.task);
 	}
 
+	/** Send a message. An idle agent starts a new run with it. A running agent gets it as a steer or follow-up. */
+	async send(message: string, delivery: "steer" | "follow_up" = "steer"): Promise<void> {
+		if (!this.alive) throw new Error(`Subagent ${this.label} has exited (${this.status}). Spawn a new one.`);
+		if (this.isBusy) await this.request({ type: delivery, message });
+		else await this.prompt(message);
+	}
+
 	/** Start a new run. Only valid while the agent is not running. */
-	async prompt(message: string): Promise<void> {
+	private async prompt(message: string): Promise<void> {
 		this.task = message;
 		this.beginRun();
 		try {
@@ -250,12 +264,6 @@ export class Subagent {
 			this.options.onChange(this);
 			throw error;
 		}
-	}
-
-	/** Queue a message for a running agent. */
-	async queue(message: string, delivery: "steer" | "follow_up"): Promise<void> {
-		this.transcript.push({ kind: "user", text: `(${delivery === "steer" ? "steer" : "follow-up"}) ${message}` });
-		await this.request({ type: delivery, message });
 	}
 
 	async abort(): Promise<void> {
@@ -398,15 +406,16 @@ export class Subagent {
 					this.push({ kind: "tool", name: part.name, summary: summarizeToolCall(part.name, part.arguments) });
 				}
 			}
-			const usage = message.usage;
-			if (usage) {
-				this.usage.input += usage.input || 0;
-				this.usage.output += usage.output || 0;
-				this.usage.cacheRead += usage.cacheRead || 0;
-				this.usage.cacheWrite += usage.cacheWrite || 0;
-				this.usage.cost += usage.cost?.total || 0;
-			}
-			this.usage.turns++;
+			const usage: UsageTotals = {
+				input: message.usage?.input || 0,
+				output: message.usage?.output || 0,
+				cacheRead: message.usage?.cacheRead || 0,
+				cacheWrite: message.usage?.cacheWrite || 0,
+				cost: message.usage?.cost?.total || 0,
+				turns: 1,
+			};
+			addUsage(this.usage, usage);
+			this.options.onUsage(usage);
 			if (message.provider && message.model) this.model = `${message.provider}/${message.model}`;
 			this.lastStopReason = message.stopReason;
 			this.lastErrorMessage = message.errorMessage;
@@ -432,6 +441,7 @@ export class Subagent {
 
 	private push(item: TranscriptItem): void {
 		this.transcript.push(item);
+		this.transcriptVersion++;
 		if (this.transcript.length > MAX_TRANSCRIPT_ITEMS) this.transcript.splice(0, this.transcript.length - MAX_TRANSCRIPT_ITEMS);
 	}
 

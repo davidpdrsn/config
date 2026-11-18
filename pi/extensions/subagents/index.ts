@@ -13,10 +13,20 @@
  */
 import { existsSync, statSync } from "node:fs";
 import path from "node:path";
-import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
+import type { ExtensionAPI, ExtensionContext, ToolResultEvent } from "@earendil-works/pi-coding-agent";
 import { Text, type TUI } from "@earendil-works/pi-tui";
-import { type Static, type TSchema, Type } from "typebox";
-import { Subagent, THINKING_LEVELS, type ThinkingLevel, type UiRequest, type UiResponse, type UsageTotals } from "./agent";
+import { Type } from "typebox";
+import {
+	addUsage,
+	emptyUsage,
+	oneLine,
+	Subagent,
+	THINKING_LEVELS,
+	type ThinkingLevel,
+	type UiRequest,
+	type UiResponse,
+	type UsageTotals,
+} from "./agent";
 import {
 	type AgentSnapshot,
 	AgentsOverlay,
@@ -103,7 +113,7 @@ function truncate(text: string, max = MAX_OUTPUT_CHARS): string {
 }
 
 function preview(text: string, max: number): string {
-	const line = text.replace(/\s+/g, " ").trim();
+	const line = oneLine(text);
 	return line.length > max ? `${line.slice(0, max - 1)}…` : line;
 }
 
@@ -121,15 +131,19 @@ function describeAgent(agent: Subagent, includeOutput: boolean): string {
 	return text;
 }
 
-function toUsage(usage: UsageTotals) {
-	if (!usage.input && !usage.output && !usage.cacheRead && !usage.cacheWrite && !usage.cost) return undefined;
+type Usage = NonNullable<ToolResultEvent["usage"]>;
+
+/** Add subagent usage to a tool result's own usage. */
+function withSubagentUsage(base: Usage | undefined, usage: UsageTotals): Usage {
+	const cost = base?.cost ?? { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, total: 0 };
 	return {
-		input: usage.input,
-		output: usage.output,
-		cacheRead: usage.cacheRead,
-		cacheWrite: usage.cacheWrite,
-		totalTokens: usage.input + usage.output + usage.cacheRead + usage.cacheWrite,
-		cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, total: usage.cost },
+		...base,
+		input: (base?.input ?? 0) + usage.input,
+		output: (base?.output ?? 0) + usage.output,
+		cacheRead: (base?.cacheRead ?? 0) + usage.cacheRead,
+		cacheWrite: (base?.cacheWrite ?? 0) + usage.cacheWrite,
+		totalTokens: (base?.totalTokens ?? 0) + usage.input + usage.output + usage.cacheRead + usage.cacheWrite,
+		cost: { ...cost, total: cost.total + usage.cost },
 	};
 }
 
@@ -138,7 +152,8 @@ export default function (pi: ExtensionAPI): void {
 
 	const agents = new Map<string, Subagent>();
 	const listeners = new Set<() => void>();
-	const waiting = new Map<string, number>();
+	/** Subagent usage not yet added to a parent tool result, which is how it reaches the session totals. */
+	let unreportedUsage = emptyUsage();
 	let nextId = 1;
 	let uiCtx: ExtensionContext | undefined;
 	let widgetTui: TUI | undefined;
@@ -215,8 +230,8 @@ export default function (pi: ExtensionAPI): void {
 
 	/**
 	 * Results waiting to be sent to the parent. While the parent is busy, results are held until its
-	 * current turn ends, so a subagent_wait call already in that turn collects them instead and the
-	 * parent does not see the same result twice.
+	 * current turn ends. Any subagent_wait call in that turn has returned by then and marked the
+	 * results it returned as delivered, so the parent does not see the same result twice.
 	 */
 	const pendingDelivery = new Set<Subagent>();
 
@@ -225,11 +240,11 @@ export default function (pi: ExtensionAPI): void {
 		if (uiCtx?.isIdle() ?? true) flushDeliveries();
 	}
 
-	/** Send finished results to the parent unless a subagent_wait call has returned, or will return, them. */
+	/** Send finished results to the parent unless a subagent_wait call has already returned them. */
 	function flushDeliveries(): void {
 		for (const agent of [...pendingDelivery]) {
 			pendingDelivery.delete(agent);
-			if (waiting.get(agent.id) || !agent.hasUndeliveredResult || agent.status === "stopped") continue;
+			if (!agent.hasUndeliveredResult || agent.status === "stopped") continue;
 			agent.deliveredRuns = agent.finishedRuns;
 			void pi.sendMessage<AgentSnapshot>(
 				{ customType: RESULT_MESSAGE_TYPE, content: describeAgent(agent, true), display: true, details: snapshot(agent) },
@@ -308,7 +323,6 @@ export default function (pi: ExtensionAPI): void {
 		onTick?: () => void,
 	): Promise<"settled" | "timeout" | "aborted"> {
 		const settled = () => (mode === "all" ? targets.every((a) => !a.isBusy) : targets.some((a) => !a.isBusy));
-		for (const agent of targets) waiting.set(agent.id, (waiting.get(agent.id) ?? 0) + 1);
 		try {
 			if (settled()) return "settled";
 			return await new Promise((resolve) => {
@@ -334,30 +348,15 @@ export default function (pi: ExtensionAPI): void {
 				signal?.addEventListener("abort", onAbort, { once: true });
 			});
 		} finally {
-			for (const agent of targets) {
-				const count = (waiting.get(agent.id) ?? 1) - 1;
-				if (count <= 0) waiting.delete(agent.id);
-				else waiting.set(agent.id, count);
-			}
 			markDelivered(targets);
 		}
 	}
 
 	function results(targets: Subagent[], intro?: string) {
-		const usage: UsageTotals = { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, cost: 0, turns: 0 };
-		for (const agent of targets) {
-			const delta = agent.takeUsageDelta();
-			usage.input += delta.input;
-			usage.output += delta.output;
-			usage.cacheRead += delta.cacheRead;
-			usage.cacheWrite += delta.cacheWrite;
-			usage.cost += delta.cost;
-		}
 		const body = targets.map((agent) => describeAgent(agent, true)).join("\n\n---\n\n");
 		return {
 			content: [{ type: "text" as const, text: intro ? `${intro}\n\n${body}` : body }],
 			details: { agents: targets.map(snapshot) } satisfies ResultDetails,
-			usage: toUsage(usage),
 		};
 	}
 
@@ -373,13 +372,13 @@ export default function (pi: ExtensionAPI): void {
 		await Promise.all([...agents.values()].map((agent) => agent.stop()));
 	}
 
-	function renderDetailsResult(result: { content: { type: string; text?: string }[]; details?: unknown }, expanded: boolean, isPartial: boolean, theme: any) {
+	function renderDetailsResult(result: { content: { type: string; text?: string }[]; details?: unknown }, expanded: boolean, showOutput: boolean, theme: any) {
 		const details = result.details as ResultDetails | undefined;
 		if (!details?.agents?.length) {
 			const first = result.content[0];
 			return new Text(first?.type === "text" ? (first.text ?? "") : "", 0, 0);
 		}
-		return renderAgentResults(details.agents, { expanded, showOutput: !isPartial }, theme);
+		return renderAgentResults(details.agents, { expanded, showOutput }, theme);
 	}
 
 	function renderCallLine(title: string, theme: any, extra: string, body?: string) {
@@ -401,7 +400,6 @@ export default function (pi: ExtensionAPI): void {
 		],
 		parameters: SpawnParams,
 		async execute(_toolCallId, params, signal, onUpdate, ctx) {
-			uiCtx ??= ctx;
 			let model: string | undefined;
 			let thinking = params.thinking;
 			if (params.model) {
@@ -429,7 +427,8 @@ export default function (pi: ExtensionAPI): void {
 				systemPrompt: params.system_prompt,
 				depth: DEPTH + 1,
 				onChange,
-				onRunFinished: (finished) => setTimeout(() => queueDelivery(finished), 0),
+				onRunFinished: queueDelivery,
+				onUsage: (usage) => addUsage(unreportedUsage, usage),
 				onUiRequest: forwardDialog,
 			});
 			agents.set(id, agent);
@@ -469,7 +468,7 @@ export default function (pi: ExtensionAPI): void {
 			return renderCallLine("subagent_spawn", theme, extra, args.task);
 		},
 		renderResult(result, { expanded, isPartial }, theme) {
-			return renderDetailsResult(result, expanded, isPartial, theme);
+			return renderDetailsResult(result, expanded, !isPartial, theme);
 		},
 	});
 
@@ -502,7 +501,7 @@ export default function (pi: ExtensionAPI): void {
 			return renderCallLine("subagent_wait", theme, extra);
 		},
 		renderResult(result, { expanded, isPartial }, theme) {
-			return renderDetailsResult(result, expanded, isPartial, theme);
+			return renderDetailsResult(result, expanded, !isPartial, theme);
 		},
 	});
 
@@ -515,12 +514,7 @@ export default function (pi: ExtensionAPI): void {
 		parameters: SendParams,
 		async execute(_toolCallId, params, signal, onUpdate) {
 			const agent = find(params.id);
-			if (!agent.alive) throw new Error(`Subagent ${agent.label} has exited (${agent.status}). Spawn a new one.`);
-			if (agent.isBusy) {
-				await agent.queue(params.message, params.delivery ?? "steer");
-			} else {
-				await agent.prompt(params.message);
-			}
+			await agent.send(params.message, params.delivery);
 			if (!params.wait) {
 				return {
 					content: [{ type: "text", text: `Sent to subagent ${agent.label}. Its result will arrive as a message when it finishes.` }],
@@ -534,7 +528,7 @@ export default function (pi: ExtensionAPI): void {
 			return renderCallLine("subagent_send", theme, theme.fg("accent", args.id), args.message);
 		},
 		renderResult(result, { expanded, isPartial }, theme) {
-			return renderDetailsResult(result, expanded, isPartial, theme);
+			return renderDetailsResult(result, expanded, !isPartial, theme);
 		},
 	});
 
@@ -561,7 +555,7 @@ export default function (pi: ExtensionAPI): void {
 			return renderCallLine("subagent_list", theme, "");
 		},
 		renderResult(result, { expanded }, theme) {
-			return renderDetailsResult(result, expanded, true, theme);
+			return renderDetailsResult(result, expanded, false, theme);
 		},
 	});
 
@@ -589,7 +583,7 @@ export default function (pi: ExtensionAPI): void {
 			return renderCallLine("subagent_stop", theme, theme.fg("accent", args.ids.join(", ")) + (args.mode === "abort" ? theme.fg("dim", " (abort)") : ""));
 		},
 		renderResult(result, { expanded }, theme) {
-			return renderDetailsResult(result, expanded, true, theme);
+			return renderDetailsResult(result, expanded, false, theme);
 		},
 	});
 
@@ -637,13 +631,21 @@ export default function (pi: ExtensionAPI): void {
 				const message = await ctx.ui.input(`Message to subagent ${agent.label}`, agent.isBusy ? "steers the current run" : "starts a new run");
 				if (!message?.trim()) continue;
 				try {
-					if (agent.isBusy) await agent.queue(message, "steer");
-					else await agent.prompt(message);
+					await agent.send(message);
 				} catch (error) {
 					ctx.ui.notify(error instanceof Error ? error.message : String(error), "error");
 				}
 			}
 		},
+	});
+
+	// Extensions cannot add usage entries to the session, so subagent usage is added to the parent's
+	// next tool result. Usage from a turn without tool calls is reported on the next tool call.
+	pi.on("tool_result", (event) => {
+		if (!unreportedUsage.turns) return;
+		const usage = withSubagentUsage(event.usage, unreportedUsage);
+		unreportedUsage = emptyUsage();
+		return { usage };
 	});
 
 	pi.on("turn_end", () => flushDeliveries());
@@ -659,6 +661,7 @@ export default function (pi: ExtensionAPI): void {
 		await stopAll();
 		agents.clear();
 		pendingDelivery.clear();
+		unreportedUsage = emptyUsage();
 		listeners.clear();
 		if (spinner) clearInterval(spinner);
 		spinner = undefined;
@@ -668,5 +671,3 @@ export default function (pi: ExtensionAPI): void {
 		uiCtx = undefined;
 	});
 }
-
-export type { Static, TSchema };

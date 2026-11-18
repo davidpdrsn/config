@@ -12,7 +12,7 @@ import {
 	visibleWidth,
 	wrapTextWithAnsi,
 } from "@earendil-works/pi-tui";
-import type { AgentStatus, Subagent, UsageTotals } from "./agent";
+import { type AgentStatus, isBusyStatus, oneLine, type Subagent, type UsageTotals } from "./agent";
 
 export const SPINNER = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
 
@@ -77,8 +77,6 @@ export function shortModel(model: string | undefined): string {
 	return slash === -1 ? model : model.slice(slash + 1);
 }
 
-const oneLine = (text: string) => text.replace(/\s+/g, " ").trim();
-
 export function statusIcon(status: AgentStatus, theme: Theme, frame = 0): string {
 	switch (status) {
 		case "starting":
@@ -113,6 +111,11 @@ function statusText(agent: AgentSnapshot, theme: Theme): string {
 	}
 }
 
+/** Width of the label column, so status rows line up. */
+function labelColumnWidth(agents: AgentSnapshot[]): number {
+	return Math.min(24, Math.max(0, ...agents.map((a) => visibleWidth(a.label))));
+}
+
 /** One status row: icon, label, model, elapsed time, then what the agent is doing. */
 export function agentRow(agent: AgentSnapshot, theme: Theme, width: number, frame: number, labelWidth = 0): string {
 	const label = theme.bold(agent.label) + " ".repeat(Math.max(0, labelWidth - visibleWidth(agent.label)));
@@ -136,11 +139,11 @@ export function createWidget(state: WidgetState, theme: Theme): Component {
 		render(width: number): string[] {
 			const agents = state.agents();
 			if (agents.length === 0) return [];
-			const running = agents.filter((a) => a.status === "running" || a.status === "starting").length;
+			const running = agents.filter((a) => isBusyStatus(a.status)).length;
 			const idle = agents.length - running;
 			const counts = [running ? `${running} running` : "", idle ? `${idle} idle` : ""].filter(Boolean).join(" · ");
 			const lines = [truncateToWidth(`${theme.fg("accent", theme.bold("Subagents"))} ${theme.fg("dim", `${counts} · /agents to manage`)}`, width)];
-			const labelWidth = Math.min(24, Math.max(...agents.map((a) => visibleWidth(a.label))));
+			const labelWidth = labelColumnWidth(agents);
 			for (const agent of agents.slice(0, MAX_WIDGET_ROWS)) {
 				lines.push(agentRow(agent, theme, width, state.frame(), labelWidth));
 			}
@@ -162,7 +165,7 @@ export function renderAgentResults(
 ): Component {
 	const container = new Container();
 	if (options.header) container.addChild(new Text(options.header, 0, 0));
-	const labelWidth = Math.min(24, Math.max(0, ...agents.map((a) => visibleWidth(a.label))));
+	const labelWidth = labelColumnWidth(agents);
 	for (const agent of agents) {
 		container.addChild(new RowText((width) => agentRow(agent, theme, width, 0, labelWidth)));
 		if (!options.showOutput) continue;
@@ -282,7 +285,6 @@ export class AgentsOverlay implements Component {
 			else if (kb.matches(data, "tui.select.confirm") && agent) {
 				this.mode = "detail";
 				this.followEnd = true;
-				this.transcriptCache = undefined;
 			} else this.handleAction(data, agent);
 		} else {
 			const page = Math.max(1, this.height() - 6);
@@ -329,7 +331,7 @@ export class AgentsOverlay implements Component {
 		const theme = this.theme;
 		if (agents.length === 0) return [theme.fg("muted", "No subagents. Ask the agent to spawn one.")];
 		const snaps = agents.map(snapshot);
-		const labelWidth = Math.min(24, Math.max(...snaps.map((a) => visibleWidth(a.label))));
+		const labelWidth = labelColumnWidth(snaps);
 		const lines = snaps.map((snap, index) => {
 			const marker = index === this.selected ? theme.fg("accent", "› ") : "  ";
 			return marker + agentRow(snap, theme, width - 2, this.controller.frame(), labelWidth);
@@ -371,7 +373,7 @@ export class AgentsOverlay implements Component {
 	}
 
 	private transcriptLines(agent: Subagent, width: number): string[] {
-		const key = `${width}:${agent.transcript.length}:${agent.status}`;
+		const key = `${agent.id}:${width}:${agent.transcriptVersion}`;
 		if (this.transcriptCache?.key === key) return this.transcriptCache.lines;
 		const theme = this.theme;
 		const markdownTheme = getMarkdownTheme();
