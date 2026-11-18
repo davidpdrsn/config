@@ -31,6 +31,8 @@ If there are several reasonable ways to fix the bug, send them as suggestions af
 
 New features take one review. Build the feature, then send proof that it works, for example a screenshot or recording of the running app or the output of the tests that cover it. Wait for the review before calling the task done. Dont send gifs. Use videos for flows and images for single design changes.
 
+For terminal apps, record videos and screenshots with `tui-record` (see the tui-record skill).
+
 ## Offering suggestions
 
 When there is more than one reasonable option, such as two layouts, three names for a command, or two ways to structure a fix, don't pick one yourself. Send them all with `prove-it suggest` and let the user choose.

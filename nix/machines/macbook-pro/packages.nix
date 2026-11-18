@@ -17,6 +17,7 @@
     gitButlerPiMsg = pkgs.callPackage ./packages/gitbutler-pi-msg.nix {inherit piMsg;};
     gitButlerNvimRemote = pkgs.callPackage ./packages/gitbutler-nvim-remote.nix {};
     webScreenshot = pkgs.callPackage ./packages/web-screenshot.nix {};
+    tuiRecord = pkgs.callPackage ./packages/tui-record.nix {};
     piWrapped = import ../../lib/pi-wrapped.nix {inherit pkgs inputs;};
     prDigest = pkgs.callPackage ../../shared/packages/pr-digest.nix {inherit piWrapped;};
     flarectl = opWrapped {
@@ -39,6 +40,7 @@
       gitButlerPiMsg
       gitButlerNvimRemote
       webScreenshot
+      tuiRecord
       ffmpeg
       imagemagick
       yt-dlp
