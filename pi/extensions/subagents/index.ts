@@ -13,20 +13,10 @@
  */
 import { existsSync, statSync } from "node:fs";
 import path from "node:path";
-import type { ExtensionAPI, ExtensionContext, ToolResultEvent } from "@earendil-works/pi-coding-agent";
+import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { Text, type TUI } from "@earendil-works/pi-tui";
 import { Type } from "typebox";
-import {
-	addUsage,
-	emptyUsage,
-	oneLine,
-	Subagent,
-	THINKING_LEVELS,
-	type ThinkingLevel,
-	type UiRequest,
-	type UiResponse,
-	type UsageTotals,
-} from "./agent";
+import { oneLine, Subagent, sumUsage, THINKING_LEVELS, type ThinkingLevel, type UiRequest, type UiResponse, type Usage } from "./agent";
 import {
 	type AgentSnapshot,
 	AgentsOverlay,
@@ -131,29 +121,13 @@ function describeAgent(agent: Subagent, includeOutput: boolean): string {
 	return text;
 }
 
-type Usage = NonNullable<ToolResultEvent["usage"]>;
-
-/** Add subagent usage to a tool result's own usage. */
-function withSubagentUsage(base: Usage | undefined, usage: UsageTotals): Usage {
-	const cost = base?.cost ?? { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, total: 0 };
-	return {
-		...base,
-		input: (base?.input ?? 0) + usage.input,
-		output: (base?.output ?? 0) + usage.output,
-		cacheRead: (base?.cacheRead ?? 0) + usage.cacheRead,
-		cacheWrite: (base?.cacheWrite ?? 0) + usage.cacheWrite,
-		totalTokens: (base?.totalTokens ?? 0) + usage.input + usage.output + usage.cacheRead + usage.cacheWrite,
-		cost: { ...cost, total: cost.total + usage.cost },
-	};
-}
-
 export default function (pi: ExtensionAPI): void {
 	if (DEPTH >= MAX_DEPTH) return;
 
 	const agents = new Map<string, Subagent>();
 	const listeners = new Set<() => void>();
 	/** Subagent usage not yet added to a parent tool result, which is how it reaches the session totals. */
-	let unreportedUsage = emptyUsage();
+	let unreportedUsage: Usage | undefined;
 	let nextId = 1;
 	let uiCtx: ExtensionContext | undefined;
 	let widgetTui: TUI | undefined;
@@ -229,22 +203,13 @@ export default function (pi: ExtensionAPI): void {
 	}
 
 	/**
-	 * Results waiting to be sent to the parent. While the parent is busy, results are held until its
-	 * current turn ends. Any subagent_wait call in that turn has returned by then and marked the
-	 * results it returned as delivered, so the parent does not see the same result twice.
+	 * Send finished results the parent has not seen as messages. This runs only while the parent is
+	 * idle or when its turn ends. Any subagent_wait call in that turn has returned by then and marked
+	 * the results it returned as delivered, so the parent does not see the same result twice.
 	 */
-	const pendingDelivery = new Set<Subagent>();
-
-	function queueDelivery(agent: Subagent): void {
-		pendingDelivery.add(agent);
-		if (uiCtx?.isIdle() ?? true) flushDeliveries();
-	}
-
-	/** Send finished results to the parent unless a subagent_wait call has already returned them. */
 	function flushDeliveries(): void {
-		for (const agent of [...pendingDelivery]) {
-			pendingDelivery.delete(agent);
-			if (!agent.hasUndeliveredResult || agent.status === "stopped") continue;
+		for (const agent of agents.values()) {
+			if (agent.isBusy || !agent.hasUndeliveredResult) continue;
 			agent.deliveredRuns = agent.finishedRuns;
 			void pi.sendMessage<AgentSnapshot>(
 				{ customType: RESULT_MESSAGE_TYPE, content: describeAgent(agent, true), display: true, details: snapshot(agent) },
@@ -427,8 +392,12 @@ export default function (pi: ExtensionAPI): void {
 				systemPrompt: params.system_prompt,
 				depth: DEPTH + 1,
 				onChange,
-				onRunFinished: queueDelivery,
-				onUsage: (usage) => addUsage(unreportedUsage, usage),
+				onRunFinished: () => {
+					if (uiCtx?.isIdle() ?? true) flushDeliveries();
+				},
+				onUsage: (usage) => {
+					unreportedUsage = unreportedUsage ? sumUsage(unreportedUsage, usage) : usage;
+				},
 				onUiRequest: forwardDialog,
 			});
 			agents.set(id, agent);
@@ -640,11 +609,11 @@ export default function (pi: ExtensionAPI): void {
 	});
 
 	// Extensions cannot add usage entries to the session, so subagent usage is added to the parent's
-	// next tool result. Usage from a turn without tool calls is reported on the next tool call.
+	// next tool result. If the parent makes no tool call before the session ends, that usage is lost.
 	pi.on("tool_result", (event) => {
-		if (!unreportedUsage.turns) return;
-		const usage = withSubagentUsage(event.usage, unreportedUsage);
-		unreportedUsage = emptyUsage();
+		if (!unreportedUsage) return;
+		const usage = event.usage ? sumUsage(event.usage, unreportedUsage) : unreportedUsage;
+		unreportedUsage = undefined;
 		return { usage };
 	});
 
@@ -660,8 +629,7 @@ export default function (pi: ExtensionAPI): void {
 	pi.on("session_shutdown", async (_event, ctx) => {
 		await stopAll();
 		agents.clear();
-		pendingDelivery.clear();
-		unreportedUsage = emptyUsage();
+		unreportedUsage = undefined;
 		listeners.clear();
 		if (spinner) clearInterval(spinner);
 		spinner = undefined;

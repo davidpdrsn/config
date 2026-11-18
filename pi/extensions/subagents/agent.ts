@@ -1,6 +1,7 @@
 import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
 import { existsSync } from "node:fs";
 import path from "node:path";
+import type { ToolResultEvent } from "@earendil-works/pi-coding-agent";
 
 /**
  * One subagent: a `pi --mode rpc` child process plus the state the parent tracks about it.
@@ -22,14 +23,17 @@ export function isBusyStatus(status: AgentStatus): boolean {
 export const THINKING_LEVELS = ["off", "minimal", "low", "medium", "high", "xhigh", "max"] as const;
 export type ThinkingLevel = (typeof THINKING_LEVELS)[number];
 
+/** Token counts shown in the UI. Cost and the exact usage go to the parent through `onUsage`. */
 export interface UsageTotals {
 	input: number;
 	output: number;
 	cacheRead: number;
 	cacheWrite: number;
-	cost: number;
 	turns: number;
 }
+
+/** Pi's usage record, as found on assistant messages, tool results and compaction results. */
+export type Usage = NonNullable<ToolResultEvent["usage"]>;
 
 export type TranscriptItem =
 	| { kind: "user"; text: string }
@@ -62,8 +66,8 @@ export interface SubagentOptions {
 	depth: number;
 	onChange: (agent: Subagent) => void;
 	onRunFinished: (agent: Subagent) => void;
-	/** Called with the usage of each assistant message. */
-	onUsage: (usage: UsageTotals) => void;
+	/** Called with every usage record the child reports: assistant messages, tool results and compactions. */
+	onUsage: (usage: Usage) => void;
 	onUiRequest: (agent: Subagent, request: UiRequest) => Promise<UiResponse>;
 }
 
@@ -76,17 +80,52 @@ const MAX_TRANSCRIPT_ITEMS = 400;
 const MAX_STDERR = 8 * 1024;
 const DIALOG_METHODS = new Set(["select", "confirm", "input", "editor"]);
 
-export function emptyUsage(): UsageTotals {
-	return { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, cost: 0, turns: 0 };
+function emptyUsage(): UsageTotals {
+	return { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, turns: 0 };
 }
 
-export function addUsage(into: UsageTotals, from: UsageTotals): void {
-	into.input += from.input;
-	into.output += from.output;
-	into.cacheRead += from.cacheRead;
-	into.cacheWrite += from.cacheWrite;
-	into.cost += from.cost;
-	into.turns += from.turns;
+/** Read a usage record from the child's JSON. */
+function parseUsage(raw: any): Usage {
+	const usage: Usage = {
+		input: raw?.input || 0,
+		output: raw?.output || 0,
+		cacheRead: raw?.cacheRead || 0,
+		cacheWrite: raw?.cacheWrite || 0,
+		totalTokens: raw?.totalTokens || 0,
+		cost: {
+			input: raw?.cost?.input || 0,
+			output: raw?.cost?.output || 0,
+			cacheRead: raw?.cost?.cacheRead || 0,
+			cacheWrite: raw?.cost?.cacheWrite || 0,
+			total: raw?.cost?.total || 0,
+		},
+	};
+	if (raw?.cacheWrite1h !== undefined) usage.cacheWrite1h = raw.cacheWrite1h;
+	if (raw?.reasoning !== undefined) usage.reasoning = raw.reasoning;
+	return usage;
+}
+
+export function sumUsage(a: Usage, b: Usage): Usage {
+	const optional = (x?: number, y?: number) => (x === undefined && y === undefined ? undefined : (x ?? 0) + (y ?? 0));
+	const usage: Usage = {
+		input: a.input + b.input,
+		output: a.output + b.output,
+		cacheRead: a.cacheRead + b.cacheRead,
+		cacheWrite: a.cacheWrite + b.cacheWrite,
+		totalTokens: a.totalTokens + b.totalTokens,
+		cost: {
+			input: a.cost.input + b.cost.input,
+			output: a.cost.output + b.cost.output,
+			cacheRead: a.cost.cacheRead + b.cost.cacheRead,
+			cacheWrite: a.cost.cacheWrite + b.cost.cacheWrite,
+			total: a.cost.total + b.cost.total,
+		},
+	};
+	const cacheWrite1h = optional(a.cacheWrite1h, b.cacheWrite1h);
+	if (cacheWrite1h !== undefined) usage.cacheWrite1h = cacheWrite1h;
+	const reasoning = optional(a.reasoning, b.reasoning);
+	if (reasoning !== undefined) usage.reasoning = reasoning;
+	return usage;
 }
 
 /** Collapse all whitespace, newlines included, into single spaces. */
@@ -385,6 +424,9 @@ export class Subagent {
 				this.activity = "compacting context";
 				this.options.onChange(this);
 				return;
+			case "compaction_end":
+				if (record.result?.usage) this.options.onUsage(parseUsage(record.result.usage));
+				return;
 			case "agent_settled":
 				if (this.status === "running") this.finishRun(Boolean(record.aborted));
 				return;
@@ -395,6 +437,9 @@ export class Subagent {
 		if (!message) return;
 		if (message.role === "user") {
 			this.push({ kind: "user", text: textOf(message.content) });
+		} else if (message.role === "toolResult") {
+			// Tools that call models, such as codemode's classifiers, report that usage on their result.
+			if (message.usage) this.options.onUsage(parseUsage(message.usage));
 		} else if (message.role === "assistant") {
 			const text = textOf(message.content);
 			if (text.trim()) {
@@ -406,15 +451,12 @@ export class Subagent {
 					this.push({ kind: "tool", name: part.name, summary: summarizeToolCall(part.name, part.arguments) });
 				}
 			}
-			const usage: UsageTotals = {
-				input: message.usage?.input || 0,
-				output: message.usage?.output || 0,
-				cacheRead: message.usage?.cacheRead || 0,
-				cacheWrite: message.usage?.cacheWrite || 0,
-				cost: message.usage?.cost?.total || 0,
-				turns: 1,
-			};
-			addUsage(this.usage, usage);
+			const usage = parseUsage(message.usage);
+			this.usage.input += usage.input;
+			this.usage.output += usage.output;
+			this.usage.cacheRead += usage.cacheRead;
+			this.usage.cacheWrite += usage.cacheWrite;
+			this.usage.turns++;
 			this.options.onUsage(usage);
 			if (message.provider && message.model) this.model = `${message.provider}/${message.model}`;
 			this.lastStopReason = message.stopReason;
