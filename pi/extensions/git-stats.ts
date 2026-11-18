@@ -2,6 +2,7 @@ import { watch, type FSWatcher } from "node:fs";
 import { copyToClipboard, type ExtensionAPI, type ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { rgbColor, truncateToWidth, visibleWidth, type TuiMouseEvent, type TuiMouseEventResult } from "@earendil-works/pi-tui";
 import { getGitStats, type GitStats } from "../scripts/git-stats";
+import { getLoadedSkills } from "../scripts/loaded-skills";
 
 function formatTokens(count: number): string {
 	if (count < 1000) return `${count}`;
@@ -83,6 +84,13 @@ export default function (pi: ExtensionAPI): void {
 	function installFooter(ctx: ExtensionContext): void {
 		if (!ctx.hasUI) return;
 		ctx.ui.setStatus("git-stats", undefined);
+		// Each skill has a `/skill:name` command whose source path is its SKILL.md.
+		const skillNames = new Map(
+			pi
+				.getCommands()
+				.filter((command) => command.source === "skill")
+				.map((command) => [command.sourceInfo.path, command.name.replace(/^skill:/, "")]),
+		);
 		ctx.ui.setFooter((tui, theme, footerData) => {
 			requestRender = () => tui.requestRender();
 			const unsubscribe = footerData.onBranchChange(requestRender);
@@ -164,6 +172,8 @@ export default function (pi: ExtensionAPI): void {
 				} else {
 					lines.push(truncateToWidth(left, width));
 				}
+				const skills = getLoadedSkills(ctx.sessionManager.buildContextEntries(), ctx.cwd, skillNames);
+				if (skills.length) lines.push(truncateToWidth(theme.fg("dim", `skills: ${skills.join(", ")}`), width));
 				const statuses = [...footerData.getExtensionStatuses()]
 					.filter(([key]) => key !== "git-stats")
 					.sort(([a], [b]) => a.localeCompare(b))
