@@ -105,6 +105,7 @@ function parseUsage(raw: any): Usage {
 	return usage;
 }
 
+/** Same as pi's internal combineUsage, which is not exported, minus the `cost.totalFromProvider` flag. */
 export function sumUsage(a: Usage, b: Usage): Usage {
 	const optional = (x?: number, y?: number) => (x === undefined && y === undefined ? undefined : (x ?? 0) + (y ?? 0));
 	const usage: Usage = {
@@ -426,6 +427,11 @@ export class Subagent {
 				return;
 			case "compaction_end":
 				if (record.result?.usage) this.options.onUsage(parseUsage(record.result.usage));
+				return;
+			// json.md documents this event only for pi.appendEntry(). Pi 1.5 also emits it for the usage
+			// entries of cache warming, which also runs for an idle child.
+			case "entry_appended":
+				if (record.entry?.type === "usage") this.options.onUsage(parseUsage(record.entry.usage));
 				return;
 			case "agent_settled":
 				if (this.status === "running") this.finishRun(Boolean(record.aborted));
