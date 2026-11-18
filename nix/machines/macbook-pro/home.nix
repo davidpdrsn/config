@@ -173,6 +173,22 @@ in {
     fi
   '';
 
+  # Records the size of every target dir once an hour, so that the Target GC
+  # app's charts have history while the app isn't open. The app is built from
+  # ~/code/cargo/target-gc-app and installed with `just install`.
+  launchd.agents.target-gc-snapshot = {
+    enable = true;
+    config = {
+      Label = "com.davidpdrsn.targetgc.snapshot";
+      ProgramArguments = ["/Applications/Target GC.app/Contents/MacOS/TargetGC" "--snapshot"];
+      StartInterval = 3600;
+      RunAtLoad = true;
+      ProcessType = "Background";
+      StandardOutPath = "${config.home.homeDirectory}/Library/Logs/target-gc-snapshot.log";
+      StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/target-gc-snapshot.err.log";
+    };
+  };
+
   # Mac-specific shell aliases
   programs.fish.shellAliases = {
     o = "open .";
