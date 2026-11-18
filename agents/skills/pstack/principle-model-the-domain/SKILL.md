@@ -1,5 +1,5 @@
 ---
-name: model-the-domain
+name: principle-model-the-domain
 description: "Apply when writing or changing code, including bug fixes"
 ---
 

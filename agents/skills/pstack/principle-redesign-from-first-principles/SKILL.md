@@ -1,5 +1,5 @@
 ---
-name: redesign-from-first-principles
+name: principle-redesign-from-first-principles
 description: "Apply when writing or changing code, including bug fixes"
 ---
 

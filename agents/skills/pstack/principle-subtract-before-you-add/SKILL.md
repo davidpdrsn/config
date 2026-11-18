@@ -1,5 +1,5 @@
 ---
-name: subtract-before-you-add
+name: principle-subtract-before-you-add
 description: "Apply when writing or changing code, including bug fixes"
 ---
 

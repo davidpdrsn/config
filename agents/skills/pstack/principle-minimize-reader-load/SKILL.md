@@ -1,5 +1,5 @@
 ---
-name: minimize-reader-load
+name: principle-minimize-reader-load
 description: "Apply when reviewing code"
 ---
 

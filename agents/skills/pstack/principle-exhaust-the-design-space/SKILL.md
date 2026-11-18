@@ -1,5 +1,5 @@
 ---
-name: exhaust-the-design-space
+name: principle-exhaust-the-design-space
 description: "Apply when building UI or when told to 'iterate on the ui'"
 ---
 

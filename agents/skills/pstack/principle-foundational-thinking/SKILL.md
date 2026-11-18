@@ -1,9 +1,9 @@
 ---
-name: foundational-thinking
+name: principle-foundational-thinking
 description: "Apply when writing or changing code, including bug fixes"
 ---
 
-Use use foundational-thinking skill when using this.
+Use use principle-foundational-thinking skill when using this.
 
 # Foundational Thinking
 

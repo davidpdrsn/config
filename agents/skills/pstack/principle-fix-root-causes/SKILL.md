@@ -1,5 +1,5 @@
 ---
-name: fix-root-causes
+name: principle-fix-root-causes
 description: "Apply when fixing bugs, crashes, failing tests, performance regressions, or anything the user says is broken, wrong, or doesn't work, including requests like 'fix it'"
 ---
 
