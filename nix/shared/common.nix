@@ -1,6 +1,6 @@
 {self, lib, pkgs, inputs, ...}: {
   # Necessary for using flakes on this system.
-  nix.settings.experimental-features = "nix-command flakes";
+  nix.settings.experimental-features = ["nix-command" "flakes"];
 
   nix.settings.extra-substituters = ["https://cache.numtide.com"];
   nix.settings.extra-trusted-public-keys = [
