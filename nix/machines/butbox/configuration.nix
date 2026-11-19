@@ -7,7 +7,7 @@
 }: {
   imports = [
     (modulesPath + "/virtualisation/amazon-image.nix")
-    ../hetzner/common.nix
+    ../../shared/server.nix
     ./disko.nix
   ];
 
