@@ -149,6 +149,8 @@ in {
       ".gitbutler-worktrees/gitbutler-git"
       "code/foreverapp"
       "code/yet-another-slob-multiplexer"
+      "code/agent"
+      ".agent-worktrees/agent"
       # The fork itself. If a change breaks it, delete target/release/cargo
       # and the flake's cargo takes over.
       "code/cargo"
