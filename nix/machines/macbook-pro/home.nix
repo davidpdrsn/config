@@ -148,6 +148,7 @@ in {
       "code/gitbutler/gitbutler-git"
       ".gitbutler-worktrees/gitbutler-git"
       "code/foreverapp"
+      ".forever-worktrees/foreverapp"
       "code/yet-another-slob-multiplexer"
       "code/agent"
       ".agent-worktrees/agent"
