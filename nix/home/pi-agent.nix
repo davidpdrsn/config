@@ -25,7 +25,7 @@ in {
       defaultThinkingLevel = "high";
       hideThinkingBlock = true;
       enabledModels = [
-        "openai-codex/gpt-6-astra"
+        "openai-codex/*"
         "anthropic/*"
       ];
       images = {
