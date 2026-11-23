@@ -571,11 +571,11 @@
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1795468383,
-        "narHash": "sha256-zZPBdRnMKolx20ERgbn0dT998iNbBc9aA2qDsBlW0wE=",
+        "lastModified": 1795469157,
+        "narHash": "sha256-VlGzdTBrLQks0ctNvdzZUYYilpMYd2m0CfMnnlPzy/M=",
         "ref": "refs/heads/main",
-        "rev": "1c1e17e7b31e41b9d256f9257e8f21eda759761e",
-        "revCount": 13,
+        "rev": "1411454af52271c4d493ac58d3c07c06751629e7",
+        "revCount": 14,
         "type": "git",
         "url": "ssh://git@github.com/davidpdrsn/stonks.git"
       },
