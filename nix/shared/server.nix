@@ -94,6 +94,12 @@
           command = "/run/current-system/sw/bin/nixos-rebuild";
           options = ["NOPASSWD"];
         }
+        # butbox has no password for this user. nixos-rebuild already runs
+        # anything as root without one, so this grants nothing new.
+        {
+          command = "/run/current-system/sw/bin/tailscale";
+          options = ["NOPASSWD"];
+        }
       ];
     }
   ];
