@@ -123,6 +123,11 @@
       IdentitiesOnly yes
   '';
 
+  # The open-source tailscaled from nixpkgs, run as a launchd daemon. It has no
+  # menu bar app; use the tailscale CLI. A new install logs in with
+  # `sudo tailscale up`. The nodes in tailnet-sites.nix run their own tailscaled.
+  services.tailscale.enable = true;
+
   # Install 1Password CLI and copy it to /usr/local/bin/op so the
   # desktop app integration (biometric unlock) works
   programs._1password.enable = true;
