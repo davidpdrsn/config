@@ -162,6 +162,9 @@ in {
 
   networking.hostName = "nix-4gb-nbg1-2";
 
+  # The tailnet name matches the SSH alias rather than the hostname.
+  services.tailscale.extraSetFlags = ["--hostname=hetzner-2"];
+
   programs.nix-ld = {
     enable = true;
     libraries = with pkgs; [

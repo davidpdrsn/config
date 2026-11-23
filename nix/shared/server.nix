@@ -70,6 +70,14 @@
 
   services.fail2ban.enable = true;
 
+  # A new server logs in once with `sudo tailscale up`. Turn off key expiry for
+  # it in the admin console. openFirewall opens tailscaled's UDP port, so peers
+  # can connect directly instead of through a relay.
+  services.tailscale = {
+    enable = true;
+    openFirewall = true;
+  };
+
   # Keep only one week of persistent systemd journal logs.
   services.journald.settings.Journal.MaxRetentionSec = "7day";
 

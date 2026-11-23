@@ -44,6 +44,9 @@ in {
 
   networking.hostName = "nix-4gb-nbg1-1";
 
+  # The tailnet name matches the SSH alias rather than the hostname.
+  services.tailscale.extraSetFlags = ["--hostname=hetzner-1"];
+
   systemd.services.obsidian-vaults-pull = obsidianVaultsPull.service;
   systemd.timers.obsidian-vaults-pull = obsidianVaultsPull.timer;
 
