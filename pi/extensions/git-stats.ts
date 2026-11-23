@@ -1,15 +1,19 @@
 import { watch, type FSWatcher } from "node:fs";
 import { copyToClipboard, type ExtensionAPI, type ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { rgbColor, truncateToWidth, visibleWidth, type TuiMouseEvent, type TuiMouseEventResult } from "@earendil-works/pi-tui";
+import { fetchUsage, type UsageWindow } from "../scripts/claude-usage";
 import { getGitStats, type GitStats } from "../scripts/git-stats";
 import { getLoadedSkills } from "../scripts/loaded-skills";
 
-function formatTokens(count: number): string {
-	if (count < 1000) return `${count}`;
-	if (count < 10000) return `${(count / 1000).toFixed(1)}k`;
-	if (count < 1000000) return `${Math.round(count / 1000)}k`;
-	return `${(count / 1000000).toFixed(1)}M`;
+function percentColor(percent: number): "error" | "warning" | "dim" {
+	return percent > 90 ? "error" : percent > 70 ? "warning" : "dim";
 }
+
+// Other Pi sessions and Claude Code also use the subscription, so the footer
+// polls for usage instead of only refreshing after its own turns.
+const usagePollMs = 5 * 60_000;
+// Agent turns end often. Skip refreshes closer together than this.
+const usageMinIntervalMs = 60_000;
 
 const diffAddedColor = rgbColor(80, 130, 70);
 const diffRemovedColor = rgbColor(170, 70, 80);
@@ -36,6 +40,27 @@ export default function (pi: ExtensionAPI): void {
 	let watcher: FSWatcher | undefined;
 	let watchedRoot: string | undefined;
 	let refreshTimer: ReturnType<typeof setTimeout> | undefined;
+	let usage: UsageWindow[] | undefined;
+	let usageFetchedAt = 0;
+	let usageTimer: ReturnType<typeof setInterval> | undefined;
+
+	async function refreshUsage(ctx: ExtensionContext): Promise<void> {
+		if (!ctx.hasUI || Date.now() - usageFetchedAt < usageMinIntervalMs) return;
+		usageFetchedAt = Date.now();
+		const auth = await ctx.modelRegistry.getProviderAuth("anthropic");
+		if (auth?.source !== "OAuth" || !auth.auth.apiKey) {
+			usage = undefined;
+		} else {
+			// Keep the last known usage when a fetch fails, for example on a rate limit.
+			usage = (await fetchUsage(auth.auth.apiKey)) ?? usage;
+		}
+		requestRender?.();
+	}
+
+	function stopUsagePolling(): void {
+		if (usageTimer) clearInterval(usageTimer);
+		usageTimer = undefined;
+	}
 
 	async function refresh(ctx: ExtensionContext): Promise<void> {
 		if (!ctx.hasUI) return;
@@ -138,27 +163,17 @@ export default function (pi: ExtensionAPI): void {
 				}
 				const lines = [directoryLine];
 
-				let input = 0, output = 0, cacheRead = 0;
-				for (const entry of ctx.sessionManager.getEntries()) {
-					if (entry.type !== "message") continue;
-					const message = entry.message;
-					// Newer Pi versions also account for nested tool usage.
-					if (!("usage" in message) || !message.usage) continue;
-					const usage = message.usage;
-					input += usage.input;
-					output += usage.output;
-					cacheRead += usage.cacheRead;
-				}
+				const contextPercent = ctx.getContextUsage()?.percent;
 				const parts = [
-					`input: ${formatTokens(input)}`,
-					`output: ${formatTokens(output)}`,
-					`cache: ${formatTokens(cacheRead)}`,
+					theme.fg(
+						percentColor(contextPercent ?? 0),
+						`context: ${contextPercent == null ? "?" : contextPercent.toFixed(1)}%`,
+					),
+					...(usage ?? []).map(({ label, percent }) =>
+						theme.fg(percentColor(percent), `${label}: ${Math.round(percent)}%`),
+					),
 				];
-				const context = ctx.getContextUsage();
-				const percent = context?.percent;
-				const contextText = `context: ${percent == null ? "?" : percent.toFixed(1)}%`;
-				parts.push(theme.fg((percent ?? 0) > 90 ? "error" : (percent ?? 0) > 70 ? "warning" : "dim", contextText));
-				const left = theme.fg("dim", parts.join(" · "));
+				const left = parts.join(theme.fg("dim", " · "));
 				let right = ctx.model?.id ?? "no-model";
 				if (ctx.model?.reasoning) right += ` • ${pi.getThinkingLevel()}`;
 				if (ctx.model && footerData.getAvailableProviderCount() > 1) {
@@ -189,15 +204,20 @@ export default function (pi: ExtensionAPI): void {
 		stopWatching();
 		stats = undefined;
 		installFooter(ctx);
-		await refresh(ctx);
+		stopUsagePolling();
+		if (ctx.hasUI) usageTimer = setInterval(() => void refreshUsage(ctx), usagePollMs);
+		await Promise.all([refresh(ctx), refreshUsage(ctx)]);
 	}
 
 	pi.on("session_start", (_event, ctx) => start(ctx));
 	pi.on("tool_execution_end", (_event, ctx) => refresh(ctx));
-	pi.on("agent_end", (_event, ctx) => refresh(ctx));
+	pi.on("agent_end", async (_event, ctx) => {
+		await Promise.all([refresh(ctx), refreshUsage(ctx)]);
+	});
 	pi.on("session_shutdown", (_event, ctx) => {
 		generation++;
 		stopWatching();
+		stopUsagePolling();
 		requestRender = undefined;
 		if (ctx.hasUI) ctx.ui.setFooter(undefined);
 	});
