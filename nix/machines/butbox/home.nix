@@ -3,6 +3,8 @@
   pkgs,
   ...
 }: {
+  services.tailnet-sites.machine = "butbox";
+
   home.sessionPath = ["/home/davidpdrsn/.local/bin"];
 
   programs.ssh.settings = {

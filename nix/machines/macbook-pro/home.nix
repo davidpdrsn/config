@@ -86,7 +86,7 @@
     EOF
   '';
 in {
-  imports = [./tailnet-sites.nix];
+  services.tailnet-sites.machine = "macbook-pro";
 
   # Mac-specific SSH: UseKeychain
   programs.ssh.settings."*".UseKeychain = "yes";

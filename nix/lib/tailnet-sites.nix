@@ -5,17 +5,41 @@
   ...
 }: let
   cfg = config.services.tailnet-sites;
+  isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
   opWrapped = import ./op-wrapper.nix {inherit pkgs;};
   stateDir = "${config.home.homeDirectory}/.local/state/tailnet-sites";
+  logDir = "${config.home.homeDirectory}/Library/Logs";
+
+  local = target: {target = "http://127.0.0.1:${toString target}";};
+  directoryHere = cfg.directory.machine == cfg.machine;
 
   # Every site plus the directory gets its own Tailscale node, and each node
-  # forwards to a local port. The directory page has its own small web server,
-  # because tagged nodes may not serve files directly.
+  # forwards to a local port. This machine runs the nodes for its own sites, and
+  # the directory's if the directory lives here. The directory page has its own
+  # small web server, because tagged nodes may not serve files directly.
   nodes =
-    lib.mapAttrs (name: site: {target = "http://127.0.0.1:${toString site.port}";}) cfg.sites
-    // {${cfg.directoryName} = {target = "http://127.0.0.1:${toString cfg.directoryPort}";};};
+    lib.mapAttrs (name: site: local site.port)
+    (lib.filterAttrs (name: site: site.machine == cfg.machine) cfg.sites)
+    // lib.optionalAttrs directoryHere {${cfg.directory.name} = local cfg.directory.port;};
+
+  # Each machine's sites, in the order of cfg.machines, leaving out machines
+  # without sites.
+  sitesByMachine = lib.filter (group: group.sites != {}) (map (machine: {
+      inherit machine;
+      sites = lib.filterAttrs (name: site: site.machine == machine) cfg.sites;
+    })
+    cfg.machines);
 
   siteUrl = name: "https://${name}.${cfg.tailnet}";
+
+  machineGroup = group: ''
+    <section>
+      <h2 class="machine">${group.machine}</h2>
+      <nav class="sites">
+      ${lib.concatStrings (lib.mapAttrsToList siteCard group.sites)}
+      </nav>
+    </section>
+  '';
 
   siteCard = name: site: ''
     <a class="site" href="${siteUrl name}">
@@ -93,6 +117,18 @@
             color: var(--muted);
             font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
             font-size: 0.875rem;
+          }
+
+          section + section { margin-top: 2rem; }
+
+          .machine {
+            margin: 0 0 0.75rem;
+            color: var(--muted);
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
           }
 
           .sites {
@@ -174,11 +210,7 @@
           ${
       if cfg.sites == {}
       then ''<p class="empty">No sites yet. Add one to services.tailnet-sites.sites.</p>''
-      else ''
-        <nav class="sites">
-        ${lib.concatStrings (lib.mapAttrsToList siteCard cfg.sites)}
-        </nav>
-      ''
+      else lib.concatStrings (map machineGroup sitesByMachine)
     }
         </main>
       </body>
@@ -208,7 +240,7 @@
             pass
 
 
-    server = ThreadingHTTPServer(("127.0.0.1", ${toString cfg.directoryPort}), Handler)
+    server = ThreadingHTTPServer(("127.0.0.1", ${toString cfg.directory.port}), Handler)
     server.serve_forever()
   '';
 
@@ -216,7 +248,7 @@
   # serve config from this module once the node is logged in, replacing any
   # config from an earlier version. After that it sets it again whenever the
   # config is gone, which happens when the node logs in again. tailscaled
-  # replaces the shell, so launchd stops it directly.
+  # replaces the shell, so launchd or systemd stops it directly.
   nodeScript = name: node:
     pkgs.writeShellApplication {
       name = "tailnet-site-${name}";
@@ -249,101 +281,123 @@
     };
 
   # Carries out the actions sync decided on, each written as <action>:<name>.
-  # op-wrapper puts the OAuth client from 1Password in TS_CLIENT_ID and
-  # TS_CLIENT_SECRET. Secrets go through stdin, so they never show up in the
-  # process list.
+  # Expects the OAuth client in TS_CLIENT_ID and TS_CLIENT_SECRET, which
+  # applyScript puts there. Secrets go through stdin, so they never show up in
+  # the process list.
   #
   #   join    log the node in, tagged so its key doesn't expire
   #   retag   replace an untagged node with a tagged one
   #   remove  delete the node from the tailnet and its state from disk
-  applyScript = opWrapped {
+  applyCommand = pkgs.writeShellApplication {
     name = "tailnet-site-apply";
-    env = {
-      TS_CLIENT_ID = cfg.oauthClient.id;
-      TS_CLIENT_SECRET = cfg.oauthClient.secret;
-    };
-    # Shells started before OP_ACCOUNT was set don't have it in their environment.
-    account = config.home.sessionVariables.OP_ACCOUNT or "";
-    command = pkgs.writeShellApplication {
-      name = "tailnet-site-apply";
-      runtimeInputs = [pkgs.tailscale pkgs.jq pkgs.curl pkgs.coreutils];
-      text = ''
-        api=https://api.tailscale.com/api/v2
-        token=
+    runtimeInputs = [pkgs.tailscale pkgs.jq pkgs.curl pkgs.coreutils];
+    text = ''
+      api=https://api.tailscale.com/api/v2
+      token=
 
-        api_call() {
-          if [ -z "$token" ]; then
-            token=$(printf 'client_id=%s&client_secret=%s' "$TS_CLIENT_ID" "$TS_CLIENT_SECRET" \
-              | curl -fsS --data @- "$api/oauth/token" | jq -r '.access_token')
-          fi
-          curl -sS -H @<(printf 'Authorization: Bearer %s\n' "$token") "$@"
-        }
+      api_call() {
+        if [ -z "$token" ]; then
+          token=$(printf 'client_id=%s&client_secret=%s' "$TS_CLIENT_ID" "$TS_CLIENT_SECRET" \
+            | curl -fsS --data @- "$api/oauth/token" | jq -r '.access_token')
+        fi
+        curl -sS -H @<(printf 'Authorization: Bearer %s\n' "$token") "$@"
+      }
 
-        # Recorded at join. Falls back to the login profile, and then to the
-        # hostname, for nodes that joined before node-id files existed.
-        node_id() {
-          local name=$1 dir="${stateDir}/$1" id
-          id=$(cat "$dir/node-id" 2>/dev/null || true)
-          if [ -z "$id" ] && [ -f "$dir/tailscaled.state" ]; then
-            id=$(jq -r '._profiles // empty' "$dir/tailscaled.state" | base64 -d 2>/dev/null \
-              | jq -r '[.[].NodeID][0] // empty' 2>/dev/null || true)
-          fi
-          if [ -z "$id" ]; then
-            id=$(api_call "$api/tailnet/-/devices" \
-              | jq -r --arg name "$name" '[.devices[] | select(.hostname == $name)] | if length == 1 then .[0].nodeId else empty end')
-          fi
-          echo "$id"
-        }
+      # Recorded at join. Falls back to the login profile, and then to the
+      # hostname, for nodes that joined before node-id files existed.
+      node_id() {
+        local name=$1 dir="${stateDir}/$1" id
+        id=$(cat "$dir/node-id" 2>/dev/null || true)
+        if [ -z "$id" ] && [ -f "$dir/tailscaled.state" ]; then
+          id=$(jq -r '._profiles // empty' "$dir/tailscaled.state" | base64 -d 2>/dev/null \
+            | jq -r '[.[].NodeID][0] // empty' 2>/dev/null || true)
+        fi
+        if [ -z "$id" ]; then
+          id=$(api_call "$api/tailnet/-/devices" \
+            | jq -r --arg name "$name" '[.devices[] | select(.hostname == $name)] | if length == 1 then .[0].nodeId else empty end')
+        fi
+        echo "$id"
+      }
 
-        delete_device() {
-          local name=$1 id=$2 status
-          if [ -z "$id" ]; then
-            echo "couldn't find $name on the tailnet. Remove it in the admin console if it's still there." >&2
-            return
-          fi
-          status=$(api_call -o /dev/null -w '%{http_code}' -X DELETE "$api/device/$id")
-          case "$status" in
-            200 | 404) echo "deleted $name.${cfg.tailnet}" ;;
-            *) echo "couldn't delete $name ($id): HTTP $status. Remove it in the admin console." >&2 ;;
-          esac
-        }
+      delete_device() {
+        local name=$1 id=$2 status
+        if [ -z "$id" ]; then
+          echo "couldn't find $name on the tailnet. Remove it in the admin console if it's still there." >&2
+          return
+        fi
+        status=$(api_call -o /dev/null -w '%{http_code}' -X DELETE "$api/device/$id")
+        case "$status" in
+          200 | 404) echo "deleted $name.${cfg.tailnet}" ;;
+          *) echo "couldn't delete $name ($id): HTTP $status. Remove it in the admin console." >&2 ;;
+        esac
+      }
 
-        join() {
-          local name=$1 sock="${stateDir}/$1/tailscaled.sock"
-          echo "joining $name.${cfg.tailnet}"
-          tailscale --socket="$sock" up --auth-key=file:/dev/stdin \
-            --advertise-tags=${cfg.tag} --hostname="$name" --accept-dns=false \
-            <<<"$TS_CLIENT_SECRET?ephemeral=false&preauthorized=true"
-          tailscale --socket="$sock" status --json | jq -r '.Self.ID' >"${stateDir}/$name/node-id"
-        }
+      join() {
+        local name=$1 sock="${stateDir}/$1/tailscaled.sock"
+        echo "joining $name.${cfg.tailnet}"
+        tailscale --socket="$sock" up --auth-key=file:/dev/stdin \
+          --advertise-tags=${cfg.tag} --hostname="$name" --accept-dns=false \
+          <<<"$TS_CLIENT_SECRET?ephemeral=false&preauthorized=true"
+        tailscale --socket="$sock" status --json | jq -r '.Self.ID' >"${stateDir}/$name/node-id"
+      }
 
-        for action in "$@"; do
-          name=''${action#*:}
-          [ -n "$name" ] || continue
-          case "$action" in
-            join:*)
-              join "$name"
-              ;;
-            retag:*)
-              id=$(node_id "$name")
-              tailscale --socket="${stateDir}/$name/tailscaled.sock" logout
-              delete_device "$name" "$id"
-              join "$name"
-              ;;
-            remove:*)
-              delete_device "$name" "$(node_id "$name")"
-              rm -rf "${stateDir}/$name"
-              ;;
-          esac
-        done
-      '';
-    };
+      for action in "$@"; do
+        name=''${action#*:}
+        [ -n "$name" ] || continue
+        case "$action" in
+          join:*)
+            join "$name"
+            ;;
+          retag:*)
+            id=$(node_id "$name")
+            tailscale --socket="${stateDir}/$name/tailscaled.sock" logout
+            delete_device "$name" "$id"
+            join "$name"
+            ;;
+          remove:*)
+            delete_device "$name" "$(node_id "$name")"
+            rm -rf "${stateDir}/$name"
+            ;;
+        esac
+      done
+    '';
   };
+
+  # Runs applyCommand with the OAuth client in its environment.
+  applyScript =
+    if cfg.oauthClient ? onePassword
+    then
+      opWrapped {
+        name = "tailnet-site-apply";
+        env = {
+          TS_CLIENT_ID = cfg.oauthClient.onePassword.id;
+          TS_CLIENT_SECRET = cfg.oauthClient.onePassword.secret;
+        };
+        # Shells started before OP_ACCOUNT was set don't have it in their environment.
+        account = config.home.sessionVariables.OP_ACCOUNT or "";
+        command = applyCommand;
+      }
+    else
+      pkgs.writeShellApplication {
+        name = "tailnet-site-apply";
+        text = ''
+          file=${lib.escapeShellArg cfg.oauthClient.file}
+          if [ ! -r "$file" ]; then
+            echo "tailnet-site: $file is missing. Run 'just tailnet-sites-secret <host>' on the Mac." >&2
+            exit 1
+          fi
+          set -a
+          # shellcheck source=/dev/null
+          . "$file"
+          set +a
+          exec ${lib.getExe applyCommand} "$@"
+        '';
+      };
 
   # Makes the tailnet match the configured nodes: logs in new nodes, replaces
   # untagged ones and removes nodes that are no longer configured. Reads the
-  # OAuth client from 1Password only when there's something to do, so a switch
-  # that changes no sites doesn't ask for Touch ID.
+  # OAuth client only when there's something to do, so a switch on the Mac that
+  # changes no sites doesn't ask for Touch ID.
   syncScript = pkgs.writeShellApplication {
     name = "tailnet-site-sync";
     runtimeInputs = [pkgs.tailscale pkgs.jq];
@@ -431,9 +485,34 @@
       esac
     '';
   };
+
+  # The long-running programs on this machine, keyed by service name.
+  programs =
+    lib.mapAttrs' (name: node:
+      lib.nameValuePair "tailnet-site-${name}" "${nodeScript name node}/bin/tailnet-site-${name}")
+    nodes
+    // lib.optionalAttrs directoryHere {
+      tailnet-sites-directory = "${directoryScript}/bin/tailnet-sites-directory";
+    };
+
+  inMachines = machine: lib.elem machine cfg.machines;
 in {
   options.services.tailnet-sites = {
-    enable = lib.mkEnableOption "one Tailscale node per local site, plus a directory page";
+    machine = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      example = "macbook-pro";
+      description = ''
+        The machine this configuration is for. It runs the nodes for the sites
+        on this machine, and the directory's node if the directory is here.
+        Null runs nothing.
+      '';
+    };
+
+    machines = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      description = "Every machine that can run sites, in the order the directory lists them.";
+    };
 
     tailnet = lib.mkOption {
       type = lib.types.str;
@@ -441,20 +520,44 @@ in {
       description = "The tailnet's DNS name. Used to build the links on the directory page.";
     };
 
-    oauthClient = {
-      id = lib.mkOption {
-        type = lib.types.str;
-        default = "op://Personal/Tailscale OAuth client/username";
-        description = "1Password reference to the Tailscale OAuth client's ID.";
+    oauthClient = lib.mkOption {
+      type = lib.types.attrTag {
+        onePassword = lib.mkOption {
+          type = lib.types.submodule {
+            options.id = lib.mkOption {
+              type = lib.types.str;
+              description = "1Password reference to the client's ID.";
+            };
+            options.secret = lib.mkOption {
+              type = lib.types.str;
+              description = "1Password reference to the client's secret.";
+            };
+          };
+          description = "Read the client from 1Password, which asks for Touch ID.";
+        };
+        file = lib.mkOption {
+          type = lib.types.str;
+          description = ''
+            Read the client from a file that sets TS_CLIENT_ID and
+            TS_CLIENT_SECRET. `just tailnet-sites-secret <host>` writes it.
+          '';
+        };
       };
-      secret = lib.mkOption {
-        type = lib.types.str;
-        default = "op://Personal/Tailscale OAuth client/credential";
-        description = ''
-          1Password reference to the Tailscale OAuth client's secret. The client
-          needs write access to devices and auth keys for `tag`.
-        '';
-      };
+      default =
+        if isDarwin
+        then {
+          onePassword = {
+            id = "op://Personal/Tailscale OAuth client/username";
+            secret = "op://Personal/Tailscale OAuth client/credential";
+          };
+        }
+        else {file = "${config.xdg.configHome}/tailnet-sites/oauth-client";};
+      defaultText = lib.literalMD "1Password on macOS, `~/.config/tailnet-sites/oauth-client` elsewhere";
+      description = ''
+        Where to find the Tailscale OAuth client that logs nodes in and deletes
+        removed ones. The client needs write access to devices and to auth
+        keys for `tag`.
+      '';
     };
 
     tag = lib.mkOption {
@@ -463,20 +566,29 @@ in {
       description = "Tag every node joins with. Tagged nodes don't expire.";
     };
 
-    directoryName = lib.mkOption {
-      type = lib.types.str;
-      default = "sites";
-      description = "Hostname of the node that serves the directory page.";
-    };
-
-    directoryPort = lib.mkOption {
-      type = lib.types.port;
-      default = 7780;
-      description = "Local port of the web server for the directory page.";
+    directory = {
+      name = lib.mkOption {
+        type = lib.types.str;
+        default = "sites";
+        description = "Hostname of the node that serves the directory page.";
+      };
+      machine = lib.mkOption {
+        type = lib.types.str;
+        description = "Machine that serves the directory page.";
+      };
+      port = lib.mkOption {
+        type = lib.types.port;
+        default = 7780;
+        description = "Local port of the web server for the directory page.";
+      };
     };
 
     sites = lib.mkOption {
       type = lib.types.attrsOf (lib.types.submodule {
+        options.machine = lib.mkOption {
+          type = lib.types.str;
+          description = "Machine the site runs on.";
+        };
         options.port = lib.mkOption {
           type = lib.types.port;
           description = "Local port the site listens on. You start the site yourself.";
@@ -487,52 +599,58 @@ in {
     };
   };
 
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf (cfg.machine != null) {
     assertions = [
       {
-        assertion = !(cfg.sites ? ${cfg.directoryName});
-        message = "services.tailnet-sites.sites can't contain the directory name \"${cfg.directoryName}\".";
+        assertion = lib.all inMachines ([cfg.machine cfg.directory.machine] ++ lib.mapAttrsToList (name: site: site.machine) cfg.sites);
+        message = "services.tailnet-sites: every machine must be in services.tailnet-sites.machines.";
       }
       {
-        assertion = !(lib.any (site: site.port == cfg.directoryPort) (lib.attrValues cfg.sites));
-        message = "services.tailnet-sites.directoryPort ${toString cfg.directoryPort} is also a site's port.";
+        assertion = !(cfg.sites ? ${cfg.directory.name});
+        message = "services.tailnet-sites.sites can't contain the directory name \"${cfg.directory.name}\".";
+      }
+      {
+        assertion = !(lib.any (site: site.machine == cfg.directory.machine && site.port == cfg.directory.port) (lib.attrValues cfg.sites));
+        message = "services.tailnet-sites.directory.port ${toString cfg.directory.port} is also the port of a site on ${cfg.directory.machine}.";
       }
     ];
 
     home.packages = [cli];
 
-    # Runs after the agents have started, so new nodes are waiting for a login.
-    home.activation.tailnetSites = lib.hm.dag.entryAfter ["setupLaunchAgents"] ''
+    # Runs after the agents or units have started, so new nodes are waiting
+    # for a login.
+    home.activation.tailnetSites = lib.hm.dag.entryAfter [(
+      if isDarwin
+      then "setupLaunchAgents"
+      else "reloadSystemd"
+    )] ''
       run ${syncScript}/bin/tailnet-site-sync \
         || warnEcho "tailnet-site sync failed. Run 'tailnet-site sync' to retry."
     '';
 
-    launchd.agents =
-      lib.mapAttrs' (name: node:
-      lib.nameValuePair "tailnet-site-${name}" {
+    launchd.agents = lib.mkIf isDarwin (lib.mapAttrs (service: program: {
         enable = true;
         config = {
-          Label = "com.davidpdrsn.tailnet-site.${name}";
-          ProgramArguments = ["${nodeScript name node}/bin/tailnet-site-${name}"];
+          Label = "com.davidpdrsn.${service}";
+          ProgramArguments = [program];
           RunAtLoad = true;
           KeepAlive = true;
-          StandardOutPath = "${config.home.homeDirectory}/Library/Logs/tailnet-site-${name}.log";
-          StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/tailnet-site-${name}.err.log";
+          StandardOutPath = "${logDir}/${service}.log";
+          StandardErrorPath = "${logDir}/${service}.err.log";
         };
       })
-      nodes
-      // {
-        tailnet-sites-directory = {
-          enable = true;
-          config = {
-            Label = "com.davidpdrsn.tailnet-sites.directory";
-            ProgramArguments = ["${directoryScript}/bin/tailnet-sites-directory"];
-            RunAtLoad = true;
-            KeepAlive = true;
-            StandardOutPath = "${config.home.homeDirectory}/Library/Logs/tailnet-sites-directory.log";
-            StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/tailnet-sites-directory.err.log";
-          };
+      programs);
+
+    # Lingering starts these at boot, without a login.
+    systemd.user.services = lib.mkIf (!isDarwin) (lib.mapAttrs (service: program: {
+        Unit.Description = service;
+        Service = {
+          ExecStart = program;
+          Restart = "always";
+          RestartSec = 5;
         };
-      };
+        Install.WantedBy = ["default.target"];
+      })
+      programs);
   };
 }

@@ -70,6 +70,17 @@ switch-vps-2:
 switch-butbox:
     ./scripts/deploy-vps butbox
 
+# Copy the Tailscale OAuth client from 1Password to a server, for its tailnet sites
+tailnet-sites-secret host:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    item="op://Personal/Tailscale OAuth client"
+    id=$(op read --account my.1password.com "$item/username")
+    secret=$(op read --account my.1password.com "$item/credential")
+    printf 'TS_CLIENT_ID=%s\nTS_CLIENT_SECRET=%s\n' "$id" "$secret" \
+      | ssh "{{host}}" 'umask 077; mkdir -p ~/.config/tailnet-sites; cat > ~/.config/tailnet-sites/oauth-client'
+    echo "wrote ~/.config/tailnet-sites/oauth-client on {{host}}"
+
 # Run Nix garbage collection locally and on both VPSes in parallel
 gc:
     #!/usr/bin/env bash

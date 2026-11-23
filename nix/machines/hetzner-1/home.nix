@@ -2,6 +2,8 @@
   lib,
   ...
 }: {
+  services.tailnet-sites.machine = "hetzner-1";
+
   nix.gc.options = lib.mkForce "--delete-older-than 3d";
 
   home.sessionPath = ["/home/davidpdrsn/.local/bin"];

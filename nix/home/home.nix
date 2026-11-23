@@ -8,6 +8,7 @@
     ./codex.nix
     ./pi-agent.nix
     ../lib/pi-agent.nix
+    ./tailnet-sites.nix
   ];
 
   # Don't change this value, even when updating home-manager.
