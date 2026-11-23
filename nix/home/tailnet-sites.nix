@@ -26,9 +26,9 @@ in {
         machine = "macbook-pro";
         port = 7417;
       };
-      # Reads stonks.toml and the Nordnet export from
+      # Reads stonks.toml, instruments.toml and the Nordnet export from
       # ~/.local/share/tailnet-sites/stonks. Copy them there yourself; they
-      # stay out of this public repo.
+      # stay out of git.
       stonks = {
         machine = "hetzner-1";
         port = 7418;
