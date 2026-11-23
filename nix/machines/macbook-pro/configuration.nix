@@ -128,6 +128,15 @@
   # `sudo tailscale up`. The nodes in tailnet-sites.nix run their own tailscaled.
   services.tailscale.enable = true;
 
+  # tailscaled writes its own files to /etc/resolver, including one for the
+  # tailnet's domain. It reports a health warning when it finds a symlink out of
+  # the directory there, so don't add nix-darwin's resolver file for ts.net.
+  environment.etc."resolver/ts.net".enable = false;
+
+  # Without a HostName the Mac takes the one DHCP hands out ("Mac.home"), and
+  # tailscaled names the node after it. This matches the LocalHostName.
+  networking.hostName = "Davids-MacBook-Pro";
+
   # Install 1Password CLI and copy it to /usr/local/bin/op so the
   # desktop app integration (biometric unlock) works
   programs._1password.enable = true;
