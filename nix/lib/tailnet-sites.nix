@@ -23,34 +23,17 @@
     lib.mapAttrs (name: site: local site.port) localSites
     // lib.optionalAttrs directoryHere {${cfg.directory.name} = local cfg.directory.port;};
 
-  # Each machine's sites, in the order of cfg.machines, leaving out machines
-  # without sites.
-  sitesByMachine = lib.filter (group: group.sites != {}) (map (machine: {
-      inherit machine;
-      sites = lib.filterAttrs (name: site: site.machine == machine) cfg.sites;
-    })
-    cfg.machines);
-
   siteUrl = name: "https://${name}.${cfg.tailnet}";
-
-  machineGroup = group: ''
-    <section>
-      <h2 class="machine">${group.machine}</h2>
-      <nav class="sites">
-      ${lib.concatStrings (lib.mapAttrsToList siteCard group.sites)}
-      </nav>
-    </section>
+  machinesWithSites = lib.filter (machine: lib.any (site: site.machine == machine) (lib.attrValues cfg.sites)) cfg.machines;
+  siteCount = builtins.length (lib.attrNames cfg.sites);
+  machineButton = machine: ''
+    <button type="button" data-machine="${lib.escapeXML machine}" aria-pressed="false">${lib.escapeXML machine}</button>
   '';
-
-  siteCard = name: site: ''
-    <a class="site" href="${siteUrl name}">
-      <span class="initial">${lib.toUpper (lib.substring 0 1 name)}</span>
-      <span class="text">
-        <span class="name">${name}</span>
-        <span class="host">${name}.${cfg.tailnet}</span>
-      </span>
-      <span class="port">:${toString site.port}</span>
-    </a>
+  siteRow = name: site: ''
+    <tr data-machine="${lib.escapeXML site.machine}">
+      <td><a href="${lib.escapeXML (siteUrl name)}">${lib.escapeXML name}</a></td>
+      <td>${lib.escapeXML site.machine}</td><td class="port">${toString site.port}</td>
+    </tr>
   '';
 
   directoryPage = pkgs.writeTextDir "index.html" ''
@@ -59,161 +42,105 @@
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="color-scheme" content="light dark">
         <title>Sites</title>
         <style>
           :root {
-            --bg: #f5f5f4;
-            --card: #ffffff;
-            --border: #e7e5e4;
-            --border-hover: #a8a29e;
-            --text: #1c1917;
-            --muted: #78716c;
-            --initial-bg: #e7e5e4;
-            --pill-bg: #f5f5f4;
-            --shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 4px 12px rgb(0 0 0 / 0.04);
+            color-scheme: light dark;
+            --bg: light-dark(#f5f5f6, #1a1c20);
+            --rail: light-dark(#e9eaee, #23262b);
+            --panel: light-dark(white, #282b31);
+            --ink: light-dark(#272b31, #edeef1);
+            --muted: light-dark(#585e68, #b0b5c0);
+            --line: light-dark(#dfe1e6, #3c4049);
+            --selected: light-dark(#d3dae7, #35445c);
+            --link: light-dark(#1759a4, #91bfff);
           }
-
-          @media (prefers-color-scheme: dark) {
-            :root {
-              --bg: #0c0a09;
-              --card: #1c1917;
-              --border: #292524;
-              --border-hover: #57534e;
-              --text: #f5f5f4;
-              --muted: #a8a29e;
-              --initial-bg: #292524;
-              --pill-bg: #0c0a09;
-              --shadow: none;
-            }
-          }
-
           * { box-sizing: border-box; }
-
-          body {
-            margin: 0;
-            background: var(--bg);
-            color: var(--text);
-            font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
-            -webkit-font-smoothing: antialiased;
+          body { margin: 0; display: grid; grid-template-columns: clamp(12rem, 24vw, 17rem) minmax(0, 1fr); min-height: 100vh; font: 1rem/1.45 system-ui, sans-serif; color: var(--ink); background: var(--bg); }
+          aside { display: flex; flex-direction: column; padding: 2.5rem 1rem 2rem; background: var(--rail); }
+          h1, h2 { margin: 0; font-size: 2.2rem; line-height: 1.2; letter-spacing: -.035em; overflow-wrap: anywhere; }
+          h1, .tailnet, .label { padding-inline: .85rem; }
+          nav { margin-top: 2.5rem; }
+          .label { margin: 1.6rem 0 .4rem; font-size: .85rem; font-weight: 600; color: var(--muted); }
+          button { display: block; width: 100%; min-height: 44px; padding: .55rem .85rem; border: 0; border-radius: .5rem; background: transparent; color: inherit; font: inherit; text-align: left; overflow-wrap: anywhere; cursor: pointer; }
+          button:hover { background: var(--line); }
+          button[aria-pressed="true"] { background: var(--selected); font-weight: 600; }
+          :focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+          .tailnet { margin: auto 0 0; padding-top: 2rem; color: var(--muted); font: .8rem/1.4 ui-monospace, monospace; overflow-wrap: anywhere; }
+          main { width: 100%; max-width: 74rem; padding: 2.5rem clamp(1.25rem, 4vw, 4rem); }
+          #count { margin: .65rem 0 2.5rem; color: var(--muted); }
+          table { width: 100%; border-spacing: 0; border-radius: .65rem; padding: .35rem 1.25rem; background: var(--panel); text-align: left; }
+          th { color: var(--muted); font-size: .85rem; }
+          th, td { padding: .85rem .5rem; overflow-wrap: anywhere; }
+          td { border-top: 1px solid var(--line); }
+          a { display: inline-flex; align-items: center; min-height: 44px; color: var(--link); font-weight: 600; text-decoration: none; }
+          a:hover { text-decoration: underline; }
+          td:first-child { padding-block: .3rem; }
+          .port { font-family: ui-monospace, monospace; }
+          @media (max-width: 42rem) {
+            body { display: block; }
+            aside { padding: 1.25rem 1rem .85rem; }
+            h1, .tailnet { padding: 0; }
+            h1 { font-size: 1.65rem; }
+            .tailnet { order: -1; margin: 0 0 .3rem; }
+            nav { display: flex; flex-wrap: wrap; gap: .25rem; margin-top: .85rem; }
+            nav .label { display: none; }
+            button { width: auto; max-width: 100%; padding-inline: .7rem; }
+            main { padding: 1.5rem 1rem; }
+            h2 { font-size: 1.5rem; }
+            #count { margin: .3rem 0 1rem; }
+            table { table-layout: fixed; padding: .15rem .5rem; font-size: .95rem; }
+            th:last-child { width: 4rem; }
+            th, td { padding-inline: .3rem; }
           }
-
-          main {
-            max-width: 44rem;
-            margin: 0 auto;
-            padding: 4rem 1rem;
-          }
-
-          header { margin-bottom: 2rem; }
-
-          h1 {
-            margin: 0;
-            font-size: 1.75rem;
-            font-weight: 650;
-            letter-spacing: -0.02em;
-          }
-
-          .tailnet {
-            margin: 0.25rem 0 0;
-            color: var(--muted);
-            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-            font-size: 0.875rem;
-          }
-
-          section + section { margin-top: 2rem; }
-
-          .machine {
-            margin: 0 0 0.75rem;
-            color: var(--muted);
-            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-            font-size: 0.75rem;
-            font-weight: 500;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-          }
-
-          .sites {
-            display: grid;
-            gap: 0.75rem;
-          }
-
-          .site {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem 1.25rem;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 0.75rem;
-            box-shadow: var(--shadow);
-            color: inherit;
-            text-decoration: none;
-            transition: border-color 120ms, transform 120ms;
-          }
-
-          .site:hover { border-color: var(--border-hover); }
-          .site:active { transform: scale(0.99); }
-
-          .site:focus-visible {
-            outline: 2px solid var(--text);
-            outline-offset: 2px;
-          }
-
-          .initial {
-            display: grid;
-            place-items: center;
-            flex: none;
-            width: 2.5rem;
-            height: 2.5rem;
-            border-radius: 0.5rem;
-            background: var(--initial-bg);
-            font-weight: 600;
-          }
-
-          .text {
-            display: flex;
-            flex-direction: column;
-            gap: 0.125rem;
-            min-width: 0;
-            flex: 1;
-          }
-
-          .name { font-weight: 600; }
-
-          .host {
-            color: var(--muted);
-            font-size: 0.875rem;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-          }
-
-          .port {
-            flex: none;
-            padding: 0.25rem 0.5rem;
-            border: 1px solid var(--border);
-            border-radius: 999px;
-            background: var(--pill-bg);
-            color: var(--muted);
-            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-            font-size: 0.75rem;
-          }
-
-          .empty { color: var(--muted); }
         </style>
       </head>
       <body>
+        <aside>
+          <h1>Sites</h1>
+          <nav aria-label="Filter sites">
+            <p class="label">Directory</p>
+            <button type="button" aria-pressed="true">All sites</button>
+            ${lib.optionalString (machinesWithSites != []) ''<p class="label">Machines</p>''}
+            ${lib.concatMapStrings machineButton machinesWithSites}
+          </nav>
+          <p class="tailnet">${lib.escapeXML cfg.tailnet}</p>
+        </aside>
         <main>
-          <header>
-            <h1>Sites</h1>
-            <p class="tailnet">${cfg.tailnet}</p>
-          </header>
+          <h2 id="view">All sites</h2>
+          <p id="count" aria-live="polite">${toString siteCount} ${
+      if siteCount == 1
+      then "site"
+      else "sites"
+    }</p>
           ${
       if cfg.sites == {}
-      then ''<p class="empty">No sites yet. Add one to services.tailnet-sites.sites.</p>''
-      else lib.concatStrings (map machineGroup sitesByMachine)
+      then ''<p>No sites yet. Add one to services.tailnet-sites.sites.</p>''
+      else ''
+        <table aria-labelledby="view">
+          <thead><tr><th>Name</th><th>Machine</th><th>Port</th></tr></thead>
+          <tbody>${lib.concatStrings (lib.mapAttrsToList siteRow cfg.sites)}</tbody>
+        </table>
+      ''
     }
         </main>
+        <script>
+          const filters = document.querySelectorAll('nav button');
+          const rows = document.querySelectorAll('tbody tr');
+          for (const button of filters) {
+            button.addEventListener('click', () => {
+              const machine = button.dataset.machine;
+              let visible = 0;
+              for (const row of rows) {
+                row.hidden = machine !== undefined && row.dataset.machine !== machine;
+                if (!row.hidden) visible++;
+              }
+              for (const filter of filters) filter.setAttribute('aria-pressed', filter === button);
+              document.querySelector('#view').textContent = button.textContent;
+              document.querySelector('#count').textContent = visible + (visible === 1 ? ' site' : ' sites');
+            });
+          }
+        </script>
       </body>
     </html>
   '';
@@ -648,14 +575,17 @@ in {
 
     # Runs after the agents or units have started, so new nodes are waiting
     # for a login.
-    home.activation.tailnetSites = lib.hm.dag.entryAfter [(
-      if isDarwin
-      then "setupLaunchAgents"
-      else "reloadSystemd"
-    )] ''
-      run ${syncScript}/bin/tailnet-site-sync \
-        || warnEcho "tailnet-site sync failed. Run 'tailnet-site sync' to retry."
-    '';
+    home.activation.tailnetSites =
+      lib.hm.dag.entryAfter [
+        (
+          if isDarwin
+          then "setupLaunchAgents"
+          else "reloadSystemd"
+        )
+      ] ''
+        run ${syncScript}/bin/tailnet-site-sync \
+          || warnEcho "tailnet-site sync failed. Run 'tailnet-site sync' to retry."
+      '';
 
     launchd.agents = lib.mkIf isDarwin (lib.mapAttrs (service: program: {
         enable = true;
