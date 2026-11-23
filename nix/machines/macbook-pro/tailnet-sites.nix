@@ -9,6 +9,7 @@
     tailnet = "tailbfde08.ts.net";
     sites = {
       factory.port = 7417;
+      stonks.port = 7418;
     };
   };
 }
