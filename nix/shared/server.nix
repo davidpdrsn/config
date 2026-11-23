@@ -78,6 +78,11 @@
     openFirewall = true;
   };
 
+  # tailscaled opens /dev/net/tun, which only exists once the tun module is
+  # loaded. The switch that added Tailscale to hetzner-1 didn't load it, and
+  # tailscaled failed to start.
+  boot.kernelModules = ["tun"];
+
   # Keep only one week of persistent systemd journal logs.
   services.journald.settings.Journal.MaxRetentionSec = "7day";
 
