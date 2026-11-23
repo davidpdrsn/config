@@ -34,6 +34,10 @@
       url = "github:davidpdrsn/npc-browser";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    stonks = {
+      url = "git+ssh://git@github.com/davidpdrsn/stonks.git";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Other dev tools are managed via `just clone-dev-tools` + cargo install.
   };

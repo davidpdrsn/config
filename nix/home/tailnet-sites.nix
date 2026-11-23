@@ -1,6 +1,7 @@
 # Sites reachable at https://<name>.tailbfde08.ts.net, on every machine. Each
 # machine's home.nix sets services.tailnet-sites.machine, and runs the nodes for
-# its own sites. Start each site yourself on its port. The directory at
+# its own sites. A site with a package runs on its machine, which is the only
+# one that builds it. Start a site without one yourself. The directory at
 # https://sites.tailbfde08.ts.net links to them all; switch its machine after
 # adding a site elsewhere, so the page lists it.
 #
@@ -8,6 +9,12 @@
 # it from ~/.config/tailnet-sites/oauth-client, which
 # `just tailnet-sites-secret <host>` writes.
 {
+  pkgs,
+  inputs,
+  ...
+}: let
+  app = name: inputs.${name}.packages.${pkgs.stdenv.hostPlatform.system}.default;
+in {
   imports = [../lib/tailnet-sites.nix];
 
   services.tailnet-sites = {
@@ -19,9 +26,13 @@
         machine = "macbook-pro";
         port = 7417;
       };
+      # Reads stonks.toml and the Nordnet export from
+      # ~/.local/share/tailnet-sites/stonks. Copy them there yourself; they
+      # stay out of this public repo.
       stonks = {
-        machine = "macbook-pro";
+        machine = "hetzner-1";
         port = 7418;
+        package = app "stonks";
       };
       website = {
         machine = "hetzner-1";

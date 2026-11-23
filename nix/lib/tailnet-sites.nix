@@ -8,6 +8,7 @@
   isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
   opWrapped = import ./op-wrapper.nix {inherit pkgs;};
   stateDir = "${config.home.homeDirectory}/.local/state/tailnet-sites";
+  appsDir = "${config.xdg.dataHome}/tailnet-sites";
   logDir = "${config.home.homeDirectory}/Library/Logs";
 
   local = target: {target = "http://127.0.0.1:${toString target}";};
@@ -17,9 +18,9 @@
   # forwards to a local port. This machine runs the nodes for its own sites, and
   # the directory's if the directory lives here. The directory page has its own
   # small web server, because tagged nodes may not serve files directly.
+  localSites = lib.filterAttrs (name: site: site.machine == cfg.machine) cfg.sites;
   nodes =
-    lib.mapAttrs (name: site: local site.port)
-    (lib.filterAttrs (name: site: site.machine == cfg.machine) cfg.sites)
+    lib.mapAttrs (name: site: local site.port) localSites
     // lib.optionalAttrs directoryHere {${cfg.directory.name} = local cfg.directory.port;};
 
   # Each machine's sites, in the order of cfg.machines, leaving out machines
@@ -486,11 +487,24 @@
     '';
   };
 
+  # Runs a site's package in its own directory, with the site's port in PORT.
+  # The app keeps its data in the directory.
+  appScript = name: site:
+    pkgs.writeShellScript "tailnet-app-${name}" ''
+      dir=${lib.escapeShellArg "${appsDir}/${name}"}
+      mkdir -p "$dir"
+      cd "$dir"
+      export PORT=${toString site.port}
+      exec ${lib.getExe site.package} ${lib.escapeShellArgs site.args}
+    '';
+
   # The long-running programs on this machine, keyed by service name.
   programs =
     lib.mapAttrs' (name: node:
       lib.nameValuePair "tailnet-site-${name}" "${nodeScript name node}/bin/tailnet-site-${name}")
     nodes
+    // lib.mapAttrs' (name: site: lib.nameValuePair "tailnet-app-${name}" "${appScript name site}")
+    (lib.filterAttrs (name: site: site.package != null) localSites)
     // lib.optionalAttrs directoryHere {
       tailnet-sites-directory = "${directoryScript}/bin/tailnet-sites-directory";
     };
@@ -591,7 +605,22 @@ in {
         };
         options.port = lib.mkOption {
           type = lib.types.port;
-          description = "Local port the site listens on. You start the site yourself.";
+          description = "Local port the site listens on.";
+        };
+        options.package = lib.mkOption {
+          type = lib.types.nullOr lib.types.package;
+          default = null;
+          description = ''
+            Package to run on the site's machine, with PORT set to the site's
+            port and ~/.local/share/tailnet-sites/<name> as its working
+            directory, where it keeps its data. Only that machine builds it.
+            Without a package, you start the site yourself.
+          '';
+        };
+        options.args = lib.mkOption {
+          type = lib.types.listOf lib.types.str;
+          default = [];
+          description = "Arguments for the package's main program.";
         };
       });
       default = {};
