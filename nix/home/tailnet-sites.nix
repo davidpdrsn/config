@@ -27,14 +27,6 @@
         machine = "hetzner-1";
         port = 3001;
       };
-      test-hetzner-2 = {
-        machine = "hetzner-2";
-        port = 7501;
-      };
-      test-butbox = {
-        machine = "butbox";
-        port = 7502;
-      };
     };
   };
 }
