@@ -5,7 +5,7 @@ description: "Use when asked to make a Rust project use the patched cargo, the c
 
 # Patched cargo
 
-`~/code/cargo` is a fork of cargo that garbage collects build directories. Every build marks the units it uses by setting their directories' modification time, and units unused for `cache.target-clean.max-age` are removed. `~/.cargo/config.toml` sets that to 4 days. `~/code/cargo/FORK.md` explains how the fork is maintained.
+`~/code/cargo` is a fork of cargo that garbage collects build directories. Every build marks the units it uses by setting their directories' modification time, and units unused for `cache.target-clean.max-age` are removed. `~/.cargo/config.toml` sets that to 4 days. Each target dir gets the max age that cargo's config sets when cargo runs in that dir, so a `.cargo/config.toml` in or above a target dir overrides the global value for it. `~/code/agent` sets 1 day in its tracked `.cargo/config.toml`, and `~/.agent-worktrees/agent/.cargo/config.toml` sets it for the agent worktrees. `~/code/cargo/FORK.md` explains how the fork is maintained.
 
 `home.nix` links `~/.local/share/patched-cargo/bin/cargo` to `~/code/cargo/target/release/cargo`. A direnv wrapper puts that directory on `PATH`, but only in the directories listed in `patchedCargoDirs` in `~/config/nix/machines/macbook-pro/home.nix`, and only when the project's `.envrc` runs `use flake`. Turning the fork on for a project means adding it to that list. The project itself only needs an `.envrc` that runs `use flake`.
 
