@@ -9,6 +9,10 @@ function percentColor(percent: number): "error" | "warning" | "dim" {
 	return percent > 90 ? "error" : percent > 70 ? "warning" : "dim";
 }
 
+// The footer shows context usage as a share of this many tokens, not of the
+// model's full context window.
+const contextTokenLimit = 250_000;
+
 // Other Pi sessions and Claude Code also use the subscription, so the footer
 // polls for usage instead of only refreshing after its own turns.
 const usagePollMs = 5 * 60_000;
@@ -163,7 +167,8 @@ export default function (pi: ExtensionAPI): void {
 				}
 				const lines = [directoryLine];
 
-				const contextPercent = ctx.getContextUsage()?.percent;
+				const contextTokens = ctx.getContextUsage()?.tokens;
+				const contextPercent = contextTokens == null ? undefined : (contextTokens / contextTokenLimit) * 100;
 				const parts = [
 					theme.fg(
 						percentColor(contextPercent ?? 0),
