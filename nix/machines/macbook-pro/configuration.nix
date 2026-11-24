@@ -1,4 +1,8 @@
-{username, ...}: {
+{
+  pkgs,
+  username,
+  ...
+}: {
   imports = [
     ../../shared/common.nix
     ./packages.nix
@@ -8,6 +12,19 @@
   nix.enable = false;
 
   system.primaryUser = username;
+
+  # nix-darwin only sets the login shell of users in knownUsers, and those need
+  # their uid. 501 is the uid macOS gave the first account. For an existing
+  # user, activation only sets the primary group (20, staff) and the shell.
+  # programs.fish.enable puts the nix paths in fish's PATH. environment.shells
+  # adds fish to /etc/shells, which chsh checks.
+  programs.fish.enable = true;
+  environment.shells = [pkgs.fish];
+  users.knownUsers = [username];
+  users.users.${username} = {
+    uid = 501;
+    shell = pkgs.fish;
+  };
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog

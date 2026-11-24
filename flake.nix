@@ -57,7 +57,6 @@
     commonArgs = {
       inherit inputs self;
       username = "davidpdrsn";
-      shell = "fish";
     };
 
     # Build a home-manager config block with shared base + machine-specific overrides.
