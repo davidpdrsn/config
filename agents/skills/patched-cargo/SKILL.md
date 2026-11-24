@@ -37,7 +37,7 @@ Cleaning runs after a successful build, at most once a day, for every registered
 cd <project> && ~/.local/share/patched-cargo/bin/cargo clean gc -Zgc --build-dir "$PWD/target"
 ```
 
-Add `--dry-run` to see what it would remove. Pass `--max-target-age "<N> days"` to use another age. Run it from the project so that cargo reads the project's config. Use `du -sk target` before and after to measure what it freed. Cargo's "Removed ... total" counts each hard-linked file separately, so it can overstate the space freed. The GC only removes from `build/`, `incremental/`, `deps/` and `.fingerprint/` in each profile dir. The final binaries and libraries in `target/<profile>/` stay until a `cargo clean`.
+Add `--dry-run` to see what it would remove. Pass `--max-target-age "<N> days"` to use another age. Run it from the project so that cargo reads the project's config. Use `du -sk target` before and after to measure what it freed. Cargo's "Removed ... total" counts each hard-linked file separately, so it can overstate the space freed. The GC only removes from `build/`, `incremental/`, `deps/` and `.fingerprint/` in each profile dir. In the units it keeps, it also removes the `<stem>.<cgu>.<invocation>.rcgu.o` files of earlier rustc invocations, which incremental builds with unpacked debug info, the macOS default, never remove. Every build does the same for the incremental units it uses. The final binaries and libraries in `target/<profile>/` stay until a `cargo clean`.
 
 Artifacts from stock cargo before 1.100 use the legacy layout (`deps/`, `.fingerprint/`). The fork removes them once their modification time is older than the max age, without tracking their use.
 
