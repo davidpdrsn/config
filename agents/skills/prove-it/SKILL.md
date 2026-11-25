@@ -9,7 +9,7 @@ Prove It is where you show the user proof instead of telling them. Saying "it's 
 
 It is also where you show the user suggestions when there is more than one reasonable way to do something. The user picks one or rejects them all.
 
-`prove-it` puts proofs and suggestions in the user's review inbox. The inbox is a macOS app where the user goes through each review, comments on each item, and approves, chooses or rejects. You get their answer back as JSON.
+`prove-it` puts proofs and suggestions in the user's review inbox. The inbox is a macOS app where the user goes through each review, comments on each item, draws on images and video frames, and approves, chooses or rejects. You get their answer back as JSON.
 
 ## Fixing a bug
 
@@ -96,16 +96,34 @@ prove-it wait <id> --timeout 540
   "id": "20250116-153012-a3f9",
   "items": [
     {
+      "annotations": [
+        {
+          "file": "/Users/me/Library/Application Support/prove-it/inbox/20250116-153012-a3f9/annotations/0-screenshot.png"
+        }
+      ],
       "comment": "Too much padding above the title",
       "file": "/Users/me/Library/Application Support/prove-it/inbox/20250116-153012-a3f9/assets/0-screenshot.png",
       "index": 0,
       "kind": "image",
       "name": "screenshot.png"
+    },
+    {
+      "annotations": [
+        {
+          "file": "/Users/me/Library/Application Support/prove-it/inbox/20250116-153012-a3f9/annotations/1-login-frame-42.png",
+          "frame": 42,
+          "time": 1.367
+        }
+      ],
+      "file": "/Users/me/Library/Application Support/prove-it/inbox/20250116-153012-a3f9/assets/1-login.mov",
+      "index": 1,
+      "kind": "video",
+      "name": "login.mov"
     }
   ],
   "responded_at": "2025-01-16T15:31:40Z",
   "status": "changes_requested",
-  "version": 2
+  "version": 3
 }
 ```
 
@@ -114,6 +132,7 @@ prove-it wait <id> --timeout 540
 - `comment` is the overall comment. It is absent when the user left none.
 - `items` has one entry per item, in the order you sent them. `comment` is the user's note on that item.
 - `file` is an absolute path to the copy the user reviewed.
+- `annotations` lists PNGs where the user drew on the item in red, usually to circle or outline what their comment is about. Open each `file` and look at it. An image or SVG has at most one. A video has one per frame the user drew on, with `frame` (counted from 1) and `time` (seconds from the start). `annotations` is absent when the user drew nothing.
 
 What to do next depends on the review. For proof of a bug, follow the steps in "Fixing a bug". For suggestions, follow "Offering suggestions". For proof of a fix or a feature:
 
