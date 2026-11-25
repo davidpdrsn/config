@@ -90,6 +90,18 @@
     extraSetFlags = ["--operator=${username}"];
   };
 
+  # tailscaled-set is a oneshot that exits, and a switch doesn't restart
+  # inactive units, so it applied changed flags only at the next boot. Staying
+  # active makes a switch restart it when its flags change. A switch starts
+  # what active targets want, so multi-user.target starts it if it isn't
+  # active. Home Manager's tailnet-sites sync runs `tailscale serve` as the
+  # operator, so it waits for the flags.
+  systemd.services.tailscaled-set = {
+    serviceConfig.RemainAfterExit = true;
+    wantedBy = ["multi-user.target"];
+  };
+  systemd.services."home-manager-${username}".after = ["tailscaled-set.service"];
+
   # tailscaled opens /dev/net/tun, which only exists once the tun module is
   # loaded. The switch that added Tailscale to hetzner-1 didn't load it, and
   # tailscaled failed to start.
