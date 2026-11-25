@@ -23,10 +23,6 @@ in {
     tailnet = "tailbfde08.ts.net";
     directory.machine = "macbook-pro";
     sites = {
-      factory = {
-        machine = "macbook-pro";
-        port = 7417;
-      };
       # Reads stonks.toml, instruments.toml and the Nordnet export from
       # ~/.local/share/tailnet-sites/stonks. Copy them there yourself; they
       # stay out of git.
