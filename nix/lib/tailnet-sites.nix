@@ -27,6 +27,8 @@
   # userspace tailscaled for that, and only while it has services to host.
   runsNode = cfg.host == "node" && localPorts != {};
   hostsServices = cfg.host == "system" || runsNode;
+  # Logging the node in and defining services need the OAuth client.
+  usesClient = runsNode || directoryHere;
   nodeDir = "${stateDir}/node";
   nodeName = "${cfg.machine}-sites";
   socketFlag = lib.optionalString (cfg.host == "node") "--socket=${nodeDir}/tailscaled.sock";
@@ -306,31 +308,32 @@
     name = "tailnet-site-sync";
     runtimeInputs = [pkgs.tailscale pkgs.jq pkgs.diffutils pkgs.coreutils];
     text = ''
-      actions=()
       mkdir -p "${stateDir}"
 
-      ${lib.optionalString runsNode ''
-        # The node's tailscaled may still be starting right after a switch.
-        state=
-        for _ in $(seq 1 20); do
-          state=$(tailscale ${socketFlag} status --json 2>/dev/null | jq -r '.BackendState // empty' || true)
-          [ -n "$state" ] && [ "$state" != NoState ] && break
-          sleep 0.5
-        done
-        case "$state" in
-          NeedsLogin) actions+=(join) ;;
-          Running) ;;
-          *) echo "tailnet-site: ${nodeName}'s tailscaled isn't running" >&2; exit 1 ;;
-        esac
-      ''}
+      ${lib.optionalString usesClient ''
+        actions=()
 
-      ${lib.optionalString directoryHere ''
-        if [ "''${1:-}" = --force ] || ! cmp -s ${definedServices} "${definedFile}"; then
-          actions+=(define)
-        fi
-      ''}
+        ${lib.optionalString runsNode ''
+          # The node's tailscaled may still be starting right after a switch.
+          state=
+          for _ in $(seq 1 20); do
+            state=$(tailscale ${socketFlag} status --json 2>/dev/null | jq -r '.BackendState // empty' || true)
+            [ -n "$state" ] && [ "$state" != NoState ] && break
+            sleep 0.5
+          done
+          case "$state" in
+            NeedsLogin) actions+=(join) ;;
+            Running) ;;
+            *) echo "tailnet-site: ${nodeName}'s tailscaled isn't running" >&2; exit 1 ;;
+          esac
+        ''}
 
-      ${lib.optionalString (runsNode || directoryHere) ''
+        ${lib.optionalString directoryHere ''
+          if [ "''${1:-}" = --force ] || ! cmp -s ${definedServices} "${definedFile}"; then
+            actions+=(define)
+          fi
+        ''}
+
         if [ ''${#actions[@]} -gt 0 ]; then
           ${applyScript}/bin/tailnet-site-apply "''${actions[@]}"
         fi
