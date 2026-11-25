@@ -142,7 +142,7 @@
 
   # The open-source tailscaled from nixpkgs, run as a launchd daemon. It has no
   # menu bar app; use the tailscale CLI. A new install logs in with
-  # `sudo tailscale up`. The tailnet-sites nodes run their own tailscaled.
+  # `sudo tailscale up`. The tailnet-sites node runs its own tailscaled.
   services.tailscale.enable = true;
 
   # tailscaled writes its own files to /etc/resolver, including one for the

@@ -1,13 +1,14 @@
 # Sites reachable at https://<name>.tailbfde08.ts.net, on every machine. Each
-# machine's home.nix sets services.tailnet-sites.machine, and runs the nodes for
-# its own sites. A site with a package runs on its machine, which is the only
-# one that builds it. Start a site without one yourself. The directory at
-# https://sites.tailbfde08.ts.net links to them all; switch its machine after
-# adding a site elsewhere, so the page lists it.
+# site is a Tailscale Service, hosted by the machine it runs on. Each machine's
+# home.nix sets services.tailnet-sites.machine. A site with a package runs on
+# its machine, which is the only one that builds it. Start a site without one
+# yourself. The directory at https://sites.tailbfde08.ts.net links to them all.
+# Its machine defines every service in the tailnet, so switch it first after
+# adding a site elsewhere.
 #
-# The Mac logs new nodes in with the OAuth client from 1Password. A server reads
-# it from ~/.config/tailnet-sites/oauth-client, which
-# `just tailnet-sites-secret <host>` writes.
+# The Mac hosts its services on a tagged node of its own, which it logs in with
+# the OAuth client from 1Password. The servers host theirs on their own nodes,
+# which are tagged tag:server.
 {
   pkgs,
   inputs,

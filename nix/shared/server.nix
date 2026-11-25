@@ -70,12 +70,24 @@
 
   services.fail2ban.enable = true;
 
-  # A new server logs in once with `sudo tailscale up`. Turn off key expiry for
-  # it in the admin console. openFirewall opens tailscaled's UDP port, so peers
-  # can connect directly instead of through a relay.
+  # Servers join tagged tag:server, so their keys don't expire and they can
+  # host the tailnet-sites services. A server joins by itself once
+  # `just tailscale-auth-key <host>` has copied the OAuth client's secret to it,
+  # at the next boot or `sudo systemctl restart tailscaled-autoconnect`. As the
+  # operator, ${username} runs tailscale commands without sudo, including
+  # `tailscale serve`. openFirewall opens tailscaled's UDP port, so peers can
+  # connect directly instead of through a relay.
   services.tailscale = {
     enable = true;
     openFirewall = true;
+    authKeyFile = "/home/${username}/.config/tailscale/auth-key";
+    # Keys from an OAuth client are ephemeral unless told otherwise.
+    authKeyParameters = {
+      ephemeral = false;
+      preauthorized = true;
+    };
+    extraUpFlags = ["--advertise-tags=tag:server"];
+    extraSetFlags = ["--operator=${username}"];
   };
 
   # tailscaled opens /dev/net/tun, which only exists once the tun module is
@@ -92,12 +104,6 @@
       commands = [
         {
           command = "/run/current-system/sw/bin/nixos-rebuild";
-          options = ["NOPASSWD"];
-        }
-        # butbox has no password for this user. nixos-rebuild already runs
-        # anything as root without one, so this grants nothing new.
-        {
-          command = "/run/current-system/sw/bin/tailscale";
           options = ["NOPASSWD"];
         }
       ];

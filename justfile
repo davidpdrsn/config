@@ -70,16 +70,13 @@ switch-vps-2:
 switch-butbox:
     ./scripts/deploy-vps butbox
 
-# Copy the Tailscale OAuth client from 1Password to a server, for its tailnet sites
-tailnet-sites-secret host:
+# Copy the Tailscale OAuth client's secret from 1Password to a server, so it joins the tailnet tagged tag:server
+tailscale-auth-key host:
     #!/usr/bin/env bash
     set -euo pipefail
-    item="op://Personal/Tailscale OAuth client"
-    id=$(op read --account my.1password.com "$item/username")
-    secret=$(op read --account my.1password.com "$item/credential")
-    printf 'TS_CLIENT_ID=%s\nTS_CLIENT_SECRET=%s\n' "$id" "$secret" \
-      | ssh "{{host}}" 'umask 077; mkdir -p ~/.config/tailnet-sites; cat > ~/.config/tailnet-sites/oauth-client'
-    echo "wrote ~/.config/tailnet-sites/oauth-client on {{host}}"
+    op read --account my.1password.com "op://Personal/Tailscale OAuth client/credential" \
+      | ssh "{{host}}" 'umask 077; mkdir -p ~/.config/tailscale; cat > ~/.config/tailscale/auth-key'
+    echo "wrote ~/.config/tailscale/auth-key on {{host}}. It joins at the next boot, or after 'sudo systemctl restart tailscaled-autoconnect'."
 
 # Run Nix garbage collection locally and on both VPSes in parallel
 gc:
